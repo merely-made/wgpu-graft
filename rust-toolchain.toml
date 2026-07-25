@@ -4,4 +4,4 @@
 #   - wgpu 29 requires rustc >= 1.92; iced/slint (wgpu 28) require >= 1.88
 # Do not lower below 1.92 — wgpu's HAL layer uses stabilized APIs from that
 # release; bevy 0.19 pulls the floor up to 1.95.
-channel = "1.95.0"
+channel = "1.97.1"
