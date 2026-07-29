@@ -3,7 +3,7 @@ name = "servo-wgpu-interop-adapter"
 version = "0.1.0"
 edition = "2024"
 license = "MPL-2.0"
-repository = "https://github.com/mark-ik/wgpu-graft"
+repository = "https://github.com/merely-made/wgpu-graft"
 description = "Servo-specific offscreen rendering adapter built on grafting"
 
 [features]
