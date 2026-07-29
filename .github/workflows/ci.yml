@@ -35,16 +35,16 @@ jobs:
       # --- Core library ---
 
       - name: cargo check (no-default-features)
-        run: cargo check -p wgpu-native-texture-interop --no-default-features
+        run: cargo check -p grafting --no-default-features --features wgpu-29
 
       - name: cargo check (all features)
-        run: cargo check -p wgpu-native-texture-interop --all-features
+        run: cargo check -p grafting --all-features
 
       - name: cargo test
-        run: cargo test -p wgpu-native-texture-interop
+        run: cargo test -p grafting
 
       - name: cargo doc
-        run: cargo doc -p wgpu-native-texture-interop --no-deps --no-default-features
+        run: cargo doc -p grafting --no-deps --no-default-features --features wgpu-29
         env:
           RUSTDOCFLAGS: -D warnings
 
@@ -107,16 +107,16 @@ jobs:
       # --- Core library (Metal + IOSurface path) ---
 
       - name: cargo check (no-default-features)
-        run: cargo check -p wgpu-native-texture-interop --no-default-features
+        run: cargo check -p grafting --no-default-features --features wgpu-29
 
       - name: cargo check (all features)
-        run: cargo check -p wgpu-native-texture-interop --all-features
+        run: cargo check -p grafting --all-features
 
       - name: cargo test
-        run: cargo test -p wgpu-native-texture-interop
+        run: cargo test -p grafting
 
       - name: cargo doc
-        run: cargo doc -p wgpu-native-texture-interop --no-deps --no-default-features
+        run: cargo doc -p grafting --no-deps --no-default-features --features wgpu-29
         env:
           RUSTDOCFLAGS: -D warnings
 
@@ -172,16 +172,16 @@ jobs:
       # --- Core library (Windows Vulkan + D3D11/D3D12 paths) ---
 
       - name: cargo check (no-default-features)
-        run: cargo check -p wgpu-native-texture-interop --no-default-features
+        run: cargo check -p grafting --no-default-features --features wgpu-29
 
       - name: cargo check (all features)
-        run: cargo check -p wgpu-native-texture-interop --all-features
+        run: cargo check -p grafting --all-features
 
       - name: cargo test
-        run: cargo test -p wgpu-native-texture-interop
+        run: cargo test -p grafting
 
       - name: cargo doc
-        run: cargo doc -p wgpu-native-texture-interop --no-deps --no-default-features
+        run: cargo doc -p grafting --no-deps --no-default-features --features wgpu-29
         env:
           RUSTDOCFLAGS: -D warnings
 
