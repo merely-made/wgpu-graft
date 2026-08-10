@@ -5,9 +5,9 @@
 //! producer retains ownership of the underlying texture — the importer takes
 //! a +1 retain count and hands it to wgpu via `texture_from_raw`.
 
-use foreign_types_shared::ForeignType;
 use objc2::rc::Retained;
-use objc2::runtime::AnyObject;
+use objc2::runtime::ProtocolObject;
+use objc2_metal::{MTLTexture, MTLTextureType};
 
 use crate::{HostWgpuContext, InteropBackend, InteropError, MetalTextureRef};
 
@@ -28,22 +28,20 @@ pub fn import_metal_texture_ref(
     let texture = unsafe {
         // Retain the caller's MTLTexture so that wgpu can take ownership
         // of the reference we hand it without invalidating the caller's copy.
-        let obj_ptr = frame.raw_metal_texture as *mut AnyObject;
-        let retained = Retained::retain(obj_ptr)
+        let obj_ptr = frame.raw_metal_texture as *mut ProtocolObject<dyn MTLTexture>;
+        let metal_texture = Retained::retain(obj_ptr)
             .ok_or_else(|| InteropError::Metal("failed to retain Metal texture".into()))?;
-        let raw_ptr = Retained::into_raw(retained) as *mut _;
-        let metal_texture = metal::Texture::from_ptr(raw_ptr);
 
         let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
             metal_texture,
             frame.format,
-            metal::MTLTextureType::D2,
-            0, // array_layers
-            0, // mip_levels
+            MTLTextureType::Type2D,
+            1, // array_layers
+            1, // mip_levels
             wgpu::hal::CopyExtent {
                 width: frame.size.width,
                 height: frame.size.height,
-                depth: 0,
+                depth: 1,
             },
         );
 

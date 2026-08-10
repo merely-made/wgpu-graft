@@ -1,6 +1,6 @@
 [package]
 name = "grafting"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2024"
 license = "MPL-2.0"
 repository = "https://github.com/merely-made/wgpu-graft"
@@ -58,8 +58,8 @@ windows = { version = "0.62", features = [
 wio = "0.2"
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
-foreign-types-shared = "0.3.1"
-metal = "0.33.0"
+# The Metal paths speak objc2 throughout, matching wgpu-hal 29. metal-rs and
+# foreign-types-shared were dropped in 0.4.0 once the last call sites moved.
 objc2 = "0.6.3"
 objc2-foundation = "0.3.2"
 objc2-io-surface = "0.3.2"

@@ -23,7 +23,7 @@ welcome.
 
 | Crate | Version | Purpose |
 | --- | --- | --- |
-| [`grafting`](grafting/) | 0.3.0 | Core library. Imports native GPU textures (GL FBO via surfman, Vulkan image, Metal IOSurface, DX12/D3D11 shared NT handle) into host-owned `wgpu` textures. Framework-agnostic; the core import paths require no Servo dependency. Carries wgpu at two majors behind features (`wgpu-29` default, `wgpu-28`) so it can build against whichever wgpu your host already uses. |
+| [`grafting`](grafting/) | 0.4.0 | Core library. Imports native GPU textures (GL FBO via surfman, Vulkan image, Metal IOSurface, DX12/D3D11 shared NT handle) into host-owned `wgpu` textures. Framework-agnostic; the core import paths require no Servo dependency. Carries wgpu at two majors behind features (`wgpu-29` default, `wgpu-28`) so it can build against whichever wgpu your host already uses. |
 | [`servo-wgpu-interop-adapter`](servo-wgpu-interop-adapter/) | 0.1.0 | Servo-specific adapter built on `grafting`. Wraps Servo's offscreen rendering context and bridges it to the interop layer. Provides `ServoWgpuRenderingContext` (CPU readback) and `ServoWgpuInteropAdapter` (zero-copy GPU import). Servo support is behind the `servo` feature. |
 | [`demo-support`](demo-support/) | 0.1.0 | Shared helpers for the demos. On Windows it forces `mozangle` to build the ANGLE runtime DLLs (`libEGL.dll` / `libGLESv2.dll`) so each demo's `build.rs` can copy them next to the executable. |
 
