@@ -44,14 +44,14 @@ uses, or the imported texture will not share a device.
 ```toml
 [dependencies]
 # Default: wgpu 29, plus the surfman GL producer path.
-grafting = "0.4"
+grafting = "0.5"
 
 # Same, against wgpu 28.
-grafting = { version = "0.4", default-features = false, features = ["wgpu-28", "surfman"] }
+grafting = { version = "0.5", default-features = false, features = ["wgpu-28", "surfman"] }
 
 # Shared-texture import only (DX12 / Metal / Vulkan DMABUF). No GL, no
 # surfman, no glow. This is what wgpu-weld takes.
-grafting = { version = "0.4", default-features = false, features = ["wgpu-29"] }
+grafting = { version = "0.5", default-features = false, features = ["wgpu-29"] }
 ```
 
 ## License

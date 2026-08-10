@@ -98,11 +98,32 @@ jobs:
             *) echo "unknown line '$LINE'" >&2; exit 1 ;;
           esac
 
+      # Deliberately not `cargo update`: that re-resolves every dependency to
+      # its newest match and drags in unrelated breakage. Changing a manifest's
+      # source is enough for cargo to re-resolve just that dependency and leave
+      # the rest of the lockfile pinned where it is.
+      #
+      # This also decides whether the rest of the job is worth running. The
+      # manifests alone cannot answer that: a branch-tracking pin is unchanged
+      # text even when the branch it names has advanced, and the moved commit
+      # shows up only in the lockfile. Resolving is cheap, compiling Servo is
+      # not, so let the lockfile say whether anything actually moved.
+      - name: Refresh lockfile
+        id: refresh
+        if: steps.repin.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          cargo metadata --format-version 1 > /dev/null
+          if git diff --quiet; then
+            echo "Manifests and lockfile already match the requested ref; nothing to build."
+            echo "unchanged=true" >> "$GITHUB_OUTPUT"
+          fi
+
       # Validation compiles Servo, which needs what mozangle needs on Linux.
       # The old sync workflows skipped this and would have failed here even
       # once their pin rewriting was fixed.
       - name: Install Servo build deps
-        if: steps.repin.outputs.skip != 'true'
+        if: steps.repin.outputs.skip != 'true' && steps.refresh.outputs.unchanged != 'true'
         run: |
           sudo apt-get update -q
           sudo apt-get install -y --no-install-recommends \
@@ -110,22 +131,14 @@ jobs:
             libdbus-1-dev libfreetype6-dev libfontconfig1-dev \
             libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
 
-      # Deliberately not `cargo update`: that re-resolves every dependency to
-      # its newest match and drags in unrelated breakage. Changing a manifest's
-      # source is enough for cargo to re-resolve just that dependency and leave
-      # the rest of the lockfile pinned where it is.
-      - name: Refresh lockfile
-        if: steps.repin.outputs.skip != 'true'
-        run: cargo metadata --format-version 1 > /dev/null
-
       - name: Validate adapter and reference demo
-        if: steps.repin.outputs.skip != 'true'
+        if: steps.repin.outputs.skip != 'true' && steps.refresh.outputs.unchanged != 'true'
         run: |
           cargo check -p servo-wgpu-interop-adapter --features servo
           cargo check -p demo-servo-winit
 
       - name: Commit and push
-        if: steps.repin.outputs.skip != 'true'
+        if: steps.repin.outputs.skip != 'true' && steps.refresh.outputs.unchanged != 'true'
         env:
           RELEASED: ${{ steps.servo.outputs.released }}
           NEWEST: ${{ steps.servo.outputs.newest }}
