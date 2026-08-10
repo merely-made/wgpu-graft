@@ -161,6 +161,14 @@ jobs:
       - name: Install Rust (pinned via rust-toolchain.toml)
         uses: dtolnay/rust-toolchain@stable
 
+      # Servo vendors the WPT suite, whose test262 filenames run past Windows'
+      # 260-character path limit, so cargo's checkout of the Servo git
+      # dependency dies with "path too long" before anything is compiled.
+      # libgit2 honours core.longpaths, and this has to precede the cache step
+      # because the restored ~/.cargo/git holds that same checkout.
+      - name: Allow long paths
+        run: git config --global core.longpaths true
+
       - name: Cache cargo registry
         uses: actions/cache@v4
         with:
