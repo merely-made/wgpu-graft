@@ -90,7 +90,7 @@ impl MetalSharedEventSynchronizer {
     /// Same-process producers can hold a reference to
     /// [`shared_event`](Self::shared_event) directly.
     pub fn new_shared_event_handle(&self) -> Retained<MTLSharedEventHandle> {
-        unsafe { self.shared_event.newSharedEventHandle() }
+        self.shared_event.newSharedEventHandle()
     }
 
     /// The underlying `MTLSharedEvent`. Same-process producers can hold a
@@ -127,10 +127,9 @@ impl InteropSynchronizer for MetalSharedEventSynchronizer {
                     // No advance() yet; treat as no-op.
                     return Ok(());
                 }
-                let signaled = unsafe {
-                    self.shared_event
-                        .waitUntilSignaledValue_timeoutMS(target, self.timeout_ms)
-                };
+                let signaled = self
+                    .shared_event
+                    .waitUntilSignaledValue_timeoutMS(target, self.timeout_ms);
                 if !signaled {
                     return Err(InteropError::Metal(format!(
                         "MTLSharedEvent wait timed out at value {} after {}ms",

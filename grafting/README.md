@@ -38,13 +38,20 @@ A "producer" (Servo, a GL renderer, a video decoder, etc.) renders into a native
 
 For Servo embedding, pair this crate with [`servo-wgpu-interop-adapter`](../servo-wgpu-interop-adapter/) which handles Servo-specific setup. For standalone GL import, see [`demo-raw-gl`](../demo-raw-gl/) which uses the `raw_gl` module directly.
 
+Pick exactly one `wgpu-*` feature; it must match the wgpu your host already
+uses, or the imported texture will not share a device.
+
 ```toml
 [dependencies]
-# Full (with surfman support):
-grafting = "0.3"
+# Default: wgpu 29, plus the surfman GL producer path.
+grafting = "0.4"
 
-# Minimal (raw GL only, no surfman):
-grafting = { version = "0.3", default-features = false }
+# Same, against wgpu 28.
+grafting = { version = "0.4", default-features = false, features = ["wgpu-28", "surfman"] }
+
+# Shared-texture import only (DX12 / Metal / Vulkan DMABUF). No GL, no
+# surfman, no glow. This is what wgpu-weld takes.
+grafting = { version = "0.4", default-features = false, features = ["wgpu-29"] }
 ```
 
 ## License

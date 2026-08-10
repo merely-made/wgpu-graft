@@ -6,11 +6,12 @@
 //! 3. Normalizing from BGRA8Unorm (Metal native) to RGBA8Unorm with Y-flip
 
 use dpi::PhysicalSize;
-use foreign_types_shared::ForeignType;
-use objc2::runtime::NSObject;
-use objc2::{msg_send, rc::Retained};
+use objc2::rc::Retained;
+use objc2::runtime::ProtocolObject;
 use objc2_io_surface::IOSurfaceRef;
-use objc2_metal::{MTLPixelFormat, MTLTextureDescriptor, MTLTextureType, MTLTextureUsage};
+use objc2_metal::{
+    MTLDevice, MTLPixelFormat, MTLTexture, MTLTextureDescriptor, MTLTextureType, MTLTextureUsage,
+};
 
 use crate::InteropError;
 
@@ -50,7 +51,7 @@ impl MetalImporter {
         wgpu_device: &wgpu::Device,
         iosurface: &IOSurfaceRef,
         size: PhysicalSize<u32>,
-    ) -> Result<Retained<NSObject>, InteropError> {
+    ) -> Result<Retained<ProtocolObject<dyn MTLTexture>>, InteropError> {
         unsafe {
             let metal_device = wgpu_device.as_hal::<wgpu::wgc::api::Metal>().ok_or(
                 InteropError::BackendMismatch {
@@ -71,39 +72,31 @@ impl MetalImporter {
             descriptor.setPixelFormat(MTLPixelFormat::BGRA8Unorm);
             descriptor.setTextureType(MTLTextureType::Type2D);
 
-            let texture: Option<Retained<NSObject>> = msg_send![
-                &*(device_raw.as_ptr() as *mut objc2::runtime::NSObject),
-                newTextureWithDescriptor:&*descriptor,
-                iosurface:iosurface,
-                plane: 0usize
-            ];
-
-            texture.ok_or_else(|| {
-                InteropError::Metal("failed to create Metal texture from IOSurface".to_string())
-            })
+            device_raw
+                .newTextureWithDescriptor_iosurface_plane(&descriptor, iosurface, 0)
+                .ok_or_else(|| {
+                    InteropError::Metal("failed to create Metal texture from IOSurface".to_string())
+                })
         }
     }
 
     fn wrap_as_wgpu_hal(
         &self,
         wgpu_device: &wgpu::Device,
-        metal_texture: Retained<NSObject>,
+        metal_texture: Retained<ProtocolObject<dyn MTLTexture>>,
         size: PhysicalSize<u32>,
     ) -> Result<wgpu::Texture, InteropError> {
         unsafe {
-            let ptr: *mut objc2_foundation::NSObject = Retained::into_raw(metal_texture);
-            let metal_texture = metal::Texture::from_ptr(ptr as *mut _);
-
             let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
                 metal_texture,
                 wgpu::TextureFormat::Bgra8Unorm,
-                metal::MTLTextureType::D2,
-                0,
-                0,
+                MTLTextureType::Type2D,
+                1,
+                1,
                 wgpu::hal::CopyExtent {
                     width: size.width,
                     height: size.height,
-                    depth: 0,
+                    depth: 1,
                 },
             );
 

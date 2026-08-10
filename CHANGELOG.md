@@ -32,6 +32,46 @@ All notable changes to this project will be documented here.
 - Removed the previous `patches/gpui` (stale Zed 0.2.2 + blade vendor),
   superseded by `patches/glass-gpui`.
 
+## [grafting 0.4.0]
+
+Everything below landed on `main` after 0.3.0 was published, so the crates.io
+0.3.0 and the repo diverged. This release closes that gap.
+
+### Fixed
+
+- **macOS built for the first time since the wgpu-hal 29 bump.**
+  `metal_texture_ref` and `raw_gl::metal` still handed `metal` crate types to
+  `wgpu_hal::metal::Device::texture_from_raw`, which has taken
+  `Retained<ProtocolObject<dyn MTLTexture>>` and `objc2_metal::MTLTextureType`
+  since the objc2 migration. Both now go through `objc2-metal`, and
+  `raw_gl::metal` calls the typed
+  `newTextureWithDescriptor:iosurface:plane:` instead of an untyped `msg_send!`.
+  Verified with `cargo check --target aarch64-apple-darwin`, default features
+  and `--no-default-features --features wgpu-29`.
+- Along the way, the same call sites were passing `array_layers: 0`,
+  `mip_levels: 0`, and `CopyExtent { depth: 0 }` for 2D textures. All three are
+  now 1.
+
+### Added
+
+- `import_dx12_shared_texture`: the low-level `OpenSharedHandle` to wgpu step,
+  exposed as a free function so a consumer can drive it without the high-level
+  importer. `wgpu-weld` uses this.
+- `Dx12SharedTexture` carries `producer_sync` and `fence_value`, the
+  shared-handle sync seam, with a multi-GPU flicker fix.
+- Epoch-keyed frame import cache.
+- Linux DMABUF import loop closed; the full demo suite runs on Linux.
+
+### Changed (breaking)
+
+- wgpu is selected by feature rather than pinned: `wgpu-29` (default) or
+  `wgpu-28`, so the crate builds against whichever major the host already uses.
+  Exactly one must be enabled.
+- The GL producer path is behind a new `gl` feature, and `surfman` implies it.
+  A consumer that only wants the shared-texture import paths (DX12 / Metal /
+  Vulkan DMABUF) can now take `default-features = false` plus a `wgpu-*`
+  feature and skip glow and surfman entirely.
+
 ## [grafting 0.3.0]
 
 ### Renamed
