@@ -7,8 +7,15 @@ description = "Minimal demo: raw GL rendering imported into a wgpu host via graf
 
 [dependencies]
 wgpu = { version = "29.0.1", features = ["metal"] }
-grafting = { path = "../grafting", default-features = false }
-glow = "0.16.0"
+# `gl` for raw_gl::producer, `wgpu-29` to match the wgpu above. Without a
+# wgpu-* feature here, grafting's own feature guard rejects the build; this
+# only ever worked as part of a whole-workspace build, where another member
+# happened to turn wgpu-29 on. `cargo check -p demo-raw-gl`, which is what CI
+# runs, does not get that unification.
+grafting = { path = "../grafting", default-features = false, features = ["gl", "wgpu-29"] }
+# Must match grafting's glow: RawGlFrameProducer::new takes an
+# Arc<glow::Context> and two glow versions do not unify.
+glow = "0.17.0"
 glutin = "0.32.3"
 glutin-winit = "0.5.0"
 raw-window-handle = "0.6"

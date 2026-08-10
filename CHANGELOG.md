@@ -4,6 +4,77 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+### Servo
+
+- **Tracking Servo `release/v0.4`** (tag v0.4.0, 4 August 2026), up from
+  `release/v0.3`. All nine manifests move together.
+- **surfman 0.12 -> 0.13** in `grafting` and `servo-wgpu-interop-adapter`,
+  because Servo 0.4 moved to surfman 0.13. Both sides have to name the same
+  surfman or the GL producer types stop unifying and every method of the
+  `RenderingContext` impl reads as a type mismatch (24 errors, all of them the
+  same version split). glow stays at 0.17, which Servo 0.4 also uses.
+- **`primeorder` pinned to 0.14.0-rc.14 in the lockfile.** Servo 0.4 pulls
+  p256/p384/p521 0.14.0-rc.14, which ask for `primeorder = "0.14.0-rc.14"`.
+  Cargo reads that as allowing the final 0.14.0, and 0.14.0 added a `WnafSize`
+  bound the release candidates do not satisfy, so a freshly resolved lockfile
+  fails to compile before it reaches Servo. Anyone resolving Servo 0.4 from
+  scratch hits this; it is not specific to this repo.
+
+### Added
+
+- `grafting::wgpu` and `grafting::wgpu_hal` re-export the feature-selected pair,
+  so a consumer can name exactly the wgpu that grafting was built against
+  instead of depending on `wgpu` separately and risking a different major. An
+  imported texture only works on a device from the matching one.
+
+### Fixed
+
+- `cargo test -p grafting` on Linux. `tests/dmabuf_roundtrip.rs` wrote `wgpu::`,
+  but an integration test is its own crate and cannot see the crate-internal
+  `extern crate wgpu_29 as wgpu` alias, and grafting has no dependency literally
+  named `wgpu`. It now goes through the re-export above. The test is
+  `#![cfg(target_os = "linux")]`, so only the Linux job could see the break;
+  `cargo check -p grafting --target x86_64-unknown-linux-gnu --tests` reproduces
+  it from any host.
+- `cargo check -p demo-raw-gl`, which asked for grafting with
+  `default-features = false` and no `wgpu-*` feature, so grafting's own feature
+  guard rejected it. It only ever built as part of a whole-workspace build,
+  where another member turned `wgpu-29` on; the per-package check CI runs gets
+  no such unification. Its glow pin also lagged grafting's at 0.16 while
+  `RawGlFrameProducer::new` takes grafting's `Arc<glow::Context>`.
+- `cargo doc` under `-D warnings`. It documented with `--no-default-features`
+  on all three platforms, but `raw_gl`, `surfman_gl`, and `vulkan_dmabuf` are
+  feature- and platform-gated, so intra-doc links into them could not resolve
+  in that configuration. Docs are now checked once, on Linux with default
+  features, which is how docs.rs builds the crate and the only configuration
+  where all three modules exist. Three link defects behind that failure are
+  fixed: a public item linking to a private one, a link to the Windows-only
+  `Dx12FenceSynchronizer`, and a redundant explicit link target.
+
+### Branch automation
+
+- The three sync workflows now share `sync-servo-line.yml` instead of each
+  carrying its own copy of the same logic. Every scheduled run had failed since
+  8 May 2026: the inline pin rewriters only matched the bare `servo = "X.Y.Z"`
+  form, so `servo-wgpu-interop-adapter`'s table-form pin kept its old version
+  while the demos moved, and two Servo versions in one graph means two Stylos
+  competing for `links = "servo_style_crate"`. The rewrite now lives in
+  `scripts/set_servo_pin.py`, handles every pin shape, discovers manifests by
+  glob rather than a hardcoded list that never grew past the first five crates,
+  and exits non-zero rather than reporting success after changing nothing.
+- Line selection moved from the GitHub releases API to `git ls-remote`
+  (`scripts/servo_lines.py`), so it reads branches and tags rather than how a
+  release happens to be titled, and needs no token.
+- `main` now tracks the newest tagged Servo release line. The previous
+  "Sync Main To Servo LTS Release" drove `main` back to the v0.1.x LTS line,
+  which current adapter code cannot compile against, so it failed in validation
+  every week even when its pin rewriting was not the problem.
+- Sync runs refresh the lockfile with `cargo metadata` rather than
+  `cargo update`, which re-resolved every dependency to its newest match and
+  invited exactly the kind of unrelated breakage the `primeorder` pin above
+  documents. They also install Servo's Linux build deps and cache the cargo
+  registry, neither of which they did before.
+
 ### Demo changes
 
 - All five demos now build and run on Linux (Fedora 44 / Mesa-RADV / Vulkan

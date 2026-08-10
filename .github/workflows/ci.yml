@@ -43,8 +43,13 @@ jobs:
       - name: cargo test
         run: cargo test -p grafting
 
+      # Default features on Linux, which is how docs.rs builds this crate and
+      # the only configuration where raw_gl, surfman_gl, and vulkan_dmabuf all
+      # exist at once. Documenting with --no-default-features left intra-doc
+      # links into those modules unresolvable, so this step failed on all three
+      # platforms; the Linux job is now the one that checks docs.
       - name: cargo doc
-        run: cargo doc -p grafting --no-deps --no-default-features --features wgpu-29
+        run: cargo doc -p grafting --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
 
@@ -115,11 +120,6 @@ jobs:
       - name: cargo test
         run: cargo test -p grafting
 
-      - name: cargo doc
-        run: cargo doc -p grafting --no-deps --no-default-features --features wgpu-29
-        env:
-          RUSTDOCFLAGS: -D warnings
-
       # --- Servo demos ---
       #
       # Servo on macOS requires cmake and pkg-config (via Homebrew).
@@ -179,11 +179,6 @@ jobs:
 
       - name: cargo test
         run: cargo test -p grafting
-
-      - name: cargo doc
-        run: cargo doc -p grafting --no-deps --no-default-features --features wgpu-29
-        env:
-          RUSTDOCFLAGS: -D warnings
 
       # --- Raw GL demo ---
 

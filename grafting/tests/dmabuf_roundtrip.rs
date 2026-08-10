@@ -20,6 +20,10 @@
 
 use ash::vk;
 use dpi::PhysicalSize;
+// Via grafting's re-export, not a `wgpu` dev-dependency: an integration test is
+// its own crate and cannot see the crate-internal `wgpu` alias, and pulling wgpu
+// in separately could resolve a different major than grafting was built with.
+use grafting::wgpu;
 use grafting::{
     CapabilityStatus, HostWgpuContext, ImportOptions, InteropBackend, NativeFrame, SyncMechanism,
     TextureImporter, VulkanExternalImage, WgpuTextureImporter,

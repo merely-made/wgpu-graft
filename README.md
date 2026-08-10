@@ -31,7 +31,7 @@ welcome.
 
 Each demo embeds Servo in a different Rust GUI framework to show that the
 approach generalizes. All Servo demos use the
-`servo` git dependency on `branch = "release/v0.2"`.
+`servo` git dependency on `branch = "release/v0.4"`.
 
 | Demo | Framework | Host wgpu | Rendering path | Notes |
 | --- | --- | --- | --- | --- |
@@ -101,11 +101,18 @@ cargo run -p demo-servo-iced -- https://example.com
 
 ## Prerequisites
 
-- **Rust 1.95.0** (pinned in `rust-toolchain.toml`). The floor is 1.95 because
+- **Rust 1.97.1** (pinned in `rust-toolchain.toml`). The floor is 1.95 because
   Bevy 0.19.0-rc.2 requires it; wgpu 29 alone needs 1.92, and the iced/Slint
   (wgpu 28) demos need 1.88.
-- **Servo `release/v0.3`** for the Servo demos (resolved via the `servo` git
+- **Servo `release/v0.4`** for the Servo demos (resolved via the `servo` git
   dependency; no local Servo checkout needed).
+- **`primeorder` must be held at `0.14.0-rc.14`.** Our committed `Cargo.lock`
+  already does this, so it only bites if you resolve Servo 0.4 yourself or run
+  `cargo update`. Servo pulls p256/p384/p521 0.14.0-rc.14, whose
+  `primeorder = "0.14.0-rc.14"` requirement Cargo satisfies with the final
+  0.14.0, and that release added a `WnafSize` bound the release candidates do
+  not satisfy. Recover with
+  `cargo update -p primeorder --precise 0.14.0-rc.14`.
 - **Windows**: ANGLE DLLs (`libEGL.dll`, `libGLESv2.dll`) must be next to the
   executable at runtime. They are built by `mozangle` during compilation (via the
   `demo-support` crate's `build_dlls` feature) and copied next to the binary by
@@ -199,14 +206,23 @@ fixes are workspace-wide because Servo is shared by all Servo demos.
 
 ## Branches
 
-The repository is organized around Servo compatibility lines. CI workflows in
-`.github/workflows/` keep these in sync.
+The repository is organized around Servo compatibility lines, each branch one
+rung of the same ladder.
 
 | Branch | Purpose | Servo line |
 | --- | --- | --- |
-| `main` | Recommended default for embedders | current Servo release line (`release/v0.2`) |
-| `latest-release` | Tracks the newest non-LTS Servo release once one exists beyond the current line | newest post-LTS release line |
-| `experimental` | Integration work against upstream Servo head | upstream `main` |
+| `main` | Recommended default for embedders | newest Servo release branch that has shipped a tag, currently `release/v0.4` |
+| `latest-release` | Early look at the line Servo is preparing next | newest Servo release branch, including one cut but not yet tagged |
+| `experimental` | Integration work against upstream Servo head | upstream `main`, pinned to an exact commit |
+
+`latest-release` has nothing of its own to track while Servo's newest release
+branch is still the one `main` follows; its sync no-ops until the next line is
+cut. Servo's LTS line is not tracked by any branch.
+
+Scheduled workflows in `.github/workflows/` keep the three in sync. All of them
+call `sync-servo-line.yml`, which resolves the ladder with
+`scripts/servo_lines.py` and repins with `scripts/set_servo_pin.py`; those
+scripts are the place to fix pin handling, not the individual workflows.
 
 ## Relationship to sibling repos
 
