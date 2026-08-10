@@ -4,6 +4,11 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+Targets `grafting` 0.5.0, not 0.4.1: surfman is a public dependency of the
+`gl` / `surfman` paths, and its major moved. The version is bumped here rather
+than at publish time so `main` never claims to be the 0.4.0 that is already on
+crates.io, which has caught this repo before.
+
 ### Servo
 
 - **Tracking Servo `release/v0.4`** (tag v0.4.0, 4 August 2026), up from
