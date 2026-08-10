@@ -3,15 +3,21 @@
 // Alias the feature-selected wgpu / wgpu-hal pair back to the plain crate names
 // so the rest of the crate keeps writing `wgpu::` and `wgpu_hal::` unchanged.
 // `wgpu-29` wins when both features are on (e.g. `--all-features`).
+//
+// Public, so a consumer can write `grafting::wgpu::Texture` and be certain it
+// names the same wgpu grafting was built against. Depending on `wgpu` directly
+// alongside grafting risks resolving a different major, and an imported texture
+// only works on a device from the matching one. Our own integration tests go
+// through the re-export for the same reason.
 #[cfg(feature = "wgpu-29")]
-extern crate wgpu_29 as wgpu;
+pub extern crate wgpu_29 as wgpu;
 #[cfg(feature = "wgpu-29")]
-extern crate wgpu_hal_29 as wgpu_hal;
+pub extern crate wgpu_hal_29 as wgpu_hal;
 
 #[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29")))]
-extern crate wgpu_28 as wgpu;
+pub extern crate wgpu_28 as wgpu;
 #[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29")))]
-extern crate wgpu_hal_28 as wgpu_hal;
+pub extern crate wgpu_hal_28 as wgpu_hal;
 
 #[cfg(not(any(feature = "wgpu-28", feature = "wgpu-29")))]
 compile_error!(
@@ -320,8 +326,7 @@ pub struct VulkanExternalImage {
     /// (`DRM_FORMAT_MOD_LINEAR`) for linear-tiled buffers.
     pub drm_modifier: u64,
     /// Optional fd to a `VkSemaphore` payload (`OPAQUE_FD`) the producer
-    /// signals after rendering. Pair with
-    /// [`VulkanSemaphoreSynchronizer`](crate::VulkanSemaphoreSynchronizer)
+    /// signals after rendering. Pair with [`VulkanSemaphoreSynchronizer`]
     /// to gate consumer submits on the signal.
     pub wait_semaphore_fd: Option<i32>,
 }
@@ -358,8 +363,8 @@ pub struct Dx12SharedTexture {
     pub generation: u64,
     pub producer_sync: SyncMechanism,
     /// Fence value the producer signalled at on its `ID3D11Fence` /
-    /// `ID3D12Fence` (opened from
-    /// [`Dx12FenceSynchronizer::shared_handle`](crate::Dx12FenceSynchronizer::shared_handle)).
+    /// `ID3D12Fence` (opened from `Dx12FenceSynchronizer::shared_handle`;
+    /// not linked, because that type only exists on Windows builds).
     /// The synchronizer waits for this value on the wgpu D3D12 queue
     /// before the next consumer submit.
     ///

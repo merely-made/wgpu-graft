@@ -1,7 +1,8 @@
 [toolchain]
-# Pinned to 1.95.0 because:
+# The floor is 1.95:
 #   - bevy 0.19.0-rc.2 requires rustc >= 1.95 (demo-servo-bevy)
 #   - wgpu 29 requires rustc >= 1.92; iced/slint (wgpu 28) require >= 1.88
-# Do not lower below 1.92 — wgpu's HAL layer uses stabilized APIs from that
-# release; bevy 0.19 pulls the floor up to 1.95.
+# Do not lower below 1.92, where wgpu's HAL layer picks up stabilized APIs;
+# bevy 0.19 pulls the floor the rest of the way to 1.95. The pin itself sits
+# above the floor and moves with stable.
 channel = "1.97.1"

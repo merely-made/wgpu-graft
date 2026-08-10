@@ -25,7 +25,7 @@ Without `servo`, only the surfman-level types are available (useful for testing 
 ```toml
 [dependencies]
 servo-wgpu-interop-adapter = { version = "0.1", features = ["servo"] }
-servo = "0.1.0"
+servo = { git = "https://github.com/servo/servo", branch = "release/v0.4" }
 ```
 
 ```rust

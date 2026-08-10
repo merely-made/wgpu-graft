@@ -234,7 +234,7 @@ unsafe fn allocate_and_bind_dmabuf_memory(
 /// wgpu-hal's default extension set (which already includes
 /// `VK_KHR_external_memory_fd` and `VK_EXT_external_memory_dma_buf` when
 /// the driver advertises them). Without this extension, the consumer-side
-/// `vkCreateImage` call in [`import_vulkan_external_image`] fails because the
+/// `vkCreateImage` call in `import_vulkan_external_image` fails because the
 /// `DRM_FORMAT_MODIFIER_EXT` tiling mode is gated on the extension being
 /// enabled at `vkCreateDevice` time.
 ///
