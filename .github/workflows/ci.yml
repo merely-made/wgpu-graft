@@ -10,6 +10,13 @@ env:
   RUSTFLAGS: -D warnings
   # Servo pulls aws-lc-rs which requires nasm on Windows; skip ASM on CI
   AWS_LC_SYS_NO_ASM: "1"
+  # cargo's bundled libgit2 keeps failing to clone Servo's very large repo on
+  # hosted runners, reporting "the SSL certificate is invalid" and "revision
+  # ... not found" for a revision that exists. Every cargo command needs the
+  # Servo source to resolve the workspace, so this took down the first step of
+  # the Linux and Windows jobs before any code was compiled. Shelling out to
+  # git is the same remedy the README gives for the identical failure locally.
+  CARGO_NET_GIT_FETCH_WITH_CLI: "true"
 
 jobs:
   # ── Linux ──────────────────────────────────────────────────────────────────

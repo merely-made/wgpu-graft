@@ -29,6 +29,9 @@ permissions:
 env:
   CARGO_TERM_COLOR: always
   AWS_LC_SYS_NO_ASM: "1"
+  # See ci.yml: cargo's libgit2 intermittently cannot clone Servo on hosted
+  # runners. These jobs fetch Servo on every run, so they are the most exposed.
+  CARGO_NET_GIT_FETCH_WITH_CLI: "true"
 
 jobs:
   sync:
