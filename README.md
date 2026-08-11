@@ -219,6 +219,17 @@ rung of the same ladder.
 branch is still the one `main` follows; its sync no-ops until the next line is
 cut. Servo's LTS line is not tracked by any branch.
 
+**Known red (2026-08-10): both forward branches fail to resolve against Servo
+0.5.** `servo-fonts` requires `freetype-sys ^0.23` from `release/v0.5` onward,
+while the vendored `patches/glass-gpui` pins `zed-font-kit`, which requires
+`freetype-sys 0.20` on non-Windows targets. `freetype-sys` sets
+`links = "freetype"`, so only one copy may exist in the graph and no version
+satisfies both. It clears when the vendored font-kit moves to freetype-sys
+0.23, or if `demo-servo-gpui` leaves the workspace on those lines. Servo 0.4 is
+unaffected: the whole graph agrees on 0.20.1 there, and `demo-servo-gpui`
+builds on all three platforms. Recorded here so a red forward branch is not
+mistaken for the sync tooling failing again.
+
 Scheduled workflows in `.github/workflows/` keep the three in sync. All of them
 call `sync-servo-line.yml`, which resolves the ladder with
 `scripts/servo_lines.py` and repins with `scripts/set_servo_pin.py`; those
