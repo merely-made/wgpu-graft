@@ -16,5 +16,5 @@ rustls = "0.23.37"
 servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
 tokio = { version = "1", features = ["sync"] }
 url = "2.5.7"
-winit = "0.30.12"
+winit = "0.30.13"
 xilem = "0.4.0"

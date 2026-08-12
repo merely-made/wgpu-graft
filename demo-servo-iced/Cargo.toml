@@ -31,4 +31,4 @@ servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", default-f
     "servo",
 ] }
 url = "2.5.7"
-winit = "0.30.12"
+winit = "0.30.13"

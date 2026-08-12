@@ -274,8 +274,8 @@ pub fn import_angle_d3d11_frame(
 
     // SAFETY: hal_texture was created from host.device's underlying HAL device.
     let texture = unsafe {
-        host.device
-            .create_texture_from_hal::<wgpu::wgc::api::Vulkan>(
+        crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Vulkan>(
+                &host.device,
                 hal_texture,
                 &wgpu::TextureDescriptor {
                     label: Some("angle-d3d11-kmt-import"),

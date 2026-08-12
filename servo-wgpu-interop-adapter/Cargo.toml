@@ -9,7 +9,8 @@ description = "Servo-specific offscreen rendering adapter built on grafting"
 [features]
 default = ["wgpu-29"]
 # Select the wgpu version to match the host; forwarded to grafting.
-# `wgpu-29` takes precedence if both are enabled.
+# The newest enabled version takes precedence.
+wgpu-30 = ["dep:wgpu_30", "grafting/wgpu-30"]
 wgpu-29 = ["dep:wgpu_29", "grafting/wgpu-29"]
 wgpu-28 = ["dep:wgpu_28", "grafting/wgpu-28"]
 servo = ["dep:servo"]
@@ -28,6 +29,7 @@ rustls = "0.23.37"
 surfman = { version = "0.13.0", features = ["chains"] }
 dpi = "0.1.2"
 winit = "0.30.13"
+wgpu_30 = { package = "wgpu", version = "30.0.0", features = ["metal"], optional = true }
 wgpu_29 = { package = "wgpu", version = "29.0.1", features = ["metal"], optional = true }
 wgpu_28 = { package = "wgpu", version = "28.0.0", features = ["metal"], optional = true }
 grafting = { path = "../grafting", version = "0.5.0", default-features = false, features = ["surfman"] }

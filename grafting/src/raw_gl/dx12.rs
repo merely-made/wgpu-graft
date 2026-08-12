@@ -217,7 +217,8 @@ pub fn import_gl_framebuffer_dx12(
             1, // sample_count
         );
 
-        let imported = host.device.create_texture_from_hal::<wgpu::wgc::api::Dx12>(
+        let imported = crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Dx12>(
+                &host.device,
             hal_texture,
             &wgpu::TextureDescriptor {
                 label: Some("gl-frame-dx12-import"),

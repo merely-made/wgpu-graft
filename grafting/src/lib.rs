@@ -2,29 +2,35 @@
 
 // Alias the feature-selected wgpu / wgpu-hal pair back to the plain crate names
 // so the rest of the crate keeps writing `wgpu::` and `wgpu_hal::` unchanged.
-// `wgpu-29` wins when both features are on (e.g. `--all-features`).
+// The newest enabled version wins when several are on (e.g. `--all-features`).
 //
 // Public, so a consumer can write `grafting::wgpu::Texture` and be certain it
 // names the same wgpu grafting was built against. Depending on `wgpu` directly
 // alongside grafting risks resolving a different major, and an imported texture
 // only works on a device from the matching one. Our own integration tests go
 // through the re-export for the same reason.
-#[cfg(feature = "wgpu-29")]
+#[cfg(feature = "wgpu-30")]
+pub extern crate wgpu_30 as wgpu;
+#[cfg(feature = "wgpu-30")]
+pub extern crate wgpu_hal_30 as wgpu_hal;
+
+#[cfg(all(feature = "wgpu-29", not(feature = "wgpu-30")))]
 pub extern crate wgpu_29 as wgpu;
-#[cfg(feature = "wgpu-29")]
+#[cfg(all(feature = "wgpu-29", not(feature = "wgpu-30")))]
 pub extern crate wgpu_hal_29 as wgpu_hal;
 
-#[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29")))]
+#[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29"), not(feature = "wgpu-30")))]
 pub extern crate wgpu_28 as wgpu;
-#[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29")))]
+#[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29"), not(feature = "wgpu-30")))]
 pub extern crate wgpu_hal_28 as wgpu_hal;
 
-#[cfg(not(any(feature = "wgpu-28", feature = "wgpu-29")))]
+#[cfg(not(any(feature = "wgpu-28", feature = "wgpu-29", feature = "wgpu-30")))]
 compile_error!(
-    "grafting needs one wgpu version feature: enable `wgpu-29` (default) or `wgpu-28` to match your host's wgpu"
+    "grafting needs one wgpu version feature: enable `wgpu-29` (default), `wgpu-30`, or `wgpu-28` to match your host's wgpu"
 );
 
 mod error;
+mod wgpu_compat;
 mod sync;
 
 #[cfg(target_os = "windows")]

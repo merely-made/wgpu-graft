@@ -36,7 +36,7 @@ stays single-GPU.
 
 ## wgpu version
 
-Bevy 0.18 stable is on wgpu 27; **0.19.0-rc.2 is on wgpu 29**, matching the
+Bevy 0.18 stable is on wgpu 27; **0.19 is on wgpu 29**, matching the
 grafting default, so the imported texture is Bevy's own `wgpu::Texture` type with
 no new grafting version.
 

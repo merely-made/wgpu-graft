@@ -87,21 +87,37 @@ impl MetalImporter {
         size: PhysicalSize<u32>,
     ) -> Result<wgpu::Texture, InteropError> {
         unsafe {
+            let copy_size = wgpu::hal::CopyExtent {
+                width: size.width,
+                height: size.height,
+                depth: 1,
+            };
+            // hal 30 added a `drop_callback` parameter; None preserves the
+            // pre-30 behavior (the retained MTLTexture keeps the surface
+            // alive, nothing extra to run on drop).
+            #[cfg(feature = "wgpu-30")]
             let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
                 metal_texture,
                 wgpu::TextureFormat::Bgra8Unorm,
                 MTLTextureType::Type2D,
                 1,
                 1,
-                wgpu::hal::CopyExtent {
-                    width: size.width,
-                    height: size.height,
-                    depth: 1,
-                },
+                copy_size,
+                None, // drop_callback
+            );
+            #[cfg(not(feature = "wgpu-30"))]
+            let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
+                metal_texture,
+                wgpu::TextureFormat::Bgra8Unorm,
+                MTLTextureType::Type2D,
+                1,
+                1,
+                copy_size,
             );
 
             Ok(
-                wgpu_device.create_texture_from_hal::<wgpu::wgc::api::Metal>(
+                crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Metal>(
+                &wgpu_device,
                     hal_texture,
                     &wgpu::TextureDescriptor {
                         label: Some("iosurface-metal-import"),

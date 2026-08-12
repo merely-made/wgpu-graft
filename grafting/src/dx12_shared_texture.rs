@@ -51,22 +51,25 @@ pub fn import_dx12_shared_texture(
             1, // sample_count
         );
 
-        host.device.create_texture_from_hal::<wgpu::wgc::api::Dx12>(
-            hal_texture,
-            &wgpu::TextureDescriptor {
-                label: Some("dx12-shared-texture-import"),
-                size: wgpu::Extent3d {
-                    width: frame.size.width,
-                    height: frame.size.height,
-                    depth_or_array_layers: 1,
-                },
-                format: frame.format,
-                dimension: wgpu::TextureDimension::D2,
-                mip_level_count: 1,
-                sample_count: 1,
-                usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_SRC,
-                view_formats: &[],
+        let desc = wgpu::TextureDescriptor {
+            label: Some("dx12-shared-texture-import"),
+            size: wgpu::Extent3d {
+                width: frame.size.width,
+                height: frame.size.height,
+                depth_or_array_layers: 1,
             },
+            format: frame.format,
+            dimension: wgpu::TextureDimension::D2,
+            mip_level_count: 1,
+            sample_count: 1,
+            usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_SRC,
+            view_formats: &[],
+        };
+
+        crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Dx12>(
+            &host.device,
+            hal_texture,
+            &desc,
         )
     };
 
