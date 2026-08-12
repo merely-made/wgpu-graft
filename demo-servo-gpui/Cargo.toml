@@ -25,4 +25,4 @@ rustls = "0.23.37"
 servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
 smallvec = "1"
 url = "2.5.7"
-winit = "0.30.12"
+winit = "0.30.13"

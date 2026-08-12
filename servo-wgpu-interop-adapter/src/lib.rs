@@ -1,13 +1,16 @@
 #![doc = include_str!("../README.md")]
 
 // Alias the feature-selected wgpu back to `wgpu` crate-wide, matching grafting.
-#[cfg(feature = "wgpu-29")]
+// The newest enabled version wins, same precedence as grafting's.
+#[cfg(feature = "wgpu-30")]
+extern crate wgpu_30 as wgpu;
+#[cfg(all(feature = "wgpu-29", not(feature = "wgpu-30")))]
 extern crate wgpu_29 as wgpu;
-#[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29")))]
+#[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29"), not(feature = "wgpu-30")))]
 extern crate wgpu_28 as wgpu;
-#[cfg(not(any(feature = "wgpu-28", feature = "wgpu-29")))]
+#[cfg(not(any(feature = "wgpu-28", feature = "wgpu-29", feature = "wgpu-30")))]
 compile_error!(
-    "servo-wgpu-interop-adapter needs one wgpu version feature: `wgpu-29` (default) or `wgpu-28`"
+    "servo-wgpu-interop-adapter needs one wgpu version feature: `wgpu-29` (default), `wgpu-30`, or `wgpu-28`"
 );
 
 use std::{cell::RefCell, rc::Rc};

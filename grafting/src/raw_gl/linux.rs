@@ -197,9 +197,8 @@ pub fn import_gl_framebuffer_vulkan(
         gl.delete_texture(texture);
         gl_with_extensions.DeleteMemoryObjectsEXT(1, &memory_object);
 
-        let imported = host
-            .device
-            .create_texture_from_hal::<wgpu::wgc::api::Vulkan>(
+        let imported = crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Vulkan>(
+                &host.device,
                 hal_device.texture_from_raw(
                     vulkan_image,
                     &wgpu_hal::TextureDescriptor {

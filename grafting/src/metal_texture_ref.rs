@@ -32,21 +32,36 @@ pub fn import_metal_texture_ref(
         let metal_texture = Retained::retain(obj_ptr)
             .ok_or_else(|| InteropError::Metal("failed to retain Metal texture".into()))?;
 
+        let copy_size = wgpu::hal::CopyExtent {
+            width: frame.size.width,
+            height: frame.size.height,
+            depth: 1,
+        };
+        // hal 30 added a `drop_callback` parameter. None preserves the old
+        // behavior: the caller keeps ownership of the underlying MTLTexture,
+        // and the retain above is what keeps it alive for wgpu's copy.
+        #[cfg(feature = "wgpu-30")]
         let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
             metal_texture,
             frame.format,
             MTLTextureType::Type2D,
             1, // array_layers
             1, // mip_levels
-            wgpu::hal::CopyExtent {
-                width: frame.size.width,
-                height: frame.size.height,
-                depth: 1,
-            },
+            copy_size,
+            None, // drop_callback
+        );
+        #[cfg(not(feature = "wgpu-30"))]
+        let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
+            metal_texture,
+            frame.format,
+            MTLTextureType::Type2D,
+            1, // array_layers
+            1, // mip_levels
+            copy_size,
         );
 
-        host.device
-            .create_texture_from_hal::<wgpu::wgc::api::Metal>(
+        crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Metal>(
+                &host.device,
                 hal_texture,
                 &wgpu::TextureDescriptor {
                     label: Some("metal-texture-ref-import"),

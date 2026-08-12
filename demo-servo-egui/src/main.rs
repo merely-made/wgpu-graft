@@ -392,7 +392,7 @@ impl App for ServoEguiApp {
             }
         }
 
-        egui::Panel::top("nav").show_inside(ui, |ui| {
+        egui::Panel::top("nav").show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label("URL:");
                 let resp = ui.add(

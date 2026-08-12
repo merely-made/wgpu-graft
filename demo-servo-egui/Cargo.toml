@@ -17,8 +17,14 @@ demo-support = { path = "../demo-support" }
 # eframe re-exports `egui`, `egui_wgpu`, and `wgpu` (the latter two with the
 # `wgpu` feature). We use those re-exports so the demo names the exact same
 # wgpu crate egui composites with, which must also unify with the adapter's
-# wgpu 29 for the imported texture to be the same type.
-eframe = { version = "0.34", default-features = false, features = [
+# wgpu for the imported texture to be the same type.
+#
+# 0.35 (wgpu 29), not 0.36 (wgpu 30): the iced demo's git iced pins
+# `web-sys = "=0.3.85"`, eframe 0.36 needs js-sys ^0.3.103, and one workspace
+# lockfile cannot hold both 0.3.x resolutions. grafting itself carries a
+# `wgpu-30` feature for hosts on eframe 0.36; this demo moves when iced lifts
+# its exact pin.
+eframe = { version = "0.35", default-features = false, features = [
     "wgpu",
     "default_fonts",
     "wayland",
@@ -30,4 +36,4 @@ servo = { git = "https://github.com/servo/servo", branch = "release/v0.4" }
 rustls = "0.23.37"
 servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
 url = "2.5.7"
-winit = "0.30.12"
+winit = "0.30.13"

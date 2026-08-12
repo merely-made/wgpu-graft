@@ -27,6 +27,28 @@ crates.io, which has caught this repo before.
 
 ### Added
 
+- **`wgpu-30` feature row** in grafting and the adapter, carrying wgpu 30
+  alongside 29 and 28. The newest enabled version wins. wgpu-29 stays the
+  default while the GUI ecosystem straddles majors: eframe 0.36 is on wgpu 30,
+  bevy 0.19 and slint 1.17 on 29, iced git (0.15-dev) on 28. The only
+  signature the majors disagree on is `Device::create_texture_from_hal`
+  (wgpu 30 adds an explicit tracker `initial_state`; 28/29 hardcoded
+  `UNINITIALIZED`), so all ten import call sites now route through one
+  `wgpu_compat::create_texture_from_hal` helper that passes UNINITIALIZED
+  explicitly on 30 — identical behavior, version split in one place.
+
+### GUI framework updates
+
+- bevy `0.19.0-rc.2` -> `0.19.0` stable (still wgpu 29).
+- eframe `0.34` -> `0.35` (wgpu 29). Not 0.36: the iced demo's git iced pins
+  `web-sys = "=0.3.85"`, eframe 0.36 needs js-sys ^0.3.103, and one workspace
+  lockfile cannot hold both 0.3.x resolutions. Hosts on eframe 0.36 use
+  grafting's `wgpu-30` feature; the demo follows when iced lifts its pin.
+- slint `1.16` -> `1.17`, and the slint demo moves from `unstable-wgpu-28` to
+  `unstable-wgpu-29`, riding the workspace default instead of dragging a second
+  wgpu major. The iced demo (git 0.15-dev) is now the only wgpu-28 consumer.
+- winit `0.30.12` -> `0.30.13` across all demos.
+
 - `grafting::wgpu` and `grafting::wgpu_hal` re-export the feature-selected pair,
   so a consumer can name exactly the wgpu that grafting was built against
   instead of depending on `wgpu` separately and risking a different major. An
@@ -34,6 +56,11 @@ crates.io, which has caught this repo before.
 
 ### Fixed
 
+- `vulkan_dmabuf::create_dmabuf_host_context` under `wgpu-28` on Linux never
+  compiled: it called hal 29's four-argument `open_with_callback` (hal 28 has
+  no `limits` parameter). No CI config ever combined wgpu-28 with the
+  Linux-only module, so the 0.5.0 cross-matrix (three targets x three wgpu
+  rows) is what surfaced it.
 - `cargo test -p grafting` on Linux. `tests/dmabuf_roundtrip.rs` wrote `wgpu::`,
   but an integration test is its own crate and cannot see the crate-internal
   `extern crate wgpu_29 as wgpu` alias, and grafting has no dependency literally

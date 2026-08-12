@@ -1,6 +1,6 @@
 [toolchain]
 # The floor is 1.95:
-#   - bevy 0.19.0-rc.2 requires rustc >= 1.95 (demo-servo-bevy)
+#   - bevy 0.19 requires rustc >= 1.95 (demo-servo-bevy)
 #   - wgpu 29 requires rustc >= 1.92; iced/slint (wgpu 28) require >= 1.88
 # Do not lower below 1.92, where wgpu's HAL layer picks up stabilized APIs;
 # bevy 0.19 pulls the floor the rest of the way to 1.95. The pin itself sits

@@ -115,9 +115,8 @@ pub(crate) fn import_vulkan_external_image(
         };
 
         let vk_device_for_drop = vk_device.clone();
-        let imported = host
-            .device
-            .create_texture_from_hal::<wgpu::wgc::api::Vulkan>(
+        let imported = crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Vulkan>(
+                &host.device,
                 hal_device.texture_from_raw(
                     vulkan_image,
                     &wgpu_hal::TextureDescriptor {
@@ -276,6 +275,10 @@ pub fn create_dmabuf_host_context(
         }
     });
 
+    // hal 29 added the `limits` parameter to open_with_callback; hal 28 takes
+    // (features, memory_hints, callback). This module never compiled under
+    // wgpu-28 before 0.5.0 — no CI config exercised the combination.
+    #[cfg(any(feature = "wgpu-29", feature = "wgpu-30"))]
     let open = unsafe {
         hal_adapter
             .open_with_callback(
@@ -284,6 +287,12 @@ pub fn create_dmabuf_host_context(
                 &desc.memory_hints,
                 Some(callback),
             )
+            .map_err(|err| InteropError::Vulkan(format!("open_with_callback: {}", err)))?
+    };
+    #[cfg(not(any(feature = "wgpu-29", feature = "wgpu-30")))]
+    let open = unsafe {
+        hal_adapter
+            .open_with_callback(desc.required_features, &desc.memory_hints, Some(callback))
             .map_err(|err| InteropError::Vulkan(format!("open_with_callback: {}", err)))?
     };
     drop(hal_adapter);

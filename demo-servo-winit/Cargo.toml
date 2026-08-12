@@ -16,4 +16,4 @@ servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features 
 url = "2.5.7"
 wgpu = { version = "29.0.1", features = ["metal"] }
 grafting = { path = "../grafting" }
-winit = "0.30.12"
+winit = "0.30.13"
