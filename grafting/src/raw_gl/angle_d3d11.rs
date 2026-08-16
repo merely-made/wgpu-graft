@@ -292,6 +292,8 @@ pub fn import_angle_d3d11_frame(
                         | wgpu::TextureUsages::RENDER_ATTACHMENT,
                     view_formats: &[],
                 },
+                // The imported Vulkan image was created in UNDEFINED layout.
+                wgpu::TextureUses::UNINITIALIZED,
             )
     };
 

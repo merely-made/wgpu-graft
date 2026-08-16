@@ -25,6 +25,13 @@ use objc2::rc::Retained;
 use objc2::runtime::ProtocolObject;
 use objc2_metal::{MTLDevice, MTLSharedEvent, MTLSharedEventHandle};
 
+#[cfg(all(
+    feature = "wgpu-28",
+    not(feature = "wgpu-29"),
+    not(feature = "wgpu-30")
+))]
+use foreign_types_shared::ForeignType;
+
 use crate::{
     HostWgpuContext, ImportedTexture, InteropBackend, InteropError, InteropSynchronizer,
     NativeFrame, SyncMechanism,
@@ -71,6 +78,16 @@ impl MetalSharedEventSynchronizer {
                     actual: "non-Metal",
                 },
             )?;
+            #[cfg(all(
+                feature = "wgpu-28",
+                not(feature = "wgpu-29"),
+                not(feature = "wgpu-30")
+            ))]
+            let device = Retained::retain(
+                hal_device.raw_device().as_ptr().cast::<ProtocolObject<dyn MTLDevice>>(),
+            )
+            .ok_or_else(|| InteropError::Metal("failed to retain Metal device".into()))?;
+            #[cfg(any(feature = "wgpu-29", feature = "wgpu-30"))]
             let device = hal_device.raw_device().clone();
             drop(hal_device);
 

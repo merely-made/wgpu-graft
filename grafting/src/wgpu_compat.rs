@@ -2,13 +2,11 @@
 //!
 //! wgpu 30 made the texture tracker's initial state an explicit parameter of
 //! `Device::create_texture_from_hal`; wgpu 28/29 hardcoded
-//! `TextureUses::UNINITIALIZED` internally. Every import path in this crate
-//! wraps a texture some external producer already wrote, so the correct value
-//! is the same everywhere: UNINITIALIZED, meaning the first consumer submit
-//! transitions from an undefined layout, with producer-side writes ordered by
-//! the frame's sync mechanism (keyed mutex / fence / semaphore), not by
-//! layout. Routing all ten call sites through here keeps the version split in
-//! one place.
+//! `TextureUses::UNINITIALIZED` internally. wgpu 30 makes the imported
+//! resource's state explicit, so each import path supplies the state it has
+//! established at the HAL boundary. Routing the version split through here
+//! keeps 28/29 behavior intact while making the 30 contract visible at every
+//! import site.
 
 /// Wrap an already-created HAL texture in a `wgpu::Texture`, identically
 /// across the carried wgpu majors.
@@ -16,16 +14,20 @@
 /// # Safety
 ///
 /// Same contract as `wgpu::Device::create_texture_from_hal`: `hal_texture`
-/// must come from this device, match `desc`, and be initialized.
+/// must come from this device, match `desc`, and be initialized. On wgpu 30,
+/// `initial_state` must match the resource's actual backend state.
 pub(crate) unsafe fn create_texture_from_hal<A: wgpu_hal::Api>(
     device: &wgpu::Device,
     hal_texture: A::Texture,
     desc: &wgpu::TextureDescriptor<'_>,
+    initial_state: wgpu::TextureUses,
 ) -> wgpu::Texture {
     #[cfg(feature = "wgpu-30")]
     unsafe {
-        device.create_texture_from_hal::<A>(hal_texture, desc, wgpu::TextureUses::UNINITIALIZED)
+        device.create_texture_from_hal::<A>(hal_texture, desc, initial_state)
     }
+    #[cfg(not(feature = "wgpu-30"))]
+    let _ = initial_state;
     #[cfg(not(feature = "wgpu-30"))]
     unsafe {
         device.create_texture_from_hal::<A>(hal_texture, desc)

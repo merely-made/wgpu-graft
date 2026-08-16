@@ -70,6 +70,8 @@ pub fn import_dx12_shared_texture(
             &host.device,
             hal_texture,
             &desc,
+            // D3D12 shared resources are handed over in COMMON state.
+            wgpu::TextureUses::UNINITIALIZED,
         )
     };
 

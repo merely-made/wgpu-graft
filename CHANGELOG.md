@@ -32,10 +32,12 @@ crates.io, which has caught this repo before.
   default while the GUI ecosystem straddles majors: eframe 0.36 is on wgpu 30,
   bevy 0.19 and slint 1.17 on 29, iced git (0.15-dev) on 28. The only
   signature the majors disagree on is `Device::create_texture_from_hal`
-  (wgpu 30 adds an explicit tracker `initial_state`; 28/29 hardcoded
-  `UNINITIALIZED`), so all ten import call sites now route through one
-  `wgpu_compat::create_texture_from_hal` helper that passes UNINITIALIZED
-  explicitly on 30 — identical behavior, version split in one place.
+  (wgpu 30 adds an explicit tracker `initial_state`; 28/29 hardcode
+  `UNINITIALIZED`). Every import routes through one compatibility helper, but
+  wgpu 30's state is chosen at the import seam: Metal frames enter for shader
+  reads, DX12 shared resources enter in COMMON, and locally created Vulkan
+  images enter in UNDEFINED layout. That preserves the older rows' behavior
+  without claiming one initial state fits every backend.
 
 ### GUI framework updates
 
@@ -56,6 +58,10 @@ crates.io, which has caught this repo before.
 
 ### Fixed
 
+- `wgpu-28` on macOS now converts wgpu-hal 28's `metal-rs` device and
+  texture handles at the HAL boundary. The earlier 28/29/30 feature matrix
+  treated Metal 28 like 29, even though wgpu-hal did not move to
+  `objc2-metal` until 29, so the advertised macOS 28 row did not compile.
 - `vulkan_dmabuf::create_dmabuf_host_context` under `wgpu-28` on Linux never
   compiled: it called hal 29's four-argument `open_with_callback` (hal 28 has
   no `limits` parameter). No CI config ever combined wgpu-28 with the

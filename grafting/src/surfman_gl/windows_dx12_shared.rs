@@ -426,6 +426,8 @@ fn init_size_dependent_state(
                     | wgpu::TextureUsages::COPY_SRC,
                 view_formats: &[],
             },
+            // The D3D11/ANGLE share path opens this resource as D3D12 COMMON.
+            wgpu::TextureUses::UNINITIALIZED,
         );
 
         Ok(SizeDependentState {
