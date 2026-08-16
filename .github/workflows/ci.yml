@@ -41,8 +41,14 @@ jobs:
 
       # --- Core library ---
 
-      - name: cargo check (no-default-features)
+      - name: cargo check (wgpu 28)
+        run: cargo check -p grafting --no-default-features --features wgpu-28
+
+      - name: cargo check (wgpu 29)
         run: cargo check -p grafting --no-default-features --features wgpu-29
+
+      - name: cargo check (wgpu 30)
+        run: cargo check -p grafting --no-default-features --features wgpu-30
 
       - name: cargo check (all features)
         run: cargo check -p grafting --all-features
@@ -118,8 +124,14 @@ jobs:
 
       # --- Core library (Metal + IOSurface path) ---
 
-      - name: cargo check (no-default-features)
+      - name: cargo check (wgpu 28)
+        run: cargo check -p grafting --no-default-features --features wgpu-28
+
+      - name: cargo check (wgpu 29)
         run: cargo check -p grafting --no-default-features --features wgpu-29
+
+      - name: cargo check (wgpu 30)
+        run: cargo check -p grafting --no-default-features --features wgpu-30
 
       - name: cargo check (all features)
         run: cargo check -p grafting --all-features
@@ -186,8 +198,14 @@ jobs:
 
       # --- Core library (Windows Vulkan + D3D11/D3D12 paths) ---
 
-      - name: cargo check (no-default-features)
+      - name: cargo check (wgpu 28)
+        run: cargo check -p grafting --no-default-features --features wgpu-28
+
+      - name: cargo check (wgpu 29)
         run: cargo check -p grafting --no-default-features --features wgpu-29
+
+      - name: cargo check (wgpu 30)
+        run: cargo check -p grafting --no-default-features --features wgpu-30
 
       - name: cargo check (all features)
         run: cargo check -p grafting --all-features

@@ -362,6 +362,10 @@ pub struct MetalTextureRef {
 /// `ID3D12Resource`. The importer opens its own D3D12 reference via
 /// `ID3D12Device::OpenSharedHandle`; **you are responsible for closing your
 /// copy** of the handle after constructing this struct.
+///
+/// A D3D12 producer must leave the resource in `D3D12_RESOURCE_STATE_COMMON`
+/// before signalling `producer_sync`. That is the state this interop contract
+/// imports into wgpu.
 #[derive(Clone, Copy, Debug)]
 pub struct Dx12SharedTexture {
     pub size: PhysicalSize<u32>,

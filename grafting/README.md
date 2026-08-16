@@ -52,6 +52,9 @@ grafting = { version = "0.5", default-features = false, features = ["wgpu-28", "
 # Shared-texture import only (DX12 / Metal / Vulkan DMABUF). No GL, no
 # surfman, no glow. This is what wgpu-weld takes.
 grafting = { version = "0.5", default-features = false, features = ["wgpu-29"] }
+
+# Same shared-texture surface against wgpu 30.
+grafting = { version = "0.5", default-features = false, features = ["wgpu-30"] }
 ```
 
 ## License

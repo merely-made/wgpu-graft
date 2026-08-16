@@ -13,6 +13,13 @@ use objc2_metal::{
     MTLDevice, MTLPixelFormat, MTLTexture, MTLTextureDescriptor, MTLTextureType, MTLTextureUsage,
 };
 
+#[cfg(all(
+    feature = "wgpu-28",
+    not(feature = "wgpu-29"),
+    not(feature = "wgpu-30")
+))]
+use foreign_types_shared::ForeignType;
+
 use crate::InteropError;
 
 use super::texture_normalizer::ImportedTextureNormalizer;
@@ -60,6 +67,19 @@ impl MetalImporter {
                 },
             )?;
 
+            #[cfg(all(
+                feature = "wgpu-28",
+                not(feature = "wgpu-29"),
+                not(feature = "wgpu-30")
+            ))]
+            let device_raw = Retained::retain(
+                metal_device
+                    .raw_device()
+                    .as_ptr()
+                    .cast::<ProtocolObject<dyn MTLDevice>>(),
+            )
+            .ok_or_else(|| InteropError::Metal("failed to retain Metal device".into()))?;
+            #[cfg(any(feature = "wgpu-29", feature = "wgpu-30"))]
             let device_raw = metal_device.raw_device().clone();
 
             let descriptor = MTLTextureDescriptor::new();
@@ -105,7 +125,7 @@ impl MetalImporter {
                 copy_size,
                 None, // drop_callback
             );
-            #[cfg(not(feature = "wgpu-30"))]
+            #[cfg(all(feature = "wgpu-29", not(feature = "wgpu-30")))]
             let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
                 metal_texture,
                 wgpu::TextureFormat::Bgra8Unorm,
@@ -114,10 +134,23 @@ impl MetalImporter {
                 1,
                 copy_size,
             );
+            #[cfg(all(
+                feature = "wgpu-28",
+                not(feature = "wgpu-29"),
+                not(feature = "wgpu-30")
+            ))]
+            let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
+                metal::Texture::from_ptr(Retained::into_raw(metal_texture).cast()),
+                wgpu::TextureFormat::Bgra8Unorm,
+                metal::MTLTextureType::D2,
+                1,
+                1,
+                copy_size,
+            );
 
             Ok(
                 crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Metal>(
-                &wgpu_device,
+                    wgpu_device,
                     hal_texture,
                     &wgpu::TextureDescriptor {
                         label: Some("iosurface-metal-import"),
@@ -134,6 +167,7 @@ impl MetalImporter {
                             | wgpu::TextureUsages::RENDER_ATTACHMENT,
                         view_formats: &[],
                     },
+                    wgpu::TextureUses::RESOURCE,
                 ),
             )
         }

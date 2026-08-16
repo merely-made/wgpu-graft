@@ -154,6 +154,8 @@ pub(crate) fn import_vulkan_external_image(
                     usage: wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::COPY_SRC,
                     view_formats: &[],
                 },
+                // The locally created image has not left UNDEFINED layout.
+                wgpu::TextureUses::UNINITIALIZED,
             );
 
         Ok(imported)

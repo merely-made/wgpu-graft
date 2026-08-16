@@ -236,6 +236,8 @@ pub fn import_gl_framebuffer_dx12(
                     | wgpu::TextureUsages::COPY_SRC,
                 view_formats: &[],
             },
+            // This shareable D3D12 texture is created in COMMON state.
+            wgpu::TextureUses::UNINITIALIZED,
         );
 
         Ok(imported)

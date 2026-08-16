@@ -237,6 +237,8 @@ pub fn import_gl_framebuffer_vulkan(
                         | wgpu::TextureUsages::RENDER_ATTACHMENT,
                     view_formats: &[],
                 },
+                // The imported Vulkan image was created in UNDEFINED layout.
+                wgpu::TextureUses::UNINITIALIZED,
             );
 
         Ok(imported)
