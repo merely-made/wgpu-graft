@@ -92,9 +92,6 @@ jobs:
       - name: cargo check demo-servo-xilem
         run: cargo check --locked -p demo-servo-xilem
 
-      - name: cargo check demo-servo-iced
-        run: cargo check --locked --manifest-path demo-servo-iced/Cargo.toml
-
       - name: cargo check demo-servo-gpui
         run: cargo check --locked -p demo-servo-gpui
 
@@ -148,9 +145,6 @@ jobs:
 
       - name: cargo check demo-servo-xilem
         run: cargo check --locked -p demo-servo-xilem
-
-      - name: cargo check demo-servo-iced
-        run: cargo check --locked --manifest-path demo-servo-iced/Cargo.toml
 
       - name: cargo check demo-servo-gpui
         run: cargo check --locked -p demo-servo-gpui
@@ -224,6 +218,8 @@ jobs:
       - name: cargo check demo-servo-xilem
         run: cargo check --locked -p demo-servo-xilem
 
+      # This demo deliberately exercises DX12 shared NT handles and is
+      # therefore a Windows-only contract.
       - name: cargo check demo-servo-iced
         run: cargo check --locked --manifest-path demo-servo-iced/Cargo.toml
 

@@ -23,8 +23,6 @@ iced = { git = "https://github.com/iced-rs/iced", rev = "4255f613", default-feat
     "tiny-skia",
     "tokio",
     "image",
-    "x11",
-    "wayland",
 ] }
 servo = { git = "https://github.com/servo/servo", branch = "release/v0.4" }
 rustls = "0.23.37"
