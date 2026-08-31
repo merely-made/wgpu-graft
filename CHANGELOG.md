@@ -9,6 +9,9 @@ All notable changes to this project will be documented here.
 - Make DMABUF fd ownership explicit and failure-safe, support same-buffer
   multi-plane layouts, intersect image and fd memory-type masks, and acquire
   producer images from `VK_QUEUE_FAMILY_FOREIGN_EXT` on the wgpu 30 path.
+- Require and enable `VK_EXT_queue_family_foreign` in the DMABUF host helper;
+  ordinary wgpu devices now report the path unavailable instead of issuing an
+  invalid foreign-family barrier.
 - Promote every Servo demo check on Linux, macOS, and Windows from advisory to
   required after the full matrix passed on all three hosted runners.
 

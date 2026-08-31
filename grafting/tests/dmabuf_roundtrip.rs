@@ -13,6 +13,7 @@
 //!   - A Vulkan-capable wgpu adapter
 //!   - `VK_EXT_image_drm_format_modifier` (Mesa exposes this; not all CI VMs do)
 //!   - `VK_EXT_external_memory_dma_buf`
+//!   - `VK_EXT_queue_family_foreign`
 //!
 //! Run with: `cargo test --test dmabuf_roundtrip -- --ignored --nocapture`
 
@@ -99,6 +100,7 @@ fn setup_vulkan_host() -> HostWgpuContext {
             power_preference: wgpu::PowerPreference::HighPerformance,
             force_fallback_adapter: false,
             compatible_surface: None,
+            ..Default::default()
         })
         .block_on()
         .expect("no Vulkan adapter available");
@@ -403,6 +405,11 @@ fn readback_rgba(
         .expect("poll");
     rx.recv().expect("recv map_async").expect("map_async error");
 
+    #[cfg(feature = "wgpu-30")]
+    let data = slice
+        .get_mapped_range()
+        .expect("get_mapped_range failed");
+    #[cfg(not(feature = "wgpu-30"))]
     let data = slice.get_mapped_range();
     let mut out = Vec::with_capacity((unpadded_bpr * height) as usize);
     for row in 0..height as usize {

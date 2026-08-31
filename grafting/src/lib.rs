@@ -192,8 +192,8 @@ pub struct HostWgpuContext {
     /// The graphics backend detected on `device` at construction time.
     pub backend: InteropBackend,
     /// Whether `device` was constructed with the Vulkan extensions required
-    /// for the DMABUF import path (`VK_EXT_image_drm_format_modifier`,
-    /// `VK_EXT_external_memory_dma_buf`, `VK_KHR_external_memory_fd`).
+    /// for the base DMABUF import path (`VK_EXT_image_drm_format_modifier`,
+    /// `VK_EXT_external_memory_dma_buf`, and `VK_KHR_external_memory_fd`).
     /// Linux-only; always `false` on other platforms or non-Vulkan backends.
     ///
     /// Detected automatically by [`HostWgpuContext::new`] by inspecting the
@@ -969,8 +969,9 @@ fn detect_backend(device: &wgpu::Device) -> InteropBackend {
     InteropBackend::Unknown
 }
 
-/// Whether `device` has the Vulkan extensions needed for the DMABUF import
-/// path (`VK_EXT_image_drm_format_modifier`) enabled.
+/// Whether `device` has the base Vulkan device extensions needed to create and
+/// bind a DMABUF-backed image. Foreign ownership is checked separately when
+/// an imported frame requests it.
 ///
 /// Returns `false` on non-Linux or non-Vulkan backends.
 fn detect_dmabuf_support(
@@ -986,9 +987,10 @@ fn detect_dmabuf_support(
             let Some(hal_device) = device.as_hal::<wgpu::wgc::api::Vulkan>() else {
                 return false;
             };
-            hal_device
-                .enabled_device_extensions()
-                .contains(&ash::ext::image_drm_format_modifier::NAME)
+            let enabled = hal_device.enabled_device_extensions();
+            crate::vulkan_dmabuf::base_dmabuf_device_extensions()
+                .iter()
+                .all(|extension| enabled.contains(extension))
         }
     }
     #[cfg(not(target_os = "linux"))]

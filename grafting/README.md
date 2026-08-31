@@ -34,7 +34,9 @@ A "producer" (Servo, a GL renderer, a video decoder, etc.) renders into a native
 - `raw_gl` — surfman-independent GL import functions. Use `RawGlFrameProducer` for any GL application without bringing surfman as a dependency (set `default-features = false`).
 - `surfman_gl` — surfman-backed frame producer (enabled by default via the `surfman` feature).
 - `vulkan_dmabuf` — owned DMABUF import, including explicit DRM modifiers,
-  same-buffer multi-plane layouts, and foreign-queue acquisition (Linux).
+  same-buffer multi-plane layouts, and foreign-queue acquisition (Linux). Use
+  `create_dmabuf_host_context` when constructing the app's unified wgpu device;
+  a default device does not enable `VK_EXT_queue_family_foreign`.
 
 ## Usage
 
