@@ -46,6 +46,9 @@ pub mod vulkan_dmabuf;
 #[cfg(target_vendor = "apple")]
 mod metal_texture_ref;
 
+#[cfg(target_vendor = "apple")]
+pub use metal_texture_ref::import_metal_texture_ref;
+
 #[cfg(target_os = "windows")]
 mod dx12_shared_texture;
 
@@ -341,7 +344,7 @@ pub struct VulkanExternalImage {
 ///
 /// The producer is responsible for ensuring the texture remains valid for the
 /// duration of the import call. Ownership is **not** transferred; the importer
-/// wraps the texture without retaining it via Objective-C ARC.
+/// takes its own Objective-C retain before handing the texture to wgpu.
 #[derive(Clone, Copy, Debug)]
 pub struct MetalTextureRef {
     pub size: PhysicalSize<u32>,
@@ -350,8 +353,8 @@ pub struct MetalTextureRef {
     pub producer_sync: SyncMechanism,
     /// Raw `MTLTexture *` pointer. Must be non-null. Apple platforms only.
     ///
-    /// The caller retains ownership and must ensure the texture outlives this
-    /// struct. The importer does not call `retain` or `release` on the pointer.
+    /// The caller retains ownership and must ensure the texture is alive when
+    /// import begins. The importer takes an independent retain for wgpu.
     #[cfg(target_vendor = "apple")]
     pub raw_metal_texture: *mut std::ffi::c_void,
 }
@@ -721,7 +724,7 @@ impl TextureImporter for WgpuTextureImporter {
             NativeFrame::VulkanExternalImage(frame) => {
                 import_vulkan_external_image(frame, &self.host)
             }
-            NativeFrame::MetalTextureRef(frame) => import_metal_texture_ref(frame, &self.host),
+            NativeFrame::MetalTextureRef(frame) => import_metal_frame(frame, &self.host),
             NativeFrame::Dx12SharedTexture(frame) => import_dx12_shared_frame(frame, &self.host),
         }?;
 
@@ -875,7 +878,7 @@ fn import_vulkan_external_image(
     ))
 }
 
-fn import_metal_texture_ref(
+fn import_metal_frame(
     #[cfg_attr(not(target_vendor = "apple"), allow(unused_variables))] frame: &MetalTextureRef,
     #[cfg_attr(not(target_vendor = "apple"), allow(unused_variables))] host: &HostWgpuContext,
 ) -> Result<ImportedTexture, InteropError> {

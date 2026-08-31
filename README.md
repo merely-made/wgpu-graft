@@ -20,8 +20,8 @@ GUI frameworks. Derived from the
   Bevy, Xilem, GPUI) plus a Servo-free GL demo. Seven frameworks confirmed
   zero-copy on Windows; the full suite runs on Linux (Fedora 44 / Vulkan).
   Xilem and GPUI use CPU readback.
-- Consumed by siblings: wgpu-weld's Windows import path delegates to
-  `grafting`; wgpu-scry was extracted from this repo.
+- Consumed by siblings: wgpu-weld and wgpu-scry delegate their native
+  Metal/Vulkan import boundaries to `grafting`; producer policy stays local.
 - `main` is the one supported repository line. A weekly workflow keeps its
   Servo pin on the newest tagged release line. The unused `latest-release`
   and `experimental` lines were retired on 2026-08-30; their last reachable

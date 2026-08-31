@@ -75,8 +75,8 @@ jobs:
       #
       # These require native build deps that mozangle (ANGLE) needs on Linux:
       #   clang, cmake, libssl-dev, pkg-config
-      # They run with continue-on-error so a build-env gap doesn't block CI,
-      # but failures are still visible in the Actions summary.
+      # These are required checks. The native dependency setup below is part of
+      # the demo contract, so a demo regression must fail the workflow.
 
       - name: Install Servo build deps (Linux)
         run: |
@@ -88,19 +88,15 @@ jobs:
 
       - name: cargo check demo-servo-winit
         run: cargo check -p demo-servo-winit
-        continue-on-error: true
 
       - name: cargo check demo-servo-xilem
         run: cargo check -p demo-servo-xilem
-        continue-on-error: true
 
       - name: cargo check demo-servo-iced
         run: cargo check --manifest-path demo-servo-iced/Cargo.toml
-        continue-on-error: true
 
       - name: cargo check demo-servo-gpui
         run: cargo check -p demo-servo-gpui
-        continue-on-error: true
 
   # ── macOS ──────────────────────────────────────────────────────────────────
   check-macos:
@@ -141,27 +137,23 @@ jobs:
 
       # --- Servo demos ---
       #
-      # Servo on macOS requires cmake and pkg-config (via Homebrew).
-      # continue-on-error so a missing dep doesn't block the core-library check.
+      # Servo on macOS requires cmake and pkg-config (via Homebrew). The demos
+      # are required checks once those build dependencies are installed.
 
       - name: Install Servo build deps (macOS)
         run: brew install cmake pkg-config
 
       - name: cargo check demo-servo-winit
         run: cargo check -p demo-servo-winit
-        continue-on-error: true
 
       - name: cargo check demo-servo-xilem
         run: cargo check -p demo-servo-xilem
-        continue-on-error: true
 
       - name: cargo check demo-servo-iced
         run: cargo check --manifest-path demo-servo-iced/Cargo.toml
-        continue-on-error: true
 
       - name: cargo check demo-servo-gpui
         run: cargo check -p demo-servo-gpui
-        continue-on-error: true
 
   # ── Windows ────────────────────────────────────────────────────────────────
   check-windows:
@@ -228,16 +220,12 @@ jobs:
 
       - name: cargo check demo-servo-winit
         run: cargo check -p demo-servo-winit
-        continue-on-error: true
 
       - name: cargo check demo-servo-xilem
         run: cargo check -p demo-servo-xilem
-        continue-on-error: true
 
       - name: cargo check demo-servo-iced
         run: cargo check --manifest-path demo-servo-iced/Cargo.toml
-        continue-on-error: true
 
       - name: cargo check demo-servo-gpui
         run: cargo check -p demo-servo-gpui
-        continue-on-error: true
