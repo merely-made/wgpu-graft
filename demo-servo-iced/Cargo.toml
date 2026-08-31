@@ -5,6 +5,12 @@ edition = "2024"
 license = "MPL-2.0"
 description = "Demo embedding Servo in an iced UI, zero-copy via D3D12 shared-handle import (CPU readback feature-gated)"
 
+# This demo is intentionally its own workspace. iced 0.15-dev pins web-sys
+# exactly to 0.3.85, which cannot share the root lockfile with wgpu 30.0.1's
+# web-sys 0.3.104. The demo itself stays on the wgpu-28 interop row.
+[workspace]
+resolver = "3"
+
 [dependencies]
 demo-support = { path = "../demo-support" }
 euclid = "0.22.11"

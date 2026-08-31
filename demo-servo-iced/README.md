@@ -50,15 +50,20 @@ The shared handle is a D3D12 resource, so this demo is Windows + DX12.
 ## Build note
 
 Because iced here is on wgpu 28 while the winit/egui demos are on wgpu 29, the
-two wgpu versions can't coexist in a single `cargo build --workspace`. Build
-demos individually: `cargo run -p demo-servo-iced`.
+iced's exact `web-sys` pin cannot share the root lockfile with wgpu 30.0.1.
+This demo is therefore an adjacent workspace on the wgpu-28 row. Build it
+through its manifest:
+
+```sh
+cargo run --manifest-path demo-servo-iced/Cargo.toml
+```
 
 ## Usage
 
 ```sh
-cargo run -p demo-servo-iced                         # built-in animated fixture
-cargo run -p demo-servo-iced -- https://example.com  # load a URL
-cargo run -p demo-servo-iced -- servo.org            # auto-prefixes https://
+cargo run --manifest-path demo-servo-iced/Cargo.toml                         # built-in animated fixture
+cargo run --manifest-path demo-servo-iced/Cargo.toml -- https://example.com  # load a URL
+cargo run --manifest-path demo-servo-iced/Cargo.toml -- servo.org            # auto-prefixes https://
 ```
 
 ## License

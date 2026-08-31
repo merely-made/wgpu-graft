@@ -1,11 +1,11 @@
 name: Sync Servo Line
 
-# The three branch syncs (main, latest-release, experimental) differ only in
-# which Servo line they follow and which branch they push, so the body lives
-# here once. The previous three copies each carried their own inline pin
-# rewriter and their own hardcoded manifest list; the copies drifted, the lists
-# never grew past the first five crates, and every scheduled run failed from
-# May 2026 onward. See scripts/set_servo_pin.py for the failure in detail.
+# The supported `main` line follows Servo's newest tagged release. The body
+# stays reusable so a maintainer can deliberately add another line later
+# without copying the pinning logic. The previous wrappers each carried their
+# own inline pin rewriter and their own hardcoded manifest list; the copies
+# drifted, the lists never grew past the first five crates, and every scheduled
+# run failed from May 2026 onward. See scripts/set_servo_pin.py for detail.
 
 on:
   workflow_call:
@@ -60,9 +60,8 @@ jobs:
             sync-
 
       # Scheduled runs check out the default branch, and the next step switches
-      # the working tree to the branch being synced. Copy the tooling out first
-      # so every branch is synced by main's copy of it, rather than by whatever
-      # stale copy that branch happens to carry.
+      # the working tree to the requested branch. Copy the tooling out first so
+      # the run always uses main's current scripts.
       - name: Stage sync tooling
         run: cp scripts/servo_lines.py scripts/set_servo_pin.py "$RUNNER_TEMP/"
 

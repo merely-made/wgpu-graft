@@ -1,4 +1,9 @@
-# TODO (macOS only): Metal objc2 arm for the wgpu-29 build
+# Metal compatibility arm across wgpu 28/29/30
+
+> **Status (2026-08-30): complete.** Commit `e3e8d9a` isolated the wgpu-hal 28
+> `metal-rs` boundary from the 29/30 `objc2-metal` boundary. `grafting` 0.5.1
+> is the first published crate containing the completed three-row Metal path.
+> The original TODO is retained below as its implementation record.
 
 **Do this on the iMac.** It cannot be written or verified on Windows/Linux:
 the code is `cfg(target_vendor = "apple")` and the wgpu-29 path uses objc2-metal

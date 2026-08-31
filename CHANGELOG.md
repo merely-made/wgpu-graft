@@ -4,10 +4,28 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
-Targets `grafting` 0.5.0, not 0.4.1: surfman is a public dependency of the
-`gl` / `surfman` paths, and its major moved. The version is bumped here rather
-than at publish time so `main` never claims to be the 0.4.0 that is already on
-crates.io, which has caught this repo before.
+## [0.5.1] - 2026-08-30
+
+- Complete the advertised wgpu-28 Metal row by converting wgpu-hal 28's
+  `metal-rs` handles at the HAL boundary while retaining the objc2-shaped
+  public API used by the 29/30 rows.
+- Give wgpu 30 imports backend-correct initial tracker states: shader reads for
+  Metal, COMMON for shared DX12 resources, and UNDEFINED for locally created
+  Vulkan images.
+- Require wgpu/wgpu-hal 30.0.1 on the newest feature row. Repository CI and
+  consumers now exercise the Vulkan and Metal fixes in that patch rather than
+  remaining locked to 30.0.0.
+- Give the Iced/wgpu-28 demo its own adjacent workspace and lockfile. Iced's
+  exact web-sys 0.3.85 pin can then coexist with wgpu 30.0.1's web-sys 0.3.104
+  requirement without holding back the core workspace lock.
+- Retire the unused `latest-release` and `experimental` branches and their
+  scheduled workflows. Their last reachable tips held no commits absent from
+  `main`; the supported main line keeps its tagged-Servo-release sync.
+
+## [0.5.0] - 2026-08-12
+
+Moved to 0.5.0 rather than 0.4.1 because surfman is a public dependency of the
+`gl` / `surfman` paths and its major moved.
 
 ### Servo
 
@@ -33,11 +51,8 @@ crates.io, which has caught this repo before.
   bevy 0.19 and slint 1.17 on 29, iced git (0.15-dev) on 28. The only
   signature the majors disagree on is `Device::create_texture_from_hal`
   (wgpu 30 adds an explicit tracker `initial_state`; 28/29 hardcode
-  `UNINITIALIZED`). Every import routes through one compatibility helper, but
-  wgpu 30's state is chosen at the import seam: Metal frames enter for shader
-  reads, DX12 shared resources enter in COMMON, and locally created Vulkan
-  images enter in UNDEFINED layout. That preserves the older rows' behavior
-  without claiming one initial state fits every backend.
+  `UNINITIALIZED`), so all ten import call sites route through one
+  compatibility helper that passes UNINITIALIZED explicitly on 30.
 
 ### GUI framework updates
 
@@ -58,10 +73,6 @@ crates.io, which has caught this repo before.
 
 ### Fixed
 
-- `wgpu-28` on macOS now converts wgpu-hal 28's `metal-rs` device and
-  texture handles at the HAL boundary. The earlier 28/29/30 feature matrix
-  treated Metal 28 like 29, even though wgpu-hal did not move to
-  `objc2-metal` until 29, so the advertised macOS 28 row did not compile.
 - `vulkan_dmabuf::create_dmabuf_host_context` under `wgpu-28` on Linux never
   compiled: it called hal 29's four-argument `open_with_callback` (hal 28 has
   no `limits` parameter). No CI config ever combined wgpu-28 with the

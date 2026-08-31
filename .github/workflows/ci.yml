@@ -95,7 +95,7 @@ jobs:
         continue-on-error: true
 
       - name: cargo check demo-servo-iced
-        run: cargo check -p demo-servo-iced
+        run: cargo check --manifest-path demo-servo-iced/Cargo.toml
         continue-on-error: true
 
       - name: cargo check demo-servo-gpui
@@ -156,7 +156,7 @@ jobs:
         continue-on-error: true
 
       - name: cargo check demo-servo-iced
-        run: cargo check -p demo-servo-iced
+        run: cargo check --manifest-path demo-servo-iced/Cargo.toml
         continue-on-error: true
 
       - name: cargo check demo-servo-gpui
@@ -235,7 +235,7 @@ jobs:
         continue-on-error: true
 
       - name: cargo check demo-servo-iced
-        run: cargo check -p demo-servo-iced
+        run: cargo check --manifest-path demo-servo-iced/Cargo.toml
         continue-on-error: true
 
       - name: cargo check demo-servo-gpui
