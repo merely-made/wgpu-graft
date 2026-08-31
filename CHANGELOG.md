@@ -12,9 +12,10 @@ All notable changes to this project will be documented here.
 - Give wgpu 30 imports backend-correct initial tracker states: shader reads for
   Metal, COMMON for shared DX12 resources, and UNDEFINED for locally created
   Vulkan images.
-- Require wgpu/wgpu-hal 30.0.1 on the newest feature row. Repository CI and
-  consumers now exercise the Vulkan and Metal fixes in that patch rather than
-  remaining locked to 30.0.0.
+- Require wgpu/wgpu-hal 30.0.1 on the newest feature row and lock the complete
+  wgpu 30 crate family to 30.0.1. Repository CI and consumers now exercise the
+  Vulkan and Metal fixes in that patch rather than retaining 30.0.0 support
+  crates beneath the 30.0.1 facade.
 - Give the Iced/wgpu-28 demo its own adjacent workspace and lockfile. Iced's
   exact web-sys 0.3.85 pin can then coexist with wgpu 30.0.1's web-sys 0.3.104
   requirement without holding back the core workspace lock.

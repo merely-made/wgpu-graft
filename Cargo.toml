@@ -21,6 +21,13 @@ members = [
 exclude = ["demo-servo-iced", "patches/glass-gpui"]
 resolver = "3"
 
+# Lockfile invariant for the wgpu-30 Windows row: gpu-allocator 0.28 accepts
+# any windows crate from 0.53 through 0.62, but wgpu-hal 30.0.1 uses 0.62 types
+# in the same D3D12 calls. Keep gpu-allocator's Cargo.lock edge on windows
+# 0.62.2; resolving that edge onto an older copy fails inside wgpu-hal with
+# mismatched ID3D12Device / ID3D12Heap types. The Windows wgpu-30 CI row is the
+# executable guard for this constraint.
+
 # gpui: switched from Zed's published `gpui = 0.2.2` (October 2025, blade
 # renderer pulling naga 25 → naga unification break) to the glass-hq fork
 # which uses wgpu 29 + naga 29 directly (no blade dep, no naga conflict).
