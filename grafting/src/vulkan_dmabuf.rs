@@ -132,6 +132,21 @@ fn planes_share_kernel_object(planes: &[VulkanDmaBufPlane]) -> bool {
         .all(|plane| fd_identity(plane.fd) == Some(first))
 }
 
+fn validate_plane_layout(planes: &[VulkanDmaBufPlane]) -> Result<(), InteropError> {
+    if planes.is_empty() {
+        return Err(InteropError::InvalidFrame("DMABUF has no planes"));
+    }
+    if planes.iter().any(|plane| plane.fd < 0) {
+        return Err(InteropError::InvalidFrame("DMABUF plane fd is negative"));
+    }
+    if !planes_share_kernel_object(planes) {
+        return Err(InteropError::Unsupported(
+            UnsupportedReason::VulkanDisjointDmabufNotSupported,
+        ));
+    }
+    Ok(())
+}
+
 fn map_format(format: wgpu::TextureFormat) -> Result<vk::Format, InteropError> {
     match format {
         wgpu::TextureFormat::Rgba8Unorm => Ok(vk::Format::R8G8B8A8_UNORM),
@@ -198,17 +213,7 @@ pub fn import_dmabuf(
     if frame.size.width == 0 || frame.size.height == 0 {
         return Err(InteropError::InvalidFrame("DMABUF dimensions are zero"));
     }
-    if frame.planes.is_empty() {
-        return Err(InteropError::InvalidFrame("DMABUF has no planes"));
-    }
-    if frame.planes.iter().any(|plane| plane.fd < 0) {
-        return Err(InteropError::InvalidFrame("DMABUF plane fd is negative"));
-    }
-    if !planes_share_kernel_object(&frame.planes) {
-        return Err(InteropError::Unsupported(
-            UnsupportedReason::NativeImportNotYetImplemented,
-        ));
-    }
+    validate_plane_layout(&frame.planes)?;
 
     #[cfg(not(feature = "wgpu-30"))]
     if frame.queue_ownership == VulkanDmaBufQueueOwnership::Foreign {
@@ -646,6 +651,25 @@ mod tests {
         assert!(!planes_share_kernel_object(&[plane(first), plane(second)]));
         unsafe { libc::close(first) };
         unsafe { libc::close(second) };
+    }
+
+    #[test]
+    fn disjoint_plane_layout_has_a_specific_error_and_closes_every_fd() {
+        let first = open_pipe_read_fd();
+        let second = open_pipe_read_fd();
+        let planes = [plane(first), plane(second)];
+        let guard = PlaneFdGuard::new(&planes);
+
+        assert!(matches!(
+            validate_plane_layout(&planes),
+            Err(InteropError::Unsupported(
+                UnsupportedReason::VulkanDisjointDmabufNotSupported
+            ))
+        ));
+
+        drop(guard);
+        assert_eq!(unsafe { libc::fcntl(first, libc::F_GETFD) }, -1);
+        assert_eq!(unsafe { libc::fcntl(second, libc::F_GETFD) }, -1);
     }
 
     #[test]

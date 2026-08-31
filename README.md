@@ -10,10 +10,10 @@ GUI frameworks. Derived from the
 
 ## Status (2026-08-31)
 
-- `grafting` 0.5.1 is the published baseline. It carries feature-selected
-  wgpu 28/29/30, including the corrected wgpu-28 Metal arm, and requires
-  wgpu 30.0.1 for the newest row. wgpu 29 remains the default while the GUI
-  ecosystem straddles majors.
+- `grafting` 0.5.1 is the published baseline; `main` is the 0.6.0 compatibility
+  revision. It makes borrowed Metal frame descriptors move-only and carries
+  feature-selected wgpu 28/29/30, including the corrected wgpu-28 Metal arm.
+  wgpu 29 remains the default while the GUI ecosystem straddles majors.
 - Servo demos track Servo `release/v0.4` (tag v0.4.0); no local Servo
   checkout is needed.
 - Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,
@@ -25,6 +25,9 @@ GUI frameworks. Derived from the
 - Linux foreign-image consumers construct the unified host device through
   `vulkan_dmabuf::create_dmabuf_host_context`, which enables the complete
   external-memory, DRM-modifier, and foreign-queue extension set.
+- A trusted RADV runner executes RGBA and BGRA DMA-BUF pixel round trips.
+  Shared-allocation multi-plane layouts are supported; disjoint plane
+  allocations return a specific typed error and close every transferred fd.
 - `main` is the one supported repository line. A weekly workflow keeps its
   Servo pin on the newest tagged release line. The unused `latest-release`
   and `experimental` lines were retired on 2026-08-30; their last reachable

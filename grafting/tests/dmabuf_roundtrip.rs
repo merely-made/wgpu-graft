@@ -24,6 +24,9 @@ use dpi::PhysicalSize;
 // Via grafting's re-export, not a `wgpu` dev-dependency: an integration test is
 // its own crate and cannot see the crate-internal `wgpu` alias, and pulling wgpu
 // in separately could resolve a different major than grafting was built with.
+use grafting::vulkan_dmabuf::{
+    VulkanDmaBufImport, VulkanDmaBufPlane, VulkanDmaBufQueueOwnership, import_dmabuf,
+};
 use grafting::wgpu;
 use grafting::{
     CapabilityStatus, HostWgpuContext, ImportOptions, InteropBackend, NativeFrame, SyncMechanism,
@@ -34,8 +37,10 @@ use pollster::FutureExt;
 const WIDTH: u32 = 64;
 const HEIGHT: u32 = 64;
 const CLEAR_FLOAT: [f32; 4] = [1.0, 0.0, 0.5, 1.0];
-const CLEAR_BYTES: [u8; 4] = [255, 0, 128, 255];
+const RGBA_CLEAR_BYTES: [u8; 4] = [255, 0, 128, 255];
+const BGRA_CLEAR_BYTES: [u8; 4] = [128, 0, 255, 255];
 const DRM_FORMAT_MOD_LINEAR: u64 = 0;
+const DRM_FORMAT_ARGB8888: u32 = 0x3432_5241;
 
 #[test]
 #[ignore = "requires VK_EXT_image_drm_format_modifier; run manually with --ignored"]
@@ -49,7 +54,15 @@ fn dmabuf_clear_roundtrip() {
     let readback_device = host.device.clone();
     let readback_queue = host.queue.clone();
 
-    let exported = unsafe { allocate_clear_and_export(&host, WIDTH, HEIGHT, CLEAR_FLOAT) };
+    let exported = unsafe {
+        allocate_clear_and_export(
+            &host,
+            WIDTH,
+            HEIGHT,
+            CLEAR_FLOAT,
+            vk::Format::R8G8B8A8_UNORM,
+        )
+    };
 
     let frame = VulkanExternalImage {
         size: PhysicalSize::new(WIDTH, HEIGHT),
@@ -79,16 +92,54 @@ fn dmabuf_clear_roundtrip() {
         HEIGHT,
     );
 
-    for &(x, y) in &[(0, 0), (WIDTH / 2, HEIGHT / 2), (WIDTH - 1, HEIGHT - 1)] {
-        let i = ((y * WIDTH + x) * 4) as usize;
-        let actual = &pixels[i..i + 4];
-        assert_eq!(actual, &CLEAR_BYTES, "pixel ({x}, {y}) mismatch");
-    }
+    assert_all_pixels(&pixels, RGBA_CLEAR_BYTES);
 
     // Producer-side resources are released here; the consumer's imported
     // wgpu texture retains its own VkImage/VkDeviceMemory bound to the
     // imported dmabuf, which the kernel keeps alive via the dup'd fd.
     drop(exported);
+}
+
+#[test]
+#[ignore = "requires VK_EXT_image_drm_format_modifier; run manually with --ignored"]
+fn bgra_dmabuf_clear_roundtrip() {
+    let host = setup_vulkan_host();
+    let exported = unsafe {
+        allocate_clear_and_export(
+            &host,
+            WIDTH,
+            HEIGHT,
+            CLEAR_FLOAT,
+            vk::Format::B8G8R8A8_UNORM,
+        )
+    };
+
+    let texture = import_dmabuf(
+        VulkanDmaBufImport {
+            size: PhysicalSize::new(WIDTH, HEIGHT),
+            format: wgpu::TextureFormat::Bgra8Unorm,
+            drm_format: DRM_FORMAT_ARGB8888,
+            drm_modifier: exported.modifier,
+            planes: vec![VulkanDmaBufPlane {
+                fd: exported.fd,
+                offset: exported.offset,
+                stride: exported.row_pitch,
+            }],
+            queue_ownership: VulkanDmaBufQueueOwnership::LocalUninitialized,
+        },
+        &host,
+    )
+    .expect("import BGRA DMABUF");
+
+    let pixels = readback_rgba(&host.device, &host.queue, &texture, WIDTH, HEIGHT);
+    assert_all_pixels(&pixels, BGRA_CLEAR_BYTES);
+    drop(exported);
+}
+
+fn assert_all_pixels(pixels: &[u8], expected: [u8; 4]) {
+    for (index, actual) in pixels.chunks_exact(4).enumerate() {
+        assert_eq!(actual, expected, "pixel {index} mismatch");
+    }
 }
 
 fn setup_vulkan_host() -> HostWgpuContext {
@@ -146,6 +197,7 @@ unsafe fn allocate_clear_and_export(
     width: u32,
     height: u32,
     color: [f32; 4],
+    format: vk::Format,
 ) -> ExportedDmabuf {
     let (vk_device, vk_instance, physical_device, queue_family) = unsafe {
         let hal_device = host
@@ -167,13 +219,13 @@ unsafe fn allocate_clear_and_export(
     };
 
     let modifiers = [DRM_FORMAT_MOD_LINEAR];
-    let mut modifier_list = vk::ImageDrmFormatModifierListCreateInfoEXT::default()
-        .drm_format_modifiers(&modifiers);
+    let mut modifier_list =
+        vk::ImageDrmFormatModifierListCreateInfoEXT::default().drm_format_modifiers(&modifiers);
     let mut external_mem_info = vk::ExternalMemoryImageCreateInfo::default()
         .handle_types(vk::ExternalMemoryHandleTypeFlags::DMA_BUF_EXT);
     let image_info = vk::ImageCreateInfo::default()
         .image_type(vk::ImageType::TYPE_2D)
-        .format(vk::Format::R8G8B8A8_UNORM)
+        .format(format)
         .extent(vk::Extent3D {
             width,
             height,
@@ -406,9 +458,7 @@ fn readback_rgba(
     rx.recv().expect("recv map_async").expect("map_async error");
 
     #[cfg(feature = "wgpu-30")]
-    let data = slice
-        .get_mapped_range()
-        .expect("get_mapped_range failed");
+    let data = slice.get_mapped_range().expect("get_mapped_range failed");
     #[cfg(not(feature = "wgpu-30"))]
     let data = slice.get_mapped_range();
     let mut out = Vec::with_capacity((unpadded_bpr * height) as usize);

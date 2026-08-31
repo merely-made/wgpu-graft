@@ -16,6 +16,10 @@ pub enum UnsupportedReason {
     /// A native frame variant (e.g. `VulkanExternalImage`) is defined in the
     /// API but the corresponding import logic is not yet implemented.
     NativeImportNotYetImplemented,
+    /// The DMABUF planes refer to independent kernel allocations. Graft
+    /// currently supports shared-fd multi-plane layouts; disjoint allocations
+    /// require Vulkan disjoint image binding and are rejected explicitly.
+    VulkanDisjointDmabufNotSupported,
     /// The wgpu Vulkan device was not constructed with the base DMABUF
     /// extension set enabled, including `VK_EXT_image_drm_format_modifier`,
     /// so external image creation would fail.
