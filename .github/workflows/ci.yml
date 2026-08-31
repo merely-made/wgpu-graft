@@ -42,19 +42,19 @@ jobs:
       # --- Core library ---
 
       - name: cargo check (wgpu 28)
-        run: cargo check -p grafting --no-default-features --features wgpu-28
+        run: cargo check --locked -p grafting --no-default-features --features wgpu-28
 
       - name: cargo check (wgpu 29)
-        run: cargo check -p grafting --no-default-features --features wgpu-29
+        run: cargo check --locked -p grafting --no-default-features --features wgpu-29
 
       - name: cargo check (wgpu 30)
-        run: cargo check -p grafting --no-default-features --features wgpu-30
+        run: cargo check --locked -p grafting --no-default-features --features wgpu-30
 
       - name: cargo check (all features)
-        run: cargo check -p grafting --all-features
+        run: cargo check --locked -p grafting --all-features
 
       - name: cargo test
-        run: cargo test -p grafting
+        run: cargo test --locked -p grafting
 
       # Default features on Linux, which is how docs.rs builds this crate and
       # the only configuration where raw_gl, surfman_gl, and vulkan_dmabuf all
@@ -62,14 +62,14 @@ jobs:
       # links into those modules unresolvable, so this step failed on all three
       # platforms; the Linux job is now the one that checks docs.
       - name: cargo doc
-        run: cargo doc -p grafting --no-deps
+        run: cargo doc --locked -p grafting --no-deps
         env:
           RUSTDOCFLAGS: -D warnings
 
       # --- Raw GL demo (no Servo dependency, no native build deps) ---
 
       - name: cargo check demo-raw-gl
-        run: cargo check -p demo-raw-gl
+        run: cargo check --locked -p demo-raw-gl
 
       # --- Servo demos ---
       #
@@ -87,16 +87,16 @@ jobs:
             libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
 
       - name: cargo check demo-servo-winit
-        run: cargo check -p demo-servo-winit
+        run: cargo check --locked -p demo-servo-winit
 
       - name: cargo check demo-servo-xilem
-        run: cargo check -p demo-servo-xilem
+        run: cargo check --locked -p demo-servo-xilem
 
       - name: cargo check demo-servo-iced
-        run: cargo check --manifest-path demo-servo-iced/Cargo.toml
+        run: cargo check --locked --manifest-path demo-servo-iced/Cargo.toml
 
       - name: cargo check demo-servo-gpui
-        run: cargo check -p demo-servo-gpui
+        run: cargo check --locked -p demo-servo-gpui
 
   # ── macOS ──────────────────────────────────────────────────────────────────
   check-macos:
@@ -121,19 +121,19 @@ jobs:
       # --- Core library (Metal + IOSurface path) ---
 
       - name: cargo check (wgpu 28)
-        run: cargo check -p grafting --no-default-features --features wgpu-28
+        run: cargo check --locked -p grafting --no-default-features --features wgpu-28
 
       - name: cargo check (wgpu 29)
-        run: cargo check -p grafting --no-default-features --features wgpu-29
+        run: cargo check --locked -p grafting --no-default-features --features wgpu-29
 
       - name: cargo check (wgpu 30)
-        run: cargo check -p grafting --no-default-features --features wgpu-30
+        run: cargo check --locked -p grafting --no-default-features --features wgpu-30
 
       - name: cargo check (all features)
-        run: cargo check -p grafting --all-features
+        run: cargo check --locked -p grafting --all-features
 
       - name: cargo test
-        run: cargo test -p grafting
+        run: cargo test --locked -p grafting
 
       # --- Servo demos ---
       #
@@ -144,16 +144,16 @@ jobs:
         run: brew install cmake pkg-config
 
       - name: cargo check demo-servo-winit
-        run: cargo check -p demo-servo-winit
+        run: cargo check --locked -p demo-servo-winit
 
       - name: cargo check demo-servo-xilem
-        run: cargo check -p demo-servo-xilem
+        run: cargo check --locked -p demo-servo-xilem
 
       - name: cargo check demo-servo-iced
-        run: cargo check --manifest-path demo-servo-iced/Cargo.toml
+        run: cargo check --locked --manifest-path demo-servo-iced/Cargo.toml
 
       - name: cargo check demo-servo-gpui
-        run: cargo check -p demo-servo-gpui
+        run: cargo check --locked -p demo-servo-gpui
 
   # ── Windows ────────────────────────────────────────────────────────────────
   check-windows:
@@ -191,24 +191,24 @@ jobs:
       # --- Core library (Windows Vulkan + D3D11/D3D12 paths) ---
 
       - name: cargo check (wgpu 28)
-        run: cargo check -p grafting --no-default-features --features wgpu-28
+        run: cargo check --locked -p grafting --no-default-features --features wgpu-28
 
       - name: cargo check (wgpu 29)
-        run: cargo check -p grafting --no-default-features --features wgpu-29
+        run: cargo check --locked -p grafting --no-default-features --features wgpu-29
 
       - name: cargo check (wgpu 30)
-        run: cargo check -p grafting --no-default-features --features wgpu-30
+        run: cargo check --locked -p grafting --no-default-features --features wgpu-30
 
       - name: cargo check (all features)
-        run: cargo check -p grafting --all-features
+        run: cargo check --locked -p grafting --all-features
 
       - name: cargo test
-        run: cargo test -p grafting
+        run: cargo test --locked -p grafting
 
       # --- Raw GL demo ---
 
       - name: cargo check demo-raw-gl
-        run: cargo check -p demo-raw-gl
+        run: cargo check --locked -p demo-raw-gl
 
       # --- Servo demos ---
       #
@@ -219,13 +219,13 @@ jobs:
         uses: lukka/get-cmake@latest
 
       - name: cargo check demo-servo-winit
-        run: cargo check -p demo-servo-winit
+        run: cargo check --locked -p demo-servo-winit
 
       - name: cargo check demo-servo-xilem
-        run: cargo check -p demo-servo-xilem
+        run: cargo check --locked -p demo-servo-xilem
 
       - name: cargo check demo-servo-iced
-        run: cargo check --manifest-path demo-servo-iced/Cargo.toml
+        run: cargo check --locked --manifest-path demo-servo-iced/Cargo.toml
 
       - name: cargo check demo-servo-gpui
-        run: cargo check -p demo-servo-gpui
+        run: cargo check --locked -p demo-servo-gpui
