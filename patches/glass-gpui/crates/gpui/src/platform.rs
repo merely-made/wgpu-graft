@@ -3,7 +3,7 @@ mod keyboard;
 mod keystroke;
 
 #[cfg(all(target_os = "linux", feature = "wayland"))]
-#[expect(missing_docs)]
+#[allow(missing_docs)]
 pub mod layer_shell;
 
 #[cfg(any(test, feature = "test-support"))]
