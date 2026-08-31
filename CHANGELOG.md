@@ -4,6 +4,14 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Expose the direct Metal-texture importer and a producer-neutral Linux DMABUF
+  importer so Scry and Weld share one native wgpu boundary.
+- Make DMABUF fd ownership explicit and failure-safe, support same-buffer
+  multi-plane layouts, intersect image and fd memory-type masks, and acquire
+  producer images from `VK_QUEUE_FAMILY_FOREIGN_EXT` on the wgpu 30 path.
+- Promote every Servo demo check on Linux, macOS, and Windows from advisory to
+  required after the full matrix passed on all three hosted runners.
+
 ## [0.5.1] - 2026-08-30
 
 - Complete the advertised wgpu-28 Metal row by converting wgpu-hal 28's
