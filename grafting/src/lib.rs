@@ -345,7 +345,7 @@ pub struct VulkanExternalImage {
 /// The producer is responsible for ensuring the texture remains valid for the
 /// duration of the import call. Ownership is **not** transferred; the importer
 /// takes its own Objective-C retain before handing the texture to wgpu.
-#[derive(Clone, Copy, Debug)]
+#[derive(Debug)]
 pub struct MetalTextureRef {
     pub size: PhysicalSize<u32>,
     pub format: wgpu::TextureFormat,

@@ -1,0 +1,43 @@
+name: hardware interop
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hardware-interop-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  RUSTFLAGS: -D warnings
+
+jobs:
+  radv-dmabuf:
+    name: RADV DMA-BUF pixel round trips
+    runs-on: [self-hosted, wgpu-hardware, radv, linux-x64]
+    timeout-minutes: 30
+    env:
+      WGPU_BACKEND: vulkan
+      CARGO_TARGET_DIR: /home/markik/Code/targets/wgpu-graft-hardware
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.97.1
+
+      - name: Record the physical adapter
+        run: |
+          lspci -nn | grep -Ei 'vga|display|3d'
+          cargo --version
+
+      - name: Unit and descriptor-lifetime gates
+        run: cargo test --locked -p grafting --no-default-features --features wgpu-30
+
+      - name: RGBA and BGRA DMA-BUF pixel gates
+        run: >-
+          cargo test --locked -p grafting --no-default-features --features wgpu-30
+          --test dmabuf_roundtrip -- --ignored --nocapture

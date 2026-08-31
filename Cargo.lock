@@ -5889,7 +5889,7 @@ dependencies = [
 
 [[package]]
 name = "grafting"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "ash",
  "dpi",
