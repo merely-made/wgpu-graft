@@ -7,6 +7,11 @@ date: 2026-05-07
 
 # wgpu-graft: slint upstream sync + maintenance + update plan
 
+> **Status (2026-08-30): superseded.** The release work landed. The
+> `latest-release` and `experimental` branches never accumulated useful unique
+> history and have been retired along with their scheduled workflows. This
+> document remains as the implementation record for the earlier branch model.
+
 ## Context
 
 `wgpu-graft` was forked from `slint-ui/slint/examples/servo` on 2026-04-08 (initial commit `67228e9`). Since that fork point, the slint upstream has shipped substantive improvements to the same Servo embedding code path. This plan absorbs the relevant upstream changes, fans them out across our branch lines, and stages a 0.2.0 release of the published interop crate. **Crates.io publishing is deferred to a follow-up session per user direction.**

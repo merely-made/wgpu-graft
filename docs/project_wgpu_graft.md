@@ -19,4 +19,6 @@ type: project
 - Apple: IOSurface → Metal texture → BGRA→RGBA normalization → wgpu texture
 - Windows: ANGLE D3D11 → DX12 shared texture by default, with ANGLE D3D11 → Vulkan and non-ANGLE `GL_EXT_memory_object_win32` paths available where supported
 
-**wgpu version:** 29.0.1. Uses `wgpu-hal` for `create_texture_from_hal` (both Vulkan and Metal paths).
+**wgpu versions:** feature-selected 28, 29, or 30; 29 is the default and the
+30 row requires at least 30.0.1. The selected `wgpu` / `wgpu-hal` pair is
+re-exported so host device and imported-texture types stay identical.

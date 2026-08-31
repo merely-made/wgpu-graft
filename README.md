@@ -8,13 +8,12 @@ adapter sits on top, and nine demos show the embedding pattern across Rust
 GUI frameworks. Derived from the
 [Slint Servo embedding example](https://github.com/slint-ui/slint/tree/master/examples/servo).
 
-## Status (2026-08-12)
+## Status (2026-08-30)
 
-- `grafting` 0.4.0 published to crates.io 2026-08-10 (feature-selected
-  wgpu 28/29, macOS build restored, DX12 shared-texture import as a free
-  function). The repo carries 0.5.0 unreleased: Servo 0.4's surfman 0.13
-  plus a new `wgpu-30` feature row (eframe 0.36 is on wgpu 30; bevy 0.19
-  and slint 1.17 on 29; iced git on 28).
+- `grafting` 0.5.1 is the published baseline. It carries feature-selected
+  wgpu 28/29/30, including the corrected wgpu-28 Metal arm, and requires
+  wgpu 30.0.1 for the newest row. wgpu 29 remains the default while the GUI
+  ecosystem straddles majors.
 - Servo demos track Servo `release/v0.4` (tag v0.4.0); no local Servo
   checkout is needed.
 - Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,
@@ -23,12 +22,13 @@ GUI frameworks. Derived from the
   Xilem and GPUI use CPU readback.
 - Consumed by siblings: wgpu-weld's Windows import path delegates to
   `grafting`; wgpu-scry was extracted from this repo.
-- Branch ladder: `main` (newest tagged Servo release line),
-  `latest-release`, `experimental`, kept in sync by scheduled workflows.
-  Both forward branches are known red against Servo 0.5 (a freetype-sys
-  links-key conflict with the vendored gpui fork); Servo 0.4 is unaffected.
+- `main` is the one supported repository line. A weekly workflow keeps its
+  Servo pin on the newest tagged release line. The unused `latest-release`
+  and `experimental` lines were retired on 2026-08-30; their last reachable
+  tips contained no history absent from `main`.
 
-Near-term plans: publish grafting 0.5.0 and clear the Servo 0.5 conflict.
+Servo 0.5 compatibility remains a focused follow-up rather than a permanent
+forward branch.
 Design docs and testing notes live in `docs/`.
 
 ## Use

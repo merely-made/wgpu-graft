@@ -6,7 +6,6 @@ members = [
     "demo-servo-blitz",
     "demo-servo-egui",
     "demo-servo-gpui",
-    "demo-servo-iced",
     "demo-servo-slint",
     "demo-servo-winit",
     "demo-servo-xilem",
@@ -16,7 +15,10 @@ members = [
 # patches/glass-gpui is itself a cargo workspace (the vendored glass-hq/gpui).
 # Exclude it so our workspace doesn't try to absorb its members; the gpui +
 # gpui_platform path deps resolve against its own [workspace].
-exclude = ["patches/glass-gpui"]
+# iced 0.15-dev pins web-sys exactly to 0.3.85 while wgpu 30.0.1 requires
+# 0.3.104. Keep that wgpu-28 demo as a small adjacent workspace with its own
+# lockfile so the core triplet can take wgpu 30 patch releases independently.
+exclude = ["demo-servo-iced", "patches/glass-gpui"]
 resolver = "3"
 
 # gpui: switched from Zed's published `gpui = 0.2.2` (October 2025, blade

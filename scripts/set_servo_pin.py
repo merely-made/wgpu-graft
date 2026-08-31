@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Point every Servo dependency in this workspace at one upstream ref.
 
-The three sync workflows (main, latest-release, experimental) all need the same
-rewrite, so it lives here instead of being pasted into each one. The pasted
-copies drifted and broke: they only matched the bare `servo = "X.Y.Z"` string
+The supported main-line sync keeps this rewrite in one tested script. Earlier
+branch-specific workflows pasted the same logic into each file; those copies
+drifted and broke: they only matched the bare `servo = "X.Y.Z"` string
 form, so a table-form pin like
 
     servo = { version = "0.1.0", optional = true }
@@ -99,10 +99,9 @@ def rewrite_manifest(path: Path, args: argparse.Namespace) -> bool:
 def rewrite_readme(path: Path, args: argparse.Namespace) -> bool:
     """Keep the docs naming the same Servo line the manifests now pin.
 
-    Each branch carries its own README, and each sync workflow runs on its own
-    branch, so rewriting every Servo line reference in place is correct per
-    branch. Anything in the docs that must survive a sync (the branch ladder
-    itself) is therefore written without a literal `release/vX.Y`.
+    The workflow runs on the branch it is updating, so rewriting every Servo
+    line reference in place keeps that checkout's manifests and guidance
+    aligned.
     """
     if not path.exists():
         return False

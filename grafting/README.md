@@ -15,7 +15,7 @@ A "producer" (Servo, a GL renderer, a video decoder, etc.) renders into a native
 | Linux / Android | GL FBO → Vulkan external memory → wgpu | Implemented |
 | macOS / iOS | IOSurface → Metal texture → wgpu | Implemented |
 | Windows (Vulkan) | GL FBO → Vulkan image (NT handle) → wgpu | Implemented |
-| Windows (DX12) | GL FBO → DX12 shared texture → wgpu | Builds, runtime deferred |
+| Windows (DX12) | GL FBO → DX12 shared texture → wgpu | Hardware-verified through the Servo demos |
 
 ## Key types
 
@@ -44,17 +44,17 @@ uses, or the imported texture will not share a device.
 ```toml
 [dependencies]
 # Default: wgpu 29, plus the surfman GL producer path.
-grafting = "0.5"
+grafting = "0.5.1"
 
 # Same, against wgpu 28.
-grafting = { version = "0.5", default-features = false, features = ["wgpu-28", "surfman"] }
+grafting = { version = "0.5.1", default-features = false, features = ["wgpu-28", "surfman"] }
 
 # Shared-texture import only (DX12 / Metal / Vulkan DMABUF). No GL, no
 # surfman, no glow. This is what wgpu-weld takes.
-grafting = { version = "0.5", default-features = false, features = ["wgpu-29"] }
+grafting = { version = "0.5.1", default-features = false, features = ["wgpu-29"] }
 
 # Same shared-texture surface against wgpu 30.
-grafting = { version = "0.5", default-features = false, features = ["wgpu-30"] }
+grafting = { version = "0.5.1", default-features = false, features = ["wgpu-30"] }
 ```
 
 ## License
