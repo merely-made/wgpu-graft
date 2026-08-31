@@ -8,7 +8,7 @@ adapter sits on top, and nine demos show the embedding pattern across Rust
 GUI frameworks. Derived from the
 [Slint Servo embedding example](https://github.com/slint-ui/slint/tree/master/examples/servo).
 
-## Status (2026-08-30)
+## Status (2026-08-31)
 
 - `grafting` 0.5.1 is the published baseline. It carries feature-selected
   wgpu 28/29/30, including the corrected wgpu-28 Metal arm, and requires
@@ -22,6 +22,9 @@ GUI frameworks. Derived from the
   Xilem and GPUI use CPU readback.
 - Consumed by siblings: wgpu-weld and wgpu-scry delegate their native
   Metal/Vulkan import boundaries to `grafting`; producer policy stays local.
+- Linux foreign-image consumers construct the unified host device through
+  `vulkan_dmabuf::create_dmabuf_host_context`, which enables the complete
+  external-memory, DRM-modifier, and foreign-queue extension set.
 - `main` is the one supported repository line. A weekly workflow keeps its
   Servo pin on the newest tagged release line. The unused `latest-release`
   and `experimental` lines were retired on 2026-08-30; their last reachable

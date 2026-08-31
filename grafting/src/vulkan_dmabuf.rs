@@ -6,8 +6,26 @@
 //! Producer-specific modifier and synchronization policy stays in the caller.
 
 use ash::vk;
+use std::ffi::CStr;
 
 use crate::{HostWgpuContext, InteropError, UnsupportedReason, VulkanExternalImage};
+
+pub(crate) fn required_device_extensions() -> [&'static CStr; 4] {
+    [
+        ash::ext::external_memory_dma_buf::NAME,
+        ash::ext::image_drm_format_modifier::NAME,
+        ash::ext::queue_family_foreign::NAME,
+        ash::khr::external_memory_fd::NAME,
+    ]
+}
+
+pub(crate) fn base_dmabuf_device_extensions() -> [&'static CStr; 3] {
+    [
+        ash::ext::external_memory_dma_buf::NAME,
+        ash::ext::image_drm_format_modifier::NAME,
+        ash::khr::external_memory_fd::NAME,
+    ]
+}
 
 /// One plane in an owned DMABUF import.
 ///
@@ -170,6 +188,13 @@ pub fn import_dmabuf(
             UnsupportedReason::VulkanDmabufExtensionNotEnabled,
         ));
     }
+    if frame.queue_ownership == VulkanDmaBufQueueOwnership::Foreign
+        && !host_has_foreign_queue_support(host)
+    {
+        return Err(InteropError::Unsupported(
+            UnsupportedReason::VulkanForeignQueueExtensionNotEnabled,
+        ));
+    }
     if frame.size.width == 0 || frame.size.height == 0 {
         return Err(InteropError::InvalidFrame("DMABUF dimensions are zero"));
     }
@@ -326,6 +351,18 @@ pub fn import_dmabuf(
             },
             initial_state,
         ))
+    }
+}
+
+fn host_has_foreign_queue_support(host: &HostWgpuContext) -> bool {
+    unsafe {
+        host.device
+            .as_hal::<wgpu::wgc::api::Vulkan>()
+            .is_some_and(|device| {
+                device
+                    .enabled_device_extensions()
+                    .contains(&ash::ext::queue_family_foreign::NAME)
+            })
     }
 }
 
@@ -518,22 +555,23 @@ pub fn create_dmabuf_host_context(
                 actual: "non-Vulkan",
             })?
     };
-    if !hal_adapter
-        .physical_device_capabilities()
-        .supports_extension(ash::ext::image_drm_format_modifier::NAME)
-    {
-        return Err(InteropError::Vulkan(
-            "physical device does not advertise VK_EXT_image_drm_format_modifier".into(),
-        ));
+    let capabilities = hal_adapter.physical_device_capabilities();
+    let missing: Vec<_> = required_device_extensions()
+        .into_iter()
+        .filter(|extension| !capabilities.supports_extension(extension))
+        .map(|extension| extension.to_string_lossy().into_owned())
+        .collect();
+    if !missing.is_empty() {
+        return Err(InteropError::Vulkan(format!(
+            "physical device does not advertise required DMABUF extensions: {missing:?}"
+        )));
     }
 
     let callback = Box::new(|args: CreateDeviceCallbackArgs<'_, '_, '_>| {
-        if !args
-            .extensions
-            .contains(&ash::ext::image_drm_format_modifier::NAME)
-        {
-            args.extensions
-                .push(ash::ext::image_drm_format_modifier::NAME);
+        for extension in required_device_extensions() {
+            if !args.extensions.contains(&extension) {
+                args.extensions.push(extension);
+            }
         }
     });
 

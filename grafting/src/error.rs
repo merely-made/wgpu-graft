@@ -16,12 +16,16 @@ pub enum UnsupportedReason {
     /// A native frame variant (e.g. `VulkanExternalImage`) is defined in the
     /// API but the corresponding import logic is not yet implemented.
     NativeImportNotYetImplemented,
-    /// The wgpu Vulkan device was not constructed with
-    /// `VK_EXT_image_drm_format_modifier` enabled, so the consumer-side
-    /// `vkCreateImage` with `DRM_FORMAT_MODIFIER_EXT` tiling would fail.
+    /// The wgpu Vulkan device was not constructed with the base DMABUF
+    /// extension set enabled, including `VK_EXT_image_drm_format_modifier`,
+    /// so external image creation would fail.
     /// Use [`vulkan_dmabuf::create_dmabuf_host_context`](crate::vulkan_dmabuf::create_dmabuf_host_context)
     /// (Linux only) to obtain a device with the required extensions.
     VulkanDmabufExtensionNotEnabled,
+    /// The imported image belongs to a non-Vulkan producer, but the host
+    /// device lacks `VK_EXT_queue_family_foreign`. Construct the unified wgpu
+    /// device with `vulkan_dmabuf::create_dmabuf_host_context`.
+    VulkanForeignQueueExtensionNotEnabled,
 }
 
 /// Errors that can occur during frame import or synchronization.
