@@ -71,6 +71,26 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(event_loop.run_app(&mut app)?)
 }
 
+#[cfg(unix)]
+fn exit_smoke_success() -> ! {
+    use std::io::Write;
+
+    unsafe extern "C" {
+        fn _exit(status: core::ffi::c_int) -> !;
+    }
+
+    let _ = std::io::stdout().flush();
+    // SAFETY: the hardware receipt is complete and flushed. A normal Unix
+    // process exit can race Servo's still-running C++ threads during global
+    // teardown, so the bounded smoke path must not run those exit handlers.
+    unsafe { _exit(0) }
+}
+
+#[cfg(not(unix))]
+fn exit_smoke_success() -> ! {
+    std::process::exit(0)
+}
+
 struct App {
     state: AppStage,
 }
@@ -375,7 +395,7 @@ impl AppState {
                     if let Some(pixel) = smoke_pixel {
                         let pixel = pixel?;
                         if self.advance_smoke(imported.size, pixel)? {
-                            std::process::exit(0);
+                            exit_smoke_success();
                         }
                     }
                     return Ok(());
