@@ -24,13 +24,13 @@ jobs:
     name: Check and test (Linux)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Rust (pinned via rust-toolchain.toml)
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache cargo registry
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry
@@ -107,13 +107,13 @@ jobs:
     name: Check (macOS / Metal)
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Rust (pinned via rust-toolchain.toml)
         uses: dtolnay/rust-toolchain@stable
 
       - name: Cache cargo registry
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry
@@ -168,7 +168,7 @@ jobs:
     name: Check (Windows / Vulkan + D3D)
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Rust (pinned via rust-toolchain.toml)
         uses: dtolnay/rust-toolchain@stable
@@ -182,7 +182,7 @@ jobs:
         run: git config --global core.longpaths true
 
       - name: Cache cargo registry
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cargo/registry

@@ -82,12 +82,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Ask Slint to render through wgpu. On Windows force DX12 + HighPerformance
     // so the ANGLE-D3D11 → DX12 shared-texture import path works and surfman is
     // LUID-matched to the GPU Slint uses.
-    let mut settings = slint::wgpu_29::WGPUSettings::default();
+    let settings = slint::wgpu_29::WGPUSettings::default();
     #[cfg(windows)]
-    {
+    let settings = {
+        let mut settings = settings;
         settings.backends = slint::wgpu_29::wgpu::Backends::DX12;
         settings.power_preference = slint::wgpu_29::wgpu::PowerPreference::HighPerformance;
-    }
+        settings
+    };
     slint::BackendSelector::new()
         .require_wgpu_29(slint::wgpu_29::WGPUConfiguration::Automatic(settings))
         .select()?;

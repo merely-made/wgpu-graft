@@ -22,25 +22,28 @@ fn copy_angle_dlls_to_binary_dir() {
 
     let build_dir = binary_dir.join("build");
 
-    for dll in &["libEGL.dll", "libGLESv2.dll"] {
-        let dest = binary_dir.join(dll);
-        if dest.exists() {
-            continue;
-        }
-        if let Ok(entries) = std::fs::read_dir(&build_dir) {
-            for entry in entries.flatten() {
-                let name = entry.file_name();
-                let name = name.to_string_lossy();
-                if !name.starts_with("mozangle-") {
-                    continue;
-                }
-                let src = entry.path().join("out").join(dll);
-                if src.exists() {
-                    if let Err(e) = std::fs::copy(&src, &dest) {
-                        println!("cargo:warning=Failed to copy {dll} to binary dir: {e}");
-                    }
-                    break;
-                }
+    let dlls = ["libEGL.dll", "libGLESv2.dll"];
+    let newest_out_dir = std::fs::read_dir(&build_dir)
+        .ok()
+        .into_iter()
+        .flatten()
+        .filter_map(Result::ok)
+        .filter(|entry| entry.file_name().to_string_lossy().starts_with("mozangle-"))
+        .map(|entry| entry.path().join("out"))
+        .filter(|out_dir| dlls.iter().all(|dll| out_dir.join(dll).is_file()))
+        .max_by_key(|out_dir| {
+            dlls.iter()
+                .filter_map(|dll| std::fs::metadata(out_dir.join(dll)).ok()?.modified().ok())
+                .max()
+                .unwrap_or(std::time::UNIX_EPOCH)
+        });
+
+    if let Some(out_dir) = newest_out_dir {
+        for dll in dlls {
+            let src = out_dir.join(dll);
+            let dest = binary_dir.join(dll);
+            if let Err(e) = std::fs::copy(&src, &dest) {
+                println!("cargo:warning=Failed to copy {dll} to binary dir: {e}");
             }
         }
     }
