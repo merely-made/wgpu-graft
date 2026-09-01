@@ -447,10 +447,14 @@ impl AppState {
                     )));
             }
             // A requested startup size taller than the Wayland work area may
-            // make GNOME maximize the window. Clear that state before proving
-            // the compositor accepted the deterministic resize.
+            // make GNOME maximize the window. Clear that state before sending
+            // the deterministic window-size request.
             self.window.set_maximized(false);
             let _ = self.window.request_inner_size(SMOKE_RESIZED_SIZE);
+            // Wayland treats client-side window sizes as advisory. Exercise
+            // the same Servo viewport resize immediately; a later OS resize
+            // event repeats this with the compositor's accepted dimensions.
+            self.webview.resize(SMOKE_RESIZED_SIZE);
             smoke.input_sent = true;
             self.window.request_redraw();
             return Ok(false);
@@ -844,6 +848,9 @@ impl Renderer {
     fn draw_fullscreen_quad(&self, bind_group: Option<&wgpu::BindGroup>) -> Result<(), String> {
         let frame = match self.surface.get_current_texture() {
             CurrentSurfaceTexture::Success(tex) | CurrentSurfaceTexture::Suboptimal(tex) => tex,
+            // These are explicitly transient. This is common during the first
+            // AppKit frames after LaunchServices makes the window visible.
+            CurrentSurfaceTexture::Timeout | CurrentSurfaceTexture::Occluded => return Ok(()),
             other => return Err(format!("surface texture unavailable: {other:?}")),
         };
         let surface_view = frame
