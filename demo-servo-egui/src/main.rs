@@ -498,11 +498,15 @@ fn main() -> eframe::Result {
     // surfman/ANGLE to the host wgpu device, which requires a DX12 host (the
     // match reads the DX12 adapter LUID). Without this eframe may pick Vulkan
     // and the adapter's new_for_device() would error.
-    let mut wgpu_options = egui_wgpu::WgpuConfiguration::default();
+    let wgpu_options = egui_wgpu::WgpuConfiguration::default();
     #[cfg(windows)]
-    if let egui_wgpu::WgpuSetup::CreateNew(setup) = &mut wgpu_options.wgpu_setup {
-        setup.instance_descriptor.backends = wgpu::Backends::DX12;
-    }
+    let wgpu_options = {
+        let mut wgpu_options = wgpu_options;
+        if let egui_wgpu::WgpuSetup::CreateNew(setup) = &mut wgpu_options.wgpu_setup {
+            setup.instance_descriptor.backends = wgpu::Backends::DX12;
+        }
+        wgpu_options
+    };
 
     let options = NativeOptions {
         renderer: eframe::Renderer::Wgpu,

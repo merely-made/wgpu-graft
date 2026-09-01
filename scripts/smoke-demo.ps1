@@ -35,14 +35,49 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
+$metadataJson = & cargo metadata --locked --no-deps --format-version 1
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+$targetRoot = ($metadataJson | ConvertFrom-Json).target_directory
+if (-not $targetRoot) {
+    throw "cargo metadata did not report a target directory"
+}
+
+# A shared target directory may already contain unrelated libEGL/libGLESv2
+# files (CEF ships DLLs with the same names). Always install the pair produced
+# by this build's newest mozangle output before launching the standalone exe.
+$buildRoot = Join-Path $targetRoot "debug\build"
+$angleRuntime = Get-ChildItem -LiteralPath $buildRoot -Directory -Filter "mozangle-*" |
+    ForEach-Object {
+        $egl = Join-Path $_.FullName "out\libEGL.dll"
+        $gles = Join-Path $_.FullName "out\libGLESv2.dll"
+        if ((Test-Path -LiteralPath $egl -PathType Leaf) -and
+            (Test-Path -LiteralPath $gles -PathType Leaf)) {
+            [pscustomobject]@{
+                Directory = Join-Path $_.FullName "out"
+                WrittenAt = [Math]::Max(
+                    (Get-Item -LiteralPath $egl).LastWriteTimeUtc.Ticks,
+                    (Get-Item -LiteralPath $gles).LastWriteTimeUtc.Ticks
+                )
+            }
+        }
+    } |
+    Sort-Object WrittenAt -Descending |
+    Select-Object -First 1
+if (-not $angleRuntime) {
+    throw "mozangle runtime DLLs were not produced under $buildRoot"
+}
+foreach ($dll in @("libEGL.dll", "libGLESv2.dll")) {
+    Copy-Item -LiteralPath (Join-Path $angleRuntime.Directory $dll) `
+        -Destination (Join-Path $targetRoot "debug\$dll") -Force
+}
+Write-Host "Installed ANGLE runtime from: $($angleRuntime.Directory)"
+
 if (-not $Binary) {
     $Binary = $Package
 }
 $binaryFile = if ($IsWindows) { "$Binary.exe" } else { $Binary }
-$targetRoot = if ($env:CARGO_TARGET_DIR) { $env:CARGO_TARGET_DIR } else { Join-Path $repo "target" }
-if (-not [System.IO.Path]::IsPathRooted($targetRoot)) {
-    $targetRoot = Join-Path $repo $targetRoot
-}
 $binaryPath = [System.IO.Path]::GetFullPath((Join-Path $targetRoot "debug\$binaryFile"))
 if (-not (Test-Path -LiteralPath $binaryPath -PathType Leaf)) {
     throw "built demo executable not found at $binaryPath"

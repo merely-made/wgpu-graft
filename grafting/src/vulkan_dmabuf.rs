@@ -611,6 +611,17 @@ pub fn create_dmabuf_host_context(
 mod tests {
     use super::*;
 
+    // File-descriptor numbers are process-wide and may be reused immediately
+    // after close. Keep these tests from opening pipes underneath one another
+    // while another test is asserting that its old descriptor number is gone.
+    static FD_TEST_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+    fn lock_fd_table() -> std::sync::MutexGuard<'static, ()> {
+        FD_TEST_LOCK
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner)
+    }
+
     fn plane(fd: i32) -> VulkanDmaBufPlane {
         VulkanDmaBufPlane {
             fd,
@@ -628,6 +639,7 @@ mod tests {
 
     #[test]
     fn duplicated_plane_fds_are_one_kernel_object() {
+        let _fd_lock = lock_fd_table();
         let first = open_pipe_read_fd();
         let second = unsafe { libc::dup(first) };
         assert!(second >= 0);
@@ -638,6 +650,7 @@ mod tests {
 
     #[test]
     fn repeated_descriptor_is_closed_once() {
+        let _fd_lock = lock_fd_table();
         let fd = open_pipe_read_fd();
         let guard = PlaneFdGuard::new(&[plane(fd), plane(fd)]);
         assert_eq!(guard.0, vec![fd]);
@@ -646,6 +659,7 @@ mod tests {
 
     #[test]
     fn independent_plane_fds_are_disjoint() {
+        let _fd_lock = lock_fd_table();
         let first = open_pipe_read_fd();
         let second = open_pipe_read_fd();
         assert!(!planes_share_kernel_object(&[plane(first), plane(second)]));
@@ -655,6 +669,7 @@ mod tests {
 
     #[test]
     fn disjoint_plane_layout_has_a_specific_error_and_closes_every_fd() {
+        let _fd_lock = lock_fd_table();
         let first = open_pipe_read_fd();
         let second = open_pipe_read_fd();
         let planes = [plane(first), plane(second)];
@@ -674,6 +689,7 @@ mod tests {
 
     #[test]
     fn invalid_plane_fd_is_conservatively_disjoint() {
+        let _fd_lock = lock_fd_table();
         let first = open_pipe_read_fd();
         assert!(!planes_share_kernel_object(&[plane(first), plane(-1)]));
         unsafe { libc::close(first) };

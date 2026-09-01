@@ -26,7 +26,7 @@ jobs:
       CARGO_TARGET_DIR: /home/markik/Code/targets/wgpu-graft-hardware
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@1.97.1
 
       - name: Record the physical adapter
@@ -58,7 +58,7 @@ jobs:
       WGPU_BACKEND: vulkan
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@1.97.1
       - name: Assert the headed Wayland session
         run: |
@@ -81,7 +81,7 @@ jobs:
       WGPU_BACKEND: dx12
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Record the physical adapter
         shell: powershell
         run: nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
@@ -98,8 +98,11 @@ jobs:
       WGPU_BACKEND: metal
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@1.97.1
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
       - name: Build the reference Servo demo
         run: cargo build --locked -p demo-servo-winit
       - name: Prove imported pixels, input, and resize
@@ -114,8 +117,11 @@ jobs:
       WGPU_BACKEND: metal
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@1.97.1
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
       - name: Build the reference Servo demo
         run: cargo build --locked -p demo-servo-winit
       - name: Prove imported pixels, input, and resize

@@ -62,7 +62,11 @@ pub fn import_gl_framebuffer_vulkan(
                     .array_layers(1)
                     .samples(vk::SampleCountFlags::TYPE_1)
                     .tiling(vk::ImageTiling::OPTIMAL)
-                    .usage(vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::COLOR_ATTACHMENT)
+                    .usage(
+                        vk::ImageUsageFlags::SAMPLED
+                            | vk::ImageUsageFlags::COLOR_ATTACHMENT
+                            | vk::ImageUsageFlags::TRANSFER_SRC,
+                    )
                     .sharing_mode(vk::SharingMode::EXCLUSIVE)
                     .initial_layout(vk::ImageLayout::UNDEFINED)
                     .push_next(&mut external_memory_image_info),
@@ -212,7 +216,9 @@ pub fn import_gl_framebuffer_vulkan(
                         dimension: wgpu::TextureDimension::D2,
                         mip_level_count: 1,
                         sample_count: 1,
-                        usage: wgpu::TextureUses::RESOURCE | wgpu::TextureUses::COLOR_TARGET,
+                        usage: wgpu::TextureUses::RESOURCE
+                            | wgpu::TextureUses::COLOR_TARGET
+                            | wgpu::TextureUses::COPY_SRC,
                         view_formats: Vec::new(),
                         memory_flags: wgpu_hal::MemoryFlags::empty(),
                     },
@@ -234,7 +240,8 @@ pub fn import_gl_framebuffer_vulkan(
                     mip_level_count: 1,
                     sample_count: 1,
                     usage: wgpu::TextureUsages::TEXTURE_BINDING
-                        | wgpu::TextureUsages::RENDER_ATTACHMENT,
+                        | wgpu::TextureUsages::RENDER_ATTACHMENT
+                        | wgpu::TextureUsages::COPY_SRC,
                     view_formats: &[],
                 },
                 // The imported Vulkan image was created in UNDEFINED layout.
