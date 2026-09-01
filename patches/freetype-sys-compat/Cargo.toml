@@ -1,0 +1,10 @@
+[package]
+name = "freetype-sys"
+version = "0.20.1"
+edition = "2024"
+license = "MIT"
+description = "Compatibility package exposing freetype-sys 0.23 through the 0.20 API edge"
+publish = false
+
+[dependencies]
+freetype-sys-upstream = { package = "freetype-sys", version = "0.23.0" }

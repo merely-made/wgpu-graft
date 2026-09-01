@@ -15,4 +15,4 @@ url = "2.5.7"
 # mozangle's OUT_DIR, where each demo's build.rs copies them next to the exe.
 # This dependency is otherwise unused; it exists purely to enable the feature.
 [target.'cfg(windows)'.dependencies]
-mozangle = { version = "0.5.5", features = ["build_dlls"] }
+mozangle = { version = "0.6.0", features = ["build_dlls"] }

@@ -14,18 +14,21 @@ GUI frameworks. Derived from the
   revision. It makes borrowed Metal frame descriptors move-only and carries
   feature-selected wgpu 28/29/30, including the corrected wgpu-28 Metal arm.
   wgpu 29 remains the default while the GUI ecosystem straddles majors.
-- Servo demos track Servo `release/v0.4` (tag v0.4.0); no local Servo
+- Servo demos track Servo `release/v0.5` (tag v0.5.0); no local Servo
   checkout is needed.
 - Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,
-  Bevy, Xilem, GPUI) plus a Servo-free GL demo. Seven frameworks confirmed
-  zero-copy on Windows; the full suite runs on Linux (Fedora 44 / Vulkan).
-  Xilem and GPUI use CPU readback.
+  Bevy, Xilem, GPUI) plus a Servo-free GL demo. Six Servo GUI paths use GPU
+  import; Xilem and GPUI intentionally demonstrate CPU readback. Bevy and
+  Iced are DX12-specific; the other six Servo demos are checked on Linux,
+  macOS, and Windows.
 - Consumed by siblings: wgpu-weld and wgpu-scry delegate their native
   Metal/Vulkan import boundaries to `grafting`; producer policy stays local.
 - Linux foreign-image consumers construct the unified host device through
   `vulkan_dmabuf::create_dmabuf_host_context`, which enables the complete
   external-memory, DRM-modifier, and foreign-queue extension set.
-- A trusted RADV runner executes RGBA and BGRA DMA-BUF pixel round trips.
+- Trusted RADV, NVIDIA, Apple Silicon, and Intel Mac runners execute the
+  reference Servo demo's deterministic imported-pixel, input, and resize gate.
+  RADV also executes RGBA and BGRA DMA-BUF pixel round trips.
   Shared-allocation multi-plane layouts are supported; disjoint plane
   allocations return a specific typed error and close every transferred fd.
 - `main` is the one supported repository line. A weekly workflow keeps its
@@ -33,8 +36,6 @@ GUI frameworks. Derived from the
   and `experimental` lines were retired on 2026-08-30; their last reachable
   tips contained no history absent from `main`.
 
-Servo 0.5 compatibility remains a focused follow-up rather than a permanent
-forward branch.
 Design docs and testing notes live in `docs/`.
 
 ## Use
@@ -55,13 +56,12 @@ cargo run -p demo-servo-winit -- https://servo.org
 # also: -egui, -iced, -blitz, -slint, -bevy, -xilem, -gpui, demo-raw-gl
 ```
 
-Windows notes: build Servo demos from a VS Developer Command Prompt; set
-`AWS_LC_SYS_NO_ASM=1` if nasm is absent; ANGLE DLLs are built and copied
-next to the binary automatically. Rust is pinned at 1.97.1; the committed
-`Cargo.lock` holds `primeorder` at 0.14.0-rc.14 (recover after a
-`cargo update` with `cargo update -p primeorder --precise 0.14.0-rc.14`).
-Bounded smoke run: `pwsh -File scripts/smoke-demo.ps1 -Package
-demo-servo-winit -Seconds 15`.
+Windows notes: `scripts/check-servo-demos.ps1` selects desktop LLVM for
+bindgen, avoiding ESP-IDF `LIBCLANG_PATH` contamination. Set
+`AWS_LC_SYS_NO_ASM=1` if nasm is absent; ANGLE DLLs are built and copied next
+to the binary automatically. Rust is pinned at 1.97.1.
+Bounded smoke run: `pwsh -File scripts/smoke-demo.ps1`. It requires a GPU
+imported pixel receipt, a page-observed click, and a resized imported frame.
 
 ## License
 

@@ -116,6 +116,8 @@ jobs:
         run: |
           set -euo pipefail
           cargo metadata --format-version 1 > /dev/null
+          cargo metadata --manifest-path demo-servo-iced/Cargo.toml \
+            --format-version 1 > /dev/null
           if git diff --quiet; then
             echo "Manifests and lockfile already match the requested ref; nothing to build."
             echo "unchanged=true" >> "$GITHUB_OUTPUT"
@@ -133,11 +135,17 @@ jobs:
             libdbus-1-dev libfreetype6-dev libfontconfig1-dev \
             libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
 
-      - name: Validate adapter and reference demo
+      - name: Validate adapter and portable Servo demos
         if: steps.repin.outputs.skip != 'true' && steps.refresh.outputs.unchanged != 'true'
         run: |
           cargo check -p servo-wgpu-interop-adapter --features servo
-          cargo check -p demo-servo-winit
+          cargo check \
+            -p demo-servo-winit \
+            -p demo-servo-xilem \
+            -p demo-servo-gpui \
+            -p demo-servo-blitz \
+            -p demo-servo-egui \
+            -p demo-servo-slint
 
       - name: Commit and push
         if: steps.repin.outputs.skip != 'true' && steps.refresh.outputs.unchanged != 'true'

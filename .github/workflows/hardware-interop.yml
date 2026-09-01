@@ -41,3 +41,82 @@ jobs:
         run: >-
           cargo test --locked -p grafting --no-default-features --features wgpu-30
           --test dmabuf_roundtrip -- --ignored --nocapture
+
+  radv-servo-demo:
+    name: RADV Servo imported-pixel, input, and resize gate
+    runs-on: [self-hosted, wgpu-hardware, radv, wayland, headed]
+    timeout-minutes: 45
+    env:
+      CARGO_TARGET_DIR: /home/markik/Code/targets/wgpu-graft-demo-hardware
+      XDG_RUNTIME_DIR: /run/user/1000
+      WAYLAND_DISPLAY: wayland-0
+      DISPLAY: ""
+      DBUS_SESSION_BUS_ADDRESS: unix:path=/run/user/1000/bus
+      XDG_SESSION_TYPE: wayland
+      XDG_CURRENT_DESKTOP: GNOME
+      WINIT_UNIX_BACKEND: wayland
+      WGPU_BACKEND: vulkan
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.97.1
+      - name: Assert the headed Wayland session
+        run: |
+          test -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+          test -z "${DISPLAY:-}"
+      - name: Build the reference Servo demo
+        run: cargo build --locked -p demo-servo-winit
+      - name: Prove imported pixels, input, and resize
+        run: |
+          set -o pipefail
+          timeout 90s "$CARGO_TARGET_DIR/debug/demo-servo-winit" --smoke 2>&1 | tee "$RUNNER_TEMP/graft-radv-demo.log"
+          grep -F "GRAFT DEMO SMOKE PASS" "$RUNNER_TEMP/graft-radv-demo.log"
+
+  nvidia-servo-demo:
+    name: NVIDIA DX12 Servo imported-pixel, input, and resize gate
+    runs-on: [self-hosted, wgpu-hardware, nvidia, windows-x64, headed]
+    timeout-minutes: 50
+    env:
+      CARGO_TARGET_DIR: C:\Users\mark_\Code\targets\wgpu-graft-demo-hardware
+      WGPU_BACKEND: dx12
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record the physical adapter
+        shell: powershell
+        run: nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
+      - name: Prove imported pixels, input, and resize
+        shell: pwsh
+        run: scripts/smoke-demo.ps1 -Seconds 120
+
+  metal-m4-servo-demo:
+    name: Apple M4 Servo imported-pixel, input, and resize gate
+    runs-on: [self-hosted, wgpu-hardware, metal, macos-arm64, m4, headed]
+    timeout-minutes: 50
+    env:
+      CARGO_TARGET_DIR: /Users/markik/Code/targets/wgpu-graft-demo-hardware
+      WGPU_BACKEND: metal
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.97.1
+      - name: Build the reference Servo demo
+        run: cargo build --locked -p demo-servo-winit
+      - name: Prove imported pixels, input, and resize
+        run: bash scripts/smoke-demo-mac.sh
+
+  metal-intel-servo-demo:
+    name: Intel iMac Servo imported-pixel, input, and resize gate
+    runs-on: [self-hosted, wgpu-hardware, metal, macos-x64, intel-mac, headed]
+    timeout-minutes: 50
+    env:
+      CARGO_TARGET_DIR: /Users/markik/Code/targets/wgpu-graft-demo-hardware
+      WGPU_BACKEND: metal
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.97.1
+      - name: Build the reference Servo demo
+        run: cargo build --locked -p demo-servo-winit
+      - name: Prove imported pixels, input, and resize
+        run: bash scripts/smoke-demo-mac.sh

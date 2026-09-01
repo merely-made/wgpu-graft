@@ -62,8 +62,15 @@ resolver = "3"
 # only substitutes this where versions are compatible, so servo-layout's
 # `^0.10` request still resolves to crates.io 0.10.x. Remove when gpui
 # upstream lifts the `=0.9.0` pin.
+#
+# zed-font-kit still asks for freetype-sys 0.20 directly on Unix. Servo 0.5
+# uses freetype-sys 0.23, and Cargo permits only one crate with
+# `links = "freetype"` in the workspace graph. The small shim keeps font-kit's
+# old package-version edge while re-exporting the 0.23 API backed by Servo's
+# single native FreeType link.
 [patch.crates-io]
 gpui = { path = "patches/glass-gpui/crates/gpui" }
+freetype-sys = { path = "patches/freetype-sys-compat" }
 serde_fmt = { path = "patches/serde_fmt" }
 glslopt = { git = "https://github.com/jamienicol/glslopt-rs", rev = "68019f02a1437d785408ebc8ce7fd20341fffb8a" }
 yeslogic-fontconfig-sys = { path = "patches/yeslogic-fontconfig-sys" }

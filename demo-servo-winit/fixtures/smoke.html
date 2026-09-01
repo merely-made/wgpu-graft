@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>graft deterministic smoke fixture</title>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: rgb(23, 97, 181);
+    }
+    body.clicked {
+      background: rgb(221, 79, 54);
+    }
+  </style>
+</head>
+<body>
+  <script>
+    document.addEventListener("mousedown", () => {
+      document.body.classList.add("clicked");
+    }, { once: true });
+  </script>
+</body>
+</html>
