@@ -4,6 +4,15 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Move every Servo embedding and both lockfiles to Servo `release/v0.5`.
+  Bridge zed-font-kit's Unix `freetype-sys` 0.20 version edge onto Servo's
+  single 0.23 native link, and align the demo ANGLE DLL feature with Servo's
+  `mozangle` 0.6 runtime.
+- Add a bounded winit hardware gate that verifies an imported pixel, forwarded
+  page input, and imported resize on RADV, NVIDIA DX12, Apple Silicon Metal,
+  and Intel Metal runners.
+- Compile every portable Servo frontend during automatic release-line sync and
+  keep the adjacent Iced lockfile in that same transaction.
 - Expose the direct Metal-texture importer and a producer-neutral Linux DMABUF
   importer so Scry and Weld share one native wgpu boundary.
 - Make DMABUF fd ownership explicit and failure-safe, support same-buffer

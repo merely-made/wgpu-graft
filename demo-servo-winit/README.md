@@ -20,12 +20,20 @@ cargo run -p demo-servo-winit                                  # built-in animat
 cargo run -p demo-servo-winit -- https://example.com           # load a URL
 cargo run -p demo-servo-winit -- servo.org                     # auto-prefixes https://
 cargo run -p demo-servo-winit -- demo-servo-winit/fixtures/static.html  # local file
+cargo run -p demo-servo-winit -- --smoke                       # bounded hardware gate
 ```
+
+`--smoke` requires the GPU import path. It samples the normalized imported
+texture, forwards a mouse click that changes the deterministic page color,
+requests a 960×640 window resize, and exits successfully only after the changed
+pixel arrives in a 960×640 imported frame. The validation readback is confined
+to this test mode; ordinary presentation remains zero-copy.
 
 ## Fixtures
 
 - `fixtures/animated.html` — continuously animating page for validating redraw scheduling and repeated frame import.
 - `fixtures/static.html` — static page for checking orientation, text sharpness, and color correctness.
+- `fixtures/smoke.html` — fixed-color input and resize fixture for `--smoke`.
 
 ## Runtime diagnostics
 

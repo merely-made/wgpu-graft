@@ -23,7 +23,9 @@ cargo run -p demo-servo-gpui -- servo.org            # auto-prefixes https://
 
 - GPUI is pre-1.0 and does not use winit, so this demo has its own key mapping in `keyutils.rs` rather than sharing the winit-based one used by the other demos.
 - GPUI's `Pixels` type has a crate-private field, so all pixel math uses `f32::from(px)` rather than direct field access.
-- The workspace includes two patches under `patches/` to resolve dependency conflicts specific to this demo (taffy version alignment with gpui, and a serde_fmt ambiguous impl fix for Rust 1.92). These patches are not needed by the other demos.
+- The workspace carries focused GPUI compatibility patches under `patches/`,
+  including a freetype-sys version-edge shim that aligns zed-font-kit with
+  Servo 0.5's single `freetype-sys` 0.23 native link.
 
 ## Platform notes
 

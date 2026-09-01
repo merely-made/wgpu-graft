@@ -17,8 +17,14 @@
 //!   cargo run -p demo-servo-winit -- https://example.com
 //!   cargo run -p demo-servo-winit -- servo.org        # auto-prefixes https://
 //!   cargo run -p demo-servo-winit                     # opens built-in fixture page
+//!   cargo run -p demo-servo-winit -- --smoke          # bounded pixel/input/resize gate
 
-use std::{borrow::Cow, rc::Rc, sync::Arc};
+use std::{
+    borrow::Cow,
+    rc::Rc,
+    sync::Arc,
+    time::{Duration, Instant},
+};
 
 use demo_support::{DemoStatus, RenderPath};
 use euclid::Scale;
@@ -36,7 +42,7 @@ use winit::{
     application::ApplicationHandler,
     dpi::{PhysicalPosition, PhysicalSize},
     event::{ElementState, MouseScrollDelta, WindowEvent},
-    event_loop::{ActiveEventLoop, EventLoop, EventLoopProxy},
+    event_loop::{ActiveEventLoop, ControlFlow, EventLoop, EventLoopProxy},
     keyboard::ModifiersState,
     window::Window,
 };
@@ -51,8 +57,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let event_loop = EventLoop::with_user_event()
         .build()
         .expect("failed to create event loop");
-    let initial_url = demo_support::resolve_initial_url(env!("CARGO_MANIFEST_DIR"))?;
-    let mut app = App::new(&event_loop, initial_url);
+    let smoke = std::env::args()
+        .skip(1)
+        .any(|argument| argument == "--smoke");
+    let initial_url = if smoke {
+        let fixture = demo_support::fixture_path(env!("CARGO_MANIFEST_DIR"), "smoke.html");
+        Url::from_file_path(&fixture)
+            .map_err(|_| format!("smoke fixture not found: {}", fixture.display()))?
+    } else {
+        demo_support::resolve_initial_url(env!("CARGO_MANIFEST_DIR"))?
+    };
+    let mut app = App::new(&event_loop, initial_url, smoke);
     Ok(event_loop.run_app(&mut app)?)
 }
 
@@ -61,7 +76,11 @@ struct App {
 }
 
 enum AppStage {
-    Initial { initial_url: Url, waker: AppWaker },
+    Initial {
+        initial_url: Url,
+        waker: AppWaker,
+        smoke: bool,
+    },
     Running(AppState),
 }
 
@@ -77,14 +96,16 @@ struct AppState {
     cursor_position: PhysicalPosition<f64>,
     modifiers: ModifiersState,
     scale_factor: f64,
+    smoke: Option<SmokeState>,
 }
 
 impl App {
-    fn new(event_loop: &EventLoop<WakerEvent>, initial_url: Url) -> Self {
+    fn new(event_loop: &EventLoop<WakerEvent>, initial_url: Url, smoke: bool) -> Self {
         Self {
             state: AppStage::Initial {
                 initial_url,
                 waker: AppWaker::new(event_loop),
+                smoke,
             },
         }
     }
@@ -92,7 +113,12 @@ impl App {
 
 impl ApplicationHandler<WakerEvent> for App {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        let AppStage::Initial { initial_url, waker } = &self.state else {
+        let AppStage::Initial {
+            initial_url,
+            waker,
+            smoke,
+        } = &self.state
+        else {
             return;
         };
 
@@ -142,10 +168,11 @@ impl ApplicationHandler<WakerEvent> for App {
             interop,
             renderer,
             gpu_import_failed: false,
-                render_status,
+            render_status,
             cursor_position: PhysicalPosition::new(0.0, 0.0),
             modifiers: ModifiersState::default(),
             scale_factor,
+            smoke: (*smoke).then(SmokeState::new),
         });
     }
 
@@ -173,6 +200,10 @@ impl ApplicationHandler<WakerEvent> for App {
             WindowEvent::RedrawRequested => {
                 if let Err(error) = state.render_frame() {
                     eprintln!("render failed: {error}");
+                    if state.smoke.is_some() {
+                        eprintln!("GRAFT DEMO SMOKE FAIL: {error}");
+                        std::process::exit(1);
+                    }
                     event_loop.exit();
                 }
             }
@@ -192,6 +223,10 @@ impl ApplicationHandler<WakerEvent> for App {
                 // here to present at the new size during the drag.
                 if let Err(error) = state.render_frame() {
                     eprintln!("render failed during resize: {error}");
+                    if state.smoke.is_some() {
+                        eprintln!("GRAFT DEMO SMOKE FAIL: {error}");
+                        std::process::exit(1);
+                    }
                 }
                 state.window.request_redraw();
             }
@@ -282,6 +317,31 @@ impl ApplicationHandler<WakerEvent> for App {
             _ => {}
         }
     }
+
+    fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
+        let AppStage::Running(state) = &mut self.state else {
+            return;
+        };
+        let Some(smoke) = state.smoke.as_ref() else {
+            return;
+        };
+
+        if smoke.started_at.elapsed() > Duration::from_secs(30) {
+            eprintln!(
+                "GRAFT DEMO SMOKE FAIL: timed out after {} imported frames",
+                smoke.frames_seen
+            );
+            std::process::exit(1);
+        }
+
+        // Keep the bounded gate alive even when the compositor produces no
+        // redraw event. The regular interactive demo retains winit's default
+        // wait behavior.
+        state.window.request_redraw();
+        event_loop.set_control_flow(ControlFlow::WaitUntil(
+            Instant::now() + Duration::from_millis(100),
+        ));
+    }
 }
 
 impl AppState {
@@ -299,9 +359,26 @@ impl AppState {
                         imported.size.height,
                     );
                     self.update_status_title();
-                    return self.renderer.render_texture(&imported.texture);
+                    let smoke_pixel = self.smoke.as_ref().map(|_| {
+                        self.renderer.read_texture_pixel(
+                            &imported.texture,
+                            imported.size.width / 2,
+                            imported.size.height / 2,
+                        )
+                    });
+                    self.renderer.render_texture(&imported.texture)?;
+                    if let Some(pixel) = smoke_pixel {
+                        let pixel = pixel?;
+                        if self.advance_smoke(imported.size, pixel)? {
+                            std::process::exit(0);
+                        }
+                    }
+                    return Ok(());
                 }
                 Err(e) => {
+                    if self.smoke.is_some() {
+                        return Err(format!("GPU import failed during smoke gate: {e}"));
+                    }
                     eprintln!("[demo] GPU import unavailable, falling back to CPU readback: {e}");
                     self.render_status.set_fallback_error(&e);
                     self.gpu_import_failed = true;
@@ -321,9 +398,96 @@ impl AppState {
     }
 
     fn update_status_title(&self) {
-        self.window
-            .set_title(&format!("demo-servo-winit — {}", self.render_status.summary()));
+        self.window.set_title(&format!(
+            "demo-servo-winit — {}",
+            self.render_status.summary()
+        ));
     }
+
+    fn advance_smoke(
+        &mut self,
+        frame_size: PhysicalSize<u32>,
+        pixel: [u8; 4],
+    ) -> Result<bool, String> {
+        let Some(smoke) = self.smoke.as_mut() else {
+            return Ok(false);
+        };
+        smoke.frames_seen += 1;
+        if smoke.started_at.elapsed() > Duration::from_secs(30) {
+            return Err(format!(
+                "timed out after {} imported frames; last pixel={pixel:?}, size={}x{}",
+                smoke.frames_seen, frame_size.width, frame_size.height
+            ));
+        }
+
+        if !smoke.input_sent && pixel_near(pixel, SMOKE_INITIAL_RGBA) {
+            println!(
+                "GRAFT DEMO SMOKE initial pixel={pixel:?} size={}x{}",
+                frame_size.width, frame_size.height
+            );
+            let point = DevicePoint::new(
+                (frame_size.width / 2) as f32,
+                (frame_size.height / 2) as f32,
+            );
+            self.webview
+                .notify_input_event(InputEvent::MouseMove(MouseMoveEvent::new(
+                    servo::WebViewPoint::Device(point),
+                )));
+            for action in [MouseButtonAction::Down, MouseButtonAction::Up] {
+                self.webview
+                    .notify_input_event(InputEvent::MouseButton(MouseButtonEvent::new(
+                        action,
+                        ServoMouseButton::Left,
+                        servo::WebViewPoint::Device(point),
+                    )));
+            }
+            let _ = self.window.request_inner_size(SMOKE_RESIZED_SIZE);
+            smoke.input_sent = true;
+            self.window.request_redraw();
+            return Ok(false);
+        }
+
+        if smoke.input_sent
+            && frame_size == SMOKE_RESIZED_SIZE
+            && pixel_near(pixel, SMOKE_CLICKED_RGBA)
+        {
+            println!(
+                "GRAFT DEMO SMOKE PASS path=GPU-import frames={} pixel={pixel:?} size={}x{}",
+                smoke.frames_seen, frame_size.width, frame_size.height
+            );
+            return Ok(true);
+        }
+
+        self.window.request_redraw();
+        Ok(false)
+    }
+}
+
+const SMOKE_INITIAL_RGBA: [u8; 4] = [23, 97, 181, 255];
+const SMOKE_CLICKED_RGBA: [u8; 4] = [221, 79, 54, 255];
+const SMOKE_RESIZED_SIZE: PhysicalSize<u32> = PhysicalSize::new(960, 640);
+
+struct SmokeState {
+    started_at: Instant,
+    frames_seen: u32,
+    input_sent: bool,
+}
+
+impl SmokeState {
+    fn new() -> Self {
+        Self {
+            started_at: Instant::now(),
+            frames_seen: 0,
+            input_sent: false,
+        }
+    }
+}
+
+fn pixel_near(actual: [u8; 4], expected: [u8; 4]) -> bool {
+    actual
+        .into_iter()
+        .zip(expected)
+        .all(|(actual, expected)| actual.abs_diff(expected) <= 18)
 }
 
 // ── Renderer ────────────────────────────────────────────────────────────────
@@ -534,6 +698,67 @@ impl Renderer {
             ],
         });
         self.draw_fullscreen_quad(Some(&bind_group))
+    }
+
+    /// Read one texel from the normalized imported texture. This is used only
+    /// by the bounded smoke gate; regular presentation remains zero-copy.
+    fn read_texture_pixel(
+        &self,
+        texture: &wgpu::Texture,
+        x: u32,
+        y: u32,
+    ) -> Result<[u8; 4], String> {
+        let buffer = self.device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("graft-demo-smoke-readback"),
+            size: wgpu::COPY_BYTES_PER_ROW_ALIGNMENT as u64,
+            usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::MAP_READ,
+            mapped_at_creation: false,
+        });
+        let mut encoder = self
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                label: Some("graft-demo-smoke-readback"),
+            });
+        encoder.copy_texture_to_buffer(
+            wgpu::TexelCopyTextureInfo {
+                texture,
+                mip_level: 0,
+                origin: wgpu::Origin3d { x, y, z: 0 },
+                aspect: wgpu::TextureAspect::All,
+            },
+            wgpu::TexelCopyBufferInfo {
+                buffer: &buffer,
+                layout: wgpu::TexelCopyBufferLayout {
+                    offset: 0,
+                    bytes_per_row: Some(wgpu::COPY_BYTES_PER_ROW_ALIGNMENT),
+                    rows_per_image: Some(1),
+                },
+            },
+            wgpu::Extent3d {
+                width: 1,
+                height: 1,
+                depth_or_array_layers: 1,
+            },
+        );
+        self.queue.submit(Some(encoder.finish()));
+
+        let slice = buffer.slice(..);
+        let (sender, receiver) = std::sync::mpsc::channel();
+        slice.map_async(wgpu::MapMode::Read, move |result| {
+            let _ = sender.send(result);
+        });
+        self.device
+            .poll(wgpu::PollType::wait_indefinitely())
+            .map_err(|error| error.to_string())?;
+        receiver
+            .recv_timeout(Duration::from_secs(5))
+            .map_err(|error| error.to_string())?
+            .map_err(|error| error.to_string())?;
+        let data = slice.get_mapped_range();
+        let pixel = [data[0], data[1], data[2], data[3]];
+        drop(data);
+        buffer.unmap();
+        Ok(pixel)
     }
 
     /// Upload a CPU-side RGBA image as the cached frame texture.

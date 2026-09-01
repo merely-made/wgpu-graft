@@ -13,11 +13,11 @@ interop does the presentation.
 
 ## How it works
 
-1. `BackendSelector::new().require_wgpu_28(WGPUConfiguration::Automatic(..))`
+1. `BackendSelector::new().require_wgpu_29(WGPUConfiguration::Automatic(..))`
    asks Slint to render through wgpu (forced to **DX12** + HighPerformance on
    Windows).
 2. `Window::set_rendering_notifier` fires at `RenderingSetup` with
-   `GraphicsAPI::WGPU28 { device, queue, .. }` — Slint's own device. We create
+   `GraphicsAPI::WGPU29 { device, queue, .. }` — Slint's own device. We create
    Servo on it (`ServoWgpuInteropAdapter::new`, surfman LUID-matched to it).
 3. A `slint::Timer` drives Servo each tick: `import_current_frame_default()`
    imports the frame zero-copy as a top-left `Rgba8Unorm` `wgpu::Texture`.
@@ -26,10 +26,9 @@ interop does the presentation.
 
 ## wgpu version
 
-Slint 1.16 (crates.io) is on **wgpu 28**; Slint master is on wgpu 29. Zero-copy
-needs the imported texture to be Slint's own `wgpu::Texture` type, so grafting
-and the adapter are built with the `wgpu-28` feature (Cargo unifies them with
-Slint's wgpu). The feature flag is `unstable-wgpu-28`.
+Slint 1.17 exposes its **wgpu 29** integration. Zero-copy needs the imported
+texture to be Slint's own `wgpu::Texture` type, so this demo uses
+`unstable-wgpu-29`, matching Graft's default row.
 
 ## Requirements (Windows)
 
@@ -38,12 +37,6 @@ Slint's wgpu). The feature flag is `unstable-wgpu-28`.
 - **ANGLE DLLs.** `libEGL.dll` / `libGLESv2.dll` produced by `mozangle`'s
   `build_dlls` feature (via `demo-support`) and copied next to the binary by
   `build.rs`.
-
-## Build note
-
-Slint here is on wgpu 28 (like the iced demo) while winit/egui/Blitz are on
-wgpu 29; the two can't coexist in one `cargo build --workspace`. Build demos
-individually: `cargo run -p demo-servo-slint`.
 
 ## Usage
 
