@@ -193,7 +193,10 @@ jobs:
       # NASM is needed by aws-lc-sys on Windows even with NO_ASM=1 for some
       # codepaths; install it defensively.
       - name: Install NASM
-        uses: ilammy/setup-nasm@v1
+        shell: pwsh
+        run: |
+          choco install nasm --version=2.16.3 --yes --no-progress
+          nasm --version
 
       # --- Core library (Windows Vulkan + D3D11/D3D12 paths) ---
 
