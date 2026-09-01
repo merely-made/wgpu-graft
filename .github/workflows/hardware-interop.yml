@@ -100,9 +100,26 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@1.97.1
-      - uses: actions/setup-python@v7
+      - name: Install relocatable Python tooling
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        env:
+          RUNNER_TOOL_CACHE: ${{ runner.temp }}/uv-tool-cache
         with:
-          python-version: "3.13"
+          version: "0.12.8"
+          enable-cache: false
+      - name: Put Python 3.13 on PATH
+        env:
+          UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+          UV_PYTHON_INSTALL_DIR: ${{ runner.temp }}/uv-python
+        run: |
+          uv python install --no-bin 3.13
+          python_bin="$(uv python find 3.13)"
+          mkdir -p "$RUNNER_TEMP/python-bin"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python3"
+          echo "$RUNNER_TEMP/python-bin" >> "$GITHUB_PATH"
+          echo "PYTHON=$python_bin" >> "$GITHUB_ENV"
+          "$python_bin" --version
       - name: Build the reference Servo demo
         run: cargo build --locked -p demo-servo-winit
       - name: Prove imported pixels, input, and resize
@@ -119,9 +136,26 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@1.97.1
-      - uses: actions/setup-python@v7
+      - name: Install relocatable Python tooling
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        env:
+          RUNNER_TOOL_CACHE: ${{ runner.temp }}/uv-tool-cache
         with:
-          python-version: "3.13"
+          version: "0.12.8"
+          enable-cache: false
+      - name: Put Python 3.13 on PATH
+        env:
+          UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+          UV_PYTHON_INSTALL_DIR: ${{ runner.temp }}/uv-python
+        run: |
+          uv python install --no-bin 3.13
+          python_bin="$(uv python find 3.13)"
+          mkdir -p "$RUNNER_TEMP/python-bin"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python3"
+          echo "$RUNNER_TEMP/python-bin" >> "$GITHUB_PATH"
+          echo "PYTHON=$python_bin" >> "$GITHUB_ENV"
+          "$python_bin" --version
       - name: Build the reference Servo demo
         run: cargo build --locked -p demo-servo-winit
       - name: Prove imported pixels, input, and resize
