@@ -122,12 +122,17 @@ impl ApplicationHandler<WakerEvent> for App {
             return;
         };
 
+        let initial_size = if *smoke {
+            SMOKE_INITIAL_SIZE
+        } else {
+            PhysicalSize::new(1280, 800)
+        };
         let window = Arc::new(
             event_loop
                 .create_window(
                     Window::default_attributes()
                         .with_title("demo-servo-winit")
-                        .with_inner_size(PhysicalSize::new(1280, 800)),
+                        .with_inner_size(initial_size),
                 )
                 .expect("failed to create window"),
         );
@@ -441,6 +446,10 @@ impl AppState {
                         servo::WebViewPoint::Device(point),
                     )));
             }
+            // A requested startup size taller than the Wayland work area may
+            // make GNOME maximize the window. Clear that state before proving
+            // the compositor accepted the deterministic resize.
+            self.window.set_maximized(false);
             let _ = self.window.request_inner_size(SMOKE_RESIZED_SIZE);
             smoke.input_sent = true;
             self.window.request_redraw();
@@ -465,6 +474,7 @@ impl AppState {
 
 const SMOKE_INITIAL_RGBA: [u8; 4] = [23, 97, 181, 255];
 const SMOKE_CLICKED_RGBA: [u8; 4] = [221, 79, 54, 255];
+const SMOKE_INITIAL_SIZE: PhysicalSize<u32> = PhysicalSize::new(1024, 600);
 const SMOKE_RESIZED_SIZE: PhysicalSize<u32> = PhysicalSize::new(960, 640);
 
 struct SmokeState {
