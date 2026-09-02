@@ -164,8 +164,8 @@ jobs:
           -p demo-servo-slint
 
   # ── Windows ────────────────────────────────────────────────────────────────
-  check-windows:
-    name: Check (Windows / Vulkan + D3D)
+  check-windows-core:
+    name: Check core (Windows / Vulkan + D3D)
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
@@ -190,14 +190,6 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml', '**/Cargo.lock', 'rust-toolchain.toml') }}
           restore-keys: ${{ runner.os }}-cargo-
 
-      # NASM is needed by aws-lc-sys on Windows even with NO_ASM=1 for some
-      # codepaths; install it defensively.
-      - name: Install NASM
-        shell: pwsh
-        run: |
-          choco install nasm --version=2.16.3 --yes --no-progress
-          nasm --version
-
       # --- Core library (Windows Vulkan + D3D11/D3D12 paths) ---
 
       - name: cargo check (wgpu 28)
@@ -220,6 +212,35 @@ jobs:
       - name: cargo check demo-raw-gl
         run: cargo check --locked -p demo-raw-gl
 
+  check-windows-servo:
+    name: Check Servo demos (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Rust (pinned via rust-toolchain.toml)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Allow long paths
+        run: git config --global core.longpaths true
+
+      - name: Cache cargo registry
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml', '**/Cargo.lock', 'rust-toolchain.toml') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      # NASM is needed by aws-lc-sys on Windows even with NO_ASM=1 for some
+      # codepaths; install it defensively.
+      - name: Install NASM
+        shell: pwsh
+        run: |
+          choco install nasm --version=2.16.3 --yes --no-progress
+          nasm --version
+
       # --- Servo demos ---
       #
       # Servo/mozangle on Windows requires clang and cmake.
@@ -228,24 +249,61 @@ jobs:
       - name: Install cmake
         uses: lukka/get-cmake@latest
 
-      - name: cargo check demo-servo-winit
-        run: cargo check --locked -p demo-servo-winit
+      - name: cargo check root-workspace Servo demos
+        shell: pwsh
+        run: ./scripts/check-servo-demos.ps1
 
-      - name: cargo check demo-servo-xilem
-        run: cargo check --locked -p demo-servo-xilem
+  check-windows-iced:
+    name: Check Iced Servo demo (Windows / DX12)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Rust (pinned via rust-toolchain.toml)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Allow long paths
+        run: git config --global core.longpaths true
+
+      - name: Cache cargo registry
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml', '**/Cargo.lock', 'rust-toolchain.toml') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Install NASM
+        shell: pwsh
+        run: |
+          choco install nasm --version=2.16.3 --yes --no-progress
+          nasm --version
+
+      - name: Install cmake
+        uses: lukka/get-cmake@latest
 
       # This demo deliberately exercises DX12 shared NT handles and is
-      # therefore a Windows-only contract.
+      # therefore a Windows-only contract. Its independent workspace and
+      # lockfile also make it a natural parallel CI lane.
       - name: cargo check demo-servo-iced
         run: cargo check --locked --manifest-path demo-servo-iced/Cargo.toml
 
-      - name: cargo check demo-servo-gpui
-        run: cargo check --locked -p demo-servo-gpui
-
-      - name: cargo check remaining Windows Servo demos
-        run: >-
-          cargo check --locked
-          -p demo-servo-bevy
-          -p demo-servo-blitz
-          -p demo-servo-egui
-          -p demo-servo-slint
+  # Preserve one stable aggregate check while the expensive Windows graphs run
+  # independently. This keeps the required-check surface simple and cuts wall
+  # time without unifying Cargo graphs that deliberately carry different wgpu
+  # and web-sys versions.
+  check-windows:
+    name: Check (Windows / Vulkan + D3D)
+    if: ${{ always() }}
+    needs:
+      - check-windows-core
+      - check-windows-servo
+      - check-windows-iced
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Windows lanes
+        run: |
+          test "${{ needs.check-windows-core.result }}" = "success"
+          test "${{ needs.check-windows-servo.result }}" = "success"
+          test "${{ needs.check-windows-iced.result }}" = "success"
