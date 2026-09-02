@@ -77,10 +77,11 @@ $llvmCandidates = @(
     (Test-Path -LiteralPath (Join-Path $_ "libclang.dll"))
 } | Select-Object -Unique
 
-if ($llvmCandidates.Count -eq 0) {
+$desktopLibclangPath = $llvmCandidates | Select-Object -First 1
+if (-not $desktopLibclangPath) {
     throw "desktop libclang.dll not found; install LLVM or set LIBCLANG_PATH to its bin directory"
 }
-$env:LIBCLANG_PATH = $llvmCandidates[0]
+$env:LIBCLANG_PATH = $desktopLibclangPath
 Write-Host "Using desktop libclang: $env:LIBCLANG_PATH"
 
 if ($TargetDir) {
