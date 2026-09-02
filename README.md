@@ -57,9 +57,14 @@ cargo run -p demo-servo-winit -- https://servo.org
 ```
 
 Windows notes: `scripts/check-servo-demos.ps1` selects desktop LLVM for
-bindgen, avoiding ESP-IDF `LIBCLANG_PATH` contamination. Set
-`AWS_LC_SYS_NO_ASM=1` if nasm is absent; ANGLE DLLs are built and copied next
-to the binary automatically. Rust is pinned at 1.97.1.
+bindgen, avoiding ESP-IDF `LIBCLANG_PATH` contamination, and validates MSVC,
+the Windows SDK, CMake, NASM, and Git long-path support before compilation. It
+checks each root demo in its own Cargo graph; pass `-IncludeIced` for the
+adjacent Iced workspace, or `-CargoCommand build` to compile and link the
+binaries. The minimum parallelism is `-Jobs 2` because WebRender's shader
+optimizer needs a jobserver worker. CI also sets `AWS_LC_SYS_NO_ASM=1`, but
+keeps NASM installed for the remaining aws-lc paths. ANGLE DLLs are built and
+copied next to the binary automatically. Rust is pinned at 1.97.1.
 Bounded smoke run: `pwsh -File scripts/smoke-demo.ps1`. It requires a GPU
 imported pixel receipt, a page-observed click, and a resized imported frame.
 
