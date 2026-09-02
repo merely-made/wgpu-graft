@@ -39,6 +39,7 @@ if ($env:OS -eq "Windows_NT") {
     $vsMajor = [int]($vsVersion -split "\.")[0]
     $cmakeGenerator = switch ($vsMajor) {
         17 { "Visual Studio 17 2022" }
+        18 { "Visual Studio 18 2026" }
         default { throw "unsupported stable Visual Studio major $vsMajor; update the CMake generator mapping" }
     }
     if (-not ((& cmake --help) -match [regex]::Escape($cmakeGenerator))) {
