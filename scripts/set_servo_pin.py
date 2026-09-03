@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+
+# Copyright 2026 Mark Alan Boykin
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+# SPDX-License-Identifier: MPL-2.0
+
 """Point every Servo dependency in this workspace at one upstream ref.
 
 The supported main-line sync keeps this rewrite in one tested script. Earlier

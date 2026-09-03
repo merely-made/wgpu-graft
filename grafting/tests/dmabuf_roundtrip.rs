@@ -1,3 +1,9 @@
+// Copyright 2026 Mark Alan Boykin
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+// SPDX-License-Identifier: MPL-2.0
+
 //! Round-trip integration test for the DMABUF → Vulkan → wgpu import path.
 //!
 //! Allocates a Vulkan image with `VK_EXT_image_drm_format_modifier` linear

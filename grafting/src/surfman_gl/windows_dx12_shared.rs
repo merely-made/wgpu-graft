@@ -1,3 +1,9 @@
+// Copyright 2026 Mark Alan Boykin
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+// SPDX-License-Identifier: MPL-2.0
+
 //! ANGLE D3D11 → DX12 shared-texture import path (Windows + DX12 host).
 //!
 //! Servo on Windows renders via ANGLE, an OpenGL ES implementation backed by
