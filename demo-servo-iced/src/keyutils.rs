@@ -1,3 +1,9 @@
+// Copyright 2026 Mark Alan Boykin
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+// SPDX-License-Identifier: MPL-2.0
+
 // Maps iced keyboard events to Servo's `keyboard_types`-based KeyboardEvent.
 // Both iced and keyboard_types follow the W3C UI Events specification,
 // so the mapping is 1:1 for named keys and physical key codes.

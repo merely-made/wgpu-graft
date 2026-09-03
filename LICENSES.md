@@ -26,8 +26,13 @@ own notes record. Mark's own part is 57 source files: the `grafting` crate,
 The sweep plan's P7 item 4 anticipated this shape (it guessed a wgpu fork; the
 vendored majority is in fact Zed's GPUI) and rules that where the ledger turns
 out to be most of the repository, the ledger is written and the header pass is
-left. That is the disposition here: this file is committed alone, and no source
-file's header was changed.
+left. That was the disposition when this ledger was first committed
+(`d459c9e`, 2026-09-03) with the header pass left open for Mark's call.
+
+**2026-09-03, Mark ruled: header them.** The 57 owned source files listed
+below now carry shape C. Provenance is unchanged — the Slint servo embedding
+example, as already recorded in the derivative-dispositions table and carried
+through [`NOTICE`](NOTICE); nothing in that attribution moved.
 
 ## Retained licenses
 
@@ -48,25 +53,40 @@ travel with GPUI under its own terms and are not separated out.
 `patches/freetype-sys-compat` is deliberately **not** in this table. It is
 Mark's own six-line shim — a `pub use freetype_sys_upstream::*;` that satisfies
 `zed-font-kit`'s 0.20 version edge without declaring a native `links` key — and
-contains no upstream code. Its manifest says `license = "MIT"` to sit beside
-the crate it stands in for; P7 changes headers only, so that line was not
-touched and is recorded here as a known inconsistency for a later pass.
+contains no upstream code. Its manifest said `license = "MIT"` to sit beside
+the crate it stands in for; that stray line was corrected to `MPL-2.0` on
+2026-09-03 alongside the header pass, and its source now carries shape C.
 
 ## Derivatives carrying MPL-2.0 with an upstream notice retained
 
-These are **not** skipped. Each is Mark's substantial work over an upstream
+These were **not** skipped. Each is Mark's substantial work over an upstream
 starting point, relicensed MPL-2.0 with the upstream notice kept verbatim.
-Apply with `--retain-notice` when the header pass is eventually run.
 
 | Path | Upstream | Notices kept |
 |---|---|---|
 | `grafting`, `servo-wgpu-interop-adapter` | the [Slint Servo embedding example](https://github.com/slint-ui/slint/tree/master/examples/servo), MIT OR Apache-2.0 | `Copyright (c) SixtyFPS GmbH <info@slint.dev>` in the root [`NOTICE`](NOTICE), which is the notice file for both crates; no per-file upstream copyright line exists to preserve |
-| `demo-servo-blitz/src/keyutils.rs`, `demo-servo-winit/src/keyutils.rs`, `demo-servo-xilem/src/keyutils.rs` | [servo/servo](https://github.com/servo/servo) `servoshell/desktop/keyutils.rs`, MPL-2.0 | each file's leading `// Adapted from Servo's servoshell/desktop/keyutils.rs` / `// Original: Mozilla Public License 2.0` provenance pair |
+| `demo-servo-blitz/src/keyutils.rs`, `demo-servo-winit/src/keyutils.rs`, `demo-servo-xilem/src/keyutils.rs` | [servo/servo](https://github.com/servo/servo) `servoshell/desktop/keyutils.rs`, MPL-2.0 | each file's leading `// Adapted from Servo's servoshell/desktop/keyutils.rs` / `// Original: Mozilla Public License 2.0` provenance pair, kept below the new header |
 
-Those three `keyutils.rs` are the only owned files the sweep's
-`git grep -l 'Mozilla Public'` finds today, and their match is that provenance
-note rather than Exhibit A. A header pass must not read it as an existing
-Exhibit A, and must not delete it.
+**2026-09-03, headered.** All 57 owned sources now carry shape C
+(`git log` — one commit after `d459c9e`). The three `keyutils.rs` files above
+were the only owned files `git grep -l 'Mozilla Public'` found before the
+pass, and their match was that provenance note rather than Exhibit A.
+**Tool finding:** `relicense_headers.py`'s `already_covered()` guard
+false-positives on them — it treats any leading `Mozilla Public` substring as
+an existing Exhibit A block and skips the file outright, which a plain
+`--apply` on this repository confirmed (`--dry-run` reported these three as
+"already correct" with no header). `--apply --renormalize` does not have this
+problem: `already_covered()` still fires, but `strip_block_header()` then
+finds no leading `/* ... */` block (these are `//` line comments), falls
+through with `block = []`, and the file proceeds through the ordinary
+add-header path instead of being skipped. The result is byte-identical to a
+correct run: the provenance pair matches none of `HEADER_PAT`'s patterns, so
+`restrip()` treats it as ordinary body content and it lands unchanged below
+the new header, not above it. No code line changed in any of the three; only
+the header was added. Neither `grafting` nor `servo-wgpu-interop-adapter`
+needed `--retain-notice` — their upstream notice lives only in the root
+`NOTICE` file, not as a per-file copyright line, so there was nothing for
+that flag to preserve.
 
 **This section is deliberately not the skip list.** The tool reads only the
 `## Retained licenses` table above.
