@@ -16,7 +16,7 @@ on:
       welding_version:
         description: Published welding version to require exactly
         required: true
-        default: "0.14.0"
+        default: "0.14.1"
         type: string
       scry_source_ref:
         description: Tag or immutable commit that produced the selected scrying release
@@ -157,7 +157,6 @@ jobs:
       CAPTURE: "1"
       TIMEOUT: "90"
       VISIBLE: "1"
-      WELD_SKIP_CASES: devtools
       PROOF_HOST: m4
 
     steps:
@@ -260,7 +259,7 @@ jobs:
       CAPTURE: "1"
       TIMEOUT: "90"
       VISIBLE: "1"
-      WELD_SKIP_CASES: devtools popup
+      WELD_SKIP_CASES: popup
       PROOF_HOST: intel
 
     steps:
@@ -368,7 +367,7 @@ jobs:
       XDG_CURRENT_DESKTOP: GNOME
       WINIT_UNIX_BACKEND: wayland
       WELD_SWITCHES: ozone-platform=wayland
-      WELD_SKIP_CASES: devtools crash
+      WELD_SKIP_CASES: crash
 
     steps:
       - uses: actions/checkout@v4

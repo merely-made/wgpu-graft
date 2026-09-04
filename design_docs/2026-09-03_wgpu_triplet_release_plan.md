@@ -1,18 +1,23 @@
 # Wgpu Triplet Release Plan
 
-**Status (2026-09-03):** implementation in progress; release not ready.
+**Status (2026-09-04):** `grafting` 0.6.0, `scrying` 0.7.0, and
+`welding` 0.14.1 are published. Weld 0.14.1 supersedes 0.14.0 after the final
+consumer proof exposed an unsafe DevTools-window capability claim. The corrected
+registry-only hardware receipt is pending; post-release hardening remains open.
 
 This plan is the cross-repo release gate for:
 
 - `wgpu-graft` / `grafting`
 - `wgpu-scry` / `scrying`
 - `wgpu-weld` / `welding`
-- Mere/Inker adapter crates that prove host use of those surfaces
+- Mere/Inker adapter crates as non-gating architectural consumers, not release
+  artifacts or substitutes for the registry-only receipt
 
-The release target is not "Electron/Tauri replacement" as a blanket claim. The
-target is narrower and defensible: browser engines can be embedded as
-host-owned `wgpu` composition surfaces on DX12, Metal, and Vulkan, with
-capabilities and security posture reported honestly. Weld may ship first as
+The public claim is limited to the completed receipts for Servo/Graft, Scry
+WebView2 on DX12, Scry WKWebView on Metal, Scry WPE headless DMABUF on
+RADV/Vulkan at its fixed backend size, and Weld CEF accelerated OSR on the
+recorded platforms. It does not claim API equivalence, uniform security models,
+WPE runtime resizing, or Electron/Tauri replacement. Weld ships first as
 trusted-content CEF embedding while sandboxing remains an explicit later
 milestone.
 
@@ -198,8 +203,10 @@ hopeful defaults.
 
 Planned changes:
 
-- Fix Scry WPE capabilities so `preferred_mode`, `imported_texture`,
-  `cpu_snapshot`, and `supported_frames` match the feature and host state.
+- Record WPE headless as an imported-DMABUF Vulkan path with a fixed native
+  render target. Its capability and degradation report must expose the runtime
+  resize limit. The current WPE 2.52 headless toplevel remains 1024x768 and
+  `resize` returns `Unsupported`.
 - Make Scry capability fields one-to-one enough that adapters stop guessing
   about cookies, script, capture, devtools, downloads, popups, drag/drop, IME,
   accessibility, and degradation reasons.
@@ -254,13 +261,15 @@ Order:
 1. Land Graft ownership changes and publish `grafting` 0.6.0.
 2. Update Scry and Weld to depend on crates.io `grafting` 0.6.0.
 3. Build fresh external consumers of Scry and Weld against the published Graft.
-4. Publish `scrying` 0.7.0 and `welding` 0.14.0.
+4. Publish `scrying` 0.7.0 and `welding` 0.14.1. Weld 0.14.0 was published in
+   the original sequence and superseded by 0.14.1 before the release gate
+   closed.
 5. Build a fresh consumer using only the three crates.io releases.
 6. Dispatch `.github/workflows/registry-only-triplet.yml` with the immutable
    Scry/Weld source refs that produced the selected releases. It stages their
    demo/test source as fresh consumers; those checkouts are fixtures only and
    never Cargo dependencies. Each staged manifest pins `grafting` 0.6.0,
-   `scrying` 0.7.0, and `welding` 0.14.0 exactly.
+   `scrying` 0.7.0, and `welding` 0.14.1 exactly.
 7. Run fresh, registry-only platform harnesses on DX12, Metal, and Vulkan. The harnesses must
    record `cargo metadata`/`cargo tree` evidence that all three library sources
    are registry packages, with no Git or path override.
@@ -272,13 +281,21 @@ Done conditions:
 - Metal proof runs on both Apple Silicon and Intel Mac when available.
 - Vulkan proof runs the Linux DMABUF path on the RADV host.
 - Graft's Servo lane and Weld's CEF lane each pass on DX12, Metal, and Vulkan.
-- Scry passes WebView2/DX12, WKWebView/Metal, and WPE/Vulkan import. Its
+- Scry passes WebView2/DX12, WKWebView/Metal, and WPE/Vulkan import at WPE's
+  fixed native size. The WPE battery proves frame import, input, script, and
+  cookies, plus an asserted `Unsupported` runtime-resize result. Its
   WebKitGTK 4.1 and WebKit6 CPU frames are uploaded into a host-owned wgpu
   texture, or those backends are explicitly excluded from the wgpu-composition
   claim. A native child overlay does not count as wgpu composition.
 - Each claimed browser path loads a deterministic local page, produces a page
-  pixel, observes pointer input, resizes, and proves script/cookie behavior
-  wherever its capability report says those operations are supported.
+  pixel, observes pointer input, and proves script/cookie behavior. Paths that
+  support runtime resize also prove resize; WPE instead proves its fixed render
+  target and honest resize rejection.
+- Each WKWebView capture receipt wakes and holds the headed WindowServer session
+  before the battery. At least one complete ScreenCaptureKit sample carrying an
+  image buffer must arrive before acquire/import is testable. Status-only
+  samples fail the capture preflight rather than counting as a zero-frame
+  product result.
 - The receipt records exact crate versions, host backend, selected wgpu row,
   hardware host, and the observed frame/pixel/input result.
 - The registry-proof artifacts retain each staged `Cargo.lock`, full metadata,
@@ -290,13 +307,21 @@ Done conditions:
   reports claim them. The staged Weld battery adds an ephemeral cookie
   round-trip case and requires its asynchronous `weld_probe` readback, in
   addition to the existing script receipt.
+- One completed registry-only workflow run records green NVIDIA DX12, M4 Metal,
+  Intel Metal, and RADV Vulkan jobs. Retained artifacts include each staged
+  `Cargo.lock`, Cargo metadata/tree, registry verifier output, exact crate
+  versions, physical adapter/backend, and browser gate logs. Progress records
+  the run, harness commit, artifact names, and superseded failed runs.
 
 ## Non-gating parallel item
 
-The neutral contract assessment lives in
-`mere/design_docs/inker_docs/research/2026-09-03_web_surface_contract_assessment.md`. It should proceed
-in parallel, but it does not block publishing the current Scry/Weld/Graft
-releases once the release gates above are green.
+The neutral contract assessment landed in Mere commit `2f1fc77c` at
+`mere/design_docs/inker_docs/research/2026-09-03_web_surface_contract_assessment.md`.
+It recommends first settling Inker's correlated asynchronous request/event
+model and capability truth, then factoring Graft's native-frame transport
+behind a wgpu-free seam, and only then deciding whether to extract
+`surface-engine-api`. This did not gate versions 0.6.0/0.7.0/0.14.1, but it
+gates any future claim of a unified public browser-surface contract.
 
 ## Release stop conditions
 
@@ -323,6 +348,12 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
 - Add a polished host-owned wgpu browser-surface demo that compares Servo,
   system WebViews, and CEF under one host UI without implying they have the same
   process model or security guarantees.
+- Add an OS-level, host-wide mutual-exclusion lock shared by Graft, Scry, and
+  Weld hardware workflows. GitHub concurrency groups do not coordinate across
+  repositories or differently named workflows.
+- Add per-exit ScreenCaptureKit status/cadence metrics and a display-awake
+  preflight so a sleeping WindowServer is distinct from a product capture
+  failure.
 
 ## Progress
 
@@ -374,11 +405,62 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   `grafting` release. The verifier permits only Servo's pinned release commit
   and the exact glslopt build fix outside the registry, records both, and still
   requires registry sources for all three triplet packages. The WPE gate
-  rejects a prerequisite `SKIP`; its separate pixel/import
-  and input tests jointly cover host-owned-wgpu composition, deterministic
-  pixel, resize, pointer, script, and cookie behavior. The Graft demo adds its
-  own registry-backed live frame, page pixel, pointer, and resize proof on all
-  four hosts.
+  rejects a prerequisite `SKIP`; its separate pixel/import and input tests
+  jointly cover host-owned-wgpu composition, deterministic pixel, pointer,
+  script, and cookie behavior at the backend's fixed 1024x768 render size. The
+  Graft demo adds its own registry-backed live frame, page pixel, pointer, and
+  resize proof on all four hosts.
 - 2026-09-03: CI now enforces that same Rust 1.92 all-features library check on
   Linux, macOS, and Windows. Servo demos keep the workspace toolchain and do
   not expand the published library's MSRV contract.
+- 2026-09-04: Graft phases 1 and 5 landed and `grafting` 0.6.0 was published
+  from tag commit `816f3e7857afee863200e1c25b300c43b1532aae`. Candidate CI run
+  `33845695867` passed all eight jobs, and hardware run `33845695847` passed on
+  NVIDIA/DX12, M4/Metal, Intel/Metal, and RADV/Vulkan.
+- 2026-09-04: Scry phases 2, 4, and 5 landed and `scrying` 0.7.0 was published
+  from tag commit `f421c2ed9e312de112a003d7056cda7b4251da1a`. Exact-candidate
+  runs passed the four-host hardware matrix (`33852408046`), wgpu matrix
+  (`33852407929`), Rust 1.92 MSRV gate (`33852407757`), macOS tests
+  (`33852407955`), and Linux tests (`33852408184`). Its package proof contained
+  92 files and verified at 1.3 MiB unpacked / 318.3 KiB compressed.
+- 2026-09-04: Weld phases 2 through 5 landed and `welding` 0.14.0 was published
+  from tag commit `c8c7bc5b4d02433e683a26de5ddcd4d3e5e102fa`. Candidate runs
+  passed the MSRV gate (`33850335500`), wgpu matrix (`33850335575`), parity
+  battery (`33850335433`), and four-host hardware matrix (`33850335455`). The
+  M4 job's successful rerun is part of that same hardware run.
+- 2026-09-04: crates.io resolves exact, non-yanked `grafting` 0.6.0, `scrying`
+  0.7.0, and `welding` 0.14.1. Scry and Weld use the published Graft release.
+  Fresh staged registry consumers verify a single crates.io source for each
+  triplet package before starting hardware work.
+- 2026-09-04: Mere's non-gating consumer lane landed on `main` through
+  `d7158864`, `a96f9e86`, and `d52428a3`. `OwnedSurfaceFrame` keeps
+  `scrying::NativeFrame` owned until host import. Focused receipts passed Inker's
+  98 tests, the scrying-engine's 15 tests, and the Scry/Weld adapter checks. The
+  present downcast seam is temporary; CPU snapshot handling, complete capability
+  projection, correlated ordered completions, direct Weld binding, and the
+  factory's `Send + Sync` requirement remain outside this release claim.
+- 2026-09-04: Registry-only runs before the final candidate exposed harness
+  faults rather than published-crate defects: Windows metadata was decoded with
+  the active code page instead of UTF-8, the staged WPE fixture lacked its local
+  default/wgpu-30 feature and `pollster`, Weld executable paths were wrong on
+  Windows and Linux, and an idle M4 display produced status-only
+  ScreenCaptureKit samples. Commits `301d739`, `6bffe71`, `36e24be`, and
+  `6f2afc7` corrected the harness. Manual replay of the exact registry-built M4
+  application under a display wake/hold delivered five 1024x1536 frames; this
+  diagnosed the preflight but does not replace the final workflow receipt.
+- 2026-09-04: Registry-only run `33856680667` passed Graft and Scry on every
+  host and passed Weld on RADV, M4, and Intel. NVIDIA's sole failure was Weld's
+  native DevTools-window case: `open_devtools() ok` was followed by repeated
+  CEF 151 GPU-process exits and the fatal `GPU process isn't usable` shutdown.
+  The public README already described that Windows/Linux regression, while the
+  capability probe still reported it supported and both producers still called
+  `show_dev_tools`. This was a real 0.14.0 release defect, not a harness fault.
+- 2026-09-04: Weld 0.14.1 was published from
+  `c7b7b4c52138643e22580a918542e8e036a0b24a`. It refuses the unsafe native
+  DevTools window on all platforms, reports the capability unsupported, and
+  keeps CDP supported. Candidate MSRV run `33860036391` passed 12/12 jobs; wgpu
+  matrix `33860036415` passed 13/13; headed parity `33860036458` passed on all
+  four hosts; and headed hardware `33860036577` passed on all four hosts. Every
+  parity job observed a CDP response and the native-window refusal followed by
+  another imported frame. The package dry-run and upload each verified 35 files
+  at 581.9 KiB unpacked / 136.4 KiB compressed.
