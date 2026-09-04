@@ -4,6 +4,7 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Declare Rust 1.92 as Graft's minimum supported Rust version.
 - **Breaking:** make resource-bearing `NativeFrame` values move-only and make
   safe import consume them. Vulkan DMABUF and semaphore descriptors now have
   RAII custody and are closed on failure until a successful driver import

@@ -327,3 +327,15 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   passed. The latter exercised move-only structural assertions and real Win32
   handle custody tests. wgpu-28/30 and Linux/Apple compilation plus fresh
   hardware workflow proof remain required before release.
+- 2026-09-03: Packaging hygiene added `rust-version = "1.92"` to the
+  publishable `grafting` manifest. A standalone, source-identical package
+  audit under Rust 1.92 listed only Cargo metadata, README/build script, crate
+  sources, and `tests/dmabuf_roundtrip.rs`. Its exact publishable-core gate,
+  `cargo +1.92.0 check --no-default-features --features wgpu-28 -j 1`, passed
+  in 4m38s with `rustc 1.92.0`; an isolated all-features check passed in 5m48s.
+  `cargo publish --dry-run` remains deferred: CI run 33831062281 is red at the
+  pre-fix ownership commit and must rerun green before a registry simulation.
+- 2026-09-03: Corrected the GL dispatch boundary exposed by Linux CI and the
+  three non-Windows Servo hardware builders. `GlFramebufferSource` remains
+  borrow-imported, while resource-bearing native frame variants are consumed;
+  the all-features receipt above verifies that combined feature shape locally.

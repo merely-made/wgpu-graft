@@ -904,7 +904,7 @@ impl TextureImporter for WgpuTextureImporter {
             NativeFrame::GlFramebufferSource(frame_source) => {
                 frame_source
                     .importer
-                    .import_into(frame_source, &self.host, options)
+                    .import_into(&frame_source, &self.host, options)
             }
             NativeFrame::VulkanExternalImage(frame) => {
                 import_vulkan_external_image(frame, &self.host)
