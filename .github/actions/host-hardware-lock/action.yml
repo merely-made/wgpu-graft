@@ -16,7 +16,7 @@ inputs:
     default: "5"
 
 runs:
-  using: node20
+  using: node24
   main: main.js
   post: post.js
   post-if: always()
