@@ -19,6 +19,28 @@ env:
   CARGO_NET_GIT_FETCH_WITH_CLI: "true"
 
 jobs:
+  msrv:
+    name: MSRV 1.92 (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Rust 1.92
+        uses: dtolnay/rust-toolchain@1.92.0
+
+      - name: Allow long paths on Windows
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
+
+      # This is the published library contract. Servo demos retain the newer
+      # workspace toolchain and are exercised by the platform jobs below.
+      - name: Check complete library feature graph
+        run: cargo +1.92.0 check --locked -p grafting --all-features
+
   # ── Linux ──────────────────────────────────────────────────────────────────
   check-linux:
     name: Check and test (Linux)
