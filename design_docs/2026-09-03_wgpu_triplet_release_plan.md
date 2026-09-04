@@ -339,3 +339,12 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   three non-Windows Servo hardware builders. `GlFramebufferSource` remains
   borrow-imported, while resource-bearing native frame variants are consumed;
   the all-features receipt above verifies that combined feature shape locally.
+- 2026-09-03: The declared-floor complete publishable graph gate passed in the
+  standalone source-identical package copy: Rust 1.92.0 (with `RUSTC`
+  explicitly pinned to that toolchain) ran `cargo check --all-features -j 1`
+  in 11m30s. This compiled Graft's wgpu 28, 29, and 30 feature rows together.
+  `RUSTDOCFLAGS="-D warnings" cargo doc -p grafting --no-deps -j 1` then
+  passed from the repository source. The pass required making the Windows-only
+  DX12 link and the Linux-only DMABUF links plain code text when their modules
+  are cfg-absent. `cargo publish --dry-run` remains deferred until the fresh
+  CI and hardware candidate is confirmed green.
