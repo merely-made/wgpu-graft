@@ -21,6 +21,7 @@ from pathlib import Path
 
 
 KIND_TO_DEMO = {
+    "graft-servo": "demo-servo-winit",
     "scry-win": "demo-win",
     "scry-mac": "demo-mac",
     "scry-wpe": "demo-wpe",
@@ -28,6 +29,14 @@ KIND_TO_DEMO = {
     "weld-linux": "demo-weld-linux",
     "weld-mac": "demo-weld-mac",
 }
+
+SERVO_REV = "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019"
+
+
+def replace_once(text: str, old: str, new: str, source: Path) -> str:
+    if text.count(old) != 1:
+        raise ValueError(f"expected one registry rewrite target in {source}: {old}")
+    return text.replace(old, new)
 
 
 def exact_dependency(name: str, version: str, *, features: list[str] | None = None,
@@ -174,7 +183,97 @@ path = "src/bundle.rs"
     return header + binary + "[dependencies]\n" + "\n".join(dependencies) + "\n"
 
 
-def copy_required(source: Path, destination: Path, kind: str) -> None:
+def copy_required(source: Path, destination: Path, kind: str,
+                  grafting_version: str, scrying_version: str,
+                  welding_version: str) -> None:
+    if kind == "graft-servo":
+        demo = source / "demo-servo-winit"
+        adapter = source / "servo-wgpu-interop-adapter"
+        support = source / "demo-support"
+        for origin, name in ((demo, "demo"), (adapter, "adapter"), (support, "demo-support")):
+            shutil.copytree(origin / "src", destination / name / "src")
+        shutil.copytree(demo / "fixtures", destination / "demo" / "fixtures")
+        shutil.copy2(demo / "build.rs", destination / "demo" / "build.rs")
+        # Servo 0.5 still needs these two narrowly scoped build fixes. They are
+        # test scaffolding, not substitutes for any of the three registry
+        # packages under proof. Keep the local patch inside the staged
+        # workspace so the verifier records it explicitly.
+        shutil.copytree(
+            source / "patches" / "serde_fmt",
+            destination / "patches" / "serde_fmt",
+        )
+
+        grafting = exact_dependency(
+            "grafting",
+            grafting_version,
+            default_features=False,
+            features=["surfman"],
+        )
+        adapter_manifest_path = adapter / "Cargo.toml"
+        adapter_manifest = replace_once(
+            adapter_manifest_path.read_text(encoding="utf-8"),
+            'grafting = { path = "../grafting", version = "0.6.0", default-features = false, features = ["surfman"] }',
+            grafting,
+            adapter_manifest_path,
+        )
+        adapter_manifest = replace_once(
+            adapter_manifest,
+            'servo = { git = "https://github.com/servo/servo", branch = "release/v0.5", optional = true }',
+            f'servo = {{ git = "https://github.com/servo/servo", rev = "{SERVO_REV}", optional = true }}',
+            adapter_manifest_path,
+        )
+        (destination / "adapter" / "Cargo.toml").write_text(adapter_manifest, encoding="utf-8")
+        shutil.copy2(adapter / "README.md", destination / "adapter" / "README.md")
+
+        demo_manifest_path = demo / "Cargo.toml"
+        demo_manifest = demo_manifest_path.read_text(encoding="utf-8")
+        demo_manifest = replace_once(
+            demo_manifest,
+            'servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }',
+            'servo-wgpu-interop-adapter = { path = "../adapter", features = ["servo"] }',
+            demo_manifest_path,
+        )
+        demo_manifest = replace_once(
+            demo_manifest,
+            'grafting = { path = "../grafting" }',
+            exact_dependency("grafting", grafting_version),
+            demo_manifest_path,
+        )
+        demo_manifest = replace_once(
+            demo_manifest,
+            'servo = { git = "https://github.com/servo/servo", branch = "release/v0.5" }',
+            f'servo = {{ git = "https://github.com/servo/servo", rev = "{SERVO_REV}" }}',
+            demo_manifest_path,
+        )
+        demo_manifest += "\n" + exact_dependency(
+            "scrying", scrying_version, default_features=False
+        )
+        demo_manifest += "\n" + exact_dependency(
+            "welding", welding_version, default_features=False
+        ) + "\n"
+        (destination / "demo" / "Cargo.toml").write_text(demo_manifest, encoding="utf-8")
+        shutil.copy2(support / "Cargo.toml", destination / "demo-support" / "Cargo.toml")
+        (destination / "Cargo.toml").write_text(
+            '''[workspace]
+members = ["adapter", "demo", "demo-support", "patches/serde_fmt"]
+resolver = "2"
+
+[patch.crates-io]
+serde_fmt = { path = "patches/serde_fmt" }
+glslopt = { git = "https://github.com/jamienicol/glslopt-rs", rev = "68019f02a1437d785408ebc8ce7fd20341fffb8a" }
+''',
+            encoding="utf-8",
+        )
+
+        scripts = destination / "scripts"
+        scripts.mkdir()
+        for script_name in ("smoke-demo.ps1", "smoke-demo-mac.sh"):
+            origin = source / "scripts" / script_name
+            staged = scripts / script_name
+            shutil.copy2(origin, staged)
+            staged.chmod(staged.stat().st_mode | 0o111)
+        return
+
     demo = source / KIND_TO_DEMO[kind]
     if not (demo / "src").is_dir():
         raise ValueError(f"{demo} has no source directory")
@@ -248,11 +347,19 @@ def main() -> int:
 
     destination.mkdir(parents=True)
     try:
-        copy_required(source, destination, args.kind)
-        (destination / "Cargo.toml").write_text(
-            manifest_for(args.kind, args.grafting_version, args.scrying_version, args.welding_version),
-            encoding="utf-8",
+        copy_required(
+            source,
+            destination,
+            args.kind,
+            args.grafting_version,
+            args.scrying_version,
+            args.welding_version,
         )
+        if args.kind != "graft-servo":
+            (destination / "Cargo.toml").write_text(
+                manifest_for(args.kind, args.grafting_version, args.scrying_version, args.welding_version),
+                encoding="utf-8",
+            )
     except Exception:
         shutil.rmtree(destination, ignore_errors=True)
         raise

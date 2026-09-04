@@ -282,8 +282,10 @@ Done conditions:
 - The receipt records exact crate versions, host backend, selected wgpu row,
   hardware host, and the observed frame/pixel/input result.
 - The registry-proof artifacts retain each staged `Cargo.lock`, full metadata,
-  and dependency tree. The verifier rejects any non-local path dependency or
-  Git source and requires exactly one registry source for every triplet crate.
+  and dependency tree. The verifier requires exactly one registry source for
+  every triplet crate. Graft's copied local Servo adapter and its commit-pinned
+  Servo 0.5/git build scaffolding are recorded separately and cannot replace a
+  triplet package.
 - The Scry hardware batteries must cover script/cookie when their capability
   reports claim them. The staged Weld battery adds an ephemeral cookie
   round-trip case and requires its asynchronous `weld_probe` readback, in
@@ -366,14 +368,17 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   temporary standalone consumers, rewrites their manifests to exact registry
   triplet dependencies, records metadata/tree/lockfile proof, then runs the
   existing headed batteries on NVIDIA/DX12, M4/Metal, Intel/Metal, and
-  RADV/Vulkan. Staging-source checkouts are never part of the resolved Cargo
-  graph. The WPE gate rejects a prerequisite `SKIP`; its separate pixel/import
+  RADV/Vulkan. Staging-source checkouts are never triplet dependencies in the
+  resolved Cargo graph. Graft's unpublished Servo adapter remains copied test
+  scaffolding, but both it and the live Servo demo consume the exact registry
+  `grafting` release. The verifier permits only Servo's pinned release commit
+  and the exact glslopt build fix outside the registry, records both, and still
+  requires registry sources for all three triplet packages. The WPE gate
+  rejects a prerequisite `SKIP`; its separate pixel/import
   and input tests jointly cover host-owned-wgpu composition, deterministic
-  pixel, resize, pointer, script, and cookie behavior. The existing Graft
-  Servo demo cannot itself become a registry-only consumer yet because its
-  `servo-wgpu-interop-adapter` is not published; that precise additional
-  proof remains post-publish work rather than a release claim made by this
-  harness.
+  pixel, resize, pointer, script, and cookie behavior. The Graft demo adds its
+  own registry-backed live frame, page pixel, pointer, and resize proof on all
+  four hosts.
 - 2026-09-03: CI now enforces that same Rust 1.92 all-features library check on
   Linux, macOS, and Windows. Servo demos keep the workspace toolchain and do
   not expand the published library's MSRV contract.
