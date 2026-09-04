@@ -348,3 +348,6 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   DX12 link and the Linux-only DMABUF links plain code text when their modules
   are cfg-absent. `cargo publish --dry-run` remains deferred until the fresh
   CI and hardware candidate is confirmed green.
+- 2026-09-03: CI now enforces that same Rust 1.92 all-features library check on
+  Linux, macOS, and Windows. Servo demos keep the workspace toolchain and do
+  not expand the published library's MSRV contract.
