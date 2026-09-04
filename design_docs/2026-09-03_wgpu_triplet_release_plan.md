@@ -3,7 +3,9 @@
 **Status (2026-09-04):** release complete. `grafting` 0.6.0, `scrying` 0.7.0,
 and `welding` 0.14.1 are published, and the crates.io-only four-host proof is
 green. Weld 0.14.1 supersedes 0.14.0 after the first consumer proof exposed an
-unsafe DevTools-window capability claim. Post-release hardening remains open.
+unsafe DevTools-window capability claim. Host-wide hardware serialization and
+the first ScreenCaptureKit reliability pass are also complete. Sandboxed CEF
+embedding and a polished combined host demo remain open.
 
 This plan is the cross-repo release gate for:
 
@@ -341,17 +343,19 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
 
 ## Post-release milestones
 
-- Implement CEF sandboxed modes for Weld and update the security posture from
+- [ ] Implement CEF sandboxed modes for Weld and update the security posture from
   trusted-content preview to sandboxed embedding where proven.
-- Decide whether to publish a neutral `surface-engine-api` crate or keep
-  complete per-engine capability structs without a shared crate.
-- Add a polished host-owned wgpu browser-surface demo that compares Servo,
+- [x] Assess whether to publish a neutral `surface-engine-api` crate or keep
+  complete per-engine capability structs without a shared crate. The assessment
+  is recorded under the non-gating item above; implementation awaits the
+  correlated asynchronous event model and capability cleanup it identifies.
+- [ ] Add a polished host-owned wgpu browser-surface demo that compares Servo,
   system WebViews, and CEF under one host UI without implying they have the same
   process model or security guarantees.
-- Add an OS-level, host-wide mutual-exclusion lock shared by Graft, Scry, and
+- [x] Add an OS-level, host-wide mutual-exclusion lock shared by Graft, Scry, and
   Weld hardware workflows. GitHub concurrency groups do not coordinate across
   repositories or differently named workflows.
-- Add per-exit ScreenCaptureKit status/cadence metrics and a display-awake
+- [x] Add per-exit ScreenCaptureKit status/cadence diagnostics and a display-awake
   preflight so a sleeping WindowServer is distinct from a product capture
   failure.
 
@@ -478,3 +482,30 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   `registry-triplet-nvidia`, `registry-triplet-metal-intel`, and
   `registry-triplet-radv` contain the per-host receipts. This closes the release
   gate for the public claim stated above.
+- 2026-09-04: Graft commit `781aa6aad3f63b83ad48b192a6a5d078be1d71b8`
+  completed the shared OS-level host lock. The Node 24 action uses an atomic
+  directory lock, owner metadata, bounded waiting, stale-lock takeover, and
+  token-checked post cleanup. Graft hardware run `33866354785` passed all five
+  NVIDIA, RADV, Intel, and M4 jobs. Scry and Weld consume the action through a
+  sparse checkout; directly referencing the action subdirectory had caused
+  GitHub to stage unrelated repository content and was rejected as the wrong
+  integration shape. The final runs below exercised real cross-repository lock
+  contention and completed without overlapping a host.
+- 2026-09-04: Scry commit `17eb18f9e4fd4804fbb07d361b046093d381f144`
+  closed the first macOS capture-reliability pass. The demo now treats winit
+  resize targets as logical sizes, derives expected physical dimensions from
+  the scale factor, keeps compositor presentation alive without stealing the
+  producer sample, requires a distinct final resize frame, and uses the proven
+  display wake/hold sequence. Earlier M4 runs exposed status-only
+  ScreenCaptureKit samples and a false-positive final resize; those runs are
+  superseded. Final headed run `33869967986` passed WKWebView capture and resize
+  on M4 and Intel, WebView2 capture and scale on NVIDIA/DX12, and WPE DMABUF on
+  RADV/Vulkan.
+- 2026-09-04: Weld commit `759555c67f6e858f77deecbed7cf52a2fd000440`
+  made the parity battery hermetic and taught it to fail on its own
+  `VALIDATION FAIL` receipt. The visibility, API, and CDP cases now use the
+  deterministic local animated fixture rather than the network default. That
+  exposed zero-frame self-consistency passes before the fix. Final parity run
+  `33868840816`, headed hardware run `33868840814`, wgpu matrix run
+  `33868840900`, and MSRV run `33868840798` all passed; the hardware runs were
+  green on NVIDIA, RADV, Intel, and M4.
