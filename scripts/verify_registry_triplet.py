@@ -30,7 +30,14 @@ GLSLOPT_FIX_SOURCE = (
 
 
 def run(command: list[str], cwd: Path) -> str:
-    completed = subprocess.run(command, cwd=cwd, check=True, text=True, stdout=subprocess.PIPE)
+    completed = subprocess.run(
+        command,
+        cwd=cwd,
+        check=True,
+        text=True,
+        encoding="utf-8",
+        stdout=subprocess.PIPE,
+    )
     return completed.stdout
 
 
