@@ -36,7 +36,9 @@ GUI frameworks. Derived from the
   and `experimental` lines were retired on 2026-08-30; their last reachable
   tips contained no history absent from `main`.
 
-Design docs and testing notes live in `docs/`.
+Release plans and active design policy live in `design_docs/`. Older project
+context and testing notes still live in `docs/` until a doc-hygiene pass moves
+or archives them.
 
 ## Use
 
