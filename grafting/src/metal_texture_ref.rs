@@ -7,9 +7,10 @@
 //! Direct `MTLTexture` → `wgpu::Texture` import path for Metal producers.
 //!
 //! Unlike [`crate::raw_gl::metal`], which imports a GL framebuffer through
-//! IOSurface, this path wraps a raw `MTLTexture` pointer directly. The
-//! producer retains ownership of the underlying texture — the importer takes
-//! a +1 retain count and hands it to wgpu via `texture_from_raw`.
+//! IOSurface, this path wraps a raw `MTLTexture` pointer directly. The safe
+//! path transfers a retained texture into [`crate::MetalTextureRef`], which is
+//! consumed by import. The explicitly unsafe borrowed-pointer escape hatch
+//! retains the producer-owned texture internally for the import.
 
 use objc2::rc::Retained;
 use objc2::runtime::ProtocolObject;
@@ -26,13 +27,33 @@ use foreign_types_shared::ForeignType;
 
 use crate::{HostWgpuContext, InteropBackend, InteropError, MetalTextureRef};
 
-pub fn import_metal_texture_ref(
-    frame: &MetalTextureRef,
+/// Import a borrowed `MTLTexture *` without transferring the producer's
+/// retain.
+///
+/// Prefer [`import_metal_texture_ref`], whose safe frame carries a retained
+/// texture. This escape hatch exists for producers that only expose a raw
+/// Objective-C pointer.
+///
+/// # Safety
+///
+/// `raw_metal_texture` must be a non-null `MTLTexture *` that remains valid
+/// until this function has retained it. The caller retains all ownership and
+/// synchronization responsibilities outside this call.
+pub unsafe fn import_metal_texture_borrowed(
+    raw_metal_texture: *mut std::ffi::c_void,
+    metadata: crate::FrameMetadata,
     host: &HostWgpuContext,
 ) -> Result<wgpu::Texture, InteropError> {
-    if frame.raw_metal_texture.is_null() {
-        return Err(InteropError::InvalidFrame("raw_metal_texture is null"));
-    }
+    let texture =
+        unsafe { Retained::retain(raw_metal_texture.cast::<ProtocolObject<dyn MTLTexture>>()) }
+            .ok_or_else(|| InteropError::InvalidFrame("raw_metal_texture is null"))?;
+    import_metal_texture_ref(MetalTextureRef::new(metadata, texture), host)
+}
+
+pub fn import_metal_texture_ref(
+    frame: MetalTextureRef,
+    host: &HostWgpuContext,
+) -> Result<wgpu::Texture, InteropError> {
     if host.backend != InteropBackend::Metal {
         return Err(InteropError::BackendMismatch {
             expected: "Metal",
@@ -40,12 +61,11 @@ pub fn import_metal_texture_ref(
         });
     }
 
+    let metadata = frame.metadata();
     let texture = unsafe {
-        // Retain the caller's MTLTexture so that wgpu can take ownership
-        // of the reference we hand it without invalidating the caller's copy.
-        let obj_ptr = frame.raw_metal_texture as *mut ProtocolObject<dyn MTLTexture>;
-        let retained = Retained::retain(obj_ptr)
-            .ok_or_else(|| InteropError::Metal("failed to retain Metal texture".into()))?;
+        // The safe frame owns one Objective-C retain. Move that exact retain
+        // into wgpu rather than borrowing a raw pointer across this boundary.
+        let retained = frame.raw_metal_texture;
         #[cfg(all(
             feature = "wgpu-28",
             not(feature = "wgpu-29"),
@@ -56,17 +76,16 @@ pub fn import_metal_texture_ref(
         let metal_texture = retained;
 
         let copy_size = wgpu::hal::CopyExtent {
-            width: frame.size.width,
-            height: frame.size.height,
+            width: metadata.size.width,
+            height: metadata.size.height,
             depth: 1,
         };
-        // hal 30 added a `drop_callback` parameter. None preserves the old
-        // behavior: the caller keeps ownership of the underlying MTLTexture,
-        // and the retain above is what keeps it alive for wgpu's copy.
+        // hal 30 added a `drop_callback` parameter. The moved retain gives
+        // wgpu its texture lifetime; no callback is needed for this transfer.
         #[cfg(feature = "wgpu-30")]
         let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
             metal_texture,
-            frame.format,
+            metadata.format,
             MTLTextureType::Type2D,
             1, // array_layers
             1, // mip_levels
@@ -76,7 +95,7 @@ pub fn import_metal_texture_ref(
         #[cfg(all(feature = "wgpu-29", not(feature = "wgpu-30")))]
         let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
             metal_texture,
-            frame.format,
+            metadata.format,
             MTLTextureType::Type2D,
             1, // array_layers
             1, // mip_levels
@@ -89,7 +108,7 @@ pub fn import_metal_texture_ref(
         ))]
         let hal_texture = wgpu::hal::metal::Device::texture_from_raw(
             metal_texture,
-            frame.format,
+            metadata.format,
             metal::MTLTextureType::D2,
             1, // array_layers
             1, // mip_levels
@@ -102,11 +121,11 @@ pub fn import_metal_texture_ref(
             &wgpu::TextureDescriptor {
                 label: Some("metal-texture-ref-import"),
                 size: wgpu::Extent3d {
-                    width: frame.size.width,
-                    height: frame.size.height,
+                    width: metadata.size.width,
+                    height: metadata.size.height,
                     depth_or_array_layers: 1,
                 },
-                format: frame.format,
+                format: metadata.format,
                 dimension: wgpu::TextureDimension::D2,
                 mip_level_count: 1,
                 sample_count: 1,

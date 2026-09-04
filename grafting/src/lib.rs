@@ -43,7 +43,7 @@ mod sync;
 mod sync_dx12;
 #[cfg(target_vendor = "apple")]
 mod sync_metal;
-#[cfg(any(target_os = "linux", target_os = "android", target_os = "windows"))]
+#[cfg(target_os = "linux")]
 mod sync_vulkan;
 
 #[cfg(target_os = "linux")]
@@ -53,7 +53,7 @@ pub mod vulkan_dmabuf;
 mod metal_texture_ref;
 
 #[cfg(target_vendor = "apple")]
-pub use metal_texture_ref::import_metal_texture_ref;
+pub use metal_texture_ref::{import_metal_texture_borrowed, import_metal_texture_ref};
 
 #[cfg(target_os = "windows")]
 mod dx12_shared_texture;
@@ -64,10 +64,10 @@ mod dx12_shared_texture;
 /// The returned texture aliases the shared resource (no copy). Use this with
 /// [`crate::surfman_gl`]'s shared-handle export path when the consumer owns its
 /// own wgpu device (e.g. a UI framework that exposes the device only on its
-/// render thread). The caller is responsible for any required Y-flip and for
-/// closing its copy of the handle once consumers have opened their references.
+/// render thread). The safe frame carries shared RAII custody of the exported
+/// handle; callers remain responsible for any required Y-flip.
 #[cfg(target_os = "windows")]
-pub use dx12_shared_texture::import_dx12_shared_texture;
+pub use dx12_shared_texture::{import_dx12_shared_handle_borrowed, import_dx12_shared_texture};
 
 #[cfg(all(
     feature = "gl",
@@ -87,6 +87,14 @@ pub mod surfman_gl;
 
 #[cfg(feature = "gl")]
 use std::rc::Rc;
+#[cfg(target_os = "windows")]
+use std::sync::{
+    Arc,
+    atomic::{AtomicU64, Ordering},
+};
+
+#[cfg(target_os = "windows")]
+use std::os::windows::io::{AsRawHandle, OwnedHandle};
 
 use dpi::PhysicalSize;
 pub use error::{InteropError, UnsupportedReason};
@@ -96,7 +104,7 @@ pub use sync::{ImplicitOnlySynchronizer, InteropSynchronizer, NoopSynchronizer, 
 pub use sync_dx12::Dx12FenceSynchronizer;
 #[cfg(target_vendor = "apple")]
 pub use sync_metal::MetalSharedEventSynchronizer;
-#[cfg(any(target_os = "linux", target_os = "android", target_os = "windows"))]
+#[cfg(target_os = "linux")]
 pub use sync_vulkan::VulkanSemaphoreSynchronizer;
 
 /// The wgpu graphics backend in use on the host device.
@@ -311,6 +319,19 @@ impl GlFramebufferSource {
     }
 }
 
+/// Copyable metadata describing a producer frame.
+///
+/// This deliberately contains no OS or driver resource. Resource-bearing
+/// frames own their handles privately so a safe caller cannot duplicate a
+/// descriptor whose import transfers ownership.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct FrameMetadata {
+    pub size: PhysicalSize<u32>,
+    pub format: wgpu::TextureFormat,
+    pub generation: u64,
+    pub producer_sync: SyncMechanism,
+}
+
 /// A frame backed by a Linux DMABUF imported via Vulkan
 /// `VK_KHR_external_memory_fd` + `VK_EXT_image_drm_format_modifier`.
 ///
@@ -319,68 +340,149 @@ impl GlFramebufferSource {
 /// `wgpu::Texture` on the host's wgpu Vulkan device. Single-plane RGBA is
 /// the common case; multi-plane formats are not yet supported.
 ///
-/// The `dmabuf_fd` and `wait_semaphore_fd` are **consumed** by the importer
-/// — Vulkan's `vkImportMemoryFdKHR` and `vkImportSemaphoreFdKHR` take
-/// ownership of the descriptors and the driver closes them. The producer
-/// must not close its copy after handoff.
-#[derive(Clone, Copy, Debug)]
+/// The safe constructor takes ownership of both descriptors. Vulkan consumes
+/// each descriptor only after its matching driver import succeeds; otherwise
+/// Rust closes it as this frame is dropped. The raw constructor is `unsafe`
+/// because it must be given uniquely owned file descriptors.
+/// The Linux Vulkan semaphore synchronizer imports a duplicate of the
+/// frame-owned semaphore descriptor, then drops the original with the
+/// consumed frame.
 pub struct VulkanExternalImage {
-    pub size: PhysicalSize<u32>,
-    pub format: wgpu::TextureFormat,
-    pub generation: u64,
-    pub producer_sync: SyncMechanism,
-    /// DMABUF file descriptor of the producer's allocated image. Linux only.
-    pub dmabuf_fd: i32,
-    /// Offset in bytes into the dmabuf where the image data starts. `0` for
-    /// most allocators.
-    pub dmabuf_offset: u64,
-    /// Row stride in bytes. The producer's allocator reports this (often
-    /// `width * bytes_per_pixel` rounded up to alignment).
-    pub dmabuf_stride: u64,
-    /// DRM format modifier reported by the producer. `0`
-    /// (`DRM_FORMAT_MOD_LINEAR`) for linear-tiled buffers.
-    pub drm_modifier: u64,
-    /// Optional fd to a `VkSemaphore` payload (`OPAQUE_FD`) the producer
-    /// signals after rendering. Pair with [`VulkanSemaphoreSynchronizer`]
-    /// to gate consumer submits on the signal.
-    pub wait_semaphore_fd: Option<i32>,
+    metadata: FrameMetadata,
+    #[cfg(target_os = "linux")]
+    dmabuf_fd: std::os::fd::OwnedFd,
+    #[cfg(target_os = "linux")]
+    dmabuf_offset: u64,
+    #[cfg(target_os = "linux")]
+    dmabuf_stride: u64,
+    #[cfg(target_os = "linux")]
+    drm_modifier: u64,
+    #[cfg(target_os = "linux")]
+    wait_semaphore_fd: Option<std::os::fd::OwnedFd>,
 }
 
-/// A frame backed by a `MTLTexture` from a Metal producer.
-///
-/// The producer is responsible for ensuring the texture remains valid for the
-/// duration of the import call. Ownership is **not** transferred; the importer
-/// takes its own Objective-C retain before handing the texture to wgpu.
-#[derive(Debug)]
-pub struct MetalTextureRef {
-    pub size: PhysicalSize<u32>,
-    pub format: wgpu::TextureFormat,
-    pub generation: u64,
-    pub producer_sync: SyncMechanism,
-    /// Raw `MTLTexture *` pointer. Must be non-null. Apple platforms only.
+impl VulkanExternalImage {
+    /// Metadata that remains valid after the frame is consumed.
+    pub fn metadata(&self) -> FrameMetadata {
+        self.metadata
+    }
+
+    #[cfg(target_os = "linux")]
+    pub fn new(
+        metadata: FrameMetadata,
+        dmabuf_fd: std::os::fd::OwnedFd,
+        dmabuf_offset: u64,
+        dmabuf_stride: u64,
+        drm_modifier: u64,
+        wait_semaphore_fd: Option<std::os::fd::OwnedFd>,
+    ) -> Self {
+        Self {
+            metadata,
+            dmabuf_fd,
+            dmabuf_offset,
+            dmabuf_stride,
+            drm_modifier,
+            wait_semaphore_fd,
+        }
+    }
+
+    /// Construct an owned frame from raw Linux descriptors.
     ///
-    /// The caller retains ownership and must ensure the texture is alive when
-    /// import begins. The importer takes an independent retain for wgpu.
+    /// # Safety
+    ///
+    /// Each descriptor must be valid and uniquely owned by the caller. This
+    /// function assumes responsibility for closing it if the Vulkan driver
+    /// does not successfully consume it.
+    #[cfg(target_os = "linux")]
+    pub unsafe fn from_raw_owned_parts(
+        metadata: FrameMetadata,
+        dmabuf_fd: std::os::fd::RawFd,
+        dmabuf_offset: u64,
+        dmabuf_stride: u64,
+        drm_modifier: u64,
+        wait_semaphore_fd: Option<std::os::fd::RawFd>,
+    ) -> Self {
+        use std::os::fd::FromRawFd;
+
+        Self::new(
+            metadata,
+            unsafe { std::os::fd::OwnedFd::from_raw_fd(dmabuf_fd) },
+            dmabuf_offset,
+            dmabuf_stride,
+            drm_modifier,
+            wait_semaphore_fd.map(|fd| unsafe { std::os::fd::OwnedFd::from_raw_fd(fd) }),
+        )
+    }
+}
+
+/// A frame backed by a retained `MTLTexture` from a Metal producer.
+///
+/// The safe constructor takes an Objective-C retain. Import moves that retain
+/// into wgpu, so the producer must clone its retain when it intends to keep
+/// rendering into the same texture. Raw borrowed pointers are available only
+/// through the explicitly unsafe Metal import API.
+pub struct MetalTextureRef {
+    metadata: FrameMetadata,
+    /// A retained `MTLTexture` represented as an opaque Objective-C pointer.
+    /// It is private so the safe API cannot manufacture a borrowed pointer.
     #[cfg(target_vendor = "apple")]
-    pub raw_metal_texture: *mut std::ffi::c_void,
+    raw_metal_texture:
+        objc2::rc::Retained<objc2::runtime::ProtocolObject<dyn objc2_metal::MTLTexture>>,
+}
+
+impl MetalTextureRef {
+    pub fn metadata(&self) -> FrameMetadata {
+        self.metadata
+    }
+
+    #[cfg(target_vendor = "apple")]
+    pub fn new(
+        metadata: FrameMetadata,
+        raw_metal_texture: objc2::rc::Retained<
+            objc2::runtime::ProtocolObject<dyn objc2_metal::MTLTexture>,
+        >,
+    ) -> Self {
+        Self {
+            metadata,
+            raw_metal_texture,
+        }
+    }
+
+    /// Construct a frame from a raw +1 Objective-C retain.
+    ///
+    /// # Safety
+    ///
+    /// `raw_metal_texture` must be a non-null `MTLTexture *` with a retain
+    /// count owned by the caller. This frame assumes that retain.
+    #[cfg(target_vendor = "apple")]
+    pub unsafe fn from_raw_retained(
+        metadata: FrameMetadata,
+        raw_metal_texture: *mut std::ffi::c_void,
+    ) -> Option<Self> {
+        let raw_metal_texture = unsafe {
+            objc2::rc::Retained::from_raw(
+                raw_metal_texture
+                    .cast::<objc2::runtime::ProtocolObject<dyn objc2_metal::MTLTexture>>(),
+            )
+        }?;
+        Some(Self::new(metadata, raw_metal_texture))
+    }
 }
 
 /// A frame backed by a D3D12 resource shared via a DXGI NT handle.
 ///
 /// Obtain the handle by calling `IDXGIResource1::CreateSharedHandle` on your
 /// `ID3D12Resource`. The importer opens its own D3D12 reference via
-/// `ID3D12Device::OpenSharedHandle`; **you are responsible for closing your
-/// copy** of the handle after constructing this struct.
+/// `ID3D12Device::OpenSharedHandle`. Construct a [`Dx12SharedResource`] from
+/// an `OwnedHandle` so Rust closes the exported handle after the producer and
+/// all in-flight frames release their shared RAII custody.
 ///
 /// A D3D12 producer must leave the resource in `D3D12_RESOURCE_STATE_COMMON`
 /// before signalling `producer_sync`. That is the state this interop contract
 /// imports into wgpu.
-#[derive(Clone, Copy, Debug)]
+#[derive(Debug)]
 pub struct Dx12SharedTexture {
-    pub size: PhysicalSize<u32>,
-    pub format: wgpu::TextureFormat,
-    pub generation: u64,
-    pub producer_sync: SyncMechanism,
+    metadata: FrameMetadata,
     /// Fence value the producer signalled at on its `ID3D11Fence` /
     /// `ID3D12Fence` (opened from `Dx12FenceSynchronizer::shared_handle`;
     /// not linked, because that type only exists on Windows builds).
@@ -390,14 +492,88 @@ pub struct Dx12SharedTexture {
     /// Only meaningful when `producer_sync == SyncMechanism::ExplicitFence`.
     /// Set to `0` for the keyed-mutex / no-fence path; the synchronizer
     /// treats `0` as "no wait recorded for this frame".
-    pub fence_value: u64,
-    /// NT `HANDLE` from `IDXGIResource1::CreateSharedHandle`. Windows only.
-    ///
-    /// The importer opens its own reference via `OpenSharedHandle`. Close
-    /// your copy of the handle once this struct has been passed to
-    /// [`TextureImporter::import_frame`].
+    fence_value: u64,
+    /// Shared RAII custody of the reusable NT handle. The producer's cache and
+    /// every emitted frame hold a clone. `OpenSharedHandle` creates the wgpu
+    /// resource reference without consuming this handle.
     #[cfg(target_os = "windows")]
-    pub handle: *mut std::ffi::c_void,
+    resource: Dx12SharedResource,
+}
+
+#[cfg(target_os = "windows")]
+#[derive(Clone, Debug)]
+pub struct Dx12SharedResource {
+    handle: Arc<OwnedHandle>,
+    allocation_key: u64,
+}
+
+#[cfg(target_os = "windows")]
+static NEXT_DX12_ALLOCATION_KEY: AtomicU64 = AtomicU64::new(1);
+
+impl Dx12SharedTexture {
+    pub fn metadata(&self) -> FrameMetadata {
+        self.metadata
+    }
+
+    pub fn fence_value(&self) -> u64 {
+        self.fence_value
+    }
+
+    #[cfg(target_os = "windows")]
+    pub fn new(metadata: FrameMetadata, resource: Dx12SharedResource, fence_value: u64) -> Self {
+        Self {
+            metadata,
+            fence_value,
+            resource,
+        }
+    }
+
+    /// Stable identity for one shared-resource allocation, suitable for a host
+    /// cache. It does not change as the producer updates frame content.
+    #[cfg(target_os = "windows")]
+    pub fn allocation_key(&self) -> u64 {
+        self.resource.allocation_key()
+    }
+
+    #[cfg(target_os = "windows")]
+    pub(crate) fn raw_handle(&self) -> *mut std::ffi::c_void {
+        self.resource.raw_handle()
+    }
+
+    /// Reusable custody of this frame's shared resource. Cloning the resource
+    /// does not clone a frame: consumers must build a fresh frame with explicit
+    /// metadata before importing it.
+    #[cfg(target_os = "windows")]
+    pub fn resource(&self) -> Dx12SharedResource {
+        self.resource.clone()
+    }
+}
+
+#[cfg(target_os = "windows")]
+impl Dx12SharedResource {
+    /// Take RAII custody of a shared DXGI NT handle.
+    pub fn from_owned_handle(handle: OwnedHandle) -> Self {
+        Self {
+            handle: Arc::new(handle),
+            allocation_key: NEXT_DX12_ALLOCATION_KEY.fetch_add(1, Ordering::Relaxed),
+        }
+    }
+
+    /// Stable identity for this shared-resource allocation, suitable for a
+    /// host import cache. It does not change as the producer updates pixels.
+    pub fn allocation_key(&self) -> u64 {
+        self.allocation_key
+    }
+
+    /// Build a fresh one-shot frame from this reusable resource-custody
+    /// token. The returned frame is deliberately move-only.
+    pub fn frame(&self, metadata: FrameMetadata, fence_value: u64) -> Dx12SharedTexture {
+        Dx12SharedTexture::new(metadata, self.clone(), fence_value)
+    }
+
+    fn raw_handle(&self) -> *mut std::ffi::c_void {
+        self.handle.as_raw_handle()
+    }
 }
 
 /// A frame produced by a [`FrameProducer`], ready to be imported by a
@@ -435,9 +611,9 @@ impl NativeFrame {
         match self {
             #[cfg(feature = "gl")]
             NativeFrame::GlFramebufferSource(frame) => frame.producer_sync(),
-            NativeFrame::VulkanExternalImage(frame) => frame.producer_sync,
-            NativeFrame::MetalTextureRef(frame) => frame.producer_sync,
-            NativeFrame::Dx12SharedTexture(frame) => frame.producer_sync,
+            NativeFrame::VulkanExternalImage(frame) => frame.metadata().producer_sync,
+            NativeFrame::MetalTextureRef(frame) => frame.metadata().producer_sync,
+            NativeFrame::Dx12SharedTexture(frame) => frame.metadata().producer_sync,
         }
     }
 }
@@ -465,7 +641,7 @@ pub trait TextureImporter {
     /// before calling this.
     fn import_frame(
         &self,
-        frame: &NativeFrame,
+        frame: NativeFrame,
         options: &ImportOptions,
     ) -> Result<ImportedTexture, InteropError>;
 }
@@ -479,7 +655,7 @@ pub trait TextureImporter {
 /// let importer = WgpuTextureImporter::new(host);
 /// // each frame:
 /// let frame = producer.acquire_frame()?;
-/// let imported = importer.import_frame(&frame, &ImportOptions::default())?;
+/// let imported = importer.import_frame(frame, &ImportOptions::default())?;
 /// // use imported.texture in your render pipeline
 /// ```
 pub struct WgpuTextureImporter {
@@ -526,10 +702,10 @@ impl WgpuTextureImporter {
 /// resource epoch and can supply the native frame handle. Use
 /// [`ReusedResource`](Self::ReusedResource) for later frames that overwrite the
 /// same shared allocation in place.
-pub enum EpochFrame<'a> {
+pub enum EpochFrame {
     NewResource {
         resource_epoch: u64,
-        frame: &'a NativeFrame,
+        frame: NativeFrame,
     },
     ReusedResource {
         resource_epoch: u64,
@@ -587,7 +763,7 @@ impl EpochCachedImporter {
 
     pub fn update(
         &mut self,
-        frame: EpochFrame<'_>,
+        frame: EpochFrame,
         options: &ImportOptions,
     ) -> Result<&ImportedTexture, InteropError> {
         match frame {
@@ -673,16 +849,18 @@ impl EpochCachedImporter {
 }
 
 #[cfg(target_os = "windows")]
-/// Close a Windows NT shared handle.
+/// Close a raw Windows NT shared handle.
 ///
-/// Shared-handle producers transfer responsibility for the caller-owned handle
-/// copy to the host. Importers open their own reference, then the host should
-/// close its copy with this helper.
+/// This is a raw-compatibility helper for integrations that still manage a
+/// borrowed `HANDLE` themselves. New code should pass an `OwnedHandle` to
+/// [`Dx12SharedResource::from_owned_handle`] and let the safe frame path keep
+/// custody.
 ///
 /// # Safety
 ///
-/// `handle` must be a Windows `HANDLE` value owned by the caller. It must not be
-/// used after this function returns `Ok(())`.
+/// `handle` must be a Windows `HANDLE` value uniquely owned by the caller. It
+/// must not be used after this function returns `Ok(())`.
+#[deprecated(note = "use Dx12SharedResource::from_owned_handle and the move-only safe frame path")]
 pub unsafe fn close_shared_handle(handle: *mut std::ffi::c_void) -> Result<(), InteropError> {
     use windows::Win32::Foundation::{CloseHandle, HANDLE};
 
@@ -702,6 +880,7 @@ pub unsafe fn close_shared_handle(handle: *mut std::ffi::c_void) -> Result<(), I
 ///
 /// This function exists so cross-platform hosts can call one helper at the API
 /// boundary. It does not dereference or close `handle`.
+#[deprecated(note = "use Dx12SharedResource::from_owned_handle and the move-only safe frame path")]
 pub unsafe fn close_shared_handle(_handle: *mut std::ffi::c_void) -> Result<(), InteropError> {
     Ok(())
 }
@@ -709,11 +888,11 @@ pub unsafe fn close_shared_handle(_handle: *mut std::ffi::c_void) -> Result<(), 
 impl TextureImporter for WgpuTextureImporter {
     fn import_frame(
         &self,
-        frame: &NativeFrame,
+        frame: NativeFrame,
         options: &ImportOptions,
     ) -> Result<ImportedTexture, InteropError> {
         self.synchronizer
-            .producer_complete(frame, frame.producer_sync())?;
+            .producer_complete(&frame, frame.producer_sync())?;
 
         // `options` drives the GL bottom-left normalize pass only; the
         // shared-texture paths return top-left already.
@@ -862,19 +1041,20 @@ pub trait GlFramebufferSourceImpl {
 }
 
 fn import_vulkan_external_image(
-    #[cfg_attr(not(target_os = "linux"), allow(unused_variables))] frame: &VulkanExternalImage,
+    #[cfg_attr(not(target_os = "linux"), allow(unused_variables))] frame: VulkanExternalImage,
     #[cfg_attr(not(target_os = "linux"), allow(unused_variables))] host: &HostWgpuContext,
 ) -> Result<ImportedTexture, InteropError> {
     #[cfg(target_os = "linux")]
     {
+        let metadata = frame.metadata();
         let texture = vulkan_dmabuf::import_vulkan_external_image(frame, host)?;
         return Ok(ImportedTexture {
             texture,
-            format: frame.format,
-            size: frame.size,
+            format: metadata.format,
+            size: metadata.size,
             origin: TextureOrigin::TopLeft,
-            generation: frame.generation,
-            consumer_sync: frame.producer_sync,
+            generation: metadata.generation,
+            consumer_sync: metadata.producer_sync,
         });
     }
 
@@ -885,19 +1065,20 @@ fn import_vulkan_external_image(
 }
 
 fn import_metal_frame(
-    #[cfg_attr(not(target_vendor = "apple"), allow(unused_variables))] frame: &MetalTextureRef,
+    #[cfg_attr(not(target_vendor = "apple"), allow(unused_variables))] frame: MetalTextureRef,
     #[cfg_attr(not(target_vendor = "apple"), allow(unused_variables))] host: &HostWgpuContext,
 ) -> Result<ImportedTexture, InteropError> {
     #[cfg(target_vendor = "apple")]
     {
+        let metadata = frame.metadata();
         let texture = metal_texture_ref::import_metal_texture_ref(frame, host)?;
         return Ok(ImportedTexture {
             texture,
-            format: frame.format,
-            size: frame.size,
+            format: metadata.format,
+            size: metadata.size,
             origin: TextureOrigin::TopLeft,
-            generation: frame.generation,
-            consumer_sync: frame.producer_sync,
+            generation: metadata.generation,
+            consumer_sync: metadata.producer_sync,
         });
     }
 
@@ -908,19 +1089,20 @@ fn import_metal_frame(
 }
 
 fn import_dx12_shared_frame(
-    #[cfg_attr(not(target_os = "windows"), allow(unused_variables))] frame: &Dx12SharedTexture,
+    #[cfg_attr(not(target_os = "windows"), allow(unused_variables))] frame: Dx12SharedTexture,
     #[cfg_attr(not(target_os = "windows"), allow(unused_variables))] host: &HostWgpuContext,
 ) -> Result<ImportedTexture, InteropError> {
     #[cfg(target_os = "windows")]
     {
+        let metadata = frame.metadata();
         let texture = dx12_shared_texture::import_dx12_shared_texture(frame, host)?;
         return Ok(ImportedTexture {
             texture,
-            format: frame.format,
-            size: frame.size,
+            format: metadata.format,
+            size: metadata.size,
             origin: TextureOrigin::TopLeft,
-            generation: frame.generation,
-            consumer_sync: frame.producer_sync,
+            generation: metadata.generation,
+            consumer_sync: metadata.producer_sync,
         });
     }
 
@@ -1004,6 +1186,19 @@ fn detect_dmabuf_support(
         let _ = backend;
         false
     }
+}
+
+#[cfg(test)]
+mod ownership_shape_tests {
+    use super::*;
+
+    static_assertions::assert_not_impl_any!(NativeFrame: Clone, Copy);
+    static_assertions::assert_not_impl_any!(VulkanExternalImage: Clone, Copy);
+    static_assertions::assert_not_impl_any!(MetalTextureRef: Clone, Copy);
+    static_assertions::assert_not_impl_any!(Dx12SharedTexture: Clone, Copy);
+
+    #[cfg(target_os = "windows")]
+    static_assertions::assert_impl_all!(Dx12SharedResource: Clone);
 }
 
 #[cfg(test)]

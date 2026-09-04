@@ -33,6 +33,7 @@ use std::cell::RefCell;
 use dpi::PhysicalSize;
 use euclid::default::Size2D;
 use glow::HasContext;
+use std::os::windows::io::FromRawHandle;
 
 use windows::Win32::Foundation::{CloseHandle, GENERIC_ALL, HANDLE};
 use windows::Win32::Graphics::Direct3D11::{
@@ -94,16 +95,8 @@ impl Default for AngleDx12SharedCache {
 /// is replaced) or the cache is dropped.
 struct ExportState {
     d3d11_shared_texture: ID3D11Texture2D,
-    nt_handle: HANDLE,
+    shared_resource: crate::Dx12SharedResource,
     size: PhysicalSize<u32>,
-}
-
-impl Drop for ExportState {
-    fn drop(&mut self) {
-        unsafe {
-            let _ = CloseHandle(self.nt_handle);
-        }
-    }
 }
 
 /// Cross-frame cache for the shared-handle *export* path
@@ -274,9 +267,10 @@ pub(super) fn export_current_frame(
         let d3d11_device = angle_d3d11_device(surfman_device)?;
         let d3d11_shared_texture = create_d3d11_shared_texture(&d3d11_device, size)?;
         let nt_handle = export_nt_handle(&d3d11_shared_texture)?;
+        let handle = unsafe { std::os::windows::io::OwnedHandle::from_raw_handle(nt_handle.0) };
         *cache.state.borrow_mut() = Some(ExportState {
             d3d11_shared_texture,
-            nt_handle,
+            shared_resource: crate::Dx12SharedResource::from_owned_handle(handle),
             size,
         });
     }
@@ -296,14 +290,15 @@ pub(super) fn export_current_frame(
         true,
     )?;
 
-    Ok(crate::Dx12SharedTexture {
-        size,
-        format: wgpu::TextureFormat::Rgba8Unorm,
-        generation,
-        producer_sync: crate::SyncMechanism::None,
-        fence_value: 0,
-        handle: state.nt_handle.0,
-    })
+    Ok(state.shared_resource.frame(
+        crate::FrameMetadata {
+            size,
+            format: wgpu::TextureFormat::Rgba8Unorm,
+            generation,
+            producer_sync: crate::SyncMechanism::None,
+        },
+        0,
+    ))
 }
 
 /// Pull the underlying ANGLE D3D11 device pointer out of a surfman device and

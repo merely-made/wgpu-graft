@@ -52,7 +52,7 @@ use crate::{
 /// );
 ///
 /// let frame = producer.acquire_frame().unwrap();
-/// let imported = importer.import_frame(&frame, &ImportOptions::default()).unwrap();
+/// let imported = importer.import_frame(frame, &ImportOptions::default()).unwrap();
 /// // Use imported.texture in your wgpu render pipeline
 /// ```
 pub struct RawGlFrameProducer {

@@ -13,6 +13,7 @@
 
 use ash::vk;
 use std::ffi::CStr;
+use std::os::fd::{AsRawFd, IntoRawFd, OwnedFd, RawFd};
 
 use crate::{HostWgpuContext, InteropError, UnsupportedReason, VulkanExternalImage};
 
@@ -35,12 +36,11 @@ pub(crate) fn base_dmabuf_device_extensions() -> [&'static CStr; 3] {
 
 /// One plane in an owned DMABUF import.
 ///
-/// `fd` is consumed by [`import_dmabuf`]. Every descriptor is closed on all
-/// error paths. On a successful Vulkan memory import the driver owns the first
-/// fd; redundant same-buffer plane fds are closed by Graft.
+/// `buffer_index` selects an owned descriptor in [`VulkanDmaBufImport`]. More
+/// than one plane can refer to the same descriptor without double ownership.
 #[derive(Clone, Copy, Debug)]
 pub struct VulkanDmaBufPlane {
-    pub fd: i32,
+    pub buffer_index: usize,
     pub offset: u64,
     pub stride: u64,
 }
@@ -63,47 +63,86 @@ pub enum VulkanDmaBufQueueOwnership {
 /// format-specific fallback policy before calling this function.
 #[derive(Debug)]
 pub struct VulkanDmaBufImport {
-    pub size: dpi::PhysicalSize<u32>,
-    pub format: wgpu::TextureFormat,
+    size: dpi::PhysicalSize<u32>,
+    format: wgpu::TextureFormat,
     /// Linux DRM fourcc. Known 32-bit RGBA/BGRA values override `format` when
     /// selecting the Vulkan format. Set to `0` to map from `format` alone.
-    pub drm_format: u32,
-    pub drm_modifier: u64,
-    pub planes: Vec<VulkanDmaBufPlane>,
-    pub queue_ownership: VulkanDmaBufQueueOwnership,
+    drm_format: u32,
+    drm_modifier: u64,
+    buffers: Vec<OwnedFd>,
+    planes: Vec<VulkanDmaBufPlane>,
+    queue_ownership: VulkanDmaBufQueueOwnership,
 }
 
-struct PlaneFdGuard(Vec<i32>);
+impl VulkanDmaBufImport {
+    /// Construct an owned DMABUF import. Every plane buffer index must refer
+    /// to one entry in `buffers`.
+    pub fn new(
+        size: dpi::PhysicalSize<u32>,
+        format: wgpu::TextureFormat,
+        drm_format: u32,
+        drm_modifier: u64,
+        buffers: Vec<OwnedFd>,
+        planes: Vec<VulkanDmaBufPlane>,
+        queue_ownership: VulkanDmaBufQueueOwnership,
+    ) -> Result<Self, InteropError> {
+        validate_plane_layout(&buffers, &planes)?;
+        Ok(Self {
+            size,
+            format,
+            drm_format,
+            drm_modifier,
+            buffers,
+            planes,
+            queue_ownership,
+        })
+    }
+
+    /// Construct an owned DMABUF import from raw descriptors.
+    ///
+    /// # Safety
+    ///
+    /// Each descriptor must be valid and uniquely owned by the caller.
+    pub unsafe fn from_raw_owned_parts(
+        size: dpi::PhysicalSize<u32>,
+        format: wgpu::TextureFormat,
+        drm_format: u32,
+        drm_modifier: u64,
+        buffers: Vec<RawFd>,
+        planes: Vec<VulkanDmaBufPlane>,
+        queue_ownership: VulkanDmaBufQueueOwnership,
+    ) -> Result<Self, InteropError> {
+        use std::os::fd::FromRawFd;
+
+        let buffers = buffers
+            .into_iter()
+            .map(|fd| unsafe { OwnedFd::from_raw_fd(fd) })
+            .collect();
+        Self::new(
+            size,
+            format,
+            drm_format,
+            drm_modifier,
+            buffers,
+            planes,
+            queue_ownership,
+        )
+    }
+}
+
+struct PlaneFdGuard(Vec<OwnedFd>);
 
 impl PlaneFdGuard {
-    fn new(planes: &[VulkanDmaBufPlane]) -> Self {
-        let mut fds = Vec::with_capacity(planes.len());
-        for plane in planes {
-            if !fds.contains(&plane.fd) {
-                fds.push(plane.fd);
-            }
-        }
-        Self(fds)
+    fn new(buffers: Vec<OwnedFd>) -> Self {
+        Self(buffers)
     }
 
-    fn first(&self) -> i32 {
-        self.0[0]
+    fn raw(&self, index: usize) -> RawFd {
+        self.0[index].as_raw_fd()
     }
 
-    fn transfer_first_to_vulkan(&mut self) {
-        self.0[0] = -1;
-    }
-}
-
-impl Drop for PlaneFdGuard {
-    fn drop(&mut self) {
-        for fd in &mut self.0 {
-            if *fd >= 0 {
-                // SAFETY: import_dmabuf owns every fd recorded in this guard.
-                unsafe { libc::close(*fd) };
-                *fd = -1;
-            }
-        }
+    fn transfer_to_vulkan(&mut self, index: usize) {
+        let _ = self.0.swap_remove(index).into_raw_fd();
     }
 }
 
@@ -113,7 +152,7 @@ struct FdIdentity {
     inode: libc::ino_t,
 }
 
-fn fd_identity(fd: i32) -> Option<FdIdentity> {
+fn fd_identity(fd: RawFd) -> Option<FdIdentity> {
     let mut stat = std::mem::MaybeUninit::<libc::stat>::uninit();
     // SAFETY: fstat only reads metadata for the live descriptor.
     if unsafe { libc::fstat(fd, stat.as_mut_ptr()) } != 0 {
@@ -126,26 +165,39 @@ fn fd_identity(fd: i32) -> Option<FdIdentity> {
     })
 }
 
-fn planes_share_kernel_object(planes: &[VulkanDmaBufPlane]) -> bool {
+fn planes_share_kernel_object(buffers: &[OwnedFd], planes: &[VulkanDmaBufPlane]) -> bool {
     if planes.len() <= 1 {
         return true;
     }
-    let Some(first) = fd_identity(planes[0].fd) else {
+    let Some(first) = fd_identity(buffers[planes[0].buffer_index].as_raw_fd()) else {
         return false;
     };
     planes[1..]
         .iter()
-        .all(|plane| fd_identity(plane.fd) == Some(first))
+        .all(|plane| fd_identity(buffers[plane.buffer_index].as_raw_fd()) == Some(first))
 }
 
-fn validate_plane_layout(planes: &[VulkanDmaBufPlane]) -> Result<(), InteropError> {
+fn validate_plane_layout(
+    buffers: &[OwnedFd],
+    planes: &[VulkanDmaBufPlane],
+) -> Result<(), InteropError> {
     if planes.is_empty() {
         return Err(InteropError::InvalidFrame("DMABUF has no planes"));
     }
-    if planes.iter().any(|plane| plane.fd < 0) {
-        return Err(InteropError::InvalidFrame("DMABUF plane fd is negative"));
+    if buffers.is_empty() {
+        return Err(InteropError::InvalidFrame(
+            "DMABUF has no descriptor buffers",
+        ));
     }
-    if !planes_share_kernel_object(planes) {
+    if planes
+        .iter()
+        .any(|plane| plane.buffer_index >= buffers.len())
+    {
+        return Err(InteropError::InvalidFrame(
+            "DMABUF plane buffer index is out of range",
+        ));
+    }
+    if !planes_share_kernel_object(buffers, planes) {
         return Err(InteropError::Unsupported(
             UnsupportedReason::VulkanDisjointDmabufNotSupported,
         ));
@@ -196,7 +248,7 @@ pub fn import_dmabuf(
     frame: VulkanDmaBufImport,
     host: &HostWgpuContext,
 ) -> Result<wgpu::Texture, InteropError> {
-    let mut plane_fds = PlaneFdGuard::new(&frame.planes);
+    let mut plane_fds = PlaneFdGuard::new(frame.buffers);
 
     if host.backend != crate::InteropBackend::Vulkan {
         return Err(InteropError::BackendMismatch {
@@ -219,7 +271,7 @@ pub fn import_dmabuf(
     if frame.size.width == 0 || frame.size.height == 0 {
         return Err(InteropError::InvalidFrame("DMABUF dimensions are zero"));
     }
-    validate_plane_layout(&frame.planes)?;
+    validate_plane_layout(&plane_fds.0, &frame.planes)?;
 
     #[cfg(not(feature = "wgpu-30"))]
     if frame.queue_ownership == VulkanDmaBufQueueOwnership::Foreign {
@@ -288,7 +340,8 @@ pub fn import_dmabuf(
             &vk_instance,
             physical_device,
             vulkan_image,
-            plane_fds.first(),
+            plane_fds.raw(frame.planes[0].buffer_index),
+            frame.planes[0].buffer_index,
             &mut plane_fds,
         ) {
             Ok(memory) => memory,
@@ -382,7 +435,8 @@ unsafe fn allocate_and_bind_dmabuf_memory(
     vk_instance: &ash::Instance,
     physical_device: vk::PhysicalDevice,
     vulkan_image: vk::Image,
-    dmabuf_fd: i32,
+    dmabuf_fd: RawFd,
+    dmabuf_buffer_index: usize,
     plane_fds: &mut PlaneFdGuard,
 ) -> Result<vk::DeviceMemory, InteropError> {
     let memory_requirements = unsafe { vk_device.get_image_memory_requirements(vulkan_image) };
@@ -430,7 +484,7 @@ unsafe fn allocate_and_bind_dmabuf_memory(
     };
 
     // A successful VkImportMemoryFdKHR allocation transfers ownership of fd.
-    plane_fds.transfer_first_to_vulkan();
+    plane_fds.transfer_to_vulkan(dmabuf_buffer_index);
     if let Err(err) = unsafe { vk_device.bind_image_memory(vulkan_image, memory, 0) } {
         unsafe { vk_device.free_memory(memory, None) };
         return Err(InteropError::Vulkan(format!(
@@ -527,25 +581,24 @@ unsafe fn acquire_from_foreign_queue(
 }
 
 pub(crate) fn import_vulkan_external_image(
-    frame: &VulkanExternalImage,
+    frame: VulkanExternalImage,
     host: &HostWgpuContext,
 ) -> Result<wgpu::Texture, InteropError> {
-    if frame.dmabuf_fd <= 0 {
-        return Err(InteropError::InvalidFrame("dmabuf_fd <= 0"));
-    }
+    let metadata = frame.metadata();
     import_dmabuf(
-        VulkanDmaBufImport {
-            size: frame.size,
-            format: frame.format,
-            drm_format: 0,
-            drm_modifier: frame.drm_modifier,
-            planes: vec![VulkanDmaBufPlane {
-                fd: frame.dmabuf_fd,
+        VulkanDmaBufImport::new(
+            metadata.size,
+            metadata.format,
+            0,
+            frame.drm_modifier,
+            vec![frame.dmabuf_fd],
+            vec![VulkanDmaBufPlane {
+                buffer_index: 0,
                 offset: frame.dmabuf_offset,
                 stride: frame.dmabuf_stride,
             }],
-            queue_ownership: VulkanDmaBufQueueOwnership::LocalUninitialized,
-        },
+            VulkanDmaBufQueueOwnership::LocalUninitialized,
+        )?,
         host,
     )
 }
@@ -616,6 +669,7 @@ pub fn create_dmabuf_host_context(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::os::fd::{AsRawFd, FromRawFd};
 
     // File-descriptor numbers are process-wide and may be reused immediately
     // after close. Keep these tests from opening pipes underneath one another
@@ -628,39 +682,41 @@ mod tests {
             .unwrap_or_else(std::sync::PoisonError::into_inner)
     }
 
-    fn plane(fd: i32) -> VulkanDmaBufPlane {
+    fn plane(buffer_index: usize) -> VulkanDmaBufPlane {
         VulkanDmaBufPlane {
-            fd,
+            buffer_index,
             offset: 0,
             stride: 0,
         }
     }
 
-    fn open_pipe_read_fd() -> i32 {
+    fn open_pipe_read_fd() -> OwnedFd {
         let mut fds = [0; 2];
         assert_eq!(unsafe { libc::pipe(fds.as_mut_ptr()) }, 0);
         unsafe { libc::close(fds[1]) };
-        fds[0]
+        unsafe { OwnedFd::from_raw_fd(fds[0]) }
     }
 
     #[test]
     fn duplicated_plane_fds_are_one_kernel_object() {
         let _fd_lock = lock_fd_table();
         let first = open_pipe_read_fd();
-        let second = unsafe { libc::dup(first) };
+        let second = unsafe { libc::dup(first.as_raw_fd()) };
         assert!(second >= 0);
-        assert!(planes_share_kernel_object(&[plane(first), plane(second)]));
-        unsafe { libc::close(first) };
-        unsafe { libc::close(second) };
+        let second = unsafe { OwnedFd::from_raw_fd(second) };
+        let buffers = vec![first, second];
+        assert!(planes_share_kernel_object(&buffers, &[plane(0), plane(1)]));
     }
 
     #[test]
     fn repeated_descriptor_is_closed_once() {
         let _fd_lock = lock_fd_table();
         let fd = open_pipe_read_fd();
-        let guard = PlaneFdGuard::new(&[plane(fd), plane(fd)]);
-        assert_eq!(guard.0, vec![fd]);
+        let raw = fd.as_raw_fd();
+        let guard = PlaneFdGuard::new(vec![fd]);
+        assert!(planes_share_kernel_object(&guard.0, &[plane(0), plane(0)]));
         drop(guard);
+        assert_eq!(unsafe { libc::fcntl(raw, libc::F_GETFD) }, -1);
     }
 
     #[test]
@@ -668,9 +724,8 @@ mod tests {
         let _fd_lock = lock_fd_table();
         let first = open_pipe_read_fd();
         let second = open_pipe_read_fd();
-        assert!(!planes_share_kernel_object(&[plane(first), plane(second)]));
-        unsafe { libc::close(first) };
-        unsafe { libc::close(second) };
+        let buffers = vec![first, second];
+        assert!(!planes_share_kernel_object(&buffers, &[plane(0), plane(1)]));
     }
 
     #[test]
@@ -678,26 +733,40 @@ mod tests {
         let _fd_lock = lock_fd_table();
         let first = open_pipe_read_fd();
         let second = open_pipe_read_fd();
-        let planes = [plane(first), plane(second)];
-        let guard = PlaneFdGuard::new(&planes);
+        let first_raw = first.as_raw_fd();
+        let second_raw = second.as_raw_fd();
+        let buffers = vec![first, second];
+        let planes = vec![plane(0), plane(1)];
 
         assert!(matches!(
-            validate_plane_layout(&planes),
+            VulkanDmaBufImport::new(
+                dpi::PhysicalSize::new(1, 1),
+                wgpu::TextureFormat::Rgba8Unorm,
+                0,
+                0,
+                buffers,
+                planes,
+                VulkanDmaBufQueueOwnership::LocalUninitialized,
+            ),
             Err(InteropError::Unsupported(
                 UnsupportedReason::VulkanDisjointDmabufNotSupported
             ))
         ));
 
-        drop(guard);
-        assert_eq!(unsafe { libc::fcntl(first, libc::F_GETFD) }, -1);
-        assert_eq!(unsafe { libc::fcntl(second, libc::F_GETFD) }, -1);
+        assert_eq!(unsafe { libc::fcntl(first_raw, libc::F_GETFD) }, -1);
+        assert_eq!(unsafe { libc::fcntl(second_raw, libc::F_GETFD) }, -1);
     }
 
     #[test]
     fn invalid_plane_fd_is_conservatively_disjoint() {
         let _fd_lock = lock_fd_table();
         let first = open_pipe_read_fd();
-        assert!(!planes_share_kernel_object(&[plane(first), plane(-1)]));
-        unsafe { libc::close(first) };
+        let buffers = vec![first];
+        assert!(matches!(
+            validate_plane_layout(&buffers, &[plane(0), plane(1)]),
+            Err(InteropError::InvalidFrame(
+                "DMABUF plane buffer index is out of range"
+            ))
+        ));
     }
 }

@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- **Breaking:** make resource-bearing `NativeFrame` values move-only and make
+  safe import consume them. Vulkan DMABUF and semaphore descriptors now have
+  RAII custody and are closed on failure until a successful driver import
+  transfers ownership. Metal safe frames require a retained texture, while
+  DX12 uses a cloneable `Dx12SharedResource` custody token to construct fresh,
+  move-only per-frame values. Borrowed/raw native imports remain explicitly
+  `unsafe` escape hatches with documented ownership.
 - Move every Servo embedding and both lockfiles to Servo `release/v0.5`.
   Bridge zed-font-kit's Unix `freetype-sys` 0.20 version edge onto Servo's
   single 0.23 native link, and align the demo ANGLE DLL feature with Servo's
