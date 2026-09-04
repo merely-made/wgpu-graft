@@ -2,6 +2,7 @@
 name = "grafting"
 version = "0.6.0"
 edition = "2024"
+rust-version = "1.92"
 license = "MPL-2.0"
 repository = "https://github.com/merely-made/wgpu-graft"
 description = "Native texture interop helpers for importing offscreen producer frames into host-owned wgpu textures"
