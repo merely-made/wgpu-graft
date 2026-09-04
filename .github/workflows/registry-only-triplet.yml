@@ -133,7 +133,7 @@ jobs:
             $env:WELD_CACHE_ROOT = "$tempPosix/registry-weld-nvidia-cache"
             $env:WELD_PROFILE = "$env:WELD_CACHE_ROOT/profile"
             $env:WELD_BATTERY_OUT = "$tempPosix/registry-weld-nvidia"
-            $env:RUN_CMD = "$targetPosix/debug/registry-triplet-weld-win.exe"
+            $env:RUN_CMD = "$targetPosix/debug/demo-weld-win.exe"
             & $gitBash scripts/parity-battery.sh
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           } finally { Pop-Location }
@@ -222,8 +222,13 @@ jobs:
           # its stable executable path on this host. Cargo still fingerprints
           # and rebuilds the fresh registry consumer at that path.
           export CARGO_TARGET_DIR="/Users/markik/Code/targets/wgpu-scry-hardware"
+          # A logged-in runner can keep its WindowServer session while the
+          # display becomes idle. SCK then emits status-only samples. Wake the
+          # display and hold the headed session awake for the battery.
+          caffeinate -u -t 5 &
+          sleep 2
           set -o pipefail
-          bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh" 2>&1 | tee "$RUNNER_TEMP/registry-scry-$PROOF_HOST.log"
+          caffeinate -dims bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh" 2>&1 | tee "$RUNNER_TEMP/registry-scry-$PROOF_HOST.log"
       - name: Build and run CEF host-owned-wgpu parity battery
         run: |
           stage="$RUNNER_TEMP/registry-triplet/weld"
@@ -320,8 +325,13 @@ jobs:
           # its stable executable path on this host. Cargo still fingerprints
           # and rebuilds the fresh registry consumer at that path.
           export CARGO_TARGET_DIR="/Users/markik/Code/targets/wgpu-scry-hardware"
+          # A logged-in runner can keep its WindowServer session while the
+          # display becomes idle. SCK then emits status-only samples. Wake the
+          # display and hold the headed session awake for the battery.
+          caffeinate -u -t 5 &
+          sleep 2
           set -o pipefail
-          bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh" 2>&1 | tee "$RUNNER_TEMP/registry-scry-$PROOF_HOST.log"
+          caffeinate -dims bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh" 2>&1 | tee "$RUNNER_TEMP/registry-scry-$PROOF_HOST.log"
       - name: Build and run CEF host-owned-wgpu parity battery
         run: |
           stage="$RUNNER_TEMP/registry-triplet/weld"
@@ -395,7 +405,7 @@ jobs:
           set -o pipefail
           timeout 90s "$CARGO_TARGET_DIR/debug/demo-servo-winit" --smoke 2>&1 | tee "$RUNNER_TEMP/registry-graft-radv.log"
           grep -F "GRAFT DEMO SMOKE PASS" "$RUNNER_TEMP/registry-graft-radv.log"
-      - name: Run WPE host-owned-wgpu pixel, resize, input, script, and cookie gates
+      - name: Run WPE host-owned-wgpu pixel, input, message, and cookie gates
         run: |
           stage="$RUNNER_TEMP/registry-triplet/scry"
           export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/scry"
@@ -418,7 +428,7 @@ jobs:
           test -n "$cef_archive"
           export CEF_PATH="${cef_archive%/archive.json}"
           export LD_LIBRARY_PATH="$CEF_PATH"
-          RUN_CMD="$CARGO_TARGET_DIR/debug/registry-triplet-weld-linux" bash scripts/parity-battery.sh
+          RUN_CMD="$CARGO_TARGET_DIR/debug/demo-weld-linux" bash scripts/parity-battery.sh
       - uses: actions/upload-artifact@v4
         if: always()
         with:
