@@ -349,8 +349,8 @@ fn view(state: &AppState) -> Element<'_, Message> {
         .on_input(Message::UrlInputChanged)
         .on_submit(Message::Navigate);
 
-    let content: Element<Message> = if let Some(desc) = state.latest_frame {
-        shader(ServoProgram { desc })
+    let content: Element<Message> = if let Some(desc) = &state.latest_frame {
+        shader(ServoProgram { desc: desc.clone() })
             .width(Length::Fill)
             .height(Length::Fill)
             .into()
@@ -399,7 +399,9 @@ impl<Message> shader::Program<Message> for ServoProgram {
         _cursor: mouse::Cursor,
         _bounds: Rectangle,
     ) -> Self::Primitive {
-        ServoPrimitive { desc: self.desc }
+        ServoPrimitive {
+            desc: self.desc.clone(),
+        }
     }
 }
 
