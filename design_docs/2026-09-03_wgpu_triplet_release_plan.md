@@ -1,9 +1,9 @@
 # Wgpu Triplet Release Plan
 
-**Status (2026-09-04):** `grafting` 0.6.0, `scrying` 0.7.0, and
-`welding` 0.14.1 are published. Weld 0.14.1 supersedes 0.14.0 after the final
-consumer proof exposed an unsafe DevTools-window capability claim. The corrected
-registry-only hardware receipt is pending; post-release hardening remains open.
+**Status (2026-09-04):** release complete. `grafting` 0.6.0, `scrying` 0.7.0,
+and `welding` 0.14.1 are published, and the crates.io-only four-host proof is
+green. Weld 0.14.1 supersedes 0.14.0 after the first consumer proof exposed an
+unsafe DevTools-window capability claim. Post-release hardening remains open.
 
 This plan is the cross-repo release gate for:
 
@@ -464,3 +464,17 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   parity job observed a CDP response and the native-window refusal followed by
   another imported frame. The package dry-run and upload each verified 35 files
   at 581.9 KiB unpacked / 136.4 KiB compressed.
+- 2026-09-04: Final crates.io-only run `33861094065`, from harness commit
+  `9beddecd167eca55591d0a7d169f27db9020fe5a`, passed M4/Metal
+  (`100985482661`), NVIDIA/DX12 (`100985482854`), Intel/Metal
+  (`100985482969`), and RADV/Vulkan (`100985482994`). Every host independently
+  verified registry sources for exact `grafting` 0.6.0, `scrying` 0.7.0, and
+  `welding` 0.14.1. Graft imported live 960x640 frames with the expected page
+  pixel on all hosts. Scry passed WKWebView/ScreenCaptureKit frame and resize
+  coverage on both Macs, WebView2/WGC frame import and scaling on NVIDIA, and
+  WPE/DMABUF pixel, input, script, cookie, and post-input-frame coverage on
+  RADV. Weld passed import and CDP on every host; its native DevTools refusal
+  was followed by another imported frame. Artifacts `registry-triplet-metal-m4`,
+  `registry-triplet-nvidia`, `registry-triplet-metal-intel`, and
+  `registry-triplet-radv` contain the per-host receipts. This closes the release
+  gate for the public claim stated above.
