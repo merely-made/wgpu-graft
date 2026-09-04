@@ -557,5 +557,7 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   opened the breaking 0.15 line by requiring cross-platform owned-native-frame
   delivery on `CefSurfaceProducer`. The direct wgpu import and neutral-frame
   paths consume the same latest-frame mailbox. Local validation passed 49
-  library tests and a Windows `cef-runtime` type check. Ordered native events
-  and caller-minted completion ids still gate the opt-in Mere adapter.
+  library tests and a Windows `cef-runtime` type check; wgpu matrix run
+  `33918122258` passed all nine wgpu-version/platform rows and all three
+  platform demo builds. Ordered native events and caller-minted completion ids
+  still gate the opt-in Mere adapter.
