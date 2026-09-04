@@ -218,7 +218,10 @@ jobs:
           bash scripts/smoke-demo-mac.sh 2>&1 | tee "$RUNNER_TEMP/registry-graft-$PROOF_HOST.log"
       - name: Run WKWebView live frame, input, resize, script, and cookie battery
         run: |
-          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/scry"
+          # ScreenCaptureKit authorization for the unsigned demo is attached to
+          # its stable executable path on this host. Cargo still fingerprints
+          # and rebuilds the fresh registry consumer at that path.
+          export CARGO_TARGET_DIR="/Users/markik/Code/targets/wgpu-scry-hardware"
           set -o pipefail
           bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh" 2>&1 | tee "$RUNNER_TEMP/registry-scry-$PROOF_HOST.log"
       - name: Build and run CEF host-owned-wgpu parity battery
@@ -313,7 +316,10 @@ jobs:
           bash scripts/smoke-demo-mac.sh 2>&1 | tee "$RUNNER_TEMP/registry-graft-$PROOF_HOST.log"
       - name: Run WKWebView live frame, input, resize, script, and cookie battery
         run: |
-          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/scry"
+          # ScreenCaptureKit authorization for the unsigned demo is attached to
+          # its stable executable path on this host. Cargo still fingerprints
+          # and rebuilds the fresh registry consumer at that path.
+          export CARGO_TARGET_DIR="/Users/markik/Code/targets/wgpu-scry-hardware"
           set -o pipefail
           bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh" 2>&1 | tee "$RUNNER_TEMP/registry-scry-$PROOF_HOST.log"
       - name: Build and run CEF host-owned-wgpu parity battery

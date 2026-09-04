@@ -147,13 +147,18 @@ objc2-app-kit = "=0.3.2"
                 'dpi = "0.1.2"',
                 'glib = "=0.18.5"',
                 'libc = "0.2"',
+                'pollster = "0.4.0"',
                 exact_dependency("scrying", scrying_version, features=["wpe"]),
             ]
         )
         # Replace the inactive scrying dependency with the WPE-enabled one.
         dependencies = [line for line in dependencies if line != exact_dependency("scrying", scrying_version)]
+        # The copied release tests retain scrying's wgpu-row cfgs. Mirror the
+        # active row locally so their wgpu 30 API branches compile unchanged.
         return header + binary + '''[features]
+default = ["wgpu-30"]
 wpe = []
+wgpu-30 = []
 
 [dependencies]
 ''' + "\n".join(dependencies) + "\n"
