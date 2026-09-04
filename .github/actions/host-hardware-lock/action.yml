@@ -1,0 +1,22 @@
+name: Host hardware lock
+description: Serialize headed GPU jobs across the Merely wgpu repositories on one host
+
+inputs:
+  timeout_seconds:
+    description: Maximum time to wait for another hardware job
+    required: false
+    default: "7200"
+  stale_seconds:
+    description: Age after which an abandoned lock may be recovered
+    required: false
+    default: "14400"
+  poll_seconds:
+    description: Delay between acquisition attempts
+    required: false
+    default: "5"
+
+runs:
+  using: node20
+  main: main.js
+  post: post.js
+  post-if: always()

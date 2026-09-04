@@ -20,13 +20,15 @@ jobs:
   radv-dmabuf:
     name: RADV DMA-BUF pixel round trips
     runs-on: [self-hosted, wgpu-hardware, radv, linux-x64]
-    timeout-minutes: 30
+    timeout-minutes: 150
     env:
       WGPU_BACKEND: vulkan
       CARGO_TARGET_DIR: /home/markik/Code/targets/wgpu-graft-hardware
 
     steps:
       - uses: actions/checkout@v7
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
 
       - name: Record the physical adapter
@@ -45,7 +47,7 @@ jobs:
   radv-servo-demo:
     name: RADV Servo imported-pixel, input, and resize gate
     runs-on: [self-hosted, wgpu-hardware, radv, wayland, headed]
-    timeout-minutes: 45
+    timeout-minutes: 165
     env:
       CARGO_TARGET_DIR: /home/markik/Code/targets/wgpu-graft-demo-hardware
       XDG_RUNTIME_DIR: /run/user/1000
@@ -59,6 +61,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
       - name: Assert the headed Wayland session
         run: |
@@ -75,13 +79,15 @@ jobs:
   nvidia-servo-demo:
     name: NVIDIA DX12 Servo imported-pixel, input, and resize gate
     runs-on: [self-hosted, wgpu-hardware, nvidia, windows-x64, headed]
-    timeout-minutes: 50
+    timeout-minutes: 170
     env:
       CARGO_TARGET_DIR: C:\Users\mark_\Code\targets\wgpu-graft-demo-hardware
       WGPU_BACKEND: dx12
 
     steps:
       - uses: actions/checkout@v7
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
       - name: Record the physical adapter
         shell: powershell
         run: nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
@@ -92,13 +98,15 @@ jobs:
   metal-m4-servo-demo:
     name: Apple M4 Servo imported-pixel, input, and resize gate
     runs-on: [self-hosted, wgpu-hardware, metal, macos-arm64, m4, headed]
-    timeout-minutes: 50
+    timeout-minutes: 170
     env:
       CARGO_TARGET_DIR: /Users/markik/Code/targets/wgpu-graft-demo-hardware
       WGPU_BACKEND: metal
 
     steps:
       - uses: actions/checkout@v7
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
       - name: Install relocatable Python tooling
         uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
@@ -128,13 +136,15 @@ jobs:
   metal-intel-servo-demo:
     name: Intel iMac Servo imported-pixel, input, and resize gate
     runs-on: [self-hosted, wgpu-hardware, metal, macos-x64, intel-mac, headed]
-    timeout-minutes: 50
+    timeout-minutes: 170
     env:
       CARGO_TARGET_DIR: /Users/markik/Code/targets/wgpu-graft-demo-hardware
       WGPU_BACKEND: metal
 
     steps:
       - uses: actions/checkout@v7
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
       - name: Install relocatable Python tooling
         uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1

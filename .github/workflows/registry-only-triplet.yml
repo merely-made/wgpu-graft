@@ -51,13 +51,15 @@ jobs:
   nvidia-dx12:
     name: NVIDIA DX12 registry-only triplet proof
     runs-on: [self-hosted, wgpu-hardware, nvidia, windows-x64, headed]
-    timeout-minutes: 90
+    timeout-minutes: 210
     env:
       WGPU_BACKEND: dx12
       CEF_CACHE_ROOT: C:\Users\mark_\Code\cef-cache\wgpu-weld
 
     steps:
       - uses: actions/checkout@v4
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
       - name: Select Rust 1.97.1
         shell: pwsh
         run: |
@@ -150,7 +152,7 @@ jobs:
   metal-m4:
     name: Apple M4 registry-only triplet proof
     runs-on: [self-hosted, wgpu-hardware, metal, macos-arm64, m4, headed]
-    timeout-minutes: 100
+    timeout-minutes: 220
     env:
       WGPU_BACKEND: metal
       CEF_PATH: /Users/markik/Code/cef-cache/wgpu-weld
@@ -161,6 +163,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
       - uses: actions/checkout@v4
         with:
@@ -252,7 +256,7 @@ jobs:
   metal-intel:
     name: Intel iMac registry-only triplet proof
     runs-on: [self-hosted, wgpu-hardware, metal, macos-x64, intel-mac, headed]
-    timeout-minutes: 100
+    timeout-minutes: 220
     env:
       WGPU_BACKEND: metal
       CEF_PATH: /Users/markik/Code/cef-cache/wgpu-weld
@@ -264,6 +268,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
       - uses: actions/checkout@v4
         with:
@@ -355,7 +361,7 @@ jobs:
   radv-vulkan:
     name: RADV Vulkan registry-only triplet proof
     runs-on: [self-hosted, wgpu-hardware, radv, wayland, headed]
-    timeout-minutes: 100
+    timeout-minutes: 220
     env:
       WGPU_BACKEND: vulkan
       CEF_CACHE_ROOT: /home/markik/Code/cef-cache/wgpu-weld
@@ -371,6 +377,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
       - uses: actions/checkout@v4
         with:
