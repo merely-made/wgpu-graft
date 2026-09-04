@@ -211,8 +211,8 @@ pub struct HostWgpuContext {
     /// Linux-only; always `false` on other platforms or non-Vulkan backends.
     ///
     /// Detected automatically by [`HostWgpuContext::new`] by inspecting the
-    /// hal device's enabled extension list. Use
-    /// [`vulkan_dmabuf::create_dmabuf_host_context`] to obtain a context where
+    /// hal device's enabled extension list. On Linux, use
+    /// `vulkan_dmabuf::create_dmabuf_host_context` to obtain a context where
     /// this is `true`.
     pub dmabuf_support: bool,
 }
@@ -473,9 +473,10 @@ impl MetalTextureRef {
 ///
 /// Obtain the handle by calling `IDXGIResource1::CreateSharedHandle` on your
 /// `ID3D12Resource`. The importer opens its own D3D12 reference via
-/// `ID3D12Device::OpenSharedHandle`. Construct a [`Dx12SharedResource`] from
-/// an `OwnedHandle` so Rust closes the exported handle after the producer and
-/// all in-flight frames release their shared RAII custody.
+/// `ID3D12Device::OpenSharedHandle`. On Windows, construct a
+/// `Dx12SharedResource` from an `OwnedHandle` so Rust closes the exported
+/// handle after the producer and all in-flight frames release their shared
+/// RAII custody.
 ///
 /// A D3D12 producer must leave the resource in `D3D12_RESOURCE_STATE_COMMON`
 /// before signalling `producer_sync`. That is the state this interop contract

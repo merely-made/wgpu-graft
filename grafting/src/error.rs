@@ -29,12 +29,12 @@ pub enum UnsupportedReason {
     /// The wgpu Vulkan device was not constructed with the base DMABUF
     /// extension set enabled, including `VK_EXT_image_drm_format_modifier`,
     /// so external image creation would fail.
-    /// Use [`vulkan_dmabuf::create_dmabuf_host_context`](crate::vulkan_dmabuf::create_dmabuf_host_context)
-    /// (Linux only) to obtain a device with the required extensions.
+    /// On Linux, use `vulkan_dmabuf::create_dmabuf_host_context` to obtain a
+    /// device with the required extensions.
     VulkanDmabufExtensionNotEnabled,
     /// The imported image belongs to a non-Vulkan producer, but the host
-    /// device lacks `VK_EXT_queue_family_foreign`. Construct the unified wgpu
-    /// device with `vulkan_dmabuf::create_dmabuf_host_context`.
+    /// device lacks `VK_EXT_queue_family_foreign`. On Linux, construct the
+    /// unified wgpu device with `vulkan_dmabuf::create_dmabuf_host_context`.
     VulkanForeignQueueExtensionNotEnabled,
 }
 
