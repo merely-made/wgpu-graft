@@ -18,29 +18,12 @@ env:
   # git is the same remedy the README gives for the identical failure locally.
   CARGO_NET_GIT_FETCH_WITH_CLI: "true"
 
+# The MSRV 1.92 job that used to sit here has moved to msrv.yml, which calls
+# the organization's shared `wgpu-msrv` workflow on tags and on demand. It ran
+# on every push across three operating systems to re-answer a question that
+# only changes at publication.
+
 jobs:
-  msrv:
-    name: MSRV 1.92 (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Install Rust 1.92
-        uses: dtolnay/rust-toolchain@1.92.0
-
-      - name: Allow long paths on Windows
-        if: runner.os == 'Windows'
-        run: git config --global core.longpaths true
-
-      # This is the published library contract. Servo demos retain the newer
-      # workspace toolchain and are exercised by the platform jobs below.
-      - name: Check complete library feature graph
-        run: cargo +1.92.0 check --locked -p grafting --all-features
-
   # ── Linux ──────────────────────────────────────────────────────────────────
   check-linux:
     name: Check and test (Linux)
@@ -324,8 +307,25 @@ jobs:
       - check-windows-iced
     runs-on: ubuntu-latest
     steps:
+      # This job compiles nothing; it only fans in the three real Windows
+      # lanes. It used to do that with three bare `test "..." = "success"`
+      # lines, so its log read `test "failure" = "success"` and named neither
+      # the lane that failed nor where to look — a red badge that taught
+      # nothing. Say which lane failed and where its log is.
       - name: Verify Windows lanes
         run: |
-          test "${{ needs.check-windows-core.result }}" = "success"
-          test "${{ needs.check-windows-servo.result }}" = "success"
-          test "${{ needs.check-windows-iced.result }}" = "success"
+          core='${{ needs.check-windows-core.result }}'
+          servo='${{ needs.check-windows-servo.result }}'
+          iced='${{ needs.check-windows-iced.result }}'
+          echo "Check core (Windows / Vulkan + D3D):   $core"
+          echo "Check Servo demos (Windows):           $servo"
+          echo "Check Iced Servo demo (Windows / DX12): $iced"
+          failed=""
+          [ "$core" = success ]  || failed="$failed 'Check core (Windows / Vulkan + D3D)'"
+          [ "$servo" = success ] || failed="$failed 'Check Servo demos (Windows)'"
+          [ "$iced" = success ]  || failed="$failed 'Check Iced Servo demo (Windows / DX12)'"
+          if [ -n "$failed" ]; then
+            echo "::error::This job is a fan-in and compiled nothing. The failure is in:$failed. Open that job in run ${{ github.run_id }} for the compiler output."
+            exit 1
+          fi
+          echo "All three Windows lanes passed."
