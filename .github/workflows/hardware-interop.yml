@@ -1,8 +1,20 @@
 name: hardware interop
 
+# Real GPUs and real Servo demos on self-hosted machines. Over the sampled
+# window this workflow completed green 11 times, was cancelled 5 times by its
+# own concurrency group, and failed once — the cancellations tracked push
+# cadence, not the code. It now runs weekly and on demand.
+#
+# Run it by hand before a release, or after touching an interop seam, with:
+#   gh workflow run hardware-interop.yml
+#
+# Branch protection must NOT list these jobs as required checks.
 on:
-  push:
-    branches: [main]
+  schedule:
+    # Staggered against the sibling hardware lanes so the four physical
+    # machines are not contended: wgpu-weld headed 05:23 Sun and parity 07:23
+    # Sun, wgpu-scry headed 09:23 Sun, this one 11:23 Sun.
+    - cron: "23 11 * * 0"
   workflow_dispatch:
 
 permissions:

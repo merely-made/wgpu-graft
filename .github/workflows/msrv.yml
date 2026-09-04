@@ -1,0 +1,38 @@
+name: grafting MSRV
+
+# Moved out of ci.yml, where it ran on every push across three operating
+# systems to re-answer a question that only changes when a dependency moves or
+# a release is cut. MSRV is a promise made at publication, so it is verified at
+# publication and on demand.
+#
+# `grafting`'s MSRV contract is one whole-graph check, not a set of per-wgpu
+# compatibility rows — the Servo demos retain the newer workspace toolchain and
+# are exercised by ci.yml's platform jobs — so this calls the shared workflow
+# with the library matrix off and the whole-graph check stated as extra-check.
+# That is exactly the command ci.yml's `msrv` job ran.
+#
+# What would have to change for wgpu-graft to join the shared gate fully is
+# recorded in design_docs/; the short version is that its per-wgpu rows are
+# interleaved with `cargo doc`, the Servo demo checks, and a shared cargo cache
+# inside one job per operating system, precisely so the very large Servo build
+# happens once rather than nine times. Splitting them into the shared 3x3
+# matrix would rebuild Servo in every cell.
+
+on:
+  push:
+    tags: ["v*", "grafting-v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  msrv:
+    uses: merely-made/.github/.github/workflows/wgpu-msrv.yml@main
+    with:
+      crate: grafting
+      toolchain: 1.92.0
+      run-library: false
+      # This is the published library contract.
+      extra-check: -p grafting --all-features
+      extra-check-name: complete library feature graph
