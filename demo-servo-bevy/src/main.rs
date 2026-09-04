@@ -277,7 +277,7 @@ fn resize_servo_image(
     servo_image: Res<ServoImage>,
     mut images: ResMut<Assets<Image>>,
 ) {
-    let Some(desc) = frame.0 else {
+    let Some(desc) = frame.0.as_ref() else {
         return;
     };
     if let Some(mut image) = images.get_mut(&servo_image.0) {
