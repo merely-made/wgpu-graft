@@ -58,7 +58,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@1.97.1
+      - name: Select Rust 1.97.1
+        shell: pwsh
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal
+          rustup override set 1.97.1
+          rustc --version
       - uses: actions/checkout@v4
         with:
           repository: merely-made/wgpu-scry
