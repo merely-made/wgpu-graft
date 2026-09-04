@@ -3,9 +3,9 @@
 **Status (2026-09-04):** release complete. `grafting` 0.6.0, `scrying` 0.7.0,
 and `welding` 0.14.1 are published, and the crates.io-only four-host proof is
 green. Weld 0.14.1 supersedes 0.14.0 after the first consumer proof exposed an
-unsafe DevTools-window capability claim. Host-wide hardware serialization and
-the first ScreenCaptureKit reliability pass are also complete. Sandboxed CEF
-embedding and a polished combined host demo remain open.
+unsafe DevTools-window capability claim. Host-wide hardware serialization, the
+first ScreenCaptureKit reliability pass, and sandboxed CEF embedding are also
+complete. A polished combined host demo remains open.
 
 This plan is the cross-repo release gate for:
 
@@ -19,9 +19,9 @@ The public claim is limited to the completed receipts for Servo/Graft, Scry
 WebView2 on DX12, Scry WKWebView on Metal, Scry WPE headless DMABUF on
 RADV/Vulkan at its fixed backend size, and Weld CEF accelerated OSR on the
 recorded platforms. It does not claim API equivalence, uniform security models,
-WPE runtime resizing, or Electron/Tauri replacement. Weld ships first as
-trusted-content CEF embedding while sandboxing remains an explicit later
-milestone.
+WPE runtime resizing, or Electron/Tauri replacement. Weld exposes the security
+choice explicitly; the completed receipts prove its sandboxed CEF mode on
+Windows, Linux, and macOS while retaining the named trusted-content mode.
 
 ## Confirmed decisions
 
@@ -292,7 +292,9 @@ Done conditions:
 - Each claimed browser path loads a deterministic local page, produces a page
   pixel, observes pointer input, and proves script/cookie behavior. Paths that
   support runtime resize also prove resize; WPE instead proves its fixed render
-  target and honest resize rejection.
+  target and honest resize rejection. Weld's CEF path supports an explicit
+  sandboxed mode on all three desktop platforms, with a bootstrap-owned sandbox
+  context on Windows and native CEF sandbox initialization on Linux and macOS.
 - Each WKWebView capture receipt wakes and holds the headed WindowServer session
   before the battery. At least one complete ScreenCaptureKit sample carrying an
   image buffer must arrive before acquire/import is testable. Status-only
@@ -343,7 +345,7 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
 
 ## Post-release milestones
 
-- [ ] Implement CEF sandboxed modes for Weld and update the security posture from
+- [x] Implement CEF sandboxed modes for Weld and update the security posture from
   trusted-content preview to sandboxed embedding where proven.
 - [x] Assess whether to publish a neutral `surface-engine-api` crate or keep
   complete per-engine capability structs without a shared crate. The assessment
@@ -509,3 +511,24 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   `33868840816`, headed hardware run `33868840814`, wgpu matrix run
   `33868840900`, and MSRV run `33868840798` all passed; the hardware runs were
   green on NVIDIA, RADV, Intel, and M4.
+- 2026-09-04: Weld commits `730c2d1b10e539f8f54bfebd27ce77fc35d59653`
+  and `a4f5cf725b2cc3489930aed50bc4dd496f741295` completed the sandbox milestone.
+  Linux enables CEF's native sandbox, macOS initializes and retains
+  `libcef_sandbox.dylib` in helper processes, and Windows packages the CEF
+  bootstrap executable with a client DLL that carries one bootstrap-owned
+  sandbox context through subprocess entry and browser initialization. Headed
+  parity run `33899247918` first proved the Linux, Intel Mac, and M4 paths.
+  Final headed parity run `33902324155` and headed hardware run `33902324150`
+  passed on NVIDIA, RADV, Intel, and M4; wgpu matrix `33902324151` and MSRV run
+  `33902324233` also passed. The Windows DX12 pixel fixture additionally passed
+  twice from a locally packaged sandbox bundle.
+- 2026-09-04: Mere commits `f77e716e` and `b9b0ee13` advanced the neutral
+  contract work without changing the released triplet. Inker now carries
+  correlated script and cookie request ids on its ordered event stream, and the
+  old blocking compatibility calls are gone from Inker and its Graft, Scry, and
+  Weld adapters. Pelt consumes page readiness as a web message and imports
+  Scry's owned DX12 frame with the same shared synchronizer used by WebView2.
+  The headed mixed receipt passed at 1280x800 and 960x640 with three imports,
+  three fence waits, thirteen host compositions, and artifact digest
+  `85d1b0ba8a86778f`. Native Scry callback completion, direct Weld binding, and
+  real Graft/Weld factories in the combined Pelt demo remain open.
