@@ -11,7 +11,7 @@ on:
       scrying_version:
         description: Published scrying version to require exactly
         required: true
-        default: "0.7.0"
+        default: "0.7.1"
         type: string
       welding_version:
         description: Published welding version to require exactly

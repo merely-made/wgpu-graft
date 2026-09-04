@@ -1,11 +1,13 @@
 # Wgpu Triplet Release Plan
 
-**Status (2026-09-04):** release complete. `grafting` 0.6.0, `scrying` 0.7.0,
+**Status (2026-09-04):** release complete. `grafting` 0.6.0, `scrying` 0.7.1,
 and `welding` 0.14.1 are published, and the crates.io-only four-host proof is
 green. Weld 0.14.1 supersedes 0.14.0 after the first consumer proof exposed an
 unsafe DevTools-window capability claim. Host-wide hardware serialization, the
 first ScreenCaptureKit reliability pass, and sandboxed CEF embedding are also
-complete. A polished combined host demo remains open.
+complete. Scry 0.7.1 supersedes 0.7.0 with native ordered asynchronous
+script-result and cookie-read completions. A polished combined host demo
+remains open.
 
 This plan is the cross-repo release gate for:
 
@@ -530,5 +532,30 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   Scry's owned DX12 frame with the same shared synchronizer used by WebView2.
   The headed mixed receipt passed at 1280x800 and 960x640 with three imports,
   three fence waits, thirteen host compositions, and artifact digest
-  `85d1b0ba8a86778f`. Native Scry callback completion, direct Weld binding, and
-  real Graft/Weld factories in the combined Pelt demo remain open.
+  `85d1b0ba8a86778f`. Direct Weld binding and real Graft/Weld factories in the
+  combined Pelt demo remain open.
+- 2026-09-04: Scry commits `8be67eec9b75d25f952eb64208749a30a8eacfa6`
+  and `8386502915e6bad0f9d9d13cc17bb7d4bbaa769a` added one native ordered event
+  stream for navigation, page messages, script completions, and cookie
+  completions on WebView2, WKWebView, and WPE. `scrying` 0.7.1 was published
+  from the latter commit. Rust 1.92 MSRV run `33913518467`, wgpu matrix
+  `33913492908`, Linux run `33913492164`, macOS run `33913491981`, and clean
+  four-host hardware rerun `33914446585` passed. The first hardware run's three
+  Windows startup/resource failures were superseded by that clean rerun.
+- 2026-09-04: Mere commit `c767cb925b84188440712806d9cc02ef79bbd9bb`
+  adopted `scrying` 0.7.1 in `scrying-engine`, forwards caller request ids,
+  consumes only Scry's ordered queue, maps native completion payloads, and
+  reports backend-specific capability limits. Registry-backed tests passed 99
+  Inker tests, 24 Graft/Scry/Weld adapter tests, and six Pelt integration tests.
+- 2026-09-04: Fresh crates.io-only run `33916390001` passed on NVIDIA/DX12,
+  M4/Metal, Intel/Metal, and RADV/Vulkan with exact `grafting` 0.6.0,
+  `scrying` 0.7.1, and `welding` 0.14.1. Each host independently resolved the
+  registry packages before running the same live Servo/Graft, system-webview,
+  and CEF batteries used for the prior release proof. This supersedes the
+  0.7.0 registry receipt for the published triplet.
+- 2026-09-04: Weld commit `52d74161fb5235c85372641c44fc1f2a101a2c2b`
+  opened the breaking 0.15 line by requiring cross-platform owned-native-frame
+  delivery on `CefSurfaceProducer`. The direct wgpu import and neutral-frame
+  paths consume the same latest-frame mailbox. Local validation passed 49
+  library tests and a Windows `cef-runtime` type check. Ordered native events
+  and caller-minted completion ids still gate the opt-in Mere adapter.
