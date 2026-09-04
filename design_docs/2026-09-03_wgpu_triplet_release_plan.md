@@ -256,7 +256,12 @@ Order:
 3. Build fresh external consumers of Scry and Weld against the published Graft.
 4. Publish `scrying` 0.7.0 and `welding` 0.14.0.
 5. Build a fresh consumer using only the three crates.io releases.
-6. Run fresh, registry-only platform harnesses on DX12, Metal, and Vulkan. The harnesses must
+6. Dispatch `.github/workflows/registry-only-triplet.yml` with the immutable
+   Scry/Weld source refs that produced the selected releases. It stages their
+   demo/test source as fresh consumers; those checkouts are fixtures only and
+   never Cargo dependencies. Each staged manifest pins `grafting` 0.6.0,
+   `scrying` 0.7.0, and `welding` 0.14.0 exactly.
+7. Run fresh, registry-only platform harnesses on DX12, Metal, and Vulkan. The harnesses must
    record `cargo metadata`/`cargo tree` evidence that all three library sources
    are registry packages, with no Git or path override.
 
@@ -276,6 +281,13 @@ Done conditions:
   wherever its capability report says those operations are supported.
 - The receipt records exact crate versions, host backend, selected wgpu row,
   hardware host, and the observed frame/pixel/input result.
+- The registry-proof artifacts retain each staged `Cargo.lock`, full metadata,
+  and dependency tree. The verifier rejects any non-local path dependency or
+  Git source and requires exactly one registry source for every triplet crate.
+- The Scry hardware batteries must cover script/cookie when their capability
+  reports claim them. The staged Weld battery adds an ephemeral cookie
+  round-trip case and requires its asynchronous `weld_probe` readback, in
+  addition to the existing script receipt.
 
 ## Non-gating parallel item
 
@@ -348,6 +360,20 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   DX12 link and the Linux-only DMABUF links plain code text when their modules
   are cfg-absent. `cargo publish --dry-run` remains deferred until the fresh
   CI and hardware candidate is confirmed green.
+- 2026-09-03: Added the manually dispatched `registry-only-triplet` workflow,
+  not yet runnable until all three specified versions exist on crates.io. It
+  stages immutable Scry/Weld release-source demos and WPE integration tests in
+  temporary standalone consumers, rewrites their manifests to exact registry
+  triplet dependencies, records metadata/tree/lockfile proof, then runs the
+  existing headed batteries on NVIDIA/DX12, M4/Metal, Intel/Metal, and
+  RADV/Vulkan. Staging-source checkouts are never part of the resolved Cargo
+  graph. The WPE gate rejects a prerequisite `SKIP`; its separate pixel/import
+  and input tests jointly cover host-owned-wgpu composition, deterministic
+  pixel, resize, pointer, script, and cookie behavior. The existing Graft
+  Servo demo cannot itself become a registry-only consumer yet because its
+  `servo-wgpu-interop-adapter` is not published; that precise additional
+  proof remains post-publish work rather than a release claim made by this
+  harness.
 - 2026-09-03: CI now enforces that same Rust 1.92 all-features library check on
   Linux, macOS, and Windows. Servo demos keep the workspace toolchain and do
   not expand the published library's MSRV contract.

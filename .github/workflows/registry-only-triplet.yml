@@ -1,0 +1,315 @@
+name: registry-only triplet proof
+
+on:
+  workflow_dispatch:
+    inputs:
+      grafting_version:
+        description: Published grafting version to require exactly
+        required: true
+        default: "0.6.0"
+        type: string
+      scrying_version:
+        description: Published scrying version to require exactly
+        required: true
+        default: "0.7.0"
+        type: string
+      welding_version:
+        description: Published welding version to require exactly
+        required: true
+        default: "0.14.0"
+        type: string
+      scry_source_ref:
+        description: Tag or immutable commit that produced the selected scrying release
+        required: true
+        type: string
+      weld_source_ref:
+        description: Tag or immutable commit that produced the selected welding release
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: registry-only-triplet-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  RUSTFLAGS: -D warnings
+
+# This deliberately does not use the checked-out sibling workspaces as Cargo
+# workspaces. `stage_registry_triplet.py` copies only demo/test source into a
+# fresh consumer and writes exact registry dependencies. The verifier records
+# metadata, Cargo.lock, and cargo tree before the headed batteries run.
+jobs:
+  nvidia-dx12:
+    name: NVIDIA DX12 registry-only Scry and Weld proof
+    runs-on: [self-hosted, wgpu-hardware, nvidia, windows-x64, headed]
+    timeout-minutes: 90
+    env:
+      WGPU_BACKEND: dx12
+      CEF_CACHE_ROOT: C:\Users\mark_\Code\cef-cache\wgpu-weld
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.97.1
+      - uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-scry
+          ref: ${{ inputs.scry_source_ref }}
+          path: .registry-proof-source/scry
+      - uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-weld
+          ref: ${{ inputs.weld_source_ref }}
+          path: .registry-proof-source/weld
+      - name: Record the physical adapter
+        shell: pwsh
+        run: nvidia-smi --query-gpu=name,driver_version --format=csv,noheader
+      - name: Stage and verify registry-only consumers
+        shell: pwsh
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP 'registry-triplet'
+          python scripts/stage_registry_triplet.py --kind scry-win --source .registry-proof-source/scry --destination "$root\scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python scripts/stage_registry_triplet.py --kind weld-win --source .registry-proof-source/weld --destination "$root\weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python scripts/verify_registry_triplet.py --consumer "$root\scry" --receipt-dir "$root\receipts\scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python scripts/verify_registry_triplet.py --consumer "$root\weld" --receipt-dir "$root\receipts\weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+      - name: Run WebView2 live frame, input, resize, script, and cookie battery
+        shell: pwsh
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP 'registry-triplet\scry'
+          $env:CARGO_TARGET_DIR = Join-Path $env:RUNNER_TEMP 'registry-triplet-target\scry'
+          Push-Location $stage
+          try {
+            & .\scripts\test-win.ps1 -Suite Core -TimeoutSeconds 120
+            & .\scripts\test-win.ps1 -Suite Capture -TimeoutSeconds 120 -SkipBuild
+          } finally { Pop-Location }
+      - name: Build and run CEF host-owned-wgpu parity battery
+        shell: pwsh
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP 'registry-triplet\weld'
+          $env:CARGO_TARGET_DIR = Join-Path $env:RUNNER_TEMP 'registry-triplet-target\weld'
+          Push-Location $stage
+          try {
+            cargo build --locked
+            $archive = Get-ChildItem -LiteralPath $env:CEF_CACHE_ROOT -Recurse -File -Filter archive.json |
+              Where-Object { $_.Directory.Name -eq 'cef_windows_x86_64' } |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 1
+            if (-not $archive) { throw 'CEF distribution was not produced by the registry consumer' }
+            $env:CEF_PATH = $archive.Directory.FullName
+            $gitBash = 'C:\Program Files\Git\bin\bash.exe'
+            $cygpath = 'C:\Program Files\Git\usr\bin\cygpath.exe'
+            if (-not (Test-Path -LiteralPath $gitBash -PathType Leaf)) { throw "Git Bash not found at $gitBash" }
+            $tempPosix = & $cygpath -u $env:RUNNER_TEMP
+            $targetPosix = & $cygpath -u $env:CARGO_TARGET_DIR
+            $env:WELD_CACHE_ROOT = "$tempPosix/registry-weld-nvidia-cache"
+            $env:WELD_PROFILE = "$env:WELD_CACHE_ROOT/profile"
+            $env:WELD_BATTERY_OUT = "$tempPosix/registry-weld-nvidia"
+            $env:RUN_CMD = "$targetPosix/debug/registry-triplet-weld-win.exe"
+            & $gitBash scripts/parity-battery.sh
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          } finally { Pop-Location }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: registry-triplet-nvidia
+          path: ${{ runner.temp }}/registry-triplet
+
+  metal-m4:
+    name: Apple M4 registry-only Scry and Weld proof
+    runs-on: [self-hosted, wgpu-hardware, metal, macos-arm64, m4, headed]
+    timeout-minutes: 100
+    env:
+      WGPU_BACKEND: metal
+      CEF_PATH: /Users/markik/Code/cef-cache/wgpu-weld
+      CAPTURE: "1"
+      TIMEOUT: "90"
+      VISIBLE: "1"
+      WELD_SKIP_CASES: devtools
+      PROOF_HOST: m4
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.97.1
+      - uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-scry
+          ref: ${{ inputs.scry_source_ref }}
+          path: .registry-proof-source/scry
+      - uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-weld
+          ref: ${{ inputs.weld_source_ref }}
+          path: .registry-proof-source/weld
+      - name: Ensure CEF native build tools
+        run: |
+          brew_bin="$(command -v brew || true)"
+          if [ -z "$brew_bin" ]; then
+            if [ -x /opt/homebrew/bin/brew ]; then brew_bin=/opt/homebrew/bin/brew; else brew_bin=/usr/local/bin/brew; fi
+          fi
+          "$brew_bin" list cmake >/dev/null 2>&1 || "$brew_bin" install cmake
+          "$brew_bin" list ninja >/dev/null 2>&1 || "$brew_bin" install ninja
+          echo "$("$brew_bin" --prefix)/bin" >> "$GITHUB_PATH"
+      - name: Stage and verify registry-only consumers
+        run: |
+          root="$RUNNER_TEMP/registry-triplet"
+          python3 scripts/stage_registry_triplet.py --kind scry-mac --source .registry-proof-source/scry --destination "$root/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/stage_registry_triplet.py --kind weld-mac --source .registry-proof-source/weld --destination "$root/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/verify_registry_triplet.py --consumer "$root/scry" --receipt-dir "$root/receipts/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/verify_registry_triplet.py --consumer "$root/weld" --receipt-dir "$root/receipts/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+      - name: Run WKWebView live frame, input, resize, script, and cookie battery
+        run: |
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/scry"
+          bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh"
+      - name: Build and run CEF host-owned-wgpu parity battery
+        run: |
+          stage="$RUNNER_TEMP/registry-triplet/weld"
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/weld"
+          export WELD_CACHE_ROOT="$(mktemp -d "$RUNNER_TEMP/registry-weld-$PROOF_HOST.XXXXXX")"
+          export WELD_PROFILE="$WELD_CACHE_ROOT/profile"
+          export WELD_BATTERY_OUT="$RUNNER_TEMP/registry-weld-$PROOF_HOST"
+          cd "$stage"
+          cargo run --locked --bin bundle-demo-weld-mac -- "$RUNNER_TEMP/registry-weld-$PROOF_HOST-bundle"
+          export WELD_MAC_APP="$RUNNER_TEMP/registry-weld-$PROOF_HOST-bundle/demo-weld-mac.app"
+          RUN_CMD="$WELD_MAC_APP/Contents/MacOS/demo-weld-mac" bash scripts/parity-battery.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: registry-triplet-metal-${{ env.PROOF_HOST }}
+          path: ${{ runner.temp }}/registry-triplet
+
+  metal-intel:
+    name: Intel iMac registry-only Scry and Weld proof
+    runs-on: [self-hosted, wgpu-hardware, metal, macos-x64, intel-mac, headed]
+    timeout-minutes: 100
+    env:
+      WGPU_BACKEND: metal
+      CEF_PATH: /Users/markik/Code/cef-cache/wgpu-weld
+      CAPTURE: "1"
+      TIMEOUT: "90"
+      VISIBLE: "1"
+      WELD_SKIP_CASES: devtools popup
+      PROOF_HOST: intel
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.97.1
+      - uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-scry
+          ref: ${{ inputs.scry_source_ref }}
+          path: .registry-proof-source/scry
+      - uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-weld
+          ref: ${{ inputs.weld_source_ref }}
+          path: .registry-proof-source/weld
+      - name: Ensure CEF native build tools
+        run: |
+          brew_bin="$(command -v brew || true)"
+          if [ -z "$brew_bin" ]; then
+            if [ -x /opt/homebrew/bin/brew ]; then brew_bin=/opt/homebrew/bin/brew; else brew_bin=/usr/local/bin/brew; fi
+          fi
+          "$brew_bin" list cmake >/dev/null 2>&1 || "$brew_bin" install cmake
+          "$brew_bin" list ninja >/dev/null 2>&1 || "$brew_bin" install ninja
+          echo "$("$brew_bin" --prefix)/bin" >> "$GITHUB_PATH"
+      - name: Stage and verify registry-only consumers
+        run: |
+          root="$RUNNER_TEMP/registry-triplet"
+          python3 scripts/stage_registry_triplet.py --kind scry-mac --source .registry-proof-source/scry --destination "$root/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/stage_registry_triplet.py --kind weld-mac --source .registry-proof-source/weld --destination "$root/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/verify_registry_triplet.py --consumer "$root/scry" --receipt-dir "$root/receipts/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/verify_registry_triplet.py --consumer "$root/weld" --receipt-dir "$root/receipts/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+      - name: Run WKWebView live frame, input, resize, script, and cookie battery
+        run: |
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/scry"
+          bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh"
+      - name: Build and run CEF host-owned-wgpu parity battery
+        run: |
+          stage="$RUNNER_TEMP/registry-triplet/weld"
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/weld"
+          export WELD_CACHE_ROOT="$(mktemp -d "$RUNNER_TEMP/registry-weld-$PROOF_HOST.XXXXXX")"
+          export WELD_PROFILE="$WELD_CACHE_ROOT/profile"
+          export WELD_BATTERY_OUT="$RUNNER_TEMP/registry-weld-$PROOF_HOST"
+          cd "$stage"
+          cargo run --locked --bin bundle-demo-weld-mac -- "$RUNNER_TEMP/registry-weld-$PROOF_HOST-bundle"
+          export WELD_MAC_APP="$RUNNER_TEMP/registry-weld-$PROOF_HOST-bundle/demo-weld-mac.app"
+          RUN_CMD="$WELD_MAC_APP/Contents/MacOS/demo-weld-mac" bash scripts/parity-battery.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: registry-triplet-metal-${{ env.PROOF_HOST }}
+          path: ${{ runner.temp }}/registry-triplet
+
+  radv-vulkan:
+    name: RADV Vulkan registry-only Scry and Weld proof
+    runs-on: [self-hosted, wgpu-hardware, radv, wayland, headed]
+    timeout-minutes: 100
+    env:
+      WGPU_BACKEND: vulkan
+      CEF_CACHE_ROOT: /home/markik/Code/cef-cache/wgpu-weld
+      XDG_RUNTIME_DIR: /run/user/1000
+      WAYLAND_DISPLAY: wayland-0
+      DISPLAY: ""
+      DBUS_SESSION_BUS_ADDRESS: unix:path=/run/user/1000/bus
+      XDG_SESSION_TYPE: wayland
+      XDG_CURRENT_DESKTOP: GNOME
+      WINIT_UNIX_BACKEND: wayland
+      WELD_SWITCHES: ozone-platform=wayland
+      WELD_SKIP_CASES: devtools crash
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.97.1
+      - uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-scry
+          ref: ${{ inputs.scry_source_ref }}
+          path: .registry-proof-source/scry
+      - uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-weld
+          ref: ${{ inputs.weld_source_ref }}
+          path: .registry-proof-source/weld
+      - name: Assert headed WPE prerequisites
+        run: |
+          test -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+          test -z "${DISPLAY:-}"
+          pkg-config --atleast-version=2.52 wpe-webkit-2.0
+      - name: Stage and verify registry-only consumers
+        run: |
+          root="$RUNNER_TEMP/registry-triplet"
+          python3 scripts/stage_registry_triplet.py --kind scry-wpe --source .registry-proof-source/scry --destination "$root/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/stage_registry_triplet.py --kind weld-linux --source .registry-proof-source/weld --destination "$root/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/verify_registry_triplet.py --consumer "$root/scry" --receipt-dir "$root/receipts/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/verify_registry_triplet.py --consumer "$root/weld" --receipt-dir "$root/receipts/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+      - name: Run WPE host-owned-wgpu pixel, resize, input, script, and cookie gates
+        run: |
+          stage="$RUNNER_TEMP/registry-triplet/scry"
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/scry"
+          cd "$stage"
+          set -o pipefail
+          cargo test --locked --features wpe --test wpe_to_vulkan_roundtrip -- --ignored --nocapture | tee "$RUNNER_TEMP/registry-wpe-vulkan.log"
+          cargo test --locked --features wpe --test wpe_input -- --ignored --nocapture | tee "$RUNNER_TEMP/registry-wpe-input.log"
+          ! grep -Eq '^SKIP:' "$RUNNER_TEMP/registry-wpe-vulkan.log" "$RUNNER_TEMP/registry-wpe-input.log"
+      - name: Build and run CEF host-owned-wgpu parity battery
+        run: |
+          stage="$RUNNER_TEMP/registry-triplet/weld"
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/weld"
+          export WELD_CACHE_ROOT="$(mktemp -d "$RUNNER_TEMP/registry-weld-radv.XXXXXX")"
+          export WELD_PROFILE="$WELD_CACHE_ROOT/profile"
+          export WELD_BATTERY_OUT="$RUNNER_TEMP/registry-weld-radv"
+          export CEF_PATH="$CEF_CACHE_ROOT"
+          cd "$stage"
+          cargo build --locked
+          cef_archive="$(find "$CEF_CACHE_ROOT" -path '*/cef_linux_x86_64/archive.json' -type f | sort | tail -1)"
+          test -n "$cef_archive"
+          export CEF_PATH="${cef_archive%/archive.json}"
+          export LD_LIBRARY_PATH="$CEF_PATH"
+          RUN_CMD="$CARGO_TARGET_DIR/debug/registry-triplet-weld-linux" bash scripts/parity-battery.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: registry-triplet-radv
+          path: ${{ runner.temp }}/registry-triplet
