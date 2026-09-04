@@ -37,6 +37,11 @@ concurrency:
 env:
   CARGO_NET_GIT_FETCH_WITH_CLI: "true"
   RUSTFLAGS: -D warnings
+  GRAFTING_VERSION: ${{ inputs.grafting_version }}
+  SCRYING_VERSION: ${{ inputs.scrying_version }}
+  WELDING_VERSION: ${{ inputs.welding_version }}
+  SCRY_SOURCE_REF: ${{ inputs.scry_source_ref }}
+  WELD_SOURCE_REF: ${{ inputs.weld_source_ref }}
 
 # This deliberately does not use the checked-out sibling workspaces as Cargo
 # workspaces. `stage_registry_triplet.py` copies only demo/test source into a
@@ -44,7 +49,7 @@ env:
 # metadata, Cargo.lock, and cargo tree before the headed batteries run.
 jobs:
   nvidia-dx12:
-    name: NVIDIA DX12 registry-only Scry and Weld proof
+    name: NVIDIA DX12 registry-only triplet proof
     runs-on: [self-hosted, wgpu-hardware, nvidia, windows-x64, headed]
     timeout-minutes: 90
     env:
@@ -71,10 +76,23 @@ jobs:
         shell: pwsh
         run: |
           $root = Join-Path $env:RUNNER_TEMP 'registry-triplet'
-          python scripts/stage_registry_triplet.py --kind scry-win --source .registry-proof-source/scry --destination "$root\scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python scripts/stage_registry_triplet.py --kind weld-win --source .registry-proof-source/weld --destination "$root\weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python scripts/verify_registry_triplet.py --consumer "$root\scry" --receipt-dir "$root\receipts\scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python scripts/verify_registry_triplet.py --consumer "$root\weld" --receipt-dir "$root\receipts\weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python scripts/stage_registry_triplet.py --kind graft-servo --source . --destination "$root\graft" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          python scripts/stage_registry_triplet.py --kind scry-win --source .registry-proof-source/scry --destination "$root\scry" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          python scripts/stage_registry_triplet.py --kind weld-win --source .registry-proof-source/weld --destination "$root\weld" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          python scripts/verify_registry_triplet.py --consumer "$root\graft" --receipt-dir "$root\receipts\graft" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION --allow-servo-git
+          python scripts/verify_registry_triplet.py --consumer "$root\scry" --receipt-dir "$root\receipts\scry" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          python scripts/verify_registry_triplet.py --consumer "$root\weld" --receipt-dir "$root\receipts\weld" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+      - name: Run Servo registry Graft live frame, input, and resize gate
+        shell: pwsh
+        run: |
+          $stage = Join-Path $env:RUNNER_TEMP 'registry-triplet\graft'
+          $env:CARGO_TARGET_DIR = Join-Path $env:RUNNER_TEMP 'registry-triplet-target\graft'
+          Push-Location $stage
+          try {
+            & .\scripts\smoke-demo.ps1 -Seconds 120 2>&1 |
+              Tee-Object -FilePath (Join-Path $env:RUNNER_TEMP 'registry-graft-nvidia.log')
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          } finally { Pop-Location }
       - name: Run WebView2 live frame, input, resize, script, and cookie battery
         shell: pwsh
         run: |
@@ -82,8 +100,12 @@ jobs:
           $env:CARGO_TARGET_DIR = Join-Path $env:RUNNER_TEMP 'registry-triplet-target\scry'
           Push-Location $stage
           try {
-            & .\scripts\test-win.ps1 -Suite Core -TimeoutSeconds 120
-            & .\scripts\test-win.ps1 -Suite Capture -TimeoutSeconds 120 -SkipBuild
+            & .\scripts\test-win.ps1 -Suite Core -TimeoutSeconds 120 2>&1 |
+              Tee-Object -FilePath (Join-Path $env:RUNNER_TEMP 'registry-scry-nvidia.log')
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            & .\scripts\test-win.ps1 -Suite Capture -TimeoutSeconds 120 -SkipBuild 2>&1 |
+              Tee-Object -FilePath (Join-Path $env:RUNNER_TEMP 'registry-scry-nvidia.log') -Append
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           } finally { Pop-Location }
       - name: Build and run CEF host-owned-wgpu parity battery
         shell: pwsh
@@ -114,10 +136,14 @@ jobs:
         if: always()
         with:
           name: registry-triplet-nvidia
-          path: ${{ runner.temp }}/registry-triplet
+          path: |
+            ${{ runner.temp }}/registry-triplet
+            ${{ runner.temp }}/registry-graft-nvidia.log
+            ${{ runner.temp }}/registry-scry-nvidia.log
+            ${{ runner.temp }}/registry-weld-nvidia
 
   metal-m4:
-    name: Apple M4 registry-only Scry and Weld proof
+    name: Apple M4 registry-only triplet proof
     runs-on: [self-hosted, wgpu-hardware, metal, macos-arm64, m4, headed]
     timeout-minutes: 100
     env:
@@ -151,17 +177,45 @@ jobs:
           "$brew_bin" list cmake >/dev/null 2>&1 || "$brew_bin" install cmake
           "$brew_bin" list ninja >/dev/null 2>&1 || "$brew_bin" install ninja
           echo "$("$brew_bin" --prefix)/bin" >> "$GITHUB_PATH"
+      - name: Install relocatable Python tooling
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        env:
+          RUNNER_TOOL_CACHE: ${{ runner.temp }}/uv-tool-cache
+        with:
+          version: "0.12.8"
+          enable-cache: false
+      - name: Put Python 3.13 on PATH
+        env:
+          UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+          UV_PYTHON_INSTALL_DIR: ${{ runner.temp }}/uv-python
+        run: |
+          uv python install --no-bin 3.13
+          python_bin="$(uv python find 3.13)"
+          mkdir -p "$RUNNER_TEMP/python-bin"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python3"
+          echo "$RUNNER_TEMP/python-bin" >> "$GITHUB_PATH"
       - name: Stage and verify registry-only consumers
         run: |
           root="$RUNNER_TEMP/registry-triplet"
-          python3 scripts/stage_registry_triplet.py --kind scry-mac --source .registry-proof-source/scry --destination "$root/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python3 scripts/stage_registry_triplet.py --kind weld-mac --source .registry-proof-source/weld --destination "$root/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python3 scripts/verify_registry_triplet.py --consumer "$root/scry" --receipt-dir "$root/receipts/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python3 scripts/verify_registry_triplet.py --consumer "$root/weld" --receipt-dir "$root/receipts/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/stage_registry_triplet.py --kind graft-servo --source . --destination "$root/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/stage_registry_triplet.py --kind scry-mac --source .registry-proof-source/scry --destination "$root/scry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/stage_registry_triplet.py --kind weld-mac --source .registry-proof-source/weld --destination "$root/weld" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/verify_registry_triplet.py --consumer "$root/graft" --receipt-dir "$root/receipts/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION" --allow-servo-git
+          python3 scripts/verify_registry_triplet.py --consumer "$root/scry" --receipt-dir "$root/receipts/scry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/verify_registry_triplet.py --consumer "$root/weld" --receipt-dir "$root/receipts/weld" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+      - name: Run Servo registry Graft live frame, input, and resize gate
+        run: |
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/graft"
+          cd "$RUNNER_TEMP/registry-triplet/graft"
+          cargo build --locked -p demo-servo-winit
+          set -o pipefail
+          bash scripts/smoke-demo-mac.sh 2>&1 | tee "$RUNNER_TEMP/registry-graft-$PROOF_HOST.log"
       - name: Run WKWebView live frame, input, resize, script, and cookie battery
         run: |
           export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/scry"
-          bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh"
+          set -o pipefail
+          bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh" 2>&1 | tee "$RUNNER_TEMP/registry-scry-$PROOF_HOST.log"
       - name: Build and run CEF host-owned-wgpu parity battery
         run: |
           stage="$RUNNER_TEMP/registry-triplet/weld"
@@ -177,10 +231,14 @@ jobs:
         if: always()
         with:
           name: registry-triplet-metal-${{ env.PROOF_HOST }}
-          path: ${{ runner.temp }}/registry-triplet
+          path: |
+            ${{ runner.temp }}/registry-triplet
+            ${{ runner.temp }}/registry-graft-${{ env.PROOF_HOST }}.log
+            ${{ runner.temp }}/registry-scry-${{ env.PROOF_HOST }}.log
+            ${{ runner.temp }}/registry-weld-${{ env.PROOF_HOST }}
 
   metal-intel:
-    name: Intel iMac registry-only Scry and Weld proof
+    name: Intel iMac registry-only triplet proof
     runs-on: [self-hosted, wgpu-hardware, metal, macos-x64, intel-mac, headed]
     timeout-minutes: 100
     env:
@@ -214,17 +272,45 @@ jobs:
           "$brew_bin" list cmake >/dev/null 2>&1 || "$brew_bin" install cmake
           "$brew_bin" list ninja >/dev/null 2>&1 || "$brew_bin" install ninja
           echo "$("$brew_bin" --prefix)/bin" >> "$GITHUB_PATH"
+      - name: Install relocatable Python tooling
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        env:
+          RUNNER_TOOL_CACHE: ${{ runner.temp }}/uv-tool-cache
+        with:
+          version: "0.12.8"
+          enable-cache: false
+      - name: Put Python 3.13 on PATH
+        env:
+          UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+          UV_PYTHON_INSTALL_DIR: ${{ runner.temp }}/uv-python
+        run: |
+          uv python install --no-bin 3.13
+          python_bin="$(uv python find 3.13)"
+          mkdir -p "$RUNNER_TEMP/python-bin"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python3"
+          echo "$RUNNER_TEMP/python-bin" >> "$GITHUB_PATH"
       - name: Stage and verify registry-only consumers
         run: |
           root="$RUNNER_TEMP/registry-triplet"
-          python3 scripts/stage_registry_triplet.py --kind scry-mac --source .registry-proof-source/scry --destination "$root/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python3 scripts/stage_registry_triplet.py --kind weld-mac --source .registry-proof-source/weld --destination "$root/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python3 scripts/verify_registry_triplet.py --consumer "$root/scry" --receipt-dir "$root/receipts/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python3 scripts/verify_registry_triplet.py --consumer "$root/weld" --receipt-dir "$root/receipts/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/stage_registry_triplet.py --kind graft-servo --source . --destination "$root/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/stage_registry_triplet.py --kind scry-mac --source .registry-proof-source/scry --destination "$root/scry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/stage_registry_triplet.py --kind weld-mac --source .registry-proof-source/weld --destination "$root/weld" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/verify_registry_triplet.py --consumer "$root/graft" --receipt-dir "$root/receipts/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION" --allow-servo-git
+          python3 scripts/verify_registry_triplet.py --consumer "$root/scry" --receipt-dir "$root/receipts/scry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/verify_registry_triplet.py --consumer "$root/weld" --receipt-dir "$root/receipts/weld" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+      - name: Run Servo registry Graft live frame, input, and resize gate
+        run: |
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/graft"
+          cd "$RUNNER_TEMP/registry-triplet/graft"
+          cargo build --locked -p demo-servo-winit
+          set -o pipefail
+          bash scripts/smoke-demo-mac.sh 2>&1 | tee "$RUNNER_TEMP/registry-graft-$PROOF_HOST.log"
       - name: Run WKWebView live frame, input, resize, script, and cookie battery
         run: |
           export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/scry"
-          bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh"
+          set -o pipefail
+          bash "$RUNNER_TEMP/registry-triplet/scry/scripts/test-mac.sh" 2>&1 | tee "$RUNNER_TEMP/registry-scry-$PROOF_HOST.log"
       - name: Build and run CEF host-owned-wgpu parity battery
         run: |
           stage="$RUNNER_TEMP/registry-triplet/weld"
@@ -240,10 +326,14 @@ jobs:
         if: always()
         with:
           name: registry-triplet-metal-${{ env.PROOF_HOST }}
-          path: ${{ runner.temp }}/registry-triplet
+          path: |
+            ${{ runner.temp }}/registry-triplet
+            ${{ runner.temp }}/registry-graft-${{ env.PROOF_HOST }}.log
+            ${{ runner.temp }}/registry-scry-${{ env.PROOF_HOST }}.log
+            ${{ runner.temp }}/registry-weld-${{ env.PROOF_HOST }}
 
   radv-vulkan:
-    name: RADV Vulkan registry-only Scry and Weld proof
+    name: RADV Vulkan registry-only triplet proof
     runs-on: [self-hosted, wgpu-hardware, radv, wayland, headed]
     timeout-minutes: 100
     env:
@@ -280,10 +370,20 @@ jobs:
       - name: Stage and verify registry-only consumers
         run: |
           root="$RUNNER_TEMP/registry-triplet"
-          python3 scripts/stage_registry_triplet.py --kind scry-wpe --source .registry-proof-source/scry --destination "$root/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python3 scripts/stage_registry_triplet.py --kind weld-linux --source .registry-proof-source/weld --destination "$root/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python3 scripts/verify_registry_triplet.py --consumer "$root/scry" --receipt-dir "$root/receipts/scry" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
-          python3 scripts/verify_registry_triplet.py --consumer "$root/weld" --receipt-dir "$root/receipts/weld" --grafting-version '${{ inputs.grafting_version }}' --scrying-version '${{ inputs.scrying_version }}' --welding-version '${{ inputs.welding_version }}'
+          python3 scripts/stage_registry_triplet.py --kind graft-servo --source . --destination "$root/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/stage_registry_triplet.py --kind scry-wpe --source .registry-proof-source/scry --destination "$root/scry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/stage_registry_triplet.py --kind weld-linux --source .registry-proof-source/weld --destination "$root/weld" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/verify_registry_triplet.py --consumer "$root/graft" --receipt-dir "$root/receipts/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION" --allow-servo-git
+          python3 scripts/verify_registry_triplet.py --consumer "$root/scry" --receipt-dir "$root/receipts/scry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/verify_registry_triplet.py --consumer "$root/weld" --receipt-dir "$root/receipts/weld" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+      - name: Run Servo registry Graft live frame, input, and resize gate
+        run: |
+          export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/graft"
+          cd "$RUNNER_TEMP/registry-triplet/graft"
+          cargo build --locked -p demo-servo-winit
+          set -o pipefail
+          timeout 90s "$CARGO_TARGET_DIR/debug/demo-servo-winit" --smoke 2>&1 | tee "$RUNNER_TEMP/registry-graft-radv.log"
+          grep -F "GRAFT DEMO SMOKE PASS" "$RUNNER_TEMP/registry-graft-radv.log"
       - name: Run WPE host-owned-wgpu pixel, resize, input, script, and cookie gates
         run: |
           stage="$RUNNER_TEMP/registry-triplet/scry"
@@ -312,4 +412,9 @@ jobs:
         if: always()
         with:
           name: registry-triplet-radv
-          path: ${{ runner.temp }}/registry-triplet
+          path: |
+            ${{ runner.temp }}/registry-triplet
+            ${{ runner.temp }}/registry-graft-radv.log
+            ${{ runner.temp }}/registry-wpe-vulkan.log
+            ${{ runner.temp }}/registry-wpe-input.log
+            ${{ runner.temp }}/registry-weld-radv
