@@ -1,6 +1,6 @@
 # Wgpu Triplet Release Plan
 
-**Status (2026-09-03):** plan; implementation not started; release not ready.
+**Status (2026-09-03):** implementation in progress; release not ready.
 
 This plan is the cross-repo release gate for:
 
@@ -314,3 +314,16 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
 
 - 2026-09-03: Plan founded in `wgpu-graft/design_docs/` after the ownership,
   sandbox, neutral-contract, and post-publish-consumer decisions were confirmed.
+- 2026-09-03: Phase 1 implementation started in Graft. Safe native frames now
+  carry owned Vulkan descriptors, retained Metal textures, or shared RAII DX12
+  resource custody and are consumed by import. Raw borrowed imports remain
+  explicitly unsafe. Windows, Linux, and Apple compile/hardware receipts and
+  the required new hardware workflow run remain open; the earlier green
+  hardware baseline (workflow run 33826415538, commit 12dba60b) predates this
+  ownership change and is not validation for it.
+- 2026-09-03: Windows local receipt for the Phase 1 slice: isolated
+  `cargo check -p grafting --no-default-features --features wgpu-29 -j 1` and
+  `cargo test -p grafting --no-default-features --features wgpu-29 -j 1`
+  passed. The latter exercised move-only structural assertions and real Win32
+  handle custody tests. wgpu-28/30 and Linux/Apple compilation plus fresh
+  hardware workflow proof remain required before release.

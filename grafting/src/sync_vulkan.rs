@@ -12,19 +12,20 @@
 //!
 //! Per frame:
 //!
-//! 1. The producer hands the consumer a frame whose
-//!    [`VulkanExternalImage::wait_semaphore_fd`] is `Some(fd)`.
-//! 2. `producer_complete` imports the fd into a persistent `VkSemaphore`
-//!    using `vkImportSemaphoreFdKHR` with [`vk::SemaphoreImportFlags::TEMPORARY`].
+//! 1. The producer hands the consumer a frame with a semaphore descriptor.
+//! 2. `producer_complete` duplicates that owned descriptor and imports the
+//!    duplicate into a persistent `VkSemaphore` using
+//!    `vkImportSemaphoreFdKHR` with [`vk::SemaphoreImportFlags::TEMPORARY`].
 //! 3. A standalone "pure wait" `vkQueueSubmit` (wait semaphore, no command
 //!    buffers) is issued on the wgpu Vulkan queue. Subsequent wgpu submits
 //!    are gated on the producer's signal.
 //!
 //! After the wait, the temporary import is consumed and the persistent
 //! semaphore returns to its prior unsignalled state, ready for the next
-//! frame. The fd ownership transfers to the driver on import per the
-//! Vulkan spec — the producer must not close it after handoff.
+//! frame. Vulkan consumes only the duplicate after a successful import. The
+//! frame keeps its original descriptor and closes it when the frame drops.
 
+use std::os::fd::{AsRawFd, FromRawFd, IntoRawFd, OwnedFd};
 use std::sync::Mutex;
 
 use ash::vk;
@@ -85,9 +86,7 @@ impl VulkanSemaphoreSynchronizer {
 
             let semaphore = vk_device
                 .create_semaphore(&vk::SemaphoreCreateInfo::default(), None)
-                .map_err(|err| {
-                    InteropError::Vulkan(format!("create_semaphore: {}", err))
-                })?;
+                .map_err(|err| InteropError::Vulkan(format!("create_semaphore: {}", err)))?;
 
             let external_semaphore_fd =
                 ash::khr::external_semaphore_fd::Device::new(&vk_instance, &vk_device);
@@ -112,23 +111,35 @@ impl InteropSynchronizer for VulkanSemaphoreSynchronizer {
         match mechanism {
             SyncMechanism::ExplicitExternalSemaphore => {
                 let semaphore_fd = match frame {
-                    NativeFrame::VulkanExternalImage(vk_frame) => vk_frame.wait_semaphore_fd,
+                    NativeFrame::VulkanExternalImage(vk_frame) => vk_frame
+                        .wait_semaphore_fd
+                        .as_ref()
+                        .ok_or_else(|| {
+                            InteropError::Vulkan(
+                                "frame.wait_semaphore_fd is None but mechanism is ExplicitExternalSemaphore"
+                                    .into(),
+                            )
+                        })?,
                     _ => {
                         return Err(InteropError::Vulkan(
                             "ExplicitExternalSemaphore requires a VulkanExternalImage frame".into(),
                         ));
                     }
                 };
-                let Some(fd) = semaphore_fd else {
-                    return Err(InteropError::Vulkan(
-                        "frame.wait_semaphore_fd is None but mechanism is ExplicitExternalSemaphore"
-                            .into(),
-                    ));
-                };
+                // The frame is borrowed by the synchronizer, so import a
+                // duplicate. Vulkan consumes the duplicate only after a
+                // successful import; the frame retains and later closes its
+                // original descriptor.
+                let duplicated = unsafe { libc::dup(semaphore_fd.as_raw_fd()) };
+                if duplicated < 0 {
+                    return Err(InteropError::Vulkan("dup wait semaphore fd failed".into()));
+                }
+                let duplicated = unsafe { OwnedFd::from_raw_fd(duplicated) };
 
-                let _guard = self.submit_lock.lock().map_err(|_| {
-                    InteropError::Vulkan("submit_lock poisoned".into())
-                })?;
+                let _guard = self
+                    .submit_lock
+                    .lock()
+                    .map_err(|_| InteropError::Vulkan("submit_lock poisoned".into()))?;
 
                 unsafe {
                     self.external_semaphore_fd
@@ -137,11 +148,14 @@ impl InteropSynchronizer for VulkanSemaphoreSynchronizer {
                                 .semaphore(self.persistent_semaphore)
                                 .flags(vk::SemaphoreImportFlags::TEMPORARY)
                                 .handle_type(vk::ExternalSemaphoreHandleTypeFlags::OPAQUE_FD)
-                                .fd(fd),
+                                .fd(duplicated.as_raw_fd()),
                         )
                         .map_err(|err| {
                             InteropError::Vulkan(format!("import_semaphore_fd: {}", err))
                         })?;
+                    // Vulkan accepted the duplicated descriptor and now owns
+                    // it. Keep the frame's original RAII descriptor untouched.
+                    let _ = duplicated.into_raw_fd();
 
                     let wait_semaphores = [self.persistent_semaphore];
                     let wait_stages = [vk::PipelineStageFlags::FRAGMENT_SHADER];

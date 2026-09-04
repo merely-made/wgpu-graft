@@ -29,6 +29,20 @@ A "producer" (Servo, a GL renderer, a video decoder, etc.) renders into a native
 - `WgpuTextureImporter` — default `TextureImporter` implementation
 - `InteropSynchronizer` — trait for cross-API synchronization policies
 
+## Native resource ownership
+
+`NativeFrame` is move-only when it carries a native resource. Safe imports
+consume the frame, so Graft closes a Vulkan descriptor on failed import and
+hands it to the driver only after successful import. Windows producer caches
+reuse a cloneable `Dx12SharedResource` token, then create a fresh move-only
+`Dx12SharedTexture` with its own metadata for each handoff. Metal's safe frame
+takes a retained `MTLTexture`.
+
+Raw native descriptors and borrowed Metal/DX12 handles are available only
+through explicitly `unsafe` constructors or import functions. Their safety
+documentation names the owner and required lifetime; use them only when an
+integration cannot transfer custody to Graft.
+
 ## Modules
 
 - `raw_gl` — surfman-independent GL import functions. Use `RawGlFrameProducer` for any GL application without bringing surfman as a dependency (set `default-features = false`).

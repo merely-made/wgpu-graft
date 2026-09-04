@@ -16,7 +16,8 @@
 //! inside the `shader` widget's `Primitive` — which must be `Send`. Servo's
 //! surfman/GL context is not `Send` and lives on the main thread, so it cannot
 //! ride along into the primitive. Instead the main thread exports a `Send` NT
-//! handle (`Dx12SharedTexture`) and the primitive opens it on iced's device.
+//! resource token (`Dx12SharedResource`) and the primitive builds a fresh
+//! one-shot frame before opening it on iced's device.
 //!
 //! Windows + DX12 only (the shared handle is a D3D12 resource). The iced UI adds
 //! a URL bar above the Servo viewport; input is forwarded so pages stay
@@ -29,7 +30,6 @@
 
 mod keyutils;
 
-use std::ffi::c_void;
 use std::rc::Rc;
 use std::time::Duration;
 
@@ -77,12 +77,11 @@ struct AppState {
     cursor_in_viewport: bool,
 }
 
-/// A `Send`-safe description of the current exported frame. The raw NT handle is
-/// carried as a `u64` so the (non-`Send`) producer stays on the main thread
-/// while the `Send` shader primitive opens the handle on iced's device.
-#[derive(Clone, Copy, Debug)]
+/// A `Send`-safe description of the current exported frame. Shared RAII
+/// custody keeps the NT handle live while the shader primitive imports it.
+#[derive(Clone, Debug)]
 struct SharedFrameDesc {
-    handle: u64,
+    resource: grafting::Dx12SharedResource,
     width: u32,
     height: u32,
     generation: u64,
@@ -181,14 +180,17 @@ fn update(state: &mut AppState, message: Message) -> Task<Message> {
 
             match state.render_ctx.current_dx12_shared_texture() {
                 Ok(frame) => {
-                    state
-                        .status
-                        .set_frame(RenderPath::GpuImport, frame.size.width, frame.size.height);
+                    let metadata = frame.metadata();
+                    state.status.set_frame(
+                        RenderPath::GpuImport,
+                        metadata.size.width,
+                        metadata.size.height,
+                    );
                     state.latest_frame = Some(SharedFrameDesc {
-                        handle: frame.handle as u64,
-                        width: frame.size.width,
-                        height: frame.size.height,
-                        generation: frame.generation,
+                        resource: frame.resource(),
+                        width: metadata.size.width,
+                        height: metadata.size.height,
+                        generation: metadata.generation,
                     });
                 }
                 Err(e) => eprintln!("[iced] shared-texture export failed: {e:?}"),
@@ -437,7 +439,7 @@ struct ServoPipeline {
 
 #[derive(Debug)]
 struct CachedImport {
-    handle: u64,
+    allocation_key: u64,
     size: (u32, u32),
     /// Keeps the imported (aliasing) texture alive for the bind group.
     _texture: wgpu::Texture,
@@ -532,22 +534,29 @@ impl ServoPipeline {
         queue: &wgpu::Queue,
         desc: &SharedFrameDesc,
     ) {
-        let want = (desc.handle, (desc.width, desc.height));
-        let have = self.cached.as_ref().map(|c| (c.handle, c.size));
-        if have == Some(want) {
-            return;
-        }
-
-        let frame = Dx12SharedTexture {
+        let metadata = grafting::FrameMetadata {
             size: PhysicalSize::new(desc.width, desc.height),
             format: wgpu::TextureFormat::Rgba8Unorm,
             generation: desc.generation,
             producer_sync: SyncMechanism::None,
-            fence_value: 0,
-            handle: desc.handle as *mut c_void,
         };
+        let want = (
+            desc.resource.allocation_key(),
+            (metadata.size.width, metadata.size.height),
+        );
+        let have = self
+            .cached
+            .as_ref()
+            .map(|cached| (cached.allocation_key, cached.size));
+        if have == Some(want) {
+            return;
+        }
+
         let host = HostWgpuContext::new(device.clone(), queue.clone());
-        match import_dx12_shared_texture(&frame, &host) {
+        match import_dx12_shared_texture(
+            Dx12SharedTexture::new(metadata, desc.resource.clone(), 0),
+            &host,
+        ) {
             Ok(texture) => {
                 let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
                 let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
@@ -565,8 +574,8 @@ impl ServoPipeline {
                     ],
                 });
                 self.cached = Some(CachedImport {
-                    handle: desc.handle,
-                    size: (desc.width, desc.height),
+                    allocation_key: desc.resource.allocation_key(),
+                    size: (metadata.size.width, metadata.size.height),
                     _texture: texture,
                     bind_group,
                 });

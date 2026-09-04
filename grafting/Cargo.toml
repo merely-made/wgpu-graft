@@ -69,6 +69,7 @@ windows = { version = "0.62", features = [
     "Win32_Graphics_Dxgi_Common",
     "Win32_Security",
     "Win32_System_LibraryLoader",
+    "Win32_System_Threading",
 ] }
 wio = "0.2"
 
@@ -87,3 +88,6 @@ gl_generator = "0.14.0"
 
 [target.'cfg(target_os = "linux")'.dev-dependencies]
 pollster = "0.4"
+
+[dev-dependencies]
+static_assertions = "1.1"

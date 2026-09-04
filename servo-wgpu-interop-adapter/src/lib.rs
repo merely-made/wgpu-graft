@@ -404,7 +404,7 @@ impl RenderingContext for ImportingRenderingContext {
         while gl.get_error() != gleam::gl::NO_ERROR {}
 
         match self.inner.acquire_native_frame() {
-            Ok(frame) => match self.importer.import_frame(&frame, &self.options) {
+            Ok(frame) => match self.importer.import_frame(frame, &self.options) {
                 Ok(imported) => *self.last_texture.borrow_mut() = Some(imported),
                 Err(e) => eprintln!("[adapter] present-hook import_frame failed: {e:?}"),
             },
@@ -499,7 +499,7 @@ impl ServoWgpuInteropAdapter {
         options: &ImportOptions,
     ) -> Result<ImportedTexture, InteropError> {
         let frame = self.rendering_context.acquire_native_frame()?;
-        self.importer.import_frame(&frame, options)
+        self.importer.import_frame(frame, options)
     }
 
     pub fn import_current_frame_default(&self) -> Result<ImportedTexture, InteropError> {

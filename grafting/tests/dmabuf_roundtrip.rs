@@ -35,8 +35,8 @@ use grafting::vulkan_dmabuf::{
 };
 use grafting::wgpu;
 use grafting::{
-    CapabilityStatus, HostWgpuContext, ImportOptions, InteropBackend, NativeFrame, SyncMechanism,
-    TextureImporter, VulkanExternalImage, WgpuTextureImporter,
+    CapabilityStatus, FrameMetadata, HostWgpuContext, ImportOptions, InteropBackend, NativeFrame,
+    SyncMechanism, TextureImporter, VulkanExternalImage, WgpuTextureImporter,
 };
 use pollster::FutureExt;
 
@@ -70,22 +70,26 @@ fn dmabuf_clear_roundtrip() {
         )
     };
 
-    let frame = VulkanExternalImage {
-        size: PhysicalSize::new(WIDTH, HEIGHT),
-        format: wgpu::TextureFormat::Rgba8Unorm,
-        generation: 1,
-        producer_sync: SyncMechanism::None,
-        dmabuf_fd: exported.fd,
-        dmabuf_offset: exported.offset,
-        dmabuf_stride: exported.row_pitch,
-        drm_modifier: exported.modifier,
-        wait_semaphore_fd: None,
+    let frame = unsafe {
+        VulkanExternalImage::from_raw_owned_parts(
+            FrameMetadata {
+                size: PhysicalSize::new(WIDTH, HEIGHT),
+                format: wgpu::TextureFormat::Rgba8Unorm,
+                generation: 1,
+                producer_sync: SyncMechanism::None,
+            },
+            exported.fd,
+            exported.offset,
+            exported.row_pitch,
+            exported.modifier,
+            None,
+        )
     };
 
     let importer = WgpuTextureImporter::new(host);
     let imported = importer
         .import_frame(
-            &NativeFrame::VulkanExternalImage(frame),
+            NativeFrame::VulkanExternalImage(frame),
             &ImportOptions::default(),
         )
         .expect("import_frame");
@@ -121,18 +125,22 @@ fn bgra_dmabuf_clear_roundtrip() {
     };
 
     let texture = import_dmabuf(
-        VulkanDmaBufImport {
-            size: PhysicalSize::new(WIDTH, HEIGHT),
-            format: wgpu::TextureFormat::Bgra8Unorm,
-            drm_format: DRM_FORMAT_ARGB8888,
-            drm_modifier: exported.modifier,
-            planes: vec![VulkanDmaBufPlane {
-                fd: exported.fd,
-                offset: exported.offset,
-                stride: exported.row_pitch,
-            }],
-            queue_ownership: VulkanDmaBufQueueOwnership::LocalUninitialized,
-        },
+        unsafe {
+            VulkanDmaBufImport::from_raw_owned_parts(
+                PhysicalSize::new(WIDTH, HEIGHT),
+                wgpu::TextureFormat::Bgra8Unorm,
+                DRM_FORMAT_ARGB8888,
+                exported.modifier,
+                vec![exported.fd],
+                vec![VulkanDmaBufPlane {
+                    buffer_index: 0,
+                    offset: exported.offset,
+                    stride: exported.row_pitch,
+                }],
+                VulkanDmaBufQueueOwnership::LocalUninitialized,
+            )
+        }
+        .expect("valid owned DMABUF import"),
         &host,
     )
     .expect("import BGRA DMABUF");

@@ -495,7 +495,7 @@ impl AppState {
         let frame = self.producer.acquire_frame()?;
         let imported = self
             .importer
-            .import_frame(&frame, &ImportOptions::default())?;
+            .import_frame(frame, &ImportOptions::default())?;
 
         // wgpu: present imported texture
         let surface_tex = match self.surface.get_current_texture() {

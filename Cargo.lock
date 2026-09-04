@@ -5958,6 +5958,7 @@ dependencies = [
  "objc2-io-surface",
  "objc2-metal 0.3.2",
  "pollster 0.4.0",
+ "static_assertions",
  "surfman",
  "thiserror 2.0.18",
  "wgpu 28.0.0",

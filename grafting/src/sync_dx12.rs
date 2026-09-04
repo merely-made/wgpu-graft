@@ -26,10 +26,13 @@
 //! `producer_complete` injection point is correct even when multiple frames
 //! are imported before a single render submit.
 
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::{
+    os::windows::io::{AsHandle, BorrowedHandle, FromRawHandle, OwnedHandle},
+    sync::atomic::{AtomicU64, Ordering},
+};
 
 use windows::Win32::{
-    Foundation::{CloseHandle, GENERIC_ALL, HANDLE},
+    Foundation::GENERIC_ALL,
     Graphics::Direct3D12::{
         D3D12_FENCE_FLAG_SHARED, ID3D12CommandQueue, ID3D12Device, ID3D12Fence,
     },
@@ -50,7 +53,7 @@ use crate::{
 pub struct Dx12FenceSynchronizer {
     fence: ID3D12Fence,
     queue: ID3D12CommandQueue,
-    shared_handle: HANDLE,
+    shared_handle: OwnedHandle,
     next_value: AtomicU64,
 }
 
@@ -98,6 +101,7 @@ impl Dx12FenceSynchronizer {
                 .CreateSharedHandle(&fence, None, GENERIC_ALL.0, None)
                 .map_err(|err| InteropError::Dx12(format!("CreateSharedHandle: {}", err)))?;
 
+            let shared_handle = OwnedHandle::from_raw_handle(shared_handle.0);
             (fence, queue, shared_handle)
         };
 
@@ -109,14 +113,14 @@ impl Dx12FenceSynchronizer {
         })
     }
 
-    /// The shared NT handle for the producer's `OpenSharedFence` /
+    /// A borrowed view of the shared NT handle for the producer's `OpenSharedFence` /
     /// `OpenSharedHandle` call.
     ///
-    /// The producer should `DuplicateHandle` (or open and immediately close
-    /// once the fence reference is held) — the synchronizer closes the
-    /// handle on drop.
-    pub fn shared_handle(&self) -> HANDLE {
-        self.shared_handle
+    /// The returned view cannot outlive this synchronizer. A producer that
+    /// needs to retain the handle beyond this call must duplicate it or open
+    /// its COM fence reference first, then release the borrowed handle.
+    pub fn shared_handle(&self) -> BorrowedHandle<'_> {
+        self.shared_handle.as_handle()
     }
 
     /// Increment the fence counter and return the new value. The producer
@@ -184,16 +188,6 @@ impl InteropSynchronizer for Dx12FenceSynchronizer {
             | SyncMechanism::ImplicitGlFlush
             | SyncMechanism::ExplicitFence => Ok(()),
             other => Err(InteropError::UnsupportedSynchronization(other)),
-        }
-    }
-}
-
-impl Drop for Dx12FenceSynchronizer {
-    fn drop(&mut self) {
-        if !self.shared_handle.is_invalid() {
-            unsafe {
-                let _ = CloseHandle(self.shared_handle);
-            }
         }
     }
 }

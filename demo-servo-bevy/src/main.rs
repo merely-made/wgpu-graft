@@ -11,10 +11,10 @@
 //! shared-handle seam (the same reason the iced demo needs it):
 //!
 //! - Servo lives in the **main world** as a `NonSend` resource. A main-world
-//!   system paints it and exports a D3D12 shared NT handle (a `Send` `u64`).
-//! - An `ExtractSchedule` system carries the handle into the **render world**.
+//!   system paints it and exports a cloneable D3D12 shared-resource token.
+//! - An `ExtractSchedule` system carries the token into the **render world**.
 //! - A render-world system (after `PrepareAssets`, before `Queue`) opens the
-//!   handle on Bevy's `RenderDevice` and injects a `GpuImage` into
+//!   resource on Bevy's `RenderDevice` and injects a `GpuImage` into
 //!   `RenderAssets<GpuImage>` for a fullscreen `Sprite`'s `Handle<Image>`.
 //!
 //! surfman/ANGLE is LUID-anchored to a throwaway HighPerformance-DX12 device and
@@ -22,8 +22,6 @@
 //! Windows + DX12 only.
 
 #![allow(clippy::type_complexity)]
-
-use std::ffi::c_void;
 
 use bevy::asset::RenderAssetUsages;
 use bevy::image::Image;
@@ -60,12 +58,12 @@ struct ServoState {
 }
 
 /// The latest exported shared-handle frame (main world). `Send`.
-#[derive(Resource, Default, Clone, Copy)]
+#[derive(Resource, Default, Clone)]
 struct ServoFrame(Option<FrameDesc>);
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 struct FrameDesc {
-    handle: u64,
+    resource: grafting::Dx12SharedResource,
     width: u32,
     height: u32,
     generation: u64,
@@ -77,7 +75,7 @@ struct ServoImage(Handle<Image>);
 
 // ── Render world mirrors (filled by ExtractSchedule) ─────────────────────────
 
-#[derive(Resource, Default, Clone, Copy)]
+#[derive(Resource, Default, Clone)]
 struct ExtractedFrame(Option<FrameDesc>);
 
 #[derive(Resource, Default, Clone, Copy)]
@@ -258,11 +256,12 @@ fn drive_servo(
         .current_dx12_shared_texture()
     {
         Ok(shared) => {
+            let metadata = shared.metadata();
             frame.0 = Some(FrameDesc {
-                handle: shared.handle as u64,
-                width: shared.size.width,
-                height: shared.size.height,
-                generation: shared.generation,
+                resource: shared.resource(),
+                width: metadata.size.width,
+                height: metadata.size.height,
+                generation: metadata.generation,
             });
         }
         Err(e) => eprintln!("[bevy] shared-texture export failed: {e:?}"),
@@ -316,7 +315,7 @@ fn extract_servo_frame(
     mut out_frame: ResMut<ExtractedFrame>,
     mut out_id: ResMut<ExtractedImageId>,
 ) {
-    out_frame.0 = frame.0;
+    out_frame.0 = frame.0.clone();
     out_id.0 = image.as_ref().map(|i| i.0.id());
 }
 
@@ -327,30 +326,31 @@ fn inject_servo_image(
     render_queue: Res<RenderQueue>,
     gpu_images: Res<RenderAssets<GpuImage>>,
 ) {
-    let (Some(desc), Some(id)) = (frame.0, image_id.0) else {
+    let (Some(desc), Some(id)) = (frame.0.clone(), image_id.0) else {
         return;
+    };
+    let metadata = grafting::FrameMetadata {
+        size: PhysicalSize::new(desc.width, desc.height),
+        format: TextureFormat::Rgba8Unorm,
+        generation: desc.generation,
+        producer_sync: SyncMechanism::None,
     };
     // Bevy's own GpuImage for the sprite. It lags a frame during resize, so only
     // copy when its size matches the freshly imported frame.
     let Some(gpu_image) = gpu_images.get(id) else {
         return;
     };
-    if gpu_image.texture_descriptor.size.width != desc.width
-        || gpu_image.texture_descriptor.size.height != desc.height
+    if gpu_image.texture_descriptor.size.width != metadata.size.width
+        || gpu_image.texture_descriptor.size.height != metadata.size.height
     {
         return;
     }
 
-    let shared = Dx12SharedTexture {
-        size: PhysicalSize::new(desc.width, desc.height),
-        format: TextureFormat::Rgba8Unorm,
-        generation: desc.generation,
-        producer_sync: SyncMechanism::None,
-        fence_value: 0,
-        handle: desc.handle as *mut c_void,
-    };
     let host = HostWgpuContext::new(device.wgpu_device().clone(), (**render_queue.0).clone());
-    let imported = match import_dx12_shared_texture(&shared, &host) {
+    let imported = match import_dx12_shared_texture(
+        Dx12SharedTexture::new(metadata, desc.resource, 0),
+        &host,
+    ) {
         Ok(t) => t,
         Err(e) => {
             eprintln!("[bevy] import_dx12_shared_texture failed: {e:?}");
@@ -371,8 +371,8 @@ fn inject_servo_image(
         imported.as_image_copy(),
         gpu_image.texture.as_image_copy(),
         Extent3d {
-            width: desc.width,
-            height: desc.height,
+            width: metadata.size.width,
+            height: metadata.size.height,
             depth_or_array_layers: 1,
         },
     );
