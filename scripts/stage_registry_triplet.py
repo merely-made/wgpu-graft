@@ -59,13 +59,23 @@ def base_dependencies(grafting_version: str, scrying_version: str,
         dependencies.extend(
             [
                 exact_dependency("scrying", scrying_version),
-                exact_dependency("welding", welding_version, default_features=False),
+                exact_dependency(
+                    "welding",
+                    welding_version,
+                    features=["wgpu-30"],
+                    default_features=False,
+                ),
             ]
         )
     else:
         dependencies.extend(
             [
-                exact_dependency("scrying", scrying_version, default_features=False),
+                exact_dependency(
+                    "scrying",
+                    scrying_version,
+                    features=["wgpu-30"],
+                    default_features=False,
+                ),
                 exact_dependency("welding", welding_version, features=["cef-runtime"]),
             ]
         )
@@ -246,10 +256,16 @@ def copy_required(source: Path, destination: Path, kind: str,
             demo_manifest_path,
         )
         demo_manifest += "\n" + exact_dependency(
-            "scrying", scrying_version, default_features=False
+            "scrying",
+            scrying_version,
+            features=["wgpu-29"],
+            default_features=False,
         )
         demo_manifest += "\n" + exact_dependency(
-            "welding", welding_version, default_features=False
+            "welding",
+            welding_version,
+            features=["wgpu-29"],
+            default_features=False,
         ) + "\n"
         (destination / "demo" / "Cargo.toml").write_text(demo_manifest, encoding="utf-8")
         shutil.copy2(support / "Cargo.toml", destination / "demo-support" / "Cargo.toml")
