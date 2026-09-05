@@ -6,8 +6,18 @@ green. Weld 0.14.1 supersedes 0.14.0 after the first consumer proof exposed an
 unsafe DevTools-window capability claim. Host-wide hardware serialization, the
 first ScreenCaptureKit reliability pass, and sandboxed CEF embedding are also
 complete. Scry 0.7.1 supersedes 0.7.0 with native ordered asynchronous
-script-result and cookie-read completions. A polished combined host demo
-remains open.
+script-result and cookie-read completions. Post-release contract hardening is
+active. A polished combined host demo remains open.
+
+**2026-09-04 follow-up:** `grafting-frame` 0.1.0 now establishes the wgpu-free
+ownership seam selected below. It owns neutral pixel metadata, DX12 shared
+resource and fence handles, Linux DMABUF descriptor tables and semaphore
+descriptors, retained Metal textures and IOSurfaces, and retained Metal shared
+events. `grafting` consumes and re-exports the new vocabulary under explicit
+compatibility names while its released 0.6 API remains intact. Scry and Weld
+adoption, importer conversion, and the breaking `grafting` 0.7 cleanup remain
+open. The leaf package is not ready to publish until its CI run is green on all
+three operating systems.
 
 This plan is the cross-repo release gate for:
 

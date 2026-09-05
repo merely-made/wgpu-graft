@@ -31,6 +31,7 @@ gl = ["dep:glow"]
 surfman = ["gl", "dep:euclid", "dep:gleam", "dep:image", "dep:surfman"]
 
 [dependencies]
+grafting-frame = { path = "../grafting-frame", version = "0.1.0" }
 thiserror = "2.0.17"
 # wgpu + wgpu-hal are carried at two majors behind cargo features so a consumer
 # can build grafting against whichever wgpu their host already uses, instead of

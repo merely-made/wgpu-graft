@@ -10,6 +10,7 @@ members = [
     "demo-servo-winit",
     "demo-servo-xilem",
     "grafting",
+    "grafting-frame",
     "servo-wgpu-interop-adapter",
 ]
 # patches/glass-gpui is itself a cargo workspace (the vendored glass-hq/gpui).

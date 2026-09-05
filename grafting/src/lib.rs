@@ -98,6 +98,21 @@ use std::os::windows::io::{AsRawHandle, OwnedHandle};
 
 use dpi::PhysicalSize;
 pub use error::{InteropError, UnsupportedReason};
+pub use grafting_frame;
+pub use grafting_frame::{
+    FrameMetadata as NeutralFrameMetadata, FrameSize, FrameSync,
+    OwnedNativeFrame as NeutralNativeFrame, OwnedNativeFrameKind, OwnedNativeImage, PixelFormat,
+};
+#[cfg(target_os = "linux")]
+pub use grafting_frame::{DmaBufError, DmaBufImage, DmaBufPlane};
+#[cfg(target_os = "windows")]
+pub use grafting_frame::{
+    Dx12SharedFence as OwnedDx12SharedFence,
+    Dx12SharedResource as OwnedDx12SharedResource,
+    Dx12SharedTexture as OwnedDx12SharedTexture,
+};
+#[cfg(target_vendor = "apple")]
+pub use grafting_frame::{IoSurface as OwnedIoSurface, MetalTexture as OwnedMetalTexture};
 pub use sync::{ImplicitOnlySynchronizer, InteropSynchronizer, NoopSynchronizer, SyncMechanism};
 
 #[cfg(target_os = "windows")]

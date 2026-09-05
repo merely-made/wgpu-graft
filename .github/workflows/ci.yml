@@ -46,6 +46,14 @@ jobs:
 
       # --- Core library ---
 
+      - name: cargo test grafting-frame
+        run: cargo test --locked -p grafting-frame
+
+      - name: cargo doc grafting-frame
+        run: cargo doc --locked -p grafting-frame --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+
       - name: cargo check (wgpu 28)
         run: cargo check --locked -p grafting --no-default-features --features wgpu-28
 
@@ -129,6 +137,9 @@ jobs:
 
       # --- Core library (Metal + IOSurface path) ---
 
+      - name: cargo test grafting-frame
+        run: cargo test --locked -p grafting-frame
+
       - name: cargo check (wgpu 28)
         run: cargo check --locked -p grafting --no-default-features --features wgpu-28
 
@@ -196,6 +207,9 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       # --- Core library (Windows Vulkan + D3D11/D3D12 paths) ---
+
+      - name: cargo test grafting-frame
+        run: cargo test --locked -p grafting-frame
 
       - name: cargo check (wgpu 28)
         run: cargo check --locked -p grafting --no-default-features --features wgpu-28
