@@ -1,0 +1,19 @@
+# Canonical formatting policy v1 (2026-09-04). Copied verbatim into every
+# repository under `Code` that builds Rust, the way `DOC_POLICY.md` is: it is
+# owned by no one repo, so change it in all of them or not at all and a diff
+# between any two copies stays empty.
+#
+# This is Genet's style, adopted family-wide because Genet is the lowest layer,
+# the source of the crates that moved up into Mere, and the only tree in the
+# family that was actually kept clean under a rule. The one real choice is the
+# trailing comma after a match-arm block; `reorder_imports` and
+# `style_edition` are rustfmt's own defaults for a 2024-edition package, named
+# so this file states the whole policy rather than the delta from it.
+#
+# Placing the file does not reformat anything. A repository conforms when
+# someone runs `cargo fmt` there, and that sweep is deliberately separate: it
+# rewrites every file it touches, so it wants a quiet tree, its own commit, and
+# that commit's hash in `.git-blame-ignore-revs`.
+match_block_trailing_comma = true
+reorder_imports = true
+style_edition = "2024"
