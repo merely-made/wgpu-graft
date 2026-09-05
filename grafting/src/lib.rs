@@ -88,12 +88,6 @@ pub mod surfman_gl;
 #[cfg(feature = "gl")]
 use std::rc::Rc;
 #[cfg(target_os = "windows")]
-use std::sync::{
-    Arc,
-    atomic::{AtomicU64, Ordering},
-};
-
-#[cfg(target_os = "windows")]
 use std::os::windows::io::{AsRawHandle, OwnedHandle};
 
 use dpi::PhysicalSize;
@@ -519,12 +513,8 @@ pub struct Dx12SharedTexture {
 #[cfg(target_os = "windows")]
 #[derive(Clone, Debug)]
 pub struct Dx12SharedResource {
-    handle: Arc<OwnedHandle>,
-    allocation_key: u64,
+    inner: OwnedDx12SharedResource,
 }
-
-#[cfg(target_os = "windows")]
-static NEXT_DX12_ALLOCATION_KEY: AtomicU64 = AtomicU64::new(1);
 
 impl Dx12SharedTexture {
     pub fn metadata(&self) -> FrameMetadata {
@@ -570,15 +560,20 @@ impl Dx12SharedResource {
     /// Take RAII custody of a shared DXGI NT handle.
     pub fn from_owned_handle(handle: OwnedHandle) -> Self {
         Self {
-            handle: Arc::new(handle),
-            allocation_key: NEXT_DX12_ALLOCATION_KEY.fetch_add(1, Ordering::Relaxed),
+            inner: OwnedDx12SharedResource::from_owned_handle(handle),
         }
+    }
+
+    /// Wrap the wgpu-free custody token without changing its allocation
+    /// identity.
+    pub fn from_owned_resource(inner: OwnedDx12SharedResource) -> Self {
+        Self { inner }
     }
 
     /// Stable identity for this shared-resource allocation, suitable for a
     /// host import cache. It does not change as the producer updates pixels.
     pub fn allocation_key(&self) -> u64 {
-        self.allocation_key
+        self.inner.allocation_key()
     }
 
     /// Build a fresh one-shot frame from this reusable resource-custody
@@ -587,8 +582,19 @@ impl Dx12SharedResource {
         Dx12SharedTexture::new(metadata, self.clone(), fence_value)
     }
 
+    /// Borrow the wgpu-free resource custody carried by this compatibility
+    /// wrapper.
+    pub fn owned_resource(&self) -> &OwnedDx12SharedResource {
+        &self.inner
+    }
+
+    /// Remove the compatibility wrapper while preserving shared custody.
+    pub fn into_owned_resource(self) -> OwnedDx12SharedResource {
+        self.inner
+    }
+
     fn raw_handle(&self) -> *mut std::ffi::c_void {
-        self.handle.as_raw_handle()
+        self.inner.as_handle().as_raw_handle()
     }
 }
 
