@@ -5950,6 +5950,7 @@ dependencies = [
  "gl_generator",
  "gleam",
  "glow 0.17.0",
+ "grafting-frame",
  "image",
  "libc",
  "metal 0.33.0",
@@ -5969,6 +5970,18 @@ dependencies = [
  "wgpu-hal 30.0.1",
  "windows 0.62.2",
  "wio",
+]
+
+[[package]]
+name = "grafting-frame"
+version = "0.1.0"
+dependencies = [
+ "objc2 0.6.4",
+ "objc2-core-foundation",
+ "objc2-io-surface",
+ "objc2-metal 0.3.2",
+ "static_assertions",
+ "windows 0.62.2",
 ]
 
 [[package]]

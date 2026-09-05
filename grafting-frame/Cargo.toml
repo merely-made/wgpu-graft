@@ -1,0 +1,25 @@
+[package]
+name = "grafting-frame"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.92"
+license = "MPL-2.0"
+repository = "https://github.com/merely-made/wgpu-graft"
+description = "wgpu-free owned native frame and synchronization custody for graphics interop"
+readme = "README.md"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_System_Threading",
+] }
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+objc2 = "0.6.3"
+objc2-core-foundation = "0.3.2"
+objc2-io-surface = "0.3.2"
+objc2-metal = { version = "0.3.2", features = ["MTLResource", "MTLTexture", "MTLEvent", "objc2-io-surface"] }
+
+[dev-dependencies]
+static_assertions = "1.1"
