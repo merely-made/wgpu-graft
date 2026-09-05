@@ -9,15 +9,20 @@ complete. Scry 0.7.1 supersedes 0.7.0 with native ordered asynchronous
 script-result and cookie-read completions. Post-release contract hardening is
 active. A polished combined host demo remains open.
 
-**2026-09-04 follow-up:** `grafting-frame` 0.1.0 now establishes the wgpu-free
+**2026-09-04 follow-up:** `grafting-frame` 0.1.0 establishes the wgpu-free
 ownership seam selected below. It owns neutral pixel metadata, DX12 shared
 resource and fence handles, Linux DMABUF descriptor tables and semaphore
 descriptors, retained Metal textures and IOSurfaces, and retained Metal shared
 events. `grafting` consumes and re-exports the new vocabulary under explicit
 compatibility names while its released 0.6 API remains intact. Scry and Weld
 adoption, importer conversion, and the breaking `grafting` 0.7 cleanup remain
-open. The leaf package is not ready to publish until its CI run is green on all
-three operating systems.
+open. Commits `7f7e089080d4ef21327ac35ff4f21d8735ddd0c2` and
+`9e25904166185da4b55b157d54b03af5e5d1839d` landed the package and made the
+existing DX12 resource wrapper use its custody token internally. CI run
+`33939904620` passed the Linux, macOS, Windows core, Windows Iced, and Windows
+Servo-demo jobs. The package dry-run and upload each verified six files at
+23.2 KiB unpacked / 6.7 KiB compressed, and `grafting-frame` 0.1.0 is published
+on crates.io.
 
 This plan is the cross-repo release gate for:
 
