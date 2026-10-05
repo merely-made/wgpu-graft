@@ -1,7 +1,9 @@
 # Wgpu Triplet Release Plan
 
-**Status (2026-09-04):** release complete. `grafting` 0.6.0, `scrying` 0.7.1,
-and `welding` 0.14.1 are published, and the crates.io-only four-host proof is
+**Status (2026-10-05):** the September registry release is complete;
+post-release contracts and Turnstone consumer qualification remain in progress.
+The completed baseline is `grafting` 0.6.0, `scrying` 0.7.1,
+and `welding` 0.14.1; all are published, and the crates.io-only four-host proof is
 green. Weld 0.14.1 supersedes 0.14.0 after the first consumer proof exposed an
 unsafe DevTools-window capability claim. Host-wide hardware serialization, the
 first ScreenCaptureKit reliability pass, and sandboxed CEF embedding are also
@@ -64,6 +66,261 @@ Windows, Linux, and macOS while retaining the named trusted-content mode.
    releases must run on DX12, Metal, and Vulkan. This is the packaging proof.
 
 ## Findings
+
+### 2026-10-05 source audit and next gates
+
+The source audit inspected local source, tags, and retained receipt records.
+The orchestrator then read the current registry and GitHub workflow results;
+it did not rerun native hardware. The recorded September
+registry proof (`33916390001`) qualifies the released triplet above. It does
+not qualify later source changes or an application that uses those libraries.
+
+A separate fresh registry read by the Turnstone orchestrator on 2026-10-05
+confirmed latest stable versions `grafting` 0.6.0, `grafting-frame` 0.1.0,
+`scrying` 0.7.1 and `welding` 0.14.1 through the crates.io package API. This
+confirms publication state, not a rerun of the earlier hardware receipts.
+
+- Graft `main` is `403a30c2fab39c573d1eebb57a0995e2c3347ff1`; the
+  `grafting-v0.6.0` tag peels to
+  `816f3e7857afee863200e1c25b300c43b1532aae`. The manifest still says
+  `0.6.0`, but `grafting/Cargo.toml` now depends on `grafting-frame` and
+  `grafting/src/lib.rs` exposes its neutral custody vocabulary. Treat this as
+  post-release source, not the exact registry 0.6.0 package. The new package's
+  publication receipt is recorded above; Scry/Weld adoption, importer
+  conversion, and the proposed breaking 0.7 cleanup remain open.
+- Weld `main` is `65d057def7db2b5034add6e316cbd51d97c163a1`; its manifest
+  says `0.15.0`, while the latest local release tag is `welding-v0.14.1`
+  at `c7b7b4c52138643e22580a918542e8e036a0b24a`. Required owned frame
+  delivery and ordered caller-id script/cookie completions have landed.
+  The earlier parity run `33935649650` at `4784d07` was cancelled. Fresh
+  [parity run 37205146754](https://github.com/merely-made/wgpu-weld/actions/runs/37205146754)
+  at the current `65d057d` head passed NVIDIA, M4, Intel and RADV. This closes
+  the old pending NVIDIA parity gate. Hardware run `37197779933` passed
+  NVIDIA and both Macs but stopped RADV before product execution because its
+  preflight hardcoded an expired logind session ID.
+- Scry hardware run
+  [37210994529](https://github.com/merely-made/wgpu-scry/actions/runs/37210994529)
+  at current `99c0a9d` passed Windows and M4. Intel passed nine of ten gates:
+  base capture cadence produced three complete frames against the required
+  five, while resize passed. That acceptance failure does not identify its
+  cause. RADV also stopped at the expired-session preflight. Scry and Weld
+  now have local preflight patches that enumerate the runner user's sessions
+  and require an active Wayland session for that UID; eight mocked acceptance
+  and refusal cases passed in each repository. A real RADV rerun is still
+  required. Scry's new capture-counter unit test also needs a native Mac run;
+  the hardware workflow does not execute it.
+- Mere's opt-in direct `WeldingSurface` adapter is implemented in
+  `mere/crates/inker/engines/weld-engine/src/welding_0_15.rs`. It retains owned
+  frames and projects ordered completions using the exact surface config.
+  Runtime/bootstrap, profiles, host import, and app policy remain host-owned.
+  Its reviewed Weld pin is `4784d07`; Turnstone currently pins `65d057d`.
+  Align package identity before adopting it, then retain app-specific limits
+  for winit input, native dragging, find selection, and zoom readback.
+- Graft's Servo adapter supplies rendering and interop, not a complete browser
+  producer. `mere/crates/inker/engines/graft-engine/src/producer.rs` still
+  delegates through the host's `GraftSurface` composite and merges separate
+  navigation/message polls. A real host must provide an ordered event source
+  and explicit capability truth before claiming a unified browser contract.
+
+**Next library release done-conditions:** choose and version the exact public
+source; rerun declared-floor, OS/wgpu, ownership/failure, and platform-demo
+gates; obtain fresh headed receipts on every claimed host; package and tag the
+same source; repeat the registry-only four-host proof with the new versions.
+The existing release stop conditions continue to apply. A unified neutral
+browser contract is a separate claim and still requires its consumer proof.
+
+**Application consumer gates:** Turnstone's current Windows Weld adapter owns
+manual raw-handle handoff/import and drops script/cookie completions into
+diagnostics. Its native DevTools support claim is corrected in the local patch because
+Weld refuses that unsafe window; CDP remains separately unconsumed. Direct
+adapter adoption, correlated hosted capture, popup-widget composition,
+downloads and inspection controls remain separate slices. Turnstone must
+prove its actual factory, profiles, host-device composition, input, navigation,
+find/zoom, and decision paths with deterministic headed scenarios. Its Scry
+factory is implemented locally as described below and still needs consumer
+qualification; Servo still needs a real factory and registration. These
+application gates inform practice and the combined-demo milestone; they do
+not reopen the completed September package release. Track implementation in
+`turnstone/design_docs/2026-08-03_user_agent_taxonomy_plan.md`.
+
+### 2026-10-05 B1 Windows Scry consumer source findings
+
+Turnstone now has local Windows Scry factory, registry, input, and owned-frame
+import changes. These are source implementation findings; full native consumer
+qualification remains gated on cookie retention and current captured pixels.
+The receipt home is
+`turnstone/docs/receipts/browser_scry_windows_20261005/README.md`. Earlier
+compile and diagnostic receipts remain separate from full native qualification
+and do not expand the released triplet claim. Initial two-page captures and
+distinct-fence counters establish bounded construction/paint evidence; later
+unassisted timer-driven progression and zero-resource close assertions are
+recorded below. The latest full and separate restart scripts complete without
+external repaint; bounded DOM input, owner selection, switching, resource
+teardown and saved pin/localStorage/text restoration pass. Cookie and pixel
+failures prevent full consumer acceptance.
+
+- **Fence scope is per producer.** Scry 0.7.1's D3D11 capture signaler starts
+  its counter independently for each capture context
+  (`wgpu-scry/scrying/src/windows_capture.rs`, `D3d11FenceSignaler::signal`).
+  A single fence shared by two producers could therefore satisfy a wait for
+  one page with the other page's signal. Turnstone's
+  `src/shell/scry.rs` creates a dedicated `Dx12FenceSynchronizer` for each
+  producer and retains that same Arc in its wrapper and node importer. The
+  outer Inker frame's borrowed fence identity/value must match the selected
+  importer and native payload. Simultaneously live producers need distinct
+  fence identities in the headed proof; handle identity is diagnostic and may
+  be reused after close.
+- **Mouse input is an adapter boundary.** The pinned Inker Scry adapter lowers
+  a mouse `PointerEvent` into Scry's portable pointer path, while WebView2's
+  native `SendPointerInput` accepts touch and pen. Turnstone's local wrapper
+  routes mouse events through Scry's `send_mouse_input`, preserving changed
+  buttons, held buttons, modifiers, and leave/cancel behavior. Touch/pen still
+  use the existing pointer path. This host workaround does not qualify other
+  hosts or change the published Scry API; an owner-side adapter correction is
+  a separate slice.
+- **Keyboard dispatch must return to the host event loop.** The published
+  Scry 0.7.1 Windows keyboard helper submits CDP `Input.dispatchKeyEvent` and
+  blocks while pumping thread messages with `DispatchMessageW`. Turnstone's
+  scenario text input calls it inside a winit event handler. The initial
+  two-page capture/count guards passed in the subsequent native run, but the
+  input-stage capture never arrived; the stopped run is retained in
+  `turnstone/docs/receipts/browser_scry_windows_20261005/native/aborted.json`.
+  Nested message dispatch is a concrete source seam consistent with that
+  stall, rather than a captured native stack diagnosis. Turnstone's local
+  `src/shell/scry.rs` now queues keyboard CDP commands per producer, with
+  one request in flight and a completion callback through the already-locked
+  native `webview2-com` 0.39.1 binding. Callbacks only record completion through
+  Weak queue state; normal host polling submits the next command, without a
+  nested message pump or dispatch from inside the callback. The queue preserves
+  raw-key-down, character, and key-up completion order; asynchronous submission
+  order alone would not prove processing order. Dispatch/completion errors or
+  a two-second in-flight deadline retire queued commands and surface on the
+  next fallible acquire/send. Pure regressions cover input parameters,
+  completion ordering, timeout/failure retirement, and Weak teardown. The
+  latest callback source compiled, and all five keyboard regressions passed
+  within the 48 passing Shell tests; 15 Inspector tests also passed
+  (`shell-tests-final.log` and `inspector-tests-final.log` in the receipt home).
+  This did **not resolve or qualify native progression**: the callback
+  executable, SHA-256
+  `9221c083785fddf15c0a00347714532a0323e587682d3922496c1d64e95e30b0`,
+  again reached the initial two-page capture but produced no input checkpoint
+  after more than six minutes. The stopped run is retained in
+  `turnstone/docs/receipts/browser_scry_windows_20261005/native-nonblocking/aborted.json`.
+  That stopped run did not establish its native stack or root cause. The
+  subsequent loop trace below measures a consumer wake boundary; blocked COM
+  and capture/occlusion are not established. Ordered DOM text without external
+  intervention, current pixels after interaction, input, teardown, and restart
+  qualification remain pending. This host adaptation changes neither the
+  published Scry API nor any repository dependency pin.
+- **Producer availability needs a host wake hook.**
+  `turnstone/docs/receipts/browser_scry_windows_20261005/native-loop-trace/`
+  records native focus and mouse down/up returning, followed by completed
+  render, accessibility update, and `trace-after-input-click` checkpoint.
+  Further redraw callbacks then stop. `wait-chain.json` reports `cycle: false`;
+  this is not a native stack diagnosis or evidence of blocked COM. A repaint
+  to the uniquely named owned Turnstone product window resumes the remaining
+  steps, ordered CDP `alpha`, and `RESULT ok`. This is an **intervened
+  diagnostic**, not native acceptance. The first repaint probe targeted the
+  private capture `Static` HWND returned by `Process.MainWindowHandle`;
+  `owned-windows.txt` and `redraw-product-window.json` retain the corrected
+  product-window target and intervention. The measured boundary is consumer
+  window scheduling/wake, rather than a proved blocked native input call.
+  Turnstone's retained deadline wake/redraw fallback now has three passing
+  standalone timer regressions and 51 passing targeted Shell tests, including
+  those three cases (`surface-poll-standalone-tests.log` and
+  `shell-tests-wake-final.log` in the receipt home). The deliberately broken
+  reset-on-every-event control fails the early-wake regression as expected
+  (`surface-poll-reset-positive-control.log`). This distinguishes an independent
+  retained deadline from a timer continually postponed by unrelated events.
+  The fresh `native-wake/` full scenario completes normally **without external
+  repaint**, but its final result is **`RESULT fail`**, not B1 acceptance.
+  `source-manifest-wake-first.json` preserves that source and executable
+  SHA-256 `1a1a2dc8fb512bd635984b3caba2618ea6273f687f55ab91fbd0ec66a44095ee`.
+  Native frame/import/wait, custody, and teardown assertions advanced through
+  all stages; `native-wake/closed.surface-frames.json` records zero live
+  producers, cached frames, and importers. The strong fixture also exposed
+  missing Enter carriage-return activation (`clicks=1`, expected `2`), missing
+  cookies after reload/reconstruction while localStorage text/markers persist,
+  and scenario selection through `OpenAddress` reloading an old page instead
+  of selecting it. This remains a historical failed diagnostic. The latest
+  result and repaired input/owner boundaries are recorded below; cookie and
+  presentation gates remain open. Successful scheduling and teardown
+  progression do not waive those product gates.
+  The concrete trio/Inker integration requirement is a producer event-loop wake
+  hook for frame, event, and completion availability, so host progress does not
+  depend on paint coalescing or continuous polling. This belongs at the
+  producer/adapter-to-host seam; Graft's resource importer retains its existing
+  device/import ownership boundary.
+- **Owned custody and every paint are retained.**
+  `turnstone/src/shell/surface_frames.rs` validates the surface envelope
+  against its owned DX12 payload before import and retains the imported
+  texture on the host device. Fresh allocations wait through Scry's importer;
+  an unchanged source/epoch/metadata reuse explicitly waits on its new producer
+  fence before sampling. A failed owned-frame operation clears the cached
+  texture. Replacement/close removes the producer, cached texture, and node
+  importer with the synchronizer retained through disposal. Legacy Weld
+  callback copying/import remains separate. Local regressions cover custody
+  refusal/drop and mocked repeated-allocation waits. The unassisted failed
+  native run above advances frame counters and zero-resource close checks;
+  full product qualification still requires native cookie persistence and
+  continued current pixels on both producers. Current
+  WebView2 capture allocates a new texture per paint, so native frame/import/wait
+  counters qualify that path rather than replacing the reuse regression.
+
+**Latest bounded Turnstone result, 2026-10-05.**
+`turnstone/docs/receipts/browser_scry_windows_20261005/source-manifest.json`
+binds 152 source/fixture inputs to executable SHA256
+`a245130a4becccd35c81c78a5108a2a74d0e980fa52744937711f4e678421948`.
+The `native-clipped/` full script completes without external repaint and fails
+only four cookie assertions: B in-place reload, A reconstruction, and reopening
+both closed pages. DOM input reports alpha/bravo and two activations (pointer
+plus ordered CDP Enter); wheel/reset and sibling-preservation, pane resizing,
+engine switching and capability refusal assertions pass. Closing both pages
+records zero live producers, cached frames and importers. Workbench commands
+follow their active member independently of graph selection; normal tab presses
+use painted, cell-clipped hit rectangles. All 18 current Workbench tests pass,
+including the long-title collision regression. Locked all-target default and
+combined `scry,weld` checks pass. Earlier targeted Shell/Inspector runs passed
+51/15 tests; there is no new full-suite success receipt.
+
+`native-restart/` runs in a separate process with the same executable, profile
+and origin, without reseeding or toggling content. Engine pins, two restored
+cells/producers, localStorage markers and saved text pass. Its two cookie
+assertions fail. Native CookieManager reads correlated across in-place reload
+and the exact profile-store behavior are the next Scry/host boundary evidence;
+the backend root cause is not established.
+
+Manual review in `visual-review.json` detects additional presentation failures:
+B's body shows an older click count than its current title/DOM assertion; A's
+body shows scroll 285/wheels 1 after current DOM reset 0/wheels 2. Both reopened
+tiles are blank in the final full-run capture; B is blank in the first restart
+capture and appears later. Positive matching frame/import/wait counts and
+distinct fences do not prove current pixels. Correlating native captured,
+imported and composited images with the current page generation is a Scry plus
+host adapter/compositor gate, with no proved cause yet. The producer wake hook
+above also remains a reusable integration requirement. **B1 stays open.**
+Turnstone's combined build uses Git `welding` 0.15.0 at `65d057d`, whereas Scry
+and Graft are registry 0.7.1/0.6.0 through the existing Mere pin. This is not
+the registry-only stable welding 0.14.1 release-consumer gate. RADV reruns,
+Intel capture cadence, the new Mac counter-unit headed receipt and exact-source
+package/registry-consumer gates remain separate; no release/workflow was
+dispatched by this consumer lane.
+
+Supplier review finds a concrete Scry 0.7.1 capture freshness defect: arrival
+notifications are coalesced by marking all seen, but acquisition dequeues one
+sample from the two-slot frame pool. The newer sample can remain unread if
+painting stops. The bounded Scry owner fix drains the pool while retaining the
+newest sample and closing superseded custody. All five focused Windows capture
+tests pass, including the broken single-dequeue positive control; exact source
+hash and command are in Turnstone's `supplier-scry-freshness.json`. A new
+exact-source native consumer must qualify Scry commit `39818a7`. Only its source,
+Windows plan and scoped index hunks are committed; the baseline Scry
+audit/preflight WIP remains outside that commit because initial hunk ownership
+is uncertain. This is consistent with the stale images,
+not a proved explanation for all blank tiles. Turnstone commit `529d839`
+retains the frozen published-0.7.1 receipt and pins. Mere's capability correction
+has since landed at `b6a50a4d` on its own main; Weld's session-discovery repair
+is committed locally at `b5cf043` with its native RADV rerun still open.
 
 ### Assessment snapshot
 
@@ -575,4 +832,7 @@ release. A failure in Scry or Weld is not a reason to yank a healthy Graft.
   library tests and a Windows `cef-runtime` type check; wgpu matrix run
   `33918122258` passed all nine wgpu-version/platform rows and all three
   platform demo builds. Ordered native events and caller-minted completion ids
-  still gate the opt-in Mere adapter.
+  still gated the opt-in Mere adapter at this checkpoint; they subsequently
+  landed with the direct adapter, as recorded in the October audit above and
+  Weld's producer parity plan. The new contract's Windows hardware gate remains
+  open in the retained receipt.
