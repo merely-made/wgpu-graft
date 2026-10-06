@@ -95,6 +95,28 @@ an importer defect or qualify the next release. Fresh passing Mac capture and
 queued Windows execution remain required, followed by exact-source package,
 tag and registry-only consumer qualification. No publication occurred.
 
+### 2026-10-06 direct consumer input finding
+
+The first direct Turnstone Weld find/zoom run passes after fixing the product
+command target: Workbench A owns controls while graph selection remains B.
+A real geolocation fixture then exposes a shared-adapter input seam: the pinned
+and current `weld-engine/src/welding_0_15.rs::map_pointer` reject mouse pointers,
+while Turnstone's winit path supplies richer PointerEvent to preserve modifiers
+and held buttons. Its keyboard mapping sends raw key events without CEF's
+separate CHAR event. Converting to legacy MouseEvent would lose those fields.
+Turnstone is qualifying a narrow native mouse/character bridge around the same
+producer; the adapter retains owned-frame and ordered-event translation.
+The follow-up belongs to Mere's shared adapter and requires both mouse/text
+contracts and the actual consumer fixture before removing that bridge. This
+finding does not change the producer hardware or registry release claims.
+
+The next Servo consumer is a real process-owned browser composite: select an
+immutable upstream Servo source, retain one event loop with per-view ordered
+delegates, state profile support explicitly, import on the host device with
+GL frame-origin handling, and prove input/resize/teardown. The existing Graft
+importer and a split navigation/message merge do not supply that composite.
+Turnstone's broader Mere integration remains held at its reviewed boundary.
+
 ### 2026-10-05 source audit and next gates
 
 The source audit inspected local source, tags, and retained receipt records.
