@@ -1,7 +1,8 @@
 # Wgpu Triplet Release Plan
 
 **Status (2026-10-06):** the September registry release is complete;
-post-release contracts and Turnstone consumer qualification remain in progress.
+the bounded Windows Turnstone Scry/direct Weld slice has native receipts.
+Post-release contracts, Servo and wider application gates remain in progress.
 The completed baseline is `grafting` 0.6.0, `scrying` 0.7.1,
 and `welding` 0.14.1; all are published, and the crates.io-only four-host proof is
 green. Weld 0.14.1 supersedes 0.14.0 after the first consumer proof exposed an
@@ -104,8 +105,26 @@ and current `weld-engine/src/welding_0_15.rs::map_pointer` reject mouse pointers
 while Turnstone's winit path supplies richer PointerEvent to preserve modifiers
 and held buttons. Its keyboard mapping sends raw key events without CEF's
 separate CHAR event. Converting to legacy MouseEvent would lose those fields.
-Turnstone is qualifying a narrow native mouse/character bridge around the same
+Turnstone qualifies a narrow native mouse/character bridge around the same
 producer; the adapter retains owned-frame and ordered-event translation.
+Actual lowercase typing exposed a second distinction: CEF CHAR requires the
+character code rather than the virtual key used for raw down/up. Corrected
+two-page alpha/bravo input, native find, requested zoom (Partial), real permission
+denial/callback navigation and zero-producer teardown pass in the Windows
+consumer receipt. Scry's two-page input/current-pixel, cookie, resize,
+reconstruction and separate-process restart runs also pass at browser commit
+`a383cdd`; the receipt remains frozen under
+`turnstone/docs/receipts/browser_scry_windows_20261006/`.
+
+The subsequent current-main merge preserves the stable Burn dependency graph
+and qualifies the browser again at Turnstone `7176581`. Its
+[integration receipt](https://github.com/merely-made/turnstone/blob/7176581a86d77a516717db5862cb65e1240b357c/docs/receipts/browser_main_integration_20261006/README.md)
+records a locked combined build, 83 passing focused browser tests and all four
+passing native scenarios on one fingerprinted executable. Mere's new
+`3d1cdacc` pin has identical Inker/surface-api trees to the earlier pin; only
+Cargo.toml/Cargo.lock differ from the prior application qualification inputs.
+The older broad-suite network sync-round failure, which passed in isolation,
+remains recorded at its original source. This is not a clean full-suite claim.
 The follow-up belongs to Mere's shared adapter and requires both mouse/text
 contracts and the actual consumer fixture before removing that bridge. This
 finding does not change the producer hardware or registry release claims.
@@ -179,16 +198,15 @@ same source; repeat the registry-only four-host proof with the new versions.
 The existing release stop conditions continue to apply. A unified neutral
 browser contract is a separate claim and still requires its consumer proof.
 
-**Application consumer gates:** Turnstone's current Windows Weld adapter owns
-manual raw-handle handoff/import and drops script/cookie completions into
-diagnostics. Its native DevTools support claim is corrected in the local patch because
-Weld refuses that unsafe window; CDP remains separately unconsumed. Direct
-adapter adoption, correlated hosted capture, popup-widget composition,
-downloads and inspection controls remain separate slices. Turnstone must
-prove its actual factory, profiles, host-device composition, input, navigation,
-find/zoom, and decision paths with deterministic headed scenarios. Its Scry
-factory is implemented locally as described below and still needs consumer
-qualification; Servo still needs a real factory and registration. These
+**Application consumer gates:** Turnstone's Windows Weld consumer adopts the
+shared version-pinned adapter, preserving ordered script/cookie completions
+and owned-frame custody. The host validates each envelope and imports every
+paint on its existing device. A narrow mouse/CHAR bridge remains until Mere
+closes its shared input gate. Unsafe native DevTools stays refused; correlated
+hosted capture, popup-widget composition, downloads and inspection remain
+separate slices. The bounded Windows Scry and Weld factory/input/profile/find,
+requested zoom/permission/teardown scope has native receipts. Servo still needs
+a real process-owned browser producer, factory and registration. These
 application gates inform practice and the combined-demo milestone; they do
 not reopen the completed September package release. Track implementation in
 `turnstone/design_docs/2026-08-03_user_agent_taxonomy_plan.md`.
