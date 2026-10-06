@@ -1,6 +1,6 @@
 # Wgpu Triplet Release Plan
 
-**Status (2026-10-05):** the September registry release is complete;
+**Status (2026-10-06):** the September registry release is complete;
 post-release contracts and Turnstone consumer qualification remain in progress.
 The completed baseline is `grafting` 0.6.0, `scrying` 0.7.1,
 and `welding` 0.14.1; all are published, and the crates.io-only four-host proof is
@@ -66,6 +66,34 @@ Windows, Linux, and macOS while retaining the named trusted-content mode.
    releases must run on DX12, Metal, and Vulkan. This is the packaging proof.
 
 ## Findings
+
+### 2026-10-06 supplier hardware follow-up
+
+The active-session preflight changes are pushed: Weld `b5cf043` and Scry
+`9c41e2d`. Eight mocked session cases pass in each repository. Weld hardware
+[run 37530088110](https://github.com/merely-made/wgpu-weld/actions/runs/37530088110)
+passes RADV, M4 and Intel; its NVIDIA job is queued. The earlier four-host
+`65d057d` parity receipt remains scoped to that source.
+
+The first Scry RADV rerun exposed a real WPE main-thread assertion: libtest
+constructed WebKit on a worker. Scry `d23ba45` changes the native integration
+binaries to run on the process main thread. `97b7579` additionally refuses
+worker-thread construction before native initialization, with a typed error
+and an actual-constructor regression. At that exact source,
+[run 37533331164](https://github.com/merely-made/wgpu-scry/actions/runs/37533331164)
+passes the worker-refusal regression, RADV imported-pixel gate and page-input
+gate. The NVIDIA battery is queued.
+
+Both Macs pass the capture-size/DPI expectation unit test now wired into the
+hardware workflow. This is the size test, correcting the earlier reference to
+a capture-counter test. Native cadence remains failed: Intel observes four
+base portrait frames against five required; M4 observes three against five,
+and two final portrait resize frames against three. Source diagnostics are
+retained with unchanged acceptance thresholds in Turnstone's
+`docs/receipts/browser_scry_windows_20261006/`. These failures do not establish
+an importer defect or qualify the next release. Fresh passing Mac capture and
+queued Windows execution remain required, followed by exact-source package,
+tag and registry-only consumer qualification. No publication occurred.
 
 ### 2026-10-05 source audit and next gates
 
