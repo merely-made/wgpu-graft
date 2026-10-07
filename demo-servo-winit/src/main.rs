@@ -382,7 +382,14 @@ impl AppState {
         // GPU path: import the GL framebuffer directly as a wgpu texture.
         // Falls back to CPU readback if the GL driver lacks external memory extensions.
         if !self.gpu_import_failed {
-            match self.interop.import_current_frame_default() {
+            // The adapter's RenderingContext imports before presenting the GL
+            // swap chain. A post-paint import can read the previous buffer and
+            // would also let this smoke gate miss a bypassed present hook.
+            match self
+                .interop
+                .take_imported_texture()
+                .ok_or("Servo present hook did not produce an imported frame")
+            {
                 Ok(imported) => {
                     self.render_status.set_frame(
                         RenderPath::GpuImport,

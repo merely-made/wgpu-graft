@@ -1,0 +1,15 @@
+    Blocking waiting for file lock on package cache
+error: failed to select a version for `core-foundation`.
+    ... required by package `core-graphics-types v0.2.0`
+    ... which satisfies dependency `core-graphics-types = "^0.2.0"` (locked to 0.2.0) of package `metal v0.33.0`
+    ... which satisfies dependency `metal = "^0.33"` (locked to 0.33.0) of package `gpui v0.2.2 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\gpui)`
+    ... which satisfies dependency `gpui = "^0.2.2"` (locked to 0.2.2) of package `demo-servo-gpui v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-gpui)`
+versions that meet the requirements `^0.10` are: 0.10.1
+
+all possible versions conflict with previously selected packages
+
+  previously selected package `core-foundation v0.10.0`
+    ... which satisfies dependency `core-foundation = "=0.10.0"` of package `gpui v0.2.2 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\gpui)`
+    ... which satisfies dependency `gpui = "^0.2.2"` (locked to 0.2.2) of package `demo-servo-gpui v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-gpui)`
+
+failed to select a version for `core-foundation` which could resolve this conflict

@@ -1,0 +1,29 @@
+    Blocking waiting for file lock on package cache
+warning: patch `boa_engine v1.0.0-dev (https://github.com/mark-ik/boa.git?branch=genet#52cfb6ff)` was not used in the crate graph
+  |
+  = help: perhaps you meant one of the following:
+          	https://github.com/mark-ik/boa.git
+warning: patch `boa_gc v1.0.0-dev (https://github.com/mark-ik/boa.git?branch=genet#52cfb6ff)` was not used in the crate graph
+  |
+  = help: perhaps you meant one of the following:
+          	https://github.com/mark-ik/boa.git
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling graft-engine v0.2.0 (C:\Users\mark_\Code\repos\mere\crates\inker\engines\graft-engine)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 59.63s
+     Running unittests src\lib.rs (C:/t/cargo-targets/mere\debug\deps\graft_engine-31c84be16250e809.exe)
+
+running 4 tests
+test engine::tests::factory_failure_surfaces_as_spawn_failed ... ok
+test engine::tests::graft_capture_stays_unsupported_until_the_protocol_is_wired ... ok
+test engine::tests::registers_and_spawns_through_registry ... ok
+test engine::tests::producer_retains_host_callback_order_across_event_kinds ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests graft_engine
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

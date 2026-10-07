@@ -398,6 +398,9 @@ impl RenderingContext for ImportingRenderingContext {
 
     /// Import the rendered back-buffer into a wgpu texture **before** the swap.
     fn present(&self) {
+        // A failed paint must not leave a previous, unconsumed frame available
+        // as though it belonged to this paint.
+        self.last_texture.borrow_mut().take();
         // Drain GL errors left by Servo's rendering so the import's own error
         // checks aren't tripped by pending producer errors.
         let gl = self.inner.gleam_gl_api();
@@ -476,7 +479,7 @@ impl ServoWgpuInteropAdapter {
     /// retrieve it with [`take_imported_texture`](Self::take_imported_texture).
     #[cfg(feature = "servo")]
     pub fn rendering_context(&self) -> Rc<dyn RenderingContext> {
-        self.rendering_context.clone()
+        self.importing_context.clone()
     }
 
     /// The zero-copy frame imported during the last `present()` (the most recent
