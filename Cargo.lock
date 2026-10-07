@@ -3759,6 +3759,7 @@ dependencies = [
  "servo-wgpu-interop-adapter",
  "url",
  "wgpu 29.0.3",
+ "wgpu 30.0.1",
  "winit",
 ]
 
