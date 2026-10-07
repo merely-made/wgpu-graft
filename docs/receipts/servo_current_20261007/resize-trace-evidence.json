@@ -1,0 +1,44 @@
+{
+  "scope": "Opt-in observation checkpoint; Windows typed only, native trace pending; defaults unchanged",
+  "artifacts": [
+    {
+      "path": "resize-trace-inputs.json",
+      "bytes": 6829,
+      "sha256": "bb6e40133ade1ea9ef0171227dbdf4792af01e7757d8cff9a4e01e9487163ba7"
+    },
+    {
+      "path": "resize-trace-inputs.zip",
+      "bytes": 206815,
+      "sha256": "a89007d236b1fc79319a8740847d0c1ff877a86b3111193d86587c5fe0e37b84"
+    },
+    {
+      "path": "resize-trace-source.diff",
+      "bytes": 9517,
+      "sha256": "2ed80e184aa07332463c4b430980d90d6d7edb0fd4ecd7545565484aad5f54ae"
+    },
+    {
+      "path": "resize-trace-typed-result.json",
+      "bytes": 1422,
+      "sha256": "5858209f056c900da2a0b99a066060f74ad4eb91bff9db1bcae8cf41ac58724b"
+    },
+    {
+      "path": "resize-trace-typed.log",
+      "bytes": 678,
+      "sha256": "7188311b6aa978912d8f5001623a6bceec1701f326329ab27adc4bc097763800"
+    }
+  ],
+  "typed_source_files": [
+    {
+      "path": "servo-wgpu-interop-adapter/src/lib.rs",
+      "sha256": "2bcb40a657b8e887b02de950c15ef6a0730cd5ae7bf45ddfb17128220413a46c",
+      "carriage_return_bytes": 0
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows_dx12_shared.rs",
+      "sha256": "e65e0a29d27c0167126e0cd6a87f0a8e8ce72152dc32fb9eb7b02931cb65782a",
+      "carriage_return_bytes": 0
+    }
+  ],
+  "frozen_input_count": 40,
+  "raw_zip_and_current_source_hashes_pass": true
+}

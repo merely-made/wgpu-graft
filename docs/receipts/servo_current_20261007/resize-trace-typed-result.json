@@ -1,0 +1,39 @@
+{
+  "command": [
+    "cargo",
+    "+1.97.1",
+    "check",
+    "--locked",
+    "-p",
+    "demo-servo-winit",
+    "--no-default-features",
+    "--features",
+    "wgpu-30,servo",
+    "--target-dir",
+    "C:/t/cargo-targets/wgpu-graft",
+    "-j1"
+  ],
+  "environment": {
+    "RUSTFLAGS": "-D warnings",
+    "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+    "CMAKE_GENERATOR": "Visual Studio 17 2022",
+    "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+  },
+  "priority": "BelowNormal",
+  "owned_pid": 39744,
+  "started_utc": "2026-10-07T10:02:44.729937+00:00",
+  "ended_utc": "2026-10-07T10:03:40.548261+00:00",
+  "elapsed_seconds": 55.818324,
+  "exit_code": 0,
+  "input_manifest": "resize-trace-inputs.json",
+  "input_manifest_sha256": "bb6e40133ade1ea9ef0171227dbdf4792af01e7757d8cff9a4e01e9487163ba7",
+  "input_archive": "resize-trace-inputs.zip",
+  "input_archive_sha256": "a89007d236b1fc79319a8740847d0c1ff877a86b3111193d86587c5fe0e37b84",
+  "source_diff": "resize-trace-source.diff",
+  "source_diff_sha256": "2ed80e184aa07332463c4b430980d90d6d7edb0fd4ecd7545565484aad5f54ae",
+  "log": "resize-trace-typed.log",
+  "log_sha256": "7188311b6aa978912d8f5001623a6bceec1701f326329ab27adc4bc097763800",
+  "all_inputs_unchanged": true,
+  "input_count": 40,
+  "scope": "Windows typed check of opt-in resize/frame/GL diagnostics; no native pixel, default behavior fix, AT or release qualification"
+}

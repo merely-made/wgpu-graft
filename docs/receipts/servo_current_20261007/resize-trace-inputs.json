@@ -1,0 +1,205 @@
+{
+  "head": "f991ca181507dc08b7e904adcc607d73794d533b",
+  "inputs": [
+    {
+      "path": "Cargo.lock",
+      "bytes": 413764,
+      "sha256": "70a46ae6e802ede655b18a2e98cb11b73d099d8ac617866fdc6a73983674b25d"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 4109,
+      "sha256": "e1da718945e59732aaaa26c92ed2162b67da6a316c8b5b96586cd67c91864e2f"
+    },
+    {
+      "path": "demo-servo-winit/Cargo.toml",
+      "bytes": 1274,
+      "sha256": "37bfe5f397173ce4605374eabced511af89c0f7c37e9ed4a8f616c151439332d"
+    },
+    {
+      "path": "demo-servo-winit/README.md",
+      "bytes": 3735,
+      "sha256": "5db426755a97b28832ae394ec009703cad3e695ce151acd7e7b53ca388bebe91"
+    },
+    {
+      "path": "demo-servo-winit/src/keyutils.rs",
+      "bytes": 11282,
+      "sha256": "a36ac2b2f3713d35cab3d902c65700656a68aab0fa40185b088aacedd5a12d28"
+    },
+    {
+      "path": "demo-servo-winit/src/main.rs",
+      "bytes": 40591,
+      "sha256": "3d02aff6517b58755b0453985db6f941701fb9eb0ca6b2f5704437641c0fbe62"
+    },
+    {
+      "path": "grafting-frame/Cargo.toml",
+      "bytes": 743,
+      "sha256": "bf806abafb4b964a069a76b3898ccde375d180c8d0982dbe169fcf7033b26b48"
+    },
+    {
+      "path": "grafting-frame/README.md",
+      "bytes": 549,
+      "sha256": "750fe4e013a9ce722759ec81011559f06f1ed831b9b05912a6366cf86f50cb83"
+    },
+    {
+      "path": "grafting-frame/src/lib.rs",
+      "bytes": 14154,
+      "sha256": "b2dd12f20ba59107a9326748bd7a0f16be5647667c2111a66407b14afcc7f169"
+    },
+    {
+      "path": "grafting/Cargo.toml",
+      "bytes": 4254,
+      "sha256": "b75ab1db9c57defb06638f759bf2b8dac6d2674ae347248e575b1bb2d1728afe"
+    },
+    {
+      "path": "grafting/README.md",
+      "bytes": 4043,
+      "sha256": "300cafb9935953b532bb5f8edbc12216693a8e1a685f9ec9915147a9762d403d"
+    },
+    {
+      "path": "grafting/src/dx12_shared_texture.rs",
+      "bytes": 6292,
+      "sha256": "0deaae38b6ed09b7d785ef096b4eea7234e76c0e32c8b7e71d3cf8ed60d38ecb"
+    },
+    {
+      "path": "grafting/src/error.rs",
+      "bytes": 3669,
+      "sha256": "d9a65df7ea79b3a0f4cab44b6749256db344a055068737da50c1302413a0ac17"
+    },
+    {
+      "path": "grafting/src/lib.rs",
+      "bytes": 50542,
+      "sha256": "bbbca008253778c25b109070e527c2051de30e14c61d52bd63cfbe1556f8a4c5"
+    },
+    {
+      "path": "grafting/src/metal_texture_ref.rs",
+      "bytes": 5193,
+      "sha256": "8330b53f60d0ef0458835638fcfe6389fdd66f4dec9a9c0ef9046f0e67b11e7a"
+    },
+    {
+      "path": "grafting/src/raw_gl/angle_d3d11.rs",
+      "bytes": 12999,
+      "sha256": "23d511e0e21802b42b03ee0d53b106382209fb49b3395884fbd1d569e4728e66"
+    },
+    {
+      "path": "grafting/src/raw_gl/dx12.rs",
+      "bytes": 10278,
+      "sha256": "9defc3be1e60937ba2708c2c8586cac96b45a5c04a9b287c216f33e011c9a0a3"
+    },
+    {
+      "path": "grafting/src/raw_gl/linux.rs",
+      "bytes": 10562,
+      "sha256": "100cd6ef39648d85655090a3a62aa13ffa02fcd2089530dbd7a52477edce12ad"
+    },
+    {
+      "path": "grafting/src/raw_gl/metal.rs",
+      "bytes": 6660,
+      "sha256": "aab229b803807dd5c00f40078fbcda522da6a25ee7aba5543001e41ade6a1301"
+    },
+    {
+      "path": "grafting/src/raw_gl/mod.rs",
+      "bytes": 916,
+      "sha256": "2e528f577f8d0227fdca5bf28c309c0baea6db9cb79a54e67659b2ed2dd9232c"
+    },
+    {
+      "path": "grafting/src/raw_gl/producer.rs",
+      "bytes": 6326,
+      "sha256": "fe15af0f85a68fc7e87fb5a458261e704b55f2e3e77ec9fee2bfadb8d46c097b"
+    },
+    {
+      "path": "grafting/src/raw_gl/texture_normalizer.rs",
+      "bytes": 9705,
+      "sha256": "aee6bffb3034e59a913ad40800b856b641c1dd535f5540179b4bdceebb512a2d"
+    },
+    {
+      "path": "grafting/src/raw_gl/windows.rs",
+      "bytes": 11959,
+      "sha256": "d1db327f8fd3e4f429fd046d3211b8dc6e0f9995dbbf821b02771b6d201bb876"
+    },
+    {
+      "path": "grafting/src/surfman_gl/adapter.rs",
+      "bytes": 4962,
+      "sha256": "3eb0385b7fe2ef5827dff2e7ee224e06c09dd6fe31e9f56b878264da92af5882"
+    },
+    {
+      "path": "grafting/src/surfman_gl/linux.rs",
+      "bytes": 2225,
+      "sha256": "39187f8d9a7e94f580ad99fcff97f4bed05d9d54cdbe8af4c2f32ce6c35ae598"
+    },
+    {
+      "path": "grafting/src/surfman_gl/metal/mod.rs",
+      "bytes": 1826,
+      "sha256": "78f7dd351b5ec0f2ab673631d269a9919953839cbc2ecbabc150fefd57a905c7"
+    },
+    {
+      "path": "grafting/src/surfman_gl/mod.rs",
+      "bytes": 5841,
+      "sha256": "2b04fb96b136dd35506a6cda4c6e4e5fb4cb2adcafaea0b80bd3ece2710b5f9d"
+    },
+    {
+      "path": "grafting/src/surfman_gl/surfman_frame_context.rs",
+      "bytes": 7008,
+      "sha256": "baff3333570fd6f25c6442e799a4fba61e9ffdf9cebeee5069812d483a324c77"
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows.rs",
+      "bytes": 7812,
+      "sha256": "ec643e91b9342e926054af8ee2fb649e43f41f8c1bae11c430f412c9bb8d13d5"
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows_dx12_shared.rs",
+      "bytes": 20217,
+      "sha256": "e65e0a29d27c0167126e0cd6a87f0a8e8ce72152dc32fb9eb7b02931cb65782a"
+    },
+    {
+      "path": "grafting/src/sync.rs",
+      "bytes": 3936,
+      "sha256": "94f2da58e71587005709a8550856c0264354d067c030102fb1293f7cdf93e694"
+    },
+    {
+      "path": "grafting/src/sync_dx12.rs",
+      "bytes": 7693,
+      "sha256": "7bd23a167f1ba1a4dbe2b732e7c7ef28602ba590692d0dec1a7387bdbc273ffb"
+    },
+    {
+      "path": "grafting/src/sync_metal.rs",
+      "bytes": 6941,
+      "sha256": "ee333ad5e66a2ae4034d2b4ce96f8c1e7ff39a2f358a307734e0a67f34e8b9b3"
+    },
+    {
+      "path": "grafting/src/sync_vulkan.rs",
+      "bytes": 8173,
+      "sha256": "87a769246185227e979819de43ffab4df4a746ff18d341be7f5f3e028734fb1e"
+    },
+    {
+      "path": "grafting/src/vulkan_dmabuf.rs",
+      "bytes": 27396,
+      "sha256": "2024672175268ed055a75c71ccfa3583dc0e6608e2b7d44ff60ab7a3f7f5e1be"
+    },
+    {
+      "path": "grafting/src/wgpu_compat.rs",
+      "bytes": 1701,
+      "sha256": "88f750d3908e3bf0a1fb22884a8b259d4490fd1f359d6effba96788f11494449"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "bytes": 378,
+      "sha256": "e37a4c7c4627b0767527085699b1f6ca573f385017907f346290419ef3e9cc58"
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/Cargo.toml",
+      "bytes": 1604,
+      "sha256": "483162112aafef42958acd9bedcefc09a5e6498dd17dc6be13dde066955ba425"
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/README.md",
+      "bytes": 5098,
+      "sha256": "e19324f9890b0439fc24fdace22cde9ba017bed9f4e540a3bcccb3fe3c54d1a6"
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/src/lib.rs",
+      "bytes": 25858,
+      "sha256": "2bcb40a657b8e887b02de950c15ef6a0730cd5ae7bf45ddfb17128220413a46c"
+    }
+  ]
+}

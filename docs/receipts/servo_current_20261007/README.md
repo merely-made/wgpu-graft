@@ -129,3 +129,33 @@ from the subsequent documentation-only exact installation recipe. That recipe
 points to the qualified source revision, and does not claim its changed compiled
 documentation bytes received another native run. No crate version, tag, or
 registry publication is part of this checkpoint.
+
+## Opt-in resize and import observation, 2026-10-07
+
+`GRAFT_SERVO_RESIZE_TRACE=1` enables supplier diagnostics, sampled once per
+crate on first use. They record changed resize/swap results, actual Surfman
+surface IDs and extents, logical dimensions, import/handoff dimensions and
+acquisition generations. The GL hook and DX12 blit also record viewport,
+scissor and framebuffer bindings. Acquisition generation counts calls; it
+does not prove a new WebRender content epoch. The trace performs no pixel
+readback or additional GPU completion wait. Default synchronization,
+PreserveBuffer::No and immutable Servo AAC remain unchanged.
+
+This supports a separate Turnstone control whose native DOM reported width
+509 after resize while the captured page still showed its earlier 252-wide
+layout. The GL blit retains incoming scissor and changes framebuffer bindings;
+that is a source-qualified state-custody concern, not an established cause or
+fix. Native comparison of the instrumented supplier remains pending.
+
+The [typed result](resize-trace-typed-result.json) records one Windows
+`cargo +1.97.1 check --locked -p demo-servo-winit --no-default-features
+--features wgpu-30,servo --target-dir C:/t/cargo-targets/wgpu-graft -j1`
+with `-D warnings`, BelowNormal priority, exit zero and all 40 inputs unchanged.
+It checks the changed Graft and adapter sources through the cached donor graph.
+The [raw log](resize-trace-typed.log) retains Servo tidy fixture discovery's
+malformed-manifest diagnostic and package-cache waits before the successful
+compiler result. No donor application ran. The [input index](resize-trace-inputs.json),
+[raw source ZIP](resize-trace-inputs.zip), [reviewed diff](resize-trace-source.diff)
+and [evidence index](resize-trace-evidence.json) bind this checkpoint separately
+from the earlier A native qualification. Formatting and wider platform gates
+retain their prior scope; this typed row does not qualify a pixel fix or AT.

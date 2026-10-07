@@ -68,6 +68,26 @@ Windows, Linux, and macOS while retaining the named trusted-content mode.
 
 ## Findings
 
+### 2026-10-07 opt-in Servo resize/import observation
+
+The current Turnstone viewport control reports a resized native DOM (509px)
+but captures the previous 252px page layout inside the enlarged imported
+target. Source alone does not establish a stale swap-chain, repaint or copy
+cause. `GRAFT_SERVO_RESIZE_TRACE=1` now records actual Surfman surface
+identity/extent, resize and swap results, acquisition/import/handoff metadata,
+and GL viewport/scissor/framebuffer state immediately before the DX12 blit.
+The acquisition counter is not a WebRender content epoch. The trace leaves
+default synchronization, swap preservation and Servo AAC selection intact.
+
+One cached Windows wgpu-30/Servo donor typed row passes at BelowNormal `-j1`,
+covering both changed supplier packages with forty frozen inputs unchanged.
+See the [dated supplier receipt](../docs/receipts/servo_current_20261007/README.md#opt-in-resize-and-import-observation-2026-10-07).
+The source shows that the GL blit retains incoming scissor and changes
+framebuffer bindings, while normalization is a distinct wgpu render pass.
+Native tracing must identify the faulty boundary before changing those states
+or claiming a fix. Native pixels, accessibility and consumer release gates
+remain open; this is an observation checkpoint without a registry release.
+
 ### 2026-10-06 supplier hardware follow-up
 
 The active-session preflight changes are pushed: Weld `b5cf043` and Scry
