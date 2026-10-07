@@ -26,14 +26,17 @@ Without `servo`, only the surfman-level types are available (useful for testing 
 The adapter is unpublished. Use its exact Git revision; the published Graft
 core package has a separate distribution status.
 
-The installation below retains the previous Servo 0.5 donor checkpoint while
-the [current Servo 0.7 migration](../design_docs/2026-09-03_wgpu_triplet_release_plan.md)
-completes its typed and native gates.
+The installation below pins the qualified Servo 0.7 supplier source
+`7907ff295da2c20c2a791419e6658d1c05350345`. Its eleven Windows typed rows and
+DX12/wgpu 30 GPU initial/click/resize gate are recorded in the
+[current receipt](../docs/receipts/servo_current_20261007/README.md). This is a
+documentation follow-up: runtime source is unchanged, and the native receipt
+remains bound to the archived source of that earlier commit.
 
 ```toml
 [dependencies]
-servo-wgpu-interop-adapter = { git = "https://github.com/merely-made/wgpu-graft", rev = "dec11bbd2c9c8676e66987fb6ca32cd4ae6310eb", default-features = false, features = ["wgpu-30", "servo"] }
-servo = { git = "https://github.com/servo/servo", rev = "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019" }
+servo-wgpu-interop-adapter = { git = "https://github.com/merely-made/wgpu-graft", rev = "7907ff295da2c20c2a791419e6658d1c05350345", default-features = false, features = ["wgpu-30", "servo"] }
+servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5ec4e959c943ad7cc7" }
 ```
 
 ```rust
@@ -57,12 +60,15 @@ paint, present through that same importing context, and take its frame:
 ```rust
 webview.paint();
 adapter.rendering_context().present();
-let imported = adapter.take_imported_texture();
+let imported = adapter.take_imported_texture_result()?;
 ```
 
 The pinned upstream `WebView::paint()` does not present. The explicit present
 call invokes the import hook before swapping GL buffers. A failed import leaves
-no frame; a host that requires GPU import must reject that absence. On Windows,
+no frame; a host that requires GPU import must reject that absence. Propagate
+a synchronization error and retire the surface before another paint/import.
+Existing constructors keep `DiagnosticGpuSync::Existing`; optional completion
+controls remain diagnostics. On Windows,
 enable upstream Servo's `no-wgl` feature and stage the matching build's ANGLE
 DLLs beside the executable. The bounded winit smoke gate exercises this sequence
 without accepting its regular CPU fallback.
@@ -71,9 +77,12 @@ The current source discards swap-chain preservation after importing the frame.
 Pinned Servo clears the entire context and renders with buffer age zero on each
 explicit paint. This avoids Surfman's ANGLE preservation blit between default
 framebuffer IDs while retaining GL completion. The Windows wgpu 30 donor has
-passed GPU initial-pixel, click, and resize checks; host integration,
-accessibility, and full teardown remain open in the
-[qualification receipt](../docs/receipts/servo_present_hook_20261006/README.md).
+passed GPU initial-pixel, click, and resize checks in the
+[current qualification receipt](../docs/receipts/servo_current_20261007/README.md).
+Current Turnstone host integration, accessibility, reopened-view reliability,
+and full teardown remain separate gates. The
+[earlier receipt](../docs/receipts/servo_present_hook_20261006/README.md) preserves
+the intermittent default reopened-view failure and synchronization comparisons.
 
 ## License
 
