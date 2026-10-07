@@ -145,7 +145,7 @@ This supports a separate Turnstone control whose native DOM reported width
 509 after resize while the captured page still showed its earlier 252-wide
 layout. The GL blit retains incoming scissor and changes framebuffer bindings;
 that is a source-qualified state-custody concern, not an established cause or
-fix. Native comparison of the instrumented supplier remains pending.
+fix. The subsequent native observations below narrow that investigation.
 
 The [typed result](resize-trace-typed-result.json) records one Windows
 `cargo +1.97.1 check --locked -p demo-servo-winit --no-default-features
@@ -169,7 +169,8 @@ passes the same Windows wgpu-30/Servo command at BelowNormal `-j1` in 13.58s,
 with all forty [inputs](resource-desc-trace-inputs.json) unchanged. The
 [raw source archive](resource-desc-trace-inputs.zip), [diff](resource-desc-trace-source.diff),
 [log](resource-desc-trace-typed.log) and [evidence index](resource-desc-trace-evidence.json)
-bind this checkpoint. No native descriptor value has been measured here.
+bind this typed checkpoint. The subsequent host probe below measures the
+descriptor separately.
 
 The resource-state gate precedes any fence implementation. Microsoft documents
 [automatic COMMON decay](https://learn.microsoft.com/en-us/windows/win32/direct3d12/using-resource-barriers-to-synchronize-resource-states-in-direct3d-12)
@@ -192,3 +193,71 @@ two-way GPU fence must gate normalization on completed producer writes and
 the next producer overwrite on completed normalization, preserving each exact
 allocation and its fence lifetime through resize/retirement. CPU readback,
 default policy changes and GL state-custody changes are outside this checkpoint.
+
+### Measured resource state and remaining ordering gate (2026-10-07)
+
+Turnstone's `native-current-resource-descriptor/run.stderr.log`, under
+`turnstone/docs/receipts/browser_supplier_integration_20261006/`, measures
+flags `0x21` for both 252x570 and 509x570 resources: ALLOW_RENDER_TARGET `0x1`
+and ALLOW_SIMULTANEOUS_ACCESS `0x20`. Both report layout 0, format 28
+(RGBA8Unorm), one mip and one sample. This is actual `GetDesc` evidence on
+supplier `bb48281bd4a88a726a009e0518706881b74b7604`, Servo
+`aac43a3f31a259f04a574f5ec4e959c943ad7cc7`, and executable SHA-256
+`61a81cb0864635a337e4db7ca7ded22f77d8076059fe72378b17f230f713c39a`.
+The stderr SHA-256 is
+`01a9760e4244695fb7decfb9ae8ccdd081fec8f984d3edb1aaf05aea1cf96eac`.
+The host's `source-manifest-all3-current-resource-descriptor.json` and
+`browser_family_20261007/native-build-binding-resource-descriptor.json`
+retain source/build/DLL bindings. The flags support the documented decay rule;
+this probe does not measure GPU resource-state transitions directly or qualify
+other devices.
+
+The earlier same-executable controls use SHA-256
+`36b8cd6e0a81b87a74a216eb5db632ddf2ff08e0bd5c0b80ada427ab3bab78a6`.
+Each row below has five import handoffs. Pixel percentages come from
+`turnstone/docs/receipts/browser_family_20261007/`:
+
+| Fixture | Normalization only | Both completion controls |
+| --- | --- | --- |
+| Intl | FAIL, 44.56% green (`sync-normalization-pixels.json`) | PASS, 93.96% (`sync-both-pixels.json`) |
+| Viewport | FAIL, 47.63%, painted 252/r0 (`viewport-sync-normalization-pixels.json`) | PASS, 97.83%, painted 509/r1 (`viewport-sync-both-pixels.json`) |
+
+The corresponding native directories are `native-current-sync-{normalization,both}-intl`
+and `native-current-sync-viewport-{normalization,both}`. All four scenario
+results and process exits pass despite both rejected pixel results.
+Existing and Producer controls also passed with different handoff counts;
+the earlier default negatives remain preserved. These observations do not
+qualify Producer alone or establish a causal fix. The earlier resize trace
+reported successful resize, actual 509-wide source/imports, and scissor disabled
+at every blit while pixels retained the earlier layout. Neither extent nor
+scissor failure explains that observed control.
+
+The next supplier gate is a bounded two-way GPU handoff, outside this repin:
+
+1. Enqueue an ANGLE D3D11 immediate-context wait for the preceding consumer
+   fence before overwriting the same allocation. After the GL blit/flush,
+   signal a producer fence and enqueue its wait on the host D3D12 queue before
+   normalization.
+2. Add an exact-source, default-compatible normalization-submission callback
+   immediately after the normalizer's `queue.submit`. Signal the consumer
+   fence after that submission; the next producer overwrite waits on it.
+   The current generic `producer_complete` runs before the deferred GL blit,
+   so it cannot supply this ordering by itself.
+3. Restrict this state argument to the private shader-read-only shared alias
+   in the canonical Windows BottomLeft normalization path, whose returned
+   texture is a fresh output. Preserve measured simultaneous-access decay;
+   refuse a descriptor that does not support it until coherent tracker/state
+   handback is implemented.
+4. Keep fences, textures and submission identity with the exact allocation,
+   including resized and retired allocations. Use checked counters and
+   propagate each HRESULT/device failure. A partial handoff must prevent
+   further reuse and retain in-flight resources until safe retirement. GPU
+   queue waits return immediately to the CPU and do not provide a timeout;
+   completion callbacks require ordinary polling. Qualify failure, resize,
+   teardown, repeated default negative controls and imported pixels together.
+
+`Existing` remains the default. The current Both option uses GL completion
+and an exact-submission CPU wait; it is an explicit diagnostic, distinct from
+the proposed GPU fences. GL state custody, foreign accessibility and release
+hardware/registry gates remain separate. No runtime redesign is implemented
+by this documentation checkpoint.
