@@ -1,5 +1,11 @@
 # Servo pre-present import and swap correction
 
+The qualified supplier correction is committed at
+`dec11bbd2c9c8676e66987fb6ca32cd4ae6310eb`. Its adapter and donor source hashes
+match the native smoke and fresh default29 typed inputs recorded below. A
+subsequent documentation-only update points the installation example to that
+immutable source; it changes neither implementation nor manifests.
+
 `ServoWgpuInteropAdapter::rendering_context()` now supplies its importing
 context to upstream Servo. The old raw context bypassed the pre-present hook,
 so a consumer of `take_imported_texture()` received no painted frame. The hook
@@ -258,6 +264,8 @@ fixture.
 The official crates.io adapter lookup returned HTTP 404 on 2026-10-07 UTC
 (2026-10-06 local), stating that `servo-wgpu-interop-adapter` does not exist.
 `adapter-crates-io-status.json` preserves the timestamp, endpoint, status, and
-response. The adapter README now uses the exact Git `01f3c9f3d68df3247e6b7ec7f65ffbca57e9b2d4`
-revision adopted by Turnstone. This lookup does not describe the separate
-published Graft core package.
+response. The adapter README now uses the exact qualified Git correction
+`dec11bbd2c9c8676e66987fb6ca32cd4ae6310eb`. Turnstone's prior candidate
+`01f3c9f3d68df3247e6b7ec7f65ffbca57e9b2d4` predates this native swap fix;
+consumer adoption and its native gates remain separate. This lookup does not
+describe the separate published Graft core package.
