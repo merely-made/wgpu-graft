@@ -144,6 +144,35 @@ published source and helper, stable authorized app/target, unchanged ordinary
 ten-mode battery and a separate two-mode activity probe. The ordinary failure
 remains a job failure even if its diagnostic passes. This diagnostic does not
 change foreground state or establish four-host triplet acceptance.
+Its completed baseline fails 9/10 and activity diagnosis fails 1/2. The
+probe reports `document.visibilityState = hidden`, zero animation-frame
+callbacks and zero CSS animation current time despite a running animation;
+timers and resize events still advance. These observations establish an
+inactive page in that test context, rather than proving a capture-custody
+defect or the cause of inactivity. A bounded control requests activation only
+for the exact owned demo bundle and repeats the unchanged ordinary battery
+and separate activity probe, retaining both previous failures. It changes
+the test launch precondition, not the published library.
+That optional foreground control completes in
+[37639574080](https://github.com/merely-made/wgpu-graft/actions/runs/37639574080)
+on wrapper `0e491151d6943d04959fe0ad31477602806ed9df`. Baseline tests run
+first; separately named script controls attempt one activation only after
+observing the exact still-running owned bundle PID. Eleven scope, syntax and
+rewrite checks pass, including reconstructing the unchanged original script.
+All four native phases fail: ordinary 9/10, activity 1/2, foreground ordinary
+9/10 and foreground activity 1/2. The 12 owned-process activation requests
+exit zero, but host focus remains false and the activity page stays hidden
+with zero animation callbacks and zero CSS animation time. Base capture
+still receives three frames; resize passes throughout. Request acceptance
+does not prove effective activation or identify the session cause. A separate
+optional passive observer records session and exact owned-window facts without
+changing the native batteries. Its results remain diagnostic evidence.
+
+The local NVIDIA organization runner has an existing saved configuration
+(`wgpu-windows-nvidia`, pool `wgpu-hardware`) but no running listener. Automatic
+approval review rejects starting it with "blocked by policy"; the user has been
+asked to start that existing configuration. No registration or credential
+change was attempted, and the four-host workflow gate remains open.
 
 The separate local Windows registry-only Scry consumer passes Core 23/23,
 Capture 3/3 and the direct first-frame pixel control. Its three exact library
