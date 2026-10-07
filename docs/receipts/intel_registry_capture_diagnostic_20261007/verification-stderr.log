@@ -1,0 +1,12 @@
+test_bash_and_embedded_python_syntax (__main__.DiagnosticChecks.test_bash_and_embedded_python_syntax) ... ok
+test_exact_fixture_helper_and_registry_versions (__main__.DiagnosticChecks.test_exact_fixture_helper_and_registry_versions) ... ok
+test_immutable_helper_produces_registry_manifest_in_memory (__main__.DiagnosticChecks.test_immutable_helper_produces_registry_manifest_in_memory) ... ok
+test_no_focus_or_published_source_manipulation (__main__.DiagnosticChecks.test_no_focus_or_published_source_manipulation) ... ok
+test_only_intel_with_shared_host_lock (__main__.DiagnosticChecks.test_only_intel_with_shared_host_lock) ... ok
+test_original_failure_cannot_become_diagnostic_success (__main__.DiagnosticChecks.test_original_failure_cannot_become_diagnostic_success) ... ok
+test_stable_target_and_unchanged_caps (__main__.DiagnosticChecks.test_stable_target_and_unchanged_caps) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.397s
+
+OK

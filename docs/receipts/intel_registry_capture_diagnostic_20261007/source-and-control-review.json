@@ -1,0 +1,53 @@
+{
+  "observed_utc": "2026-10-07T14:24:49.165733+00:00",
+  "source_native_ref": "4771072a6827695dfaba9db104cd48b87e6cd543",
+  "release_fixture_ref": "4d8d1d3f8dd450b712960c90b74263a45b46e35b",
+  "mac_source_diff": "",
+  "logs": [
+    {
+      "path": "C:\\Users\\mark_\\Code\\repos\\wgpu-scry\\docs\\receipts\\scry_release_readiness_20261007\\m4-unlocked-intel-attempt2.log",
+      "bytes": 137618,
+      "sha256": "0111f3fd5213615eee05fdf3a24cfb841d310f300e6092844725035c8aec909e",
+      "launch_bundle_lines": [
+        "2026-10-07T13:00:20.2855530Z ==> LaunchServices app: /Users/markik/Code/targets/wgpu-scry-hardware/debug/scry-demo-mac-hardware.app",
+        "2026-10-07T13:01:14.1014920Z ==> LaunchServices app: /Users/markik/Code/targets/wgpu-scry-hardware/debug/scry-demo-mac-hardware.app"
+      ],
+      "capture_receipt_lines": [
+        "2026-10-07T13:00:53.0480160Z demo-mac: capture-test: PASS \u2014 SCK pipeline delivered 5 frames across [1024x1536]",
+        "2026-10-07T13:01:10.8659540Z demo-mac: capture-test: PASS \u2014 SCK pipeline delivered 815 frames across [768x1200, 1024x1400, 1024x1536, 1280x1600]",
+        "2026-10-07T13:01:18.6314220Z demo-mac: capture-test: PASS \u2014 SCK pipeline delivered 5 frames across [1024x1536]",
+        "2026-10-07T13:01:36.6365730Z demo-mac: capture-test: PASS \u2014 SCK pipeline delivered 813 frames across [768x1200, 1024x1400, 1024x1536, 1280x1600]"
+      ]
+    },
+    {
+      "path": "C:\\Users\\mark_\\Code\\repos\\wgpu-scry\\docs\\receipts\\scry_release_readiness_20261007\\release072-registry-corrected-job-112834014127.log",
+      "bytes": 228925,
+      "sha256": "ba5e56591ee048ecd5113b8aefcc592bbf0ba378e7c8527a1bc98e484ffb7fba",
+      "launch_bundle_lines": [
+        "2026-10-07T14:11:44.4631750Z ==> LaunchServices app: /Users/markik/Code/targets/wgpu-scry-hardware/debug/scry-demo-mac-hardware.app"
+      ],
+      "capture_receipt_lines": [
+        "2026-10-07T14:12:46.1257370Z demo-mac: capture-test: FAIL",
+        "2026-10-07T14:13:03.8736270Z demo-mac: capture-test: PASS \u2014 SCK pipeline delivered 12 frames across [768x1200, 1024x1400, 1024x1536, 1280x1600]"
+      ]
+    }
+  ],
+  "transport": {
+    "ssh_host": "imac-intel",
+    "BatchMode": true,
+    "ConnectTimeout_seconds": 8,
+    "actual_exit_code": 1,
+    "actual_error": "Connection refused",
+    "session_unlocked_state_verified": false
+  },
+  "limits": "Focus correlation only; no cause inferred. Instrumented green cannot qualify original fixture.",
+  "graph_distinction": {
+    "source_native_lock_objc2": "0.6.4",
+    "registry_stager_objc2": "=0.6.3",
+    "causation_proved": false
+  },
+  "failed_ordinary_counters": [
+    "2026-10-07T14:12:46.1256750Z demo-mac: capture activity at 29.00s: frames=3, complete=3, idle=1683, visible=Some(true), minimized=Some(false), focused=false",
+    "2026-10-07T14:12:46.1260200Z   - SCK frame statuses: missing=0, complete=3, idle=1741, blank=0, suspended=0, started=0, stopped=0, unknown=0, last=Some(1)"
+  ]
+}
