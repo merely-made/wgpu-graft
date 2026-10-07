@@ -98,7 +98,40 @@ output. Its initial wgpu transition is explicit, so absent that flag a tracked
 COMMON handback requires a separate design. Existing Windows COM features
 already cover D3D11 immediate-context shared fences and the host D3D12 queue.
 See the [descriptor receipt](../docs/receipts/servo_current_20261007/README.md#shared-resource-descriptor-observation-2026-10-07).
-This is a resource-state investigation gate, not a pixel or ordering fix.
+The subsequent Turnstone probe on supplier `bb48281bd4a88a726a009e0518706881b74b7604`
+and executable SHA-256
+`61a81cb0864635a337e4db7ca7ded22f77d8076059fe72378b17f230f713c39a`
+measures flags `0x21` (simultaneous access plus render target) at both 252x570
+and 509x570, RGBA8, one mip/sample. This supports documented COMMON decay for
+that actual resource, without measuring transitions or qualifying other GPUs.
+The [dated receipt](../docs/receipts/servo_current_20261007/README.md#measured-resource-state-and-remaining-ordering-gate-2026-10-07)
+names the host source/build/loaded-DLL evidence and exact stderr hash.
+
+Same `36b8cd6e` executable controls have five handoffs each: Normalization only
+fails Intl pixels (44.56% green) and viewport pixels (47.63%, old 252/r0), while
+Both passes Intl (93.96%) and viewport (97.83%, 509/r1). Scenario assertions
+and exit zero alone missed both negatives. Existing/Producer positive controls
+have different handoff counts, so Producer sufficiency and causality remain
+unqualified. Actual 509-wide resize/imports and disabled scissor eliminate
+those explanations for the traced stale-layout control.
+
+The remaining supplier release gate is two-way producer/read/reuse ordering:
+D3D11 waits before shared-source overwrite, then signals after GL blit/flush;
+the host D3D12 queue waits before normalization and signals after its exact
+submission. Add a default-compatible source callback at that submission, bound
+to the exact allocation rather than the latest cache slot. The state argument
+is limited to a private read-only shared alias normalized into a fresh output.
+Validate actual descriptor support, checked fence values, precise errors and
+partial-handoff retirement; retain all in-flight texture/fence ownership
+through resize and shutdown. Queue waits have no CPU timeout, and callback
+delivery requires polling. Qualify repeated pixel controls plus lifecycle and
+failure behavior before adopting the GPU fence path.
+
+Runtime implementation is deferred beyond this S0 repin. `Existing` remains
+the default; Both is a completion diagnostic, not the proposed GPU fence path.
+GL state custody, accessibility and hardware/registry release gates retain
+their separate scope. This documentation adds neither a pixel fix nor a
+release acceptance claim.
 
 ### 2026-10-06 supplier hardware follow-up
 
