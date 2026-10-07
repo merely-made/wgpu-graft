@@ -1,0 +1,20 @@
+{
+  "scope": "Pre-present-call native compilation diagnostic only; no native frame qualification",
+  "build_exit_code": 0,
+  "build_duration": "58m 01s",
+  "supplier_head": "95bab7e5127e71d2fd6f90cfe8266e6326d7e760",
+  "inputs": [
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\demo-servo-winit\\src\\main.rs",
+      "Hash": "8416D1DCD4C2DFFC889DDA9CEFE1C28DF79B3F2B2B635D01DE5988513BCE2BFC"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\Cargo.lock",
+      "Hash": "86945D977A8CB31E2ABC808D72F7B14D6700FBBEC559151084574423C6EE5ADE"
+    },
+    {
+      "Path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\demo-servo-winit.exe",
+      "Hash": "07CA3EF231F3636367DFA6A6F808EEA825A8E97979C535659FFBE5FEB6DA59F1"
+    }
+  ]
+}

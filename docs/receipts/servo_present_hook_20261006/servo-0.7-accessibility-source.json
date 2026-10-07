@@ -1,0 +1,64 @@
+{
+  "observed_at_utc": "2026-10-07T03:46:09.0759543Z",
+  "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+  "adopted": false,
+  "source_observation": "Producer chain starts with empty action masks and does not set action/child-action flags before unchanged delegate delivery; public forwarding executes only Click.",
+  "native_result": "Unqualified",
+  "files": [
+    {
+      "url": "https://raw.githubusercontent.com/servo/servo/aac43a3f31a259f04a574f5ec4e959c943ad7cc7/components/layout/accessibility/mod.rs",
+      "path": "components/layout/accessibility/mod.rs",
+      "sha256": "2457468BB4B321D40067653416C276EC89E26F1BB20CD14DA0D75B65DBB0F60E",
+      "raw_lines": 1671,
+      "scope": "Private node129–136, constructor750–759, all field mutations, finalize1428–1442"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/servo/servo/aac43a3f31a259f04a574f5ec4e959c943ad7cc7/components/layout/layout_impl.rs",
+      "path": "components/layout/layout_impl.rs",
+      "sha256": "958B0AB45D0B6BE7116FA661E69F00D95BEEFD4D173F5EA2E7BBB616D828809E",
+      "raw_lines": 2062,
+      "scope": "Tree update construction1003–1023 forwards unchanged"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/servo/servo/aac43a3f31a259f04a574f5ec4e959c943ad7cc7/components/servo/servo.rs",
+      "path": "components/servo/servo.rs",
+      "sha256": "4D221039EBB370CE254E2987342BCD3B5535B3E51716386E499041D6D687A073",
+      "raw_lines": 1512,
+      "scope": "Tree forwarding783–787; public action1127–1131"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/servo/servo/aac43a3f31a259f04a574f5ec4e959c943ad7cc7/components/servo/webview.rs",
+      "path": "components/servo/webview.rs",
+      "sha256": "AB37F1503585706E5275D78DDD1F11B76A6C5BED0A1A3B11C03507FA1F117A8A",
+      "raw_lines": 1156,
+      "scope": "Wrapper nodes952/980; epoch filtering and unchanged forwarding998–1019"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/servo/servo/aac43a3f31a259f04a574f5ec4e959c943ad7cc7/components/script/dom/window/window.rs",
+      "path": "components/script/dom/window/window.rs",
+      "sha256": "52F18319DF7E90A94E22B2782D6C0B237B22FEE8CB8BC2767A3B2FD76C4A9889",
+      "raw_lines": 4256,
+      "scope": "Click-only DOM handler3832–3843"
+    }
+  ],
+  "accesskit_comparison_sources": [
+    {
+      "package": "accesskit-0.24.1",
+      "path": "src/lib.rs",
+      "sha256": "DA99BAD8C05747EEE4C1CEE0850488C4E61170F7F55CBF6B39E79CD4E4A1ACBF",
+      "scope": "Node defaults1737–1742; action bits1756–1777"
+    },
+    {
+      "package": "accesskit_consumer-0.35.0",
+      "path": "src/node.rs",
+      "sha256": "7CA5B53A821529E168AF71F63D064EF20308A3634E019C8CE4F1C965C2B483CF",
+      "scope": "Clickability595–596; invocability638–666"
+    },
+    {
+      "package": "accesskit_windows-0.32.1",
+      "path": "src/node.rs",
+      "sha256": "E2E558A8F7CE54CD7D5B66E95CD65F42F7EE2533ECE0B7796A999348F6640E49",
+      "scope": "UIA Invoke condition572"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "executable": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\demo-servo-winit.exe",
+  "executable_sha256": "5C20C3BC239DC1D3E6B7532A9FC04B0E1A8836238E16A53542227A772BEEEFCD",
+  "executable_file_version": null,
+  "executable_product_version": null,
+  "process_id": 48584,
+  "exit_code": 101,
+  "elapsed_seconds": 6.4647411,
+  "requested_backend": "dx12",
+  "requested_priority": "BelowNormal",
+  "loaded_angle": [
+    {
+      "process_id": 48584,
+      "module": "libEGL.dll",
+      "path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\libEGL.dll",
+      "sha256": "A4C0B14F0B6A1BDE6AE88F5512CF22214A14722209AFDAA339C903F255D04D49",
+      "file_version": null,
+      "product_version": null
+    },
+    {
+      "process_id": 48584,
+      "module": "libGLESv2.dll",
+      "path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\libGLESv2.dll",
+      "sha256": "CA963BE19F9D69F108C98784D083E5910651AD1B5941677B182A99463D4597B3",
+      "file_version": null,
+      "product_version": null
+    }
+  ],
+  "shutdown_scope": "Donor process::exit; full process-root teardown is not qualified."
+}

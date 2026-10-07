@@ -6,11 +6,10 @@
 
 //! Minimal winit + wgpu demo embedding Servo as a web renderer.
 //!
-//! Demonstrates both GPU texture import and CPU readback paths. On Windows with
-//! Servo/ANGLE, the zero-copy path uses `eglQuerySurfacePointerANGLE` to obtain
-//! the D3D11 shared handle and imports it via `VK_KHR_external_memory_win32`.
-//! Falls back to `GL_EXT_memory_object_win32` (non-ANGLE Vulkan GL), then to
-//! CPU readback (`read_full_frame()` → `write_texture()`) if no GPU path works.
+//! Demonstrates GPU texture import and CPU readback paths. On Windows, the
+//! Servo adapter requires DX12 for physical-GPU matching and imports ANGLE's
+//! D3D11 output through a shared NT handle. Regular runs fall back to CPU
+//! readback if import fails; the bounded `--smoke` gate rejects that fallback.
 //!
 //! Mouse, scroll, and keyboard events are forwarded directly to Servo so
 //! pages are fully interactive (links, scrolling, text input).
@@ -51,8 +50,8 @@ use grafting::{HostWgpuContext, InteropBackend};
 use rustls::crypto::aws_lc_rs;
 use servo::{
     DevicePoint, EventLoopWaker, InputEvent, MouseButton as ServoMouseButton, MouseButtonAction,
-    MouseButtonEvent, MouseLeftViewportEvent, MouseMoveEvent, Servo, ServoBuilder, WebView,
-    WebViewBuilder, WebViewDelegate, WheelDelta, WheelEvent, WheelMode,
+    MouseButtonEvent, MouseLeftViewportEvent, MouseMoveEvent, RenderingContext, Servo, ServoBuilder,
+    WebView, WebViewBuilder, WebViewDelegate, WheelDelta, WheelEvent, WheelMode,
 };
 use servo_wgpu_interop_adapter::ServoWgpuInteropAdapter;
 use url::Url;
@@ -79,6 +78,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let smoke = std::env::args()
         .skip(1)
         .any(|argument| argument == "--smoke");
+    let raw_present_control = std::env::args()
+        .skip(1)
+        .any(|argument| argument == "--raw-present-control");
+    if raw_present_control && !smoke {
+        return Err("--raw-present-control requires the bounded --smoke mode".into());
+    }
     let initial_url = if smoke {
         let fixture = demo_support::fixture_path(env!("CARGO_MANIFEST_DIR"), "smoke.html");
         Url::from_file_path(&fixture)
@@ -86,7 +91,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         demo_support::resolve_initial_url(env!("CARGO_MANIFEST_DIR"))?
     };
-    let mut app = App::new(&event_loop, initial_url, smoke);
+    let mut app = App::new(&event_loop, initial_url, smoke, raw_present_control);
     Ok(event_loop.run_app(&mut app)?)
 }
 
@@ -119,6 +124,7 @@ enum AppStage {
         initial_url: Url,
         waker: AppWaker,
         smoke: bool,
+        raw_present_control: bool,
     },
     Running(AppState),
 }
@@ -136,15 +142,22 @@ struct AppState {
     modifiers: ModifiersState,
     scale_factor: f64,
     smoke: Option<SmokeState>,
+    raw_present_control: bool,
 }
 
 impl App {
-    fn new(event_loop: &EventLoop<WakerEvent>, initial_url: Url, smoke: bool) -> Self {
+    fn new(
+        event_loop: &EventLoop<WakerEvent>,
+        initial_url: Url,
+        smoke: bool,
+        raw_present_control: bool,
+    ) -> Self {
         Self {
             state: AppStage::Initial {
                 initial_url,
                 waker: AppWaker::new(event_loop),
                 smoke,
+                raw_present_control,
             },
         }
     }
@@ -156,6 +169,7 @@ impl ApplicationHandler<WakerEvent> for App {
             initial_url,
             waker,
             smoke,
+            raw_present_control,
         } = &self.state
         else {
             return;
@@ -217,6 +231,7 @@ impl ApplicationHandler<WakerEvent> for App {
             modifiers: ModifiersState::default(),
             scale_factor,
             smoke: (*smoke).then(SmokeState::new),
+            raw_present_control: *raw_present_control,
         });
     }
 
@@ -392,9 +407,20 @@ impl AppState {
     fn render_frame(&mut self) -> Result<(), String> {
         self.webview.paint();
 
+        if self.raw_present_control {
+            // Diagnostic only: exercise the same Surfman swap without the
+            // import hook. Completion does not qualify an imported frame.
+            self.interop.rendering_context_handle().present();
+            println!("GRAFT RAW PRESENT CONTROL: swap completed without importer; no pixel/import qualification");
+            exit_smoke_success();
+        }
+
         // GPU path: import the GL framebuffer directly as a wgpu texture.
         // Falls back to CPU readback if the GL driver lacks external memory extensions.
         if !self.gpu_import_failed {
+            // The pinned upstream paint call draws without presenting. Invoke
+            // the importing context to capture before the GL buffer swap.
+            self.interop.rendering_context().present();
             // The adapter's RenderingContext imports before presenting the GL
             // swap chain. A post-paint import can read the previous buffer and
             // would also let this smoke gate miss a bypassed present hook.
@@ -433,6 +459,9 @@ impl AppState {
                     eprintln!("[demo] GPU import unavailable, falling back to CPU readback: {e}");
                     self.render_status.set_fallback_error(&e);
                     self.gpu_import_failed = true;
+                    // The failed import still presented and swapped buffers.
+                    // Repaint the current buffer before reading the CPU frame.
+                    self.webview.paint();
                 }
             }
         }
@@ -571,8 +600,8 @@ impl Renderer {
     async fn new(window: Arc<Window>) -> Result<Self, String> {
         // On Windows, force DX12 so the ANGLE D3D11 → DX12 shared-NT-handle
         // import path (`surfman_gl::windows_dx12_shared`) is exercised. The
-        // older Vulkan + ANGLE-D3D11 KMT path still works and can be selected
-        // by setting `WGPU_BACKEND=vulkan` in the environment.
+        // lower-level Graft Vulkan importer is separate: requesting Vulkan
+        // here is currently refused by the Servo adapter's DX12 LUID matcher.
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             #[cfg(target_os = "windows")]
             backends: match std::env::var("WGPU_BACKEND").as_deref() {
@@ -595,6 +624,8 @@ impl Renderer {
                 power_preference: wgpu::PowerPreference::HighPerformance,
                 force_fallback_adapter: false,
                 compatible_surface: Some(&surface),
+                #[cfg(feature = "wgpu-30")]
+                apply_limit_buckets: false,
             })
             .await
             .map_err(|error| error.to_string())?;
@@ -711,6 +742,8 @@ impl Renderer {
             desired_maximum_frame_latency: 2,
             alpha_mode: surface_caps.alpha_modes[0],
             view_formats: vec![],
+            #[cfg(feature = "wgpu-30")]
+            color_space: wgpu::SurfaceColorSpace::Auto,
         };
         surface.configure(&device, &config);
 
@@ -814,7 +847,10 @@ impl Renderer {
             .recv_timeout(Duration::from_secs(5))
             .map_err(|error| error.to_string())?
             .map_err(|error| error.to_string())?;
+        #[cfg(feature = "wgpu-29")]
         let data = slice.get_mapped_range();
+        #[cfg(feature = "wgpu-30")]
+        let data = slice.get_mapped_range().map_err(|error| error.to_string())?;
         let pixel = [data[0], data[1], data[2], data[3]];
         drop(data);
         buffer.unmap();
@@ -945,7 +981,10 @@ impl Renderer {
         }
 
         self.queue.submit(std::iter::once(encoder.finish()));
+        #[cfg(feature = "wgpu-29")]
         frame.present();
+        #[cfg(feature = "wgpu-30")]
+        self.queue.present(frame);
         Ok(())
     }
 }

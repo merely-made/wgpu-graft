@@ -1,0 +1,13 @@
+{
+  "checked_at_utc": "2026-10-07T02:52:48.3924136Z",
+  "source": "https://crates.io/api/v1/crates/servo-wgpu-interop-adapter",
+  "http_status": 404,
+  "response": {
+    "errors": [
+      {
+        "detail": "crate `servo-wgpu-interop-adapter` does not exist"
+      }
+    ]
+  },
+  "scope": "Adapter registry lookup only; published Graft core is separate."
+}

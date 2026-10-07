@@ -197,13 +197,13 @@ impl RenderingContext for ServoWgpuRenderingContext {
     }
 
     fn present(&self) {
-        // Swap so ANGLE resolves the rendered frame into the presentable
-        // surface — the zero-copy import aliases that surface, and without a
-        // swap it is never updated (reads black). PreserveBuffer::Yes keeps the
-        // content in the buffer the importer then reads, and `finish()` blocks
-        // until the GL/ANGLE work completes so the cross-API (→ wgpu) read does
-        // not race the in-flight render (the flicker). The CPU readback path is
-        // unaffected — `glReadPixels` reads the FBO directly and blocks itself.
+        // Capturing/importing contexts obtain the current rendered frame
+        // before this swap. Pinned Servo clears the entire rendering context
+        // and renders with buffer_age=0 on every paint, so the next back buffer
+        // does not need previous pixels preserved. Surfman's ANGLE backend
+        // identifies both pbuffers by the default FBO, making its preservation
+        // blit invalid on this backend. Keep GL completion after the swap so
+        // producer work completes before returning the captured/imported frame.
         let info = self.frame_producer.borrow().context();
         {
             let mut device = info.device.borrow_mut();
@@ -211,7 +211,7 @@ impl RenderingContext for ServoWgpuRenderingContext {
             let _ = self.swap_chain.swap_buffers(
                 &mut *device,
                 &mut *context,
-                PreserveBuffer::Yes(&info.glow_gl),
+                PreserveBuffer::No,
             );
         }
         info.gleam_gl.finish();
@@ -348,10 +348,12 @@ impl RenderingContext for CapturingRenderingContext {
 /// Importing *after* `present()` (post-swap) reads the wrong buffer of the
 /// double-buffered attached swap chain, which alternates blank/stale content
 /// and causes flicker. This mirrors how [`CapturingRenderingContext`] reads for
-/// the CPU path, but performs a zero-copy GPU import instead.
+/// the CPU path, but avoids CPU readback. Default normalization copies the
+/// imported image into a fresh GPU texture with top-left origin.
 ///
 /// Call [`ImportingRenderingContext::take_imported`] after
-/// [`servo::WebView::paint`] to obtain the most-recently imported frame.
+/// [`servo::WebView::paint`] and an explicit call to this context's
+/// [`RenderingContext::present`] to obtain the most-recently imported frame.
 #[cfg(feature = "servo")]
 pub struct ImportingRenderingContext {
     inner: Rc<ServoWgpuRenderingContext>,
@@ -482,8 +484,9 @@ impl ServoWgpuInteropAdapter {
         self.importing_context.clone()
     }
 
-    /// The zero-copy frame imported during the last `present()` (the most recent
-    /// [`servo::WebView::paint`]). Flicker-free: captured before the swap flip.
+    /// The frame imported during the last explicit `present()`, after
+    /// [`servo::WebView::paint`]. Captured before the swap flip, with the
+    /// importer's normalization policy applied.
     #[cfg(feature = "servo")]
     pub fn take_imported_texture(&self) -> Option<ImportedTexture> {
         self.importing_context.take_imported()

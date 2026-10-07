@@ -1,0 +1,3 @@
+demo url: file:///C:/Users/mark_/Code/repos/wgpu-graft/demo-servo-winit/fixtures/smoke.html
+host backend: Dx12
+capabilities: CapabilityMatrix { host_backend: Dx12, gl_framebuffer_source: Supported, vulkan_external_image: Unsupported(HostBackendMismatch), metal_texture_ref: Unsupported(HostBackendMismatch), dx12_shared_texture: Supported }

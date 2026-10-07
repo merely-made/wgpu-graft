@@ -1,0 +1,74 @@
+   Compiling libz-sys v1.1.29
+    Checking servo-paint-api v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+   Compiling fontsan v0.7.0
+    Checking servo-net-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-devtools-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-constellation-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-media-thread v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+   Compiling mozjs_sys v140.14.0-0
+    Checking servo-script-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+   Compiling mozangle v0.6.0
+    Checking servo-fonts v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking mozjs v0.21.6
+    Checking servo-layout-api v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-net v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-script-bindings v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-metrics v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-canvas v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-webgl v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-paint v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-constellation v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-devtools v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-storage v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+   Compiling demo-servo-winit v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-winit)
+    Checking pollster v0.4.0
+    Checking servo-script v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking demo-support v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-support)
+    Checking servo-layout v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Checking servo-wgpu-interop-adapter v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\servo-wgpu-interop-adapter)
+error[E0063]: missing field `apply_limit_buckets` in initializer of `RequestAdapterOptions<&wgpu::Surface<'_>>`
+   --> demo-servo-winit\src\main.rs:594:31
+    |
+594 |             .request_adapter(&wgpu::RequestAdapterOptions {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `apply_limit_buckets`
+
+error[E0063]: missing field `color_space` in initializer of `wgpu::wgpu_types::SurfaceConfiguration<Vec<TextureFormat>>`
+   --> demo-servo-winit\src\main.rs:705:22
+    |
+705 |         let config = wgpu::SurfaceConfiguration {
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `color_space`
+
+error[E0608]: cannot index into a value of type `std::result::Result<BufferView, MapRangeError>`
+   --> demo-servo-winit\src\main.rs:818:26
+    |
+818 |         let pixel = [data[0], data[1], data[2], data[3]];
+    |                          ^^^
+
+error[E0608]: cannot index into a value of type `std::result::Result<BufferView, MapRangeError>`
+   --> demo-servo-winit\src\main.rs:818:35
+    |
+818 |         let pixel = [data[0], data[1], data[2], data[3]];
+    |                                   ^^^
+
+error[E0608]: cannot index into a value of type `std::result::Result<BufferView, MapRangeError>`
+   --> demo-servo-winit\src\main.rs:818:44
+    |
+818 |         let pixel = [data[0], data[1], data[2], data[3]];
+    |                                            ^^^
+
+error[E0608]: cannot index into a value of type `std::result::Result<BufferView, MapRangeError>`
+   --> demo-servo-winit\src\main.rs:818:53
+    |
+818 |         let pixel = [data[0], data[1], data[2], data[3]];
+    |                                                     ^^^
+
+error[E0599]: no method named `present` found for struct `wgpu::SurfaceTexture` in the current scope
+   --> demo-servo-winit\src\main.rs:948:15
+    |
+948 |         frame.present();
+    |               ^^^^^^^ method not found in `wgpu::SurfaceTexture`
+
+Some errors have detailed explanations: E0063, E0599, E0608.
+For more information about an error, try `rustc --explain E0063`.
+error: could not compile `demo-servo-winit` (bin "demo-servo-winit") due to 7 previous errors

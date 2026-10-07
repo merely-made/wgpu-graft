@@ -1,0 +1,10 @@
+{
+  "command": "cargo build --offline --locked -p demo-servo-winit --no-default-features --features wgpu-30,servo --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+  "exit_code": 101,
+  "main_source_sha256": "8EE5CE40CC70D55B63822362664753B72974E8462FF62622427A8F92B29BD05D",
+  "adapter_source_sha256": "4BD7A97EB1159C093CAD190DD04F24D619B6FC24C76E2702644E6CC4AE35CA63",
+  "log_sha256": "3BDA2F0A4AF64A63F67AE2E1BAD4ABB08CE3A69CF6C28A1E00D9A77E874D388E",
+  "actual_error": "E0599: raw concrete Rc present requires servo::RenderingContext trait import",
+  "native_execution": "Not attempted for this source",
+  "followup": "One required trait import; separate cached fixed-build log"
+}

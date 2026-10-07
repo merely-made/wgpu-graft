@@ -1,0 +1,12 @@
+[wgpu] backend: DirectX 12
+[2026-10-07T03:59:58Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T03:59:58Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T03:59:58Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T03:59:58Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T03:59:58Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T03:59:58Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T03:59:58Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T03:59:58Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T03:59:58Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T03:59:58Z WARN  servo_constellation::constellation] Pipeline(1,1): Visibility change for closed pipeline
+[2026-10-07T03:59:58Z WARN  script::timers] Resuming an already resumed timer.
