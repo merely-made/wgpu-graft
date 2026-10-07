@@ -1,0 +1,514 @@
+﻿2026-10-07T05:57:01.7297726Z Current runner version: '2.337.0'
+2026-10-07T05:57:01.7318607Z ##[group]Runner Image Provisioner
+2026-10-07T05:57:01.7319323Z Hosted Compute Agent
+2026-10-07T05:57:01.7319849Z Version: 20260901.588
+2026-10-07T05:57:01.7320411Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-07T05:57:01.7321055Z Build Date: 2026-09-01T19:56:44Z
+2026-10-07T05:57:01.7321632Z Worker ID: {36c8d0b9-07ae-4927-8d9c-9bc3231dc642}
+2026-10-07T05:57:01.7322230Z Azure Region: eastus
+2026-10-07T05:57:01.7322715Z ##[endgroup]
+2026-10-07T05:57:01.7323923Z ##[group]Operating System
+2026-10-07T05:57:01.7324501Z Ubuntu
+2026-10-07T05:57:01.7324961Z 24.04.5
+2026-10-07T05:57:01.7325366Z LTS
+2026-10-07T05:57:01.7325848Z ##[endgroup]
+2026-10-07T05:57:01.7326316Z ##[group]Runner Image
+2026-10-07T05:57:01.7326875Z Image: ubuntu-24.04
+2026-10-07T05:57:01.7327383Z Version: 20260927.320.1
+2026-10-07T05:57:01.7328427Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-07T05:57:01.7329634Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-07T05:57:01.7330448Z ##[endgroup]
+2026-10-07T05:57:01.7331415Z ##[group]GITHUB_TOKEN Permissions
+2026-10-07T05:57:01.7333551Z Contents: read
+2026-10-07T05:57:01.7334412Z Metadata: read
+2026-10-07T05:57:01.7335070Z Packages: read
+2026-10-07T05:57:01.7335909Z ##[endgroup]
+2026-10-07T05:57:01.7338098Z Secret source: Actions
+2026-10-07T05:57:01.7339355Z Cache mode: write
+2026-10-07T05:57:01.7340528Z Prepare workflow directory
+2026-10-07T05:57:01.7758160Z Prepare all required actions
+2026-10-07T05:57:01.7811907Z Getting action download info
+2026-10-07T05:57:01.9555921Z Download action repository 'actions/checkout@v7' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-07T05:57:02.3184118Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:89b12181fb390509a0842a86cc55eeb8eb928c1d)
+2026-10-07T05:57:02.4822506Z Download action repository 'actions/cache@v6' (SHA:55cc8345863c7cc4c66a329aec7e433d2d1c52a9)
+2026-10-07T05:57:02.8675279Z Complete job name: Check and test (Linux)
+2026-10-07T05:57:02.9450190Z ##[group]Run actions/checkout@v7
+2026-10-07T05:57:02.9451273Z with:
+2026-10-07T05:57:02.9451984Z   repository: merely-made/wgpu-graft
+2026-10-07T05:57:02.9458876Z   token: ***
+2026-10-07T05:57:02.9459568Z   ssh-strict: true
+2026-10-07T05:57:02.9460280Z   ssh-user: git
+2026-10-07T05:57:02.9460992Z   persist-credentials: true
+2026-10-07T05:57:02.9461777Z   clean: true
+2026-10-07T05:57:02.9462504Z   sparse-checkout-cone-mode: true
+2026-10-07T05:57:02.9463349Z   fetch-depth: 1
+2026-10-07T05:57:02.9464167Z   fetch-tags: false
+2026-10-07T05:57:02.9464898Z   show-progress: true
+2026-10-07T05:57:02.9465627Z   lfs: false
+2026-10-07T05:57:02.9466297Z   submodules: false
+2026-10-07T05:57:02.9467060Z   set-safe-directory: true
+2026-10-07T05:57:02.9467873Z   allow-unsafe-pr-checkout: false
+2026-10-07T05:57:02.9468888Z env:
+2026-10-07T05:57:02.9469545Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:02.9470351Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:02.9471086Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:02.9471870Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:02.9472693Z ##[endgroup]
+2026-10-07T05:57:03.0278154Z Syncing repository: merely-made/wgpu-graft
+2026-10-07T05:57:03.0281210Z ##[group]Getting Git version info
+2026-10-07T05:57:03.0282857Z Working directory is '/home/runner/work/wgpu-graft/wgpu-graft'
+2026-10-07T05:57:03.0285439Z [command]/usr/bin/git version
+2026-10-07T05:57:03.0342709Z git version 2.55.0
+2026-10-07T05:57:03.0362072Z ##[endgroup]
+2026-10-07T05:57:03.0371086Z Temporarily overriding HOME='/home/runner/work/_temp/8d055d2e-a86a-461d-9394-e33dfea08990' before making global git config changes
+2026-10-07T05:57:03.0373506Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-07T05:57:03.0377548Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/wgpu-graft/wgpu-graft
+2026-10-07T05:57:03.0420518Z Deleting the contents of '/home/runner/work/wgpu-graft/wgpu-graft'
+2026-10-07T05:57:03.0424989Z ##[group]Determining repository object format
+2026-10-07T05:57:03.0426921Z ##[endgroup]
+2026-10-07T05:57:03.0428173Z ##[group]Initializing the repository
+2026-10-07T05:57:03.0430216Z [command]/usr/bin/git init /home/runner/work/wgpu-graft/wgpu-graft
+2026-10-07T05:57:03.0529003Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-07T05:57:03.0530505Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-07T05:57:03.0531941Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-07T05:57:03.0533066Z hint: call:
+2026-10-07T05:57:03.0533851Z hint:
+2026-10-07T05:57:03.0534664Z hint: 	git config --global init.defaultBranch <name>
+2026-10-07T05:57:03.0535618Z hint:
+2026-10-07T05:57:03.0536907Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-07T05:57:03.0539037Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-07T05:57:03.0540772Z hint:
+2026-10-07T05:57:03.0541457Z hint: 	git branch -m <name>
+2026-10-07T05:57:03.0542208Z hint:
+2026-10-07T05:57:03.0543170Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-07T05:57:03.0545515Z Initialized empty Git repository in /home/runner/work/wgpu-graft/wgpu-graft/.git/
+2026-10-07T05:57:03.0549243Z [command]/usr/bin/git remote add origin https://github.com/merely-made/wgpu-graft
+2026-10-07T05:57:03.0614460Z ##[endgroup]
+2026-10-07T05:57:03.0615968Z ##[group]Disabling automatic garbage collection
+2026-10-07T05:57:03.0617332Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-07T05:57:03.0646800Z ##[endgroup]
+2026-10-07T05:57:03.0648750Z ##[group]Setting up auth
+2026-10-07T05:57:03.0649595Z Removing SSH command configuration
+2026-10-07T05:57:03.0652333Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-07T05:57:03.0683138Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-07T05:57:03.1125247Z Removing HTTP extra header
+2026-10-07T05:57:03.1129764Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-07T05:57:03.1160767Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-07T05:57:03.1348009Z Removing includeIf entries pointing to credentials config files
+2026-10-07T05:57:03.1351586Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-07T05:57:03.1383004Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-07T05:57:03.1577760Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-07T05:57:03.1612124Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/wgpu-graft/wgpu-graft/.git.path /home/runner/work/_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config
+2026-10-07T05:57:03.1641729Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/wgpu-graft/wgpu-graft/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config
+2026-10-07T05:57:03.1734139Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config
+2026-10-07T05:57:03.1740801Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config
+2026-10-07T05:57:03.1745360Z ##[endgroup]
+2026-10-07T05:57:03.1746778Z ##[group]Fetching the repository
+2026-10-07T05:57:03.1748737Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +9ccccf94122504b4318381887ae3dd0434a91042:refs/remotes/origin/main
+2026-10-07T05:57:03.9099471Z From https://github.com/merely-made/wgpu-graft
+2026-10-07T05:57:03.9100784Z  * [new ref]         9ccccf94122504b4318381887ae3dd0434a91042 -> origin/main
+2026-10-07T05:57:03.9107976Z [command]/usr/bin/git branch --list --remote origin/main
+2026-10-07T05:57:03.9133072Z   origin/main
+2026-10-07T05:57:03.9139417Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-10-07T05:57:03.9162457Z 9ccccf94122504b4318381887ae3dd0434a91042
+2026-10-07T05:57:03.9166812Z ##[endgroup]
+2026-10-07T05:57:03.9167996Z ##[group]Determining the checkout info
+2026-10-07T05:57:03.9169440Z ##[endgroup]
+2026-10-07T05:57:03.9170383Z [command]/usr/bin/git sparse-checkout disable
+2026-10-07T05:57:03.9219378Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-07T05:57:03.9249062Z ##[group]Checking out the ref
+2026-10-07T05:57:03.9251236Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-10-07T05:57:04.0145062Z Switched to a new branch 'main'
+2026-10-07T05:57:04.0148377Z branch 'main' set up to track 'origin/main'.
+2026-10-07T05:57:04.0157880Z ##[endgroup]
+2026-10-07T05:57:04.0208091Z [command]/usr/bin/git log -1 --format=%H
+2026-10-07T05:57:04.0232434Z 9ccccf94122504b4318381887ae3dd0434a91042
+2026-10-07T05:57:04.0678591Z ##[group]Run dtolnay/rust-toolchain@stable
+2026-10-07T05:57:04.0679461Z with:
+2026-10-07T05:57:04.0680089Z   toolchain: stable
+2026-10-07T05:57:04.0680754Z env:
+2026-10-07T05:57:04.0681373Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:04.0682115Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:04.0682831Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:04.0683547Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:04.0684464Z ##[endgroup]
+2026-10-07T05:57:04.0751810Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-10-07T05:57:04.0815088Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-10-07T05:57:04.0816065Z [36;1mif [[ -z $toolchain ]]; then[0m
+2026-10-07T05:57:04.0817469Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2026-10-07T05:57:04.0818952Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2026-10-07T05:57:04.0819844Z [36;1m  exit 1[0m
+2026-10-07T05:57:04.0820870Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2026-10-07T05:57:04.0822060Z [36;1m  if [[ Linux == macOS ]]; then[0m
+2026-10-07T05:57:04.0823476Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-10-07T05:57:04.0824984Z [36;1m  else[0m
+2026-10-07T05:57:04.0826112Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-10-07T05:57:04.0827395Z [36;1m  fi[0m
+2026-10-07T05:57:04.0828290Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2026-10-07T05:57:04.0829726Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2026-10-07T05:57:04.0831005Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2026-10-07T05:57:04.0832441Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2026-10-07T05:57:04.0833874Z [36;1melse[0m
+2026-10-07T05:57:04.0834637Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+2026-10-07T05:57:04.0835532Z [36;1mfi[0m
+2026-10-07T05:57:04.1421574Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:04.1422577Z env:
+2026-10-07T05:57:04.1423221Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:04.1424089Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:04.1424811Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:04.1425800Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:04.1426591Z   toolchain: stable
+2026-10-07T05:57:04.1427239Z ##[endgroup]
+2026-10-07T05:57:04.1559679Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=80]
+2026-10-07T05:57:04.1573264Z ##[start-action display=Construct rustup command line;id=__dtolnay_rust-toolchain.flags]
+2026-10-07T05:57:04.1614092Z ##[group]Run echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-10-07T05:57:04.1615747Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+2026-10-07T05:57:04.1617404Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+2026-10-07T05:57:04.1618721Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+2026-10-07T05:57:04.1672565Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:04.1673500Z env:
+2026-10-07T05:57:04.1674293Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:04.1675039Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:04.1675747Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:04.1676466Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:04.1677236Z   targets: 
+2026-10-07T05:57:04.1677851Z   components: 
+2026-10-07T05:57:04.1678473Z ##[endgroup]
+2026-10-07T05:57:04.1777668Z ##[end-action id=__dtolnay_rust-toolchain.flags;outcome=success;conclusion=success;duration_ms=20]
+2026-10-07T05:57:04.1782565Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-10-07T05:57:04.1815315Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV
+2026-10-07T05:57:04.1816583Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+2026-10-07T05:57:04.1870447Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:04.1871398Z env:
+2026-10-07T05:57:04.1872013Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:04.1872751Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:04.1873462Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:04.1874415Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:04.1875181Z ##[endgroup]
+2026-10-07T05:57:04.1965213Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=18]
+2026-10-07T05:57:04.1970050Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-10-07T05:57:04.2010373Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-10-07T05:57:04.2011391Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2026-10-07T05:57:04.2013293Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+2026-10-07T05:57:04.2015433Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+2026-10-07T05:57:04.2016264Z [36;1mfi[0m
+2026-10-07T05:57:04.2070549Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:04.2071488Z env:
+2026-10-07T05:57:04.2072114Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:04.2072839Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:04.2073528Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:04.2074428Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:04.2075225Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:04.2075972Z ##[endgroup]
+2026-10-07T05:57:04.2162743Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=success;conclusion=success;duration_ms=19]
+2026-10-07T05:57:04.2167938Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-10-07T05:57:04.2179010Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-07T05:57:04.2190995Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+2026-10-07T05:57:04.2224015Z ##[group]Run log=$(mktemp)
+2026-10-07T05:57:04.2224766Z [36;1mlog=$(mktemp)[0m
+2026-10-07T05:57:04.2225504Z [36;1mtrap 'rm -f "$log"' EXIT[0m
+2026-10-07T05:57:04.2226459Z [36;1mfor attempt in 1 2 3 4 5; do[0m
+2026-10-07T05:57:04.2227895Z [36;1m  if rustup toolchain install stable --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then[0m
+2026-10-07T05:57:04.2229347Z [36;1m    break[0m
+2026-10-07T05:57:04.2229994Z [36;1m  else[0m
+2026-10-07T05:57:04.2230624Z [36;1m    status=$?[0m
+2026-10-07T05:57:04.2231295Z [36;1m  fi[0m
+2026-10-07T05:57:04.2232127Z [36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \[0m
+2026-10-07T05:57:04.2233760Z [36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then[0m
+2026-10-07T05:57:04.2235063Z [36;1m    exit "$status"[0m
+2026-10-07T05:57:04.2235771Z [36;1m  fi[0m
+2026-10-07T05:57:04.2236774Z [36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2[0m
+2026-10-07T05:57:04.2237935Z [36;1m  sleep 30[0m
+2026-10-07T05:57:04.2238580Z [36;1mdone[0m
+2026-10-07T05:57:04.2292763Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:04.2293861Z env:
+2026-10-07T05:57:04.2294471Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:04.2295193Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:04.2295889Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:04.2296594Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:04.2297392Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:04.2298180Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-10-07T05:57:04.2298898Z ##[endgroup]
+2026-10-07T05:57:04.7794136Z info: syncing channel updates for stable-x86_64-unknown-linux-gnu
+2026-10-07T05:57:04.8778127Z info: latest update on 2026-10-01 for version 1.99.0 (b940084d7 2026-09-28)
+2026-10-07T05:57:04.8875390Z info: removing previous version of component rustfmt
+2026-10-07T05:57:04.9151184Z info: removing previous version of component clippy
+2026-10-07T05:57:04.9387430Z info: removing previous version of component cargo
+2026-10-07T05:57:04.9424931Z info: removing previous version of component rust-std
+2026-10-07T05:57:04.9463561Z info: removing previous version of component rustc
+2026-10-07T05:57:04.9552366Z info: downloading 5 components
+2026-10-07T05:57:12.3420396Z 
+2026-10-07T05:57:12.3478551Z   stable-x86_64-unknown-linux-gnu updated - rustc 1.99.0 (b940084d7 2026-09-28) (from rustc 1.98.1 (48a229cea 2026-09-01))
+2026-10-07T05:57:12.3479267Z 
+2026-10-07T05:57:12.3550730Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=8135]
+2026-10-07T05:57:12.3557642Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+2026-10-07T05:57:12.3599080Z ##[group]Run rustup default stable --force-non-host
+2026-10-07T05:57:12.3599434Z [36;1mrustup default stable --force-non-host[0m
+2026-10-07T05:57:12.3654220Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:12.3654502Z env:
+2026-10-07T05:57:12.3654677Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:12.3654883Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:12.3655082Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:12.3655292Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:12.3655533Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:12.3655746Z ##[endgroup]
+2026-10-07T05:57:12.3759164Z info: using existing install for stable-x86_64-unknown-linux-gnu
+2026-10-07T05:57:12.3765690Z info: default toolchain set to stable-x86_64-unknown-linux-gnu
+2026-10-07T05:57:12.3765936Z 
+2026-10-07T05:57:12.3819322Z   stable-x86_64-unknown-linux-gnu unchanged - rustc 1.99.0 (b940084d7 2026-09-28)
+2026-10-07T05:57:12.3819674Z 
+2026-10-07T05:57:12.3820149Z info: note that the toolchain '1.97.1-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/runner/work/wgpu-graft/wgpu-graft/rust-toolchain.toml')
+2026-10-07T05:57:12.3834316Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=27]
+2026-10-07T05:57:12.3836534Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-10-07T05:57:12.3855888Z ##[group]Run DATE=$(rustc +stable --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-10-07T05:57:12.3856675Z [36;1mDATE=$(rustc +stable --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2026-10-07T05:57:12.3857192Z [36;1mHASH=$(rustc +stable --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2026-10-07T05:57:12.3857642Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2026-10-07T05:57:12.3908500Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:12.3908793Z env:
+2026-10-07T05:57:12.3908962Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:12.3909161Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:12.3909349Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:12.3909540Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:12.3909761Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:12.3909974Z ##[endgroup]
+2026-10-07T05:57:12.4186809Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=34]
+2026-10-07T05:57:12.4189188Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-10-07T05:57:12.4207682Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-10-07T05:57:12.4208010Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2026-10-07T05:57:12.4208285Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2026-10-07T05:57:12.4208523Z [36;1mfi[0m
+2026-10-07T05:57:12.4262426Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:12.4262720Z env:
+2026-10-07T05:57:12.4262894Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:12.4263100Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:12.4263293Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:12.4263490Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:12.4263829Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:12.4264041Z ##[endgroup]
+2026-10-07T05:57:12.4334149Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=14]
+2026-10-07T05:57:12.4336027Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-10-07T05:57:12.4352539Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-10-07T05:57:12.4352843Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2026-10-07T05:57:12.4353117Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2026-10-07T05:57:12.4353361Z [36;1mfi[0m
+2026-10-07T05:57:12.4400683Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:12.4400972Z env:
+2026-10-07T05:57:12.4401149Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:12.4401388Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:12.4401580Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:12.4401779Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:12.4402005Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:12.4402213Z   CARGO_INCREMENTAL: 0
+2026-10-07T05:57:12.4402396Z ##[endgroup]
+2026-10-07T05:57:12.4470386Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=13]
+2026-10-07T05:57:12.4472207Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-10-07T05:57:12.4489882Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-10-07T05:57:12.4490297Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2026-10-07T05:57:12.4490863Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2026-10-07T05:57:12.4491435Z [36;1m  if rustc +stable --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2026-10-07T05:57:12.4491905Z [36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-10-07T05:57:12.4492329Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2026-10-07T05:57:12.4492719Z [36;1m  elif rustc +stable --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2026-10-07T05:57:12.4493319Z [36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-10-07T05:57:12.4493934Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2026-10-07T05:57:12.4494218Z [36;1m  fi[0m
+2026-10-07T05:57:12.4494386Z [36;1mfi[0m
+2026-10-07T05:57:12.4541194Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:12.4541475Z env:
+2026-10-07T05:57:12.4541647Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:12.4541855Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:12.4542043Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:12.4542235Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:12.4542461Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:12.4542666Z   CARGO_INCREMENTAL: 0
+2026-10-07T05:57:12.4542849Z ##[endgroup]
+2026-10-07T05:57:12.4800613Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=32]
+2026-10-07T05:57:12.4803130Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-10-07T05:57:12.4822961Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-10-07T05:57:12.4823568Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2026-10-07T05:57:12.4824263Z [36;1mif rustc +stable --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2026-10-07T05:57:12.4824802Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2026-10-07T05:57:12.4825073Z [36;1mfi[0m
+2026-10-07T05:57:12.4879543Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:12.4879842Z env:
+2026-10-07T05:57:12.4880044Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:12.4880248Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:12.4880437Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:12.4880631Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:12.4880861Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:12.4881082Z   CARGO_INCREMENTAL: 0
+2026-10-07T05:57:12.4881263Z ##[endgroup]
+2026-10-07T05:57:12.5043252Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=23]
+2026-10-07T05:57:12.5047092Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-10-07T05:57:12.5064500Z ##[group]Run rustc +stable --version --verbose
+2026-10-07T05:57:12.5064792Z [36;1mrustc +stable --version --verbose[0m
+2026-10-07T05:57:12.5114718Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-07T05:57:12.5115018Z env:
+2026-10-07T05:57:12.5115191Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:12.5115412Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:12.5115601Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:12.5115793Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:12.5116020Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:12.5116227Z   CARGO_INCREMENTAL: 0
+2026-10-07T05:57:12.5116408Z ##[endgroup]
+2026-10-07T05:57:12.5264421Z rustc 1.99.0 (b940084d7 2026-09-28)
+2026-10-07T05:57:12.5264889Z binary: rustc
+2026-10-07T05:57:12.5265222Z commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4
+2026-10-07T05:57:12.5265626Z commit-date: 2026-09-28
+2026-10-07T05:57:12.5265933Z host: x86_64-unknown-linux-gnu
+2026-10-07T05:57:12.5266236Z release: 1.99.0
+2026-10-07T05:57:12.5266608Z LLVM version: 23.1.1
+2026-10-07T05:57:12.5277796Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=23]
+2026-10-07T05:57:12.6632298Z ##[group]Run actions/cache@v6
+2026-10-07T05:57:12.6632545Z with:
+2026-10-07T05:57:12.6632751Z   path: ~/.cargo/registry
+~/.cargo/git
+target
+
+2026-10-07T05:57:12.6633138Z   key: Linux-cargo-7a415c162c8a1b137ede40d0a74309afaf15a5ac75c3adb0faeb3511cb6fac4e
+2026-10-07T05:57:12.6633494Z   restore-keys: Linux-cargo-
+2026-10-07T05:57:12.6633978Z   enableCrossOsArchive: false
+2026-10-07T05:57:12.6634253Z   fail-on-cache-miss: false
+2026-10-07T05:57:12.6634456Z   lookup-only: false
+2026-10-07T05:57:12.6634817Z   save-always: false
+2026-10-07T05:57:12.6634993Z env:
+2026-10-07T05:57:12.6635163Z   CARGO_TERM_COLOR: always
+2026-10-07T05:57:12.6635362Z   RUSTFLAGS: -D warnings
+2026-10-07T05:57:12.6635549Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:57:12.6635743Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:57:12.6635965Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:57:12.6636171Z   CARGO_INCREMENTAL: 0
+2026-10-07T05:57:12.6636354Z ##[endgroup]
+2026-10-07T05:57:12.9110928Z Cache hit for: Linux-cargo-7a415c162c8a1b137ede40d0a74309afaf15a5ac75c3adb0faeb3511cb6fac4e
+2026-10-07T05:57:13.9491564Z Received 268435456 of 4670745634 (5.7%), 256.0 MBs/sec
+2026-10-07T05:57:14.9584888Z Received 633339904 of 4670745634 (13.6%), 301.4 MBs/sec
+2026-10-07T05:57:15.9614995Z Received 968884224 of 4670745634 (20.7%), 307.5 MBs/sec
+2026-10-07T05:57:16.9541670Z Received 1342177280 of 4670745634 (28.7%), 319.5 MBs/sec
+2026-10-07T05:57:17.9578678Z Received 1665138688 of 4670745634 (35.7%), 317.0 MBs/sec
+2026-10-07T05:57:18.9578972Z Received 2009071616 of 4670745634 (43.0%), 318.9 MBs/sec
+2026-10-07T05:57:19.9595365Z Received 2306867200 of 4670745634 (49.4%), 313.9 MBs/sec
+2026-10-07T05:57:20.9608643Z Received 2625634304 of 4670745634 (56.2%), 312.5 MBs/sec
+2026-10-07T05:57:21.9611815Z Received 2885681152 of 4670745634 (61.8%), 305.4 MBs/sec
+2026-10-07T05:57:23.0031002Z Received 3087007744 of 4670745634 (66.1%), 292.9 MBs/sec
+2026-10-07T05:57:24.0017428Z Received 3351248896 of 4670745634 (71.7%), 289.2 MBs/sec
+2026-10-07T05:57:25.0037587Z Received 3514826752 of 4670745634 (75.3%), 278.1 MBs/sec
+2026-10-07T05:57:26.0023407Z Received 3762290688 of 4670745634 (80.6%), 274.9 MBs/sec
+2026-10-07T05:57:27.1424408Z Received 4026531840 of 4670745634 (86.2%), 270.6 MBs/sec
+2026-10-07T05:57:28.3596339Z Received 4294967296 of 4670745634 (92.0%), 265.8 MBs/sec
+2026-10-07T05:57:29.3598533Z Received 4508876800 of 4670745634 (96.5%), 262.0 MBs/sec
+2026-10-07T05:57:30.4120199Z Received 4670745634 of 4670745634 (100.0%), 255.1 MBs/sec
+2026-10-07T05:57:30.4121541Z Cache Size: ~4454 MB (4670745634 B)
+2026-10-07T05:57:30.4151698Z [command]/usr/bin/tar -xf /home/runner/work/_temp/aada7d67-adb0-4f88-8828-6a7d83822639/cache.tzst -P -C /home/runner/work/wgpu-graft/wgpu-graft --use-compress-program unzstd
+2026-10-07T05:58:45.8504542Z Cache restored successfully
+2026-10-07T05:58:46.3498913Z Cache restored from key: Linux-cargo-7a415c162c8a1b137ede40d0a74309afaf15a5ac75c3adb0faeb3511cb6fac4e
+2026-10-07T05:58:46.7076929Z ##[group]Run cargo test --locked -p grafting-frame
+2026-10-07T05:58:46.7077637Z [36;1mcargo test --locked -p grafting-frame[0m
+2026-10-07T05:58:46.8106564Z shell: /usr/bin/bash -e {0}
+2026-10-07T05:58:46.8106825Z env:
+2026-10-07T05:58:46.8107024Z   CARGO_TERM_COLOR: always
+2026-10-07T05:58:46.8107243Z   RUSTFLAGS: -D warnings
+2026-10-07T05:58:46.8107456Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:58:46.8107668Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:58:46.8107901Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:58:46.8108122Z   CARGO_INCREMENTAL: 0
+2026-10-07T05:58:46.8108327Z ##[endgroup]
+2026-10-07T05:58:46.8377236Z info: syncing channel updates for 1.97.1-x86_64-unknown-linux-gnu
+2026-10-07T05:58:47.1078981Z info: latest update on 2026-07-16 for version 1.97.1 (8bab26f4f 2026-07-14)
+2026-10-07T05:58:47.1081214Z info: downloading 3 components
+2026-10-07T05:58:55.2780812Z warn: the missing active toolchain `1.97.1-x86_64-unknown-linux-gnu` has been auto-installed
+2026-10-07T05:58:55.2781750Z warn: this might cause rustup commands to take longer time to finish than expected
+2026-10-07T05:58:55.2782432Z info: you may opt out with `RUSTUP_AUTO_INSTALL=0` or `rustup set auto-install disable`
+2026-10-07T05:58:59.8584118Z [1m[92m   Compiling[0m grafting-frame v0.1.0 (/home/runner/work/wgpu-graft/wgpu-graft/grafting-frame)
+2026-10-07T05:59:00.2361181Z [1m[92m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 4.95s
+2026-10-07T05:59:00.2511261Z [1m[92m     Running[0m unittests src/lib.rs (target/debug/deps/grafting_frame-0f9c321c85e546f8)
+2026-10-07T05:59:00.2525619Z 
+2026-10-07T05:59:00.2525761Z running 2 tests
+2026-10-07T05:59:00.2532014Z test tests::metadata_is_resource_free_and_copyable ... ok
+2026-10-07T05:59:00.2532461Z [1m[92m   Doc-tests[0m grafting_frame
+2026-10-07T05:59:00.2532765Z test tests::invalid_dmabuf_layout_closes_taken_descriptor ... ok
+2026-10-07T05:59:00.2532968Z 
+2026-10-07T05:59:00.2533185Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-07T05:59:00.2533450Z 
+2026-10-07T05:59:00.2699887Z 
+2026-10-07T05:59:00.2700144Z running 0 tests
+2026-10-07T05:59:00.2700381Z 
+2026-10-07T05:59:00.2700655Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-07T05:59:00.2700938Z 
+2026-10-07T05:59:00.2843858Z ##[group]Run cargo doc --locked -p grafting-frame --no-deps
+2026-10-07T05:59:00.2844275Z [36;1mcargo doc --locked -p grafting-frame --no-deps[0m
+2026-10-07T05:59:00.2899712Z shell: /usr/bin/bash -e {0}
+2026-10-07T05:59:00.2899951Z env:
+2026-10-07T05:59:00.2900124Z   CARGO_TERM_COLOR: always
+2026-10-07T05:59:00.2900341Z   RUSTFLAGS: -D warnings
+2026-10-07T05:59:00.2900537Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:59:00.2900732Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:59:00.2900962Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:59:00.2901176Z   CARGO_INCREMENTAL: 0
+2026-10-07T05:59:00.2901362Z   RUSTDOCFLAGS: -D warnings
+2026-10-07T05:59:00.2901559Z ##[endgroup]
+2026-10-07T05:59:00.9493319Z [1m[92m Documenting[0m grafting-frame v0.1.0 (/home/runner/work/wgpu-graft/wgpu-graft/grafting-frame)
+2026-10-07T05:59:01.1604733Z [1m[92m    Finished[0m `dev` profile [unoptimized + debuginfo] target(s) in 0.85s
+2026-10-07T05:59:01.1752928Z [1m[92m   Generated[0m /home/runner/work/wgpu-graft/wgpu-graft/target/doc/grafting_frame/index.html
+2026-10-07T05:59:01.1873535Z ##[group]Run cargo check --locked -p grafting --no-default-features --features wgpu-28
+2026-10-07T05:59:01.1874216Z [36;1mcargo check --locked -p grafting --no-default-features --features wgpu-28[0m
+2026-10-07T05:59:01.1929203Z shell: /usr/bin/bash -e {0}
+2026-10-07T05:59:01.1929426Z env:
+2026-10-07T05:59:01.1929605Z   CARGO_TERM_COLOR: always
+2026-10-07T05:59:01.1929826Z   RUSTFLAGS: -D warnings
+2026-10-07T05:59:01.1930021Z   AWS_LC_SYS_NO_ASM: 1
+2026-10-07T05:59:01.1930215Z   CARGO_NET_GIT_FETCH_WITH_CLI: true
+2026-10-07T05:59:01.1930447Z   CARGO_HOME: /home/runner/.cargo
+2026-10-07T05:59:01.1930660Z   CARGO_INCREMENTAL: 0
+2026-10-07T05:59:01.1930841Z ##[endgroup]
+2026-10-07T05:59:01.9779719Z [1m[92m   Compiling[0m grafting v0.6.0 (/home/runner/work/wgpu-graft/wgpu-graft/grafting)
+2026-10-07T05:59:01.9781011Z [1m[92m    Checking[0m grafting-frame v0.1.0 (/home/runner/work/wgpu-graft/wgpu-graft/grafting-frame)
+2026-10-07T05:59:02.4488899Z [1m[91merror[0m[1m: methods `wait_for_producer` and `normalization_timeout` are never used[0m
+2026-10-07T05:59:02.4489404Z    [1m[94m--> [0mgrafting/src/lib.rs:266:19
+2026-10-07T05:59:02.4489669Z     [1m[94m|[0m
+2026-10-07T05:59:02.4489947Z [1m[94m265[0m [1m[94m|[0m impl DiagnosticGpuSync {
+2026-10-07T05:59:02.4490359Z     [1m[94m|[0m [1m[94m----------------------[0m [1m[94mmethods in this implementation[0m
+2026-10-07T05:59:02.4490811Z [1m[94m266[0m [1m[94m|[0m     pub(crate) fn wait_for_producer(self) -> bool {
+2026-10-07T05:59:02.4491201Z     [1m[94m|[0m                   [1m[91m^^^^^^^^^^^^^^^^^[0m
+2026-10-07T05:59:02.4491468Z [1m[94m...[0m
+2026-10-07T05:59:02.4492394Z [1m[94m270[0m [1m[94m|[0m     fn normalization_timeout(self) -> Option<std::time::Duration> {
+2026-10-07T05:59:02.4492796Z     [1m[94m|[0m        [1m[91m^^^^^^^^^^^^^^^^^^^^^[0m
+2026-10-07T05:59:02.4493048Z     [1m[94m|[0m
+2026-10-07T05:59:02.4493326Z     [1m[94m= [0m[1mnote[0m: `-D dead-code` implied by `-D warnings`
+2026-10-07T05:59:02.4494263Z     [1m[94m= [0m[1mhelp[0m: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+2026-10-07T05:59:02.4494567Z 
+2026-10-07T05:59:02.4578072Z [1m[91merror[0m: could not compile `grafting` (lib) due to 1 previous error
+2026-10-07T05:59:02.4864080Z ##[error]Process completed with exit code 101.
+2026-10-07T05:59:02.4993807Z Post job cleanup.
+2026-10-07T05:59:02.6744107Z [command]/usr/bin/git version
+2026-10-07T05:59:02.6781077Z git version 2.55.0
+2026-10-07T05:59:02.6999603Z Temporarily overriding HOME='/home/runner/work/_temp/ea8003ab-040e-4dc2-9dea-c9ffcced5729' before making global git config changes
+2026-10-07T05:59:02.7000228Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-07T05:59:02.7000897Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/wgpu-graft/wgpu-graft
+2026-10-07T05:59:02.7001974Z Removing SSH command configuration
+2026-10-07T05:59:02.7002458Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-07T05:59:02.7004007Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-07T05:59:02.8285297Z Removing HTTP extra header
+2026-10-07T05:59:02.8290191Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-07T05:59:02.8325608Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-07T05:59:02.8514221Z Removing includeIf entries pointing to credentials config files
+2026-10-07T05:59:02.8519057Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-07T05:59:02.8547430Z includeif.gitdir:/home/runner/work/wgpu-graft/wgpu-graft/.git.path
+2026-10-07T05:59:02.8548107Z includeif.gitdir:/home/runner/work/wgpu-graft/wgpu-graft/.git/worktrees/*.path
+2026-10-07T05:59:02.8548678Z includeif.gitdir:/github/workspace/.git.path
+2026-10-07T05:59:02.8549173Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-07T05:59:02.8554588Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/wgpu-graft/wgpu-graft/.git.path
+2026-10-07T05:59:02.8576999Z /home/runner/work/_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config
+2026-10-07T05:59:02.8584241Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/wgpu-graft/wgpu-graft/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-921969db\-d9b0\-485b\-9ea2\-2d40e1152a4e\.config
+2026-10-07T05:59:02.8616932Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/wgpu-graft/wgpu-graft/.git/worktrees/*.path
+2026-10-07T05:59:02.8639299Z /home/runner/work/_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config
+2026-10-07T05:59:02.8646400Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/wgpu-graft/wgpu-graft/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-921969db\-d9b0\-485b\-9ea2\-2d40e1152a4e\.config
+2026-10-07T05:59:02.8684599Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-07T05:59:02.8706761Z /github/runner_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config
+2026-10-07T05:59:02.8712164Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-921969db\-d9b0\-485b\-9ea2\-2d40e1152a4e\.config
+2026-10-07T05:59:02.8742636Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-07T05:59:02.8764091Z /github/runner_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config
+2026-10-07T05:59:02.8769683Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-921969db\-d9b0\-485b\-9ea2\-2d40e1152a4e\.config
+2026-10-07T05:59:02.8801918Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-07T05:59:02.8987525Z Removing credentials config '/home/runner/work/_temp/git-credentials-921969db-d9b0-485b-9ea2-2d40e1152a4e.config'
+2026-10-07T05:59:02.9110107Z Cleaning up orphan processes

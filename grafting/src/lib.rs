@@ -263,10 +263,12 @@ pub enum DiagnosticGpuSync {
 }
 
 impl DiagnosticGpuSync {
+    #[cfg(all(feature = "surfman", target_os = "windows"))]
     pub(crate) fn wait_for_producer(self) -> bool {
         matches!(self, Self::ProducerCompletion | Self::Both { .. })
     }
 
+    #[cfg(feature = "gl")]
     fn normalization_timeout(self) -> Option<std::time::Duration> {
         match self {
             Self::NormalizationCompletion { timeout } | Self::Both { timeout } => Some(timeout),

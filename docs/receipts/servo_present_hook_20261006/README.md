@@ -342,3 +342,29 @@ formatting hunk, now corrected; existing formatting debt is preserved.
 `supplier-sync-diagnostic-fmt-check.log`, its result JSON, and the per-file
 baseline/current diffs record that failed gate. This diagnostic checkpoint
 does not claim a green whole-workspace formatting or release gate.
+
+## CI feature-gate correction (2026-10-07)
+
+Git checkpoint `9ccccf94122504b4318381887ae3dd0434a91042` exposed a
+conditional-compilation defect in CI run `37578874532`: the Linux and Windows
+core wgpu 28 checks omitted GL/surfman, leaving both new private diagnostic
+helpers unused under `RUSTFLAGS=-D warnings`. The two completed-job logs are
+retained as `ci-9cccc-linux-job-112653795853.log` and
+`ci-9cccc-windows-job-112653795952.log`.
+
+The correction gates `wait_for_producer` to Windows surfman and
+`normalization_timeout` to GL, matching their call sites. The public enum,
+default, and helper bodies are unchanged. The source review JSON proves that
+only these two private-helper attributes differ from 9cccc. The prior native
+controls remain bound to their archived preformat source; this compile fix
+adds no native evidence and changes neither the default policy nor the
+intermittent reopen finding.
+
+Seven sequential Windows typed checks passed with warnings denied: the core
+wgpu 28/29/30 rows without GL/surfman, GL-only wgpu 30, and surfman wgpu
+28/29/30. `sync-diagnostic-cfg-fix-inputs.json`,
+`sync-diagnostic-cfg-fix-check-results.json`, and
+`sync-diagnostic-cfg-fix-source-review.json` retain the current 12 input
+hashes, exact commands, logs, and source comparison. Linux/macOS acceptance
+awaits fresh CI; existing formatting, accessibility, U9, and release limits
+remain open.

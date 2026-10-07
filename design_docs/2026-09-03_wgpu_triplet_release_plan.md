@@ -365,12 +365,22 @@ fault fix nor a causal explanation.
 
 Windows typed checks passed for core `wgpu-28,surfman`, core
 `wgpu-29,surfman`, and adapter `wgpu-30,servo`. Native controls used the archived
-preformat source. The only subsequent source change formats the new poll
-expression; byte-preserved preformat input and full-file rustfmt-normalized text
+preformat source. Before the initial diagnostic source checkpoint, the only
+subsequent change formatted the new poll expression; byte-preserved preformat input and full-file rustfmt-normalized text
 equivalence are recorded, followed by fresh passing checks for all three rows.
 Whole-workspace `cargo fmt --all -- --check` still fails on the retained formatting
 debt across 138 reported paths; the new formatting hunk was corrected without
 applying the unrelated changes.
+
+CI run `37578874532` on the Git diagnostic checkpoint `9ccccf9` then found
+unused private helpers in the Linux and Windows core wgpu 28 rows with GL and
+surfman omitted. Matching helper feature gates correct that warnings-as-errors
+failure. Seven Windows rows now pass with `RUSTFLAGS=-D warnings`: core
+28/29/30, GL-only 30, and surfman 28/29/30. Only two private-helper cfg attributes
+changed; Windows GL/surfman retains the same bodies. The
+[correction receipt](../docs/receipts/servo_present_hook_20261006/sync-diagnostic-cfg-fix-check-results.json)
+records hashes and commands. Fresh cross-platform CI remains required; these
+checks add no native evidence to the archived preformat controls.
 
 This checkpoint accepts no accessibility gate, U9 coordinated consumer landing,
 production default change, crate release, or broader platform qualification.

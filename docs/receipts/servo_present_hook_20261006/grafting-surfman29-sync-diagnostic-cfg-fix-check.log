@@ -1,0 +1,9 @@
+    Checking naga v29.0.3
+    Checking wgpu-types v29.0.3
+    Checking wgpu-naga-bridge v29.0.3
+    Checking wgpu-hal v29.0.3
+    Checking wgpu-core-deps-windows-linux-android v29.0.3
+    Checking wgpu-core v29.0.3
+   Compiling grafting v0.6.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting)
+    Checking wgpu v29.0.3
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 26.78s

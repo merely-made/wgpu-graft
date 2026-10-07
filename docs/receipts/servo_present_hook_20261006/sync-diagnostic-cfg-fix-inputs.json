@@ -1,0 +1,54 @@
+{
+  "recorded_utc": "2026-10-07T06:07:55.952288+00:00",
+  "scope": "Private helper cfg correction following CI 9cccc no-GL dead-code failure; Windows gl runtime semantics unchanged",
+  "inputs": [
+    {
+      "path": "Cargo.toml",
+      "sha256": "e1da718945e59732aaaa26c92ed2162b67da6a316c8b5b96586cd67c91864e2f"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "86945d977a8cb31e2abc808d72f7b14d6700fbbec559151084574423c6ee5ade"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "e37a4c7c4627b0767527085699b1f6ca573f385017907f346290419ef3e9cc58"
+    },
+    {
+      "path": "grafting/Cargo.toml",
+      "sha256": "e6b7a7d0d6303fc6eeef6544e244c8a16c1326361b520d8c4c7f117851d21356"
+    },
+    {
+      "path": "grafting-frame/Cargo.toml",
+      "sha256": "bf806abafb4b964a069a76b3898ccde375d180c8d0982dbe169fcf7033b26b48"
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/Cargo.toml",
+      "sha256": "850257eb4cc7836e5845f06471fec4b34b40f1be5383a4f24d7d94ba2400ccb0"
+    },
+    {
+      "path": "grafting/src/error.rs",
+      "sha256": "d9a65df7ea79b3a0f4cab44b6749256db344a055068737da50c1302413a0ac17"
+    },
+    {
+      "path": "grafting/src/lib.rs",
+      "sha256": "bbbca008253778c25b109070e527c2051de30e14c61d52bd63cfbe1556f8a4c5"
+    },
+    {
+      "path": "grafting/src/raw_gl/texture_normalizer.rs",
+      "sha256": "aee6bffb3034e59a913ad40800b856b641c1dd535f5540179b4bdceebb512a2d"
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows.rs",
+      "sha256": "ec643e91b9342e926054af8ee2fb649e43f41f8c1bae11c430f412c9bb8d13d5"
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows_dx12_shared.rs",
+      "sha256": "a1fa33cfb28a8b669af4b2efad31ea1188104f16b727ce97bc77ce81b6d18a65"
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/src/lib.rs",
+      "sha256": "0bbf245a1a3e109f460d40173e5edf446539b3bd5aae6ff56b0e4e6826611a08"
+    }
+  ]
+}
