@@ -14,8 +14,8 @@ GUI frameworks. Derived from the
   revision. It makes borrowed Metal frame descriptors move-only and carries
   feature-selected wgpu 28/29/30, including the corrected wgpu-28 Metal arm.
   wgpu 29 remains the default while the GUI ecosystem straddles majors.
-- Servo demos track Servo `release/v0.5` (tag v0.5.0); no local Servo
-  checkout is needed.
+- Servo demos use the immutable Servo 0.5.0 snapshot
+  `1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019`; no local Servo checkout is needed.
 - Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,
   Bevy, Xilem, GPUI) plus a Servo-free GL demo. Six Servo GUI paths use GPU
   import; Xilem and GPUI intentionally demonstrate CPU readback. Bevy and
