@@ -136,6 +136,211 @@ GL frame-origin handling, and prove input/resize/teardown. The existing Graft
 importer and a split navigation/message merge do not supply that composite.
 Turnstone's broader Mere integration remains held at its reviewed boundary.
 
+### 2026-10-06 bounded supplier repairs
+
+Mere's shared Weld mouse/CHAR repair is committed as `7b6618c2` and reachable
+from main. The direct adapter passes eleven feature-enabled tests, including
+five dispatch regressions, and three feature-disabled tests. It preserves raw
+key codes and emits text separately using actual character codes. Mouse
+PointerEvent retains changed buttons, held buttons and modifiers. These unit
+receipts do not remove Turnstone's qualified bridge until the exact consumer
+graph and native scenarios pass. Cargo rejects a different revision of the
+same Git repository as a patch source; an adapter-only repin would otherwise
+introduce a second Inker type family. The consumer follow-up must preserve one
+family without silently advancing Genet, Knot or the held graph-semantics lane.
+
+Mere `69cb3921` adds an overrideable ordered `GraftSurface::poll_web_event` and
+forwards it unchanged. Its four tests pass, including mixed-kind callback order
+with legacy polling forbidden in that fixture. A real Servo host supplies the
+FIFO. Mark selected one explicitly named, configurable Servo profile shared
+by its views in the process, matching upstream's process-global options.
+
+Scry `f952abc47d3d12b15530a958277df76f2e8eac2b` fixes status-only
+ScreenCaptureKit callbacks evicting the pending image. Its two ownership tests
+pass and restoring the old overwrite rule fails the custody control. Exact
+hardware [run 37553214645](https://github.com/merely-made/wgpu-scry/actions/runs/37553214645)
+passes RADV and compiles the Mac callback; both Macs pass the helper and size
+tests. Mac native acceptance still fails: Intel base delivers/consumes three
+Complete frames and startup resize two; M4 base passes five, startup resize
+delivers/consumes two against three required. Complete frames are no longer
+lost to status-only callbacks. Remaining scarcity needs fixture activity and
+native capture-delivery evidence; changed thresholds or importer blame are
+unsupported. See `wgpu-scry/docs/receipts/mac_sample_retention_20261006/` for
+the exact source, local tests and earlier failed controls. No release is
+qualified by this repair alone.
+
+Opt-in page telemetry at `550b9fb` then shows both Mac fixtures hidden, with
+animation-frame counts and CSS animation clocks stopped while timers advance.
+The host window reports visible and unminimized. Headed focus (`36c8888`) and
+Metal/browser layer-order (`6143ed7`) trials preserve the original thresholds
+and both fail the ordinary Mac battery. The latter
+[run 37555489592](https://github.com/merely-made/wgpu-scry/actions/runs/37555489592)
+passes RADV; M4 base passes five and resize delivers eleven with two startup
+frames, while Intel base delivers two and resize twelve with two startup
+frames. The page remains hidden in their separate diagnostic followups.
+Scry `2c3ebd2` restores the demo source exactly to `550b9fb`, retaining custody,
+opt-in telemetry and build guards while removing the unproved runtime probes.
+Fresh visible advancing Mac capture and NVIDIA execution remain release gates.
+The restored source's macOS tests (`37555841449`), wgpu matrix
+(`37555842648`) and Linux tests (`37555841596`) now pass. The Mac source blob
+is exactly `301ef4608d47b06f0c735a278f25da34658e28a8` at both `550b9fb` and
+`2c3ebd2`; successful CI does not supersede the native Mac failures. NVIDIA
+job `112580634919` remains queued in the failed-probe hardware run.
+
+Weld `b5cf043` hardware remains green on RADV/M4/Intel, with NVIDIA job
+`112496930340` queued. Its earlier matrix run `37530088138` failed formatting
+job `112496970310` on Rust 1.97.1. Dedicated formatting commit `8ac21cc1`
+adds only 148 trailing commas across 18 Rust files; blame metadata `caaf07f6`
+and the qualification receipt are pushed at `2d9695b0`. Fresh exact-head
+[matrix run 37565195678](https://github.com/merely-made/wgpu-weld/actions/runs/37565195678)
+passes formatting, all nine OS/wgpu rows and all three platform demos on
+Rust 1.97.1. Dependencies and runtime behavior are unchanged. Package,
+Rust 1.92 MSRV, claimed-host hardware and registry-consumer qualification
+remain separate gates; the earlier hardware receipt is scoped to `b5cf043`.
+
+Graft `01f3c9f` supplies the importing rendering context to upstream Servo and
+clears unconsumed prior paints before each pre-present import. Both exact-source
+adapter checks pass against Servo `1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019`
+with `wgpu-30,servo`, supplier Rust 1.97.1 and the stable Graft target. This is
+typed proof. Graft `95bab7e` additionally lets the winit donor select wgpu 30
+and builds Servo's ANGLE DLLs through Windows `no-wgl`; its adapter source is
+byte-identical to the consumer pin. Actual native import and matching DLL
+construction/staging, consumer input/orientation/resize/close-reopen and full
+process shutdown remain open. See
+`wgpu-graft/docs/receipts/servo_present_hook_20261006/`.
+
+### 2026-10-06 current-stack coordination and accessibility
+
+Turnstone's U9 holds its final repin until WS4 is pushed and one tested set
+moves Knot, Redshank, then Turnstone. Fresh published Mere `5919dc64` contains
+R0–R5, but local R6 `1d87808a` is not yet an ancestor. Identity's Knot candidate
+`f68af0dc` pins Mere `ea74604b`, likewise without R6; its dirty seed lane is
+owned separately. Older compatibility revisions remain scoped qualification
+inputs. No independent Turnstone pin landing supersedes this coordination.
+The current Genet decoder owner repair is independently published as
+`965b64e206a47d1c8808472de9aa461233638768`, directly atop `90c5ef50`, after
+three meaningful codec tests and six-file preservation guards. Current Mere's
+immutable Genet pin `d851a9db` does not acquire that repair automatically.
+The later remote refresh finds Mere `fde06dc0` and Knot still `6cb57f10`;
+Mere R6 remains absent. Mere's published composition brief now records
+AC1–AC5 and U15's shared-helper/E1 assignment to the unusual-protocols lane,
+and its smolweb plan records U16's Smolweb/Micron projection assignment there.
+Published Turnstone `032463a` has not yet received these records. This supplier
+lane provides browser-specific exports/actions for that helper; AC6's future
+cross-process paint-list and accessibility channel remains research.
+
+U2 prioritizes browser accessibility on Windows, macOS and Linux. Each foreign
+surface needs an original AccessKit subtree, lifetime and bounds/focus mapping,
+and action ownership by `(TreeId, NodeId)`. Current Turnstone action routing
+ignores `target_tree`. Pinned Servo `1d44e5dd` exports AccessKit trees but lacks
+a public action-forwarding method; Servo 0.7 provides
+[`Servo::forward_accessibility_action`](https://github.com/servo/servo/blob/aac43a3f31a259f04a574f5ec4e959c943ad7cc7/components/servo/servo.rs#L1120-L1131),
+whose exact downstream DOM handler currently executes only Click; Focus,
+text/value, selection and scrolling fall through, with no typed result. Its
+producer chain also forwards nodes with empty action masks, without Click or
+child-action advertisement. Native invocability therefore needs a distinct
+supplier gate even for the action its public bridge can execute. Its
+coherent Surfman/ANGLE migration now has an accessibility reason without
+closing the complete action gate. Scry/Weld semantic
+export and control are separate supplier work. Scoped pixel/native receipts
+cannot establish UIA, NSAccessibility or AT-SPI assistive acceptance.
+
+### 2026-10-06 compatible consumer qualification
+
+Turnstone now removes the local Weld input bridge using compatible Mere
+`db4ee312`, Woodshed `b613fc55` and Knot `91cb44a2`, retaining Genet
+`69a2383b`, one Inker family and wgpu 30.0.1. The locked Scry/Weld production
+build, 83 distinct focused tests and all four fresh Windows native scenarios
+pass on executable SHA-256
+`b7bfd160ceab9710810b1993ac1a98eef04984fed670ffa9c9203ad91da861bb`.
+This closes the earlier shared-input consumer gate. Raw source/scenario/runner
+bytes and completed evidence are archived in Turnstone's
+`docs/receipts/browser_supplier_integration_20261006/`; later Servo changes
+cannot retroactively qualify this phase or alter its inputs.
+
+The three compatibility revisions are reachable from published main through
+Mere `392630bb`, Woodshed `06c2b13c` and Knot `6cb57f10`. Their owned collision
+worktrees and temporary branches are removed. Current primary source trees
+and concurrent unpublished work are preserved; these commits do not promote
+the held graph-semantics lane.
+
+The actual Turnstone Servo source now retains the named process profile,
+ordered native delegates and imported texture custody. The full
+`scry,weld,servo` build and native gates are in progress. The exact ANGLE DLL
+pair, actual owned root/CEF child module observations and fresh Scry/Weld
+reruns on that binary are required before claiming runtime coexistence. Servo
+effective zoom, HiDPI scale projection, physical keyboard/IME and richer
+browser operations retain their individual gates. Package/MSRV/feature-row,
+claimed-host hardware and registry-only release qualification stay separate.
+
+### 2026-10-06 upstream currency and combined-graph blocker
+
+Live upstream [Servo 0.7.0](https://github.com/servo/servo/releases/tag/v0.7.0)
+was released October 5; [0.6 LTS](https://github.com/servo/servo/releases/tag/v0.6.0)
+was released September 29. The current integration source `1d44e5dd` is an
+August 15 commit on the 0.5 release branch, with two release-branch commits
+outside the later release ancestry. The 0.7 migration changes Surfman
+0.13 to 0.14, mozangle 0.6 to 0.7 and ipc-channel 0.22 to 0.23. Graft's
+rendering-context boundary exposes Surfman types, so a simple Servo repin
+introduces a concrete type mismatch. This is an adapter/native migration;
+Turnstone's Rust 1.98.1 already exceeds upstream's 1.97.1 toolchain.
+
+The shared wgpu 30.0.1 row is current. CEF 151 is three Chromium majors
+behind the current [CEF 154 binding release](https://github.com/tauri-apps/cef-rs/releases/tag/cef-v154.4.0%2B154.0.33).
+The WebView2 Rust binding 0.39.1 is current independently of Microsoft's
+installed runtime and SDK versions. Refreshing CEF requires the matching SDK,
+subprocess/sandbox packaging, imported pixels and native operation gates;
+refreshing Servo requires a coherent Surfman/ANGLE graph and its own hardware
+and real-consumer receipts. Neither refresh inherits an older receipt.
+
+The first Turnstone three-engine build exposed an existing dependency
+collision rather than a missing top-level Servo feature. Genet `69a2383b`
+enables fontsan 0.7's default `woff2`; upstream Servo explicitly enables
+`libz-sys,wuff`. Cargo unifies both decoders and fontsan's exactly-one guard
+rejects the graph. Servo 0.7 has the same edge, so upgrading does not resolve
+it. Turnstone retains the failed build and exact inverse feature tree. A
+bounded Genet compatibility change `679d8314` passes valid WOFF2 decoding
+with its NKo glyph retained, malformed-input rejection and SFNT-identity
+checks. The sanitizer function stays unchanged. Published maintenance pins
+Mere `edf175f9`, Redshank/Woodshed `24f196f4` and Knot `211ff57a` carry this
+same source family without changing browser adapter bodies. Independent
+parsed-lock comparisons preserve existing registry versions/checksums and
+identify only the intended decoder-provider and Git source changes. The real
+locked Turnstone `scry,weld,servo` Windows metadata now resolves with one
+fontsan `libz-sys,wuff` provider, one Mere/Inker/Genet family and one wgpu 30
+device family. Bevy reflection separately retains `wgpu-types` 27.0.1;
+there is no second `wgpu`, `wgpu-core` or `wgpu-hal` family. The following build exits 101: `quinn-proto`'s rustc reports a 2 MiB allocation
+failure and status `0xc0000409`. Its transcript/result remain a failure
+receipt; resolver and source checks do not qualify compilation or native
+behavior. A serialized one-job retry has a separate gate. See the
+[decoder compatibility receipts](../../turnstone/docs/receipts/browser_supplier_integration_20261006/fontsan-compatibility/qualification-summary.json).
+
+Upstream `WebView::paint` renders without presenting. Both the Turnstone host
+and the corrected winit donor explicitly present through the importing context
+before taking the texture. The earlier donor native build passes compilation
+but predates that call and remains diagnostic. Corrected-source checks pass
+on default wgpu 29 and native wgpu 30. The actual native smoke exits 101 before
+a verified pixel: Surfman 0.13's preservation blit reports GL_INVALID_OPERATION.
+The bounded same-binary backtrace reproduces it through the import context's
+present call. Both runs load the exact native-build ANGLE DLLs. The later
+raw-swap control also fails with the same GL error and no importing context
+in its stack, reproducing the preservation failure without the importer.
+A narrow no-preservation swap change is assigned, retaining GL synchronization
+and frame custody. Its fresh native wgpu 30 smoke passes with exit 0 and 49
+GPU-imported frames: initial `[23,97,181,255]` at 1024×600, then
+`[221,79,54,255]` after a click and resize to 960×640. Actual native ANGLE
+paths/hashes are observed and no CPU fallback qualifies. The changed-source
+default wgpu 29 check also passes. Tested supplier source and native receipts
+are pushed as `dec11bbd2c9c8676e66987fb6ca32cd4ae6310eb`; documentation-only
+`79261674fa1eaf8f31383eca15e147028838e40b` follows it with identical compiled
+source/manifests. Fresh required CI checks are not yet confirmed green. This donor
+uses `process::exit`, so full shutdown, orientation, text, two-view host and
+accessibility acceptance remain separate. The current Windows adapter constructor requires DX12; lower-level
+Vulkan import facilities do not establish a runnable Servo adapter route.
+Matching native-build ANGLE outputs, PE imports and actual loaded-module
+identities remain required. Typed-check DLL hashes cannot substitute for
+those runtime observations.
+
 ### 2026-10-05 source audit and next gates
 
 The source audit inspected local source, tags, and retained receipt records.
