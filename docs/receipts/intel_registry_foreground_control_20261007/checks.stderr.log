@@ -1,0 +1,16 @@
+test_actual_script_rewrite_and_bash_syntax (__main__.ForegroundChecks.test_actual_script_rewrite_and_bash_syntax) ... ok
+test_bash_and_embedded_python_syntax (__main__.ForegroundChecks.test_bash_and_embedded_python_syntax) ... ok
+test_exact_fixture_helper_and_registry_versions (__main__.ForegroundChecks.test_exact_fixture_helper_and_registry_versions) ... ok
+test_existing_baseline_steps_are_identical (__main__.ForegroundChecks.test_existing_baseline_steps_are_identical) ... ok
+test_foreground_default_off_and_baselines_first (__main__.ForegroundChecks.test_foreground_default_off_and_baselines_first) ... ok
+test_immutable_helper_produces_registry_manifest_in_memory (__main__.ForegroundChecks.test_immutable_helper_produces_registry_manifest_in_memory) ... ok
+test_missing_or_duplicate_rewrite_boundaries_fail_closed (__main__.ForegroundChecks.test_missing_or_duplicate_rewrite_boundaries_fail_closed) ... ok
+test_no_focus_or_published_source_manipulation (__main__.ForegroundChecks.test_no_focus_or_published_source_manipulation) ... ok
+test_only_intel_with_shared_host_lock (__main__.ForegroundChecks.test_only_intel_with_shared_host_lock) ... ok
+test_original_failure_cannot_become_diagnostic_success (__main__.ForegroundChecks.test_original_failure_cannot_become_diagnostic_success) ... ok
+test_stable_target_and_unchanged_caps (__main__.ForegroundChecks.test_stable_target_and_unchanged_caps) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.835s
+
+OK

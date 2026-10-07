@@ -1,0 +1,31 @@
+--- test-mac.sh
++++ test-mac-foreground-control.sh
+@@ -202,6 +202,7 @@
+     deadline=$((SECONDS + TIMEOUT))
+     launch_deadline=$((SECONDS + 5))
+     saw_process=0
++    foreground_control_attempted=0
+     while [[ $SECONDS -lt $deadline ]]; do
+         if grep -Eq 'demo-mac: .*: (PASS|FAIL)' "$log"; then
+             stop_demo_app
+@@ -209,6 +210,20 @@
+         fi
+         if demo_app_running; then
+             saw_process=1
++            if [[ "$foreground_control_attempted" -eq 0 ]]; then
++                foreground_control_attempted=1
++                if kill -0 "$_pid" 2>/dev/null; then
++                    echo "foreground-control: attempt owned-bundle pid=$_pid app=$DEMO_APP"
++                    open -a "$DEMO_APP"
++                    activation_rc=$?
++                    echo "foreground-control: activation exit=$activation_rc pid=$_pid"
++                    if [[ $activation_rc -ne 0 ]]; then
++                        return "$activation_rc"
++                    fi
++                else
++                    echo "foreground-control: owned-bundle pid=$_pid exited before activation; skipped"
++                fi
++            fi
+         elif [[ $saw_process -eq 1 ]]; then
+             return 0
+         elif [[ $SECONDS -ge $launch_deadline && -s "$log" ]]; then

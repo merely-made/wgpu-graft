@@ -1,0 +1,71 @@
+{
+  "schema": "artifact_sha256_v1",
+  "scope": "finished preparation packet; index excludes itself",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 20,
+      "sha256": "e97602ab9cac70102245345c5ab0fc9830df8b17f1072b188265a662a3a547ae"
+    },
+    {
+      "path": "checks-result.json",
+      "bytes": 530,
+      "sha256": "614f1da452b7cc02a048ffd5819b64310e1d7a400e4a1c8a543cb311e7c16433"
+    },
+    {
+      "path": "checks.stderr.log",
+      "bytes": 1526,
+      "sha256": "8ee0b3c7378d74ab96a5aa2b3740ea715250eab8d9deb0b8432f19fda0bf2ade"
+    },
+    {
+      "path": "checks.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "initial-ten-checks-result.json",
+      "bytes": 474,
+      "sha256": "a9d7a2c3873bcfcfcbf9bee0b5fd593d2b7ff1200113efb87ecc5440aeb2d1dd"
+    },
+    {
+      "path": "initial-ten-checks.stderr.log",
+      "bytes": 1404,
+      "sha256": "a598e08787163d627d3e45b86e57740ab4103ac6fd14b99a51bfdda42636f877"
+    },
+    {
+      "path": "initial-ten-checks.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "proposed-foreground-script.patch",
+      "bytes": 1287,
+      "sha256": "b64cef8a105393396b9e92fd5f0ff99bcd091013ceb9ffe90cc6dc7253d9f1bb"
+    },
+    {
+      "path": "proposed-test-mac-foreground-control.sh",
+      "bytes": 10510,
+      "sha256": "7716e39ac3e31bd5a633e597bc58896dfc2460b27c817932cc77865d6f2ff0ff"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3188,
+      "sha256": "d8cad8befbef9893e1209657fdaad9dedf61db9268fc89b39722908c5bcb58a6"
+    },
+    {
+      "path": "source-bindings.json",
+      "bytes": 882,
+      "sha256": "27537a45b70d0514edbc0f5f25daa4df19f68ea358e5676e8f3498e98114fafc"
+    },
+    {
+      "path": "verify.py",
+      "bytes": 5488,
+      "sha256": "df85a7bfb98e12f1162a452fa2f89ff4568f73c70b8b32c18006a1b845602596"
+    },
+    {
+      "path": "workflow-reviewed.yml",
+      "bytes": 13382,
+      "sha256": "5c3c93e37994612ca2d1a156f76c43b618417be6ba92789eb0bd0c09eb97fb0d"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "recorded_utc": "2026-10-07T14:44:28.801778+00:00",
+  "workflow_base_sha": "0201765fdbfa136ef034826c23e4f97331623890",
+  "workflow_sha256": "5c3c93e37994612ca2d1a156f76c43b618417be6ba92789eb0bd0c09eb97fb0d",
+  "fixture_sha": "4d8d1d3f8dd450b712960c90b74263a45b46e35b",
+  "helper_sha": "e8ffee2d6b680154cae645d54a340116f08acb5d",
+  "staged_original_script_sha256": "d9fd607525c08d9f126e7a76c1139533917c9beee1cfea43b91ae60c693c0998",
+  "generated_script_sha256": "7716e39ac3e31bd5a633e597bc58896dfc2460b27c817932cc77865d6f2ff0ff",
+  "rewrite_counts": {
+    "per_mode_reset": 1,
+    "owned_bundle_observation": 1,
+    "open_a": 1
+  },
+  "checks_exit_code": 0,
+  "native_result": null,
+  "new_native_receipt_prefix": "release072-intel-foreground-",
+  "scope": "pure in-memory source rewrite only; no local consumer staging, build, app, dispatch or native proof"
+}
