@@ -1,0 +1,30 @@
+{
+  "command": [
+    "C:\\Users\\mark_\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\docs\\receipts\\registry_rsa_reconciliation_20261007\\verify.py"
+  ],
+  "started_utc": "2026-10-07T14:02:11.740752+00:00",
+  "finished_utc": "2026-10-07T14:02:12.348198+00:00",
+  "elapsed_seconds": 0.5939999999827705,
+  "exit_code": 0,
+  "scope": "11 pure stager/primary-source compatibility checks; no Cargo, native app, or actual consumer staging.",
+  "inputs": {
+    "scripts/stage_registry_triplet.py": {
+      "bytes": 16468,
+      "sha256": "9980f707d2c10ec05b3b32562aa1bfff32ac6b1e6ac07c150d37ab1d7111495a"
+    },
+    ".github/workflows/registry-only-triplet.yml": {
+      "bytes": 29310,
+      "sha256": "84a94c920905a155c65cbfcec9e86f44e24cd588c159f3e970c12f6e7fdd3d3b"
+    },
+    "docs/receipts/registry_harness_20261007/verify.py": {
+      "bytes": 7466,
+      "sha256": "227a5d235942c7fb016ffb762128fba9b38bb31da0ba409d59c1804f2b67b443"
+    },
+    "docs/receipts/registry_rsa_reconciliation_20261007/verify.py": {
+      "bytes": 3022,
+      "sha256": "4e3c47f95e3ff3c71a605b202b416008fa7977413f90135a3a9a3c9210f93ecc"
+    }
+  }
+}

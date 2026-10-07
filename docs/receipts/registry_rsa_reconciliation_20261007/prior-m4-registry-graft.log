@@ -1,0 +1,8 @@
+demo url: file:///Users/markik/actions-runner-wgpu/_work/_temp/registry-triplet/graft/demo/fixtures/smoke.html
+host backend: Metal
+capabilities: CapabilityMatrix { host_backend: Metal, gl_framebuffer_source: Supported, vulkan_external_image: Unsupported(HostBackendMismatch), metal_texture_ref: Supported, dx12_shared_texture: Unsupported(HostBackendMismatch) }
+[servo] URL changed: file:///Users/markik/actions-runner-wgpu/_work/_temp/registry-triplet/graft/demo/fixtures/smoke.html
+GRAFT DEMO SMOKE initial pixel=[23, 97, 181, 255] size=1024x600
+GRAFT DEMO SMOKE PASS path=GPU-import frames=105 pixel=[221, 79, 54, 255] size=960x640
+[wgpu] backend: Metal
+Deterministic macOS smoke passed.

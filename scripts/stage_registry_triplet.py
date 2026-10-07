@@ -288,6 +288,12 @@ def copy_required(source: Path, destination: Path, kind: str,
             features=["wgpu-29"],
             default_features=False,
         ) + "\n"
+        # Servo 0.5's rsa rc.18 accepts pkcs1 rc.5 by semver, but that
+        # prerelease changed the key struct API. Keep the registry version
+        # from successful triplet run 33916390001's proof-fixture lock.
+        demo_manifest += exact_dependency(
+            "pkcs1", "0.8.0-rc.4", default_features=False,
+        ) + "\n"
         (destination / "demo" / "Cargo.toml").write_text(demo_manifest, encoding="utf-8")
         shutil.copy2(support / "Cargo.toml", destination / "demo-support" / "Cargo.toml")
         (destination / "Cargo.toml").write_text(
