@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Users\\mark_\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\docs\\receipts\\intel_registry_capture_diagnostic_20261007\\verify.py"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 0.5940000000118744,
+  "completed_utc": "2026-10-07T14:24:49.817121+00:00",
+  "scope": "Pure scope/manifest/source/syntax checks only; no Cargo, apps, actual staging or dispatch.",
+  "inputs": {
+    ".github/workflows/scry-registry-intel-diagnostic.yml": {
+      "bytes": 7830,
+      "sha256": "1986dcd31b26f6759f3d8152b9ccb94b9999f79d1df43858d53263a70886db48"
+    },
+    "docs/receipts/intel_registry_capture_diagnostic_20261007/verify.py": {
+      "bytes": 5557,
+      "sha256": "88c541af8fae6dba6797642338b5e6a9597fa701a730fa6a42fab1b6297c23df"
+    }
+  }
+}

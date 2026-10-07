@@ -1,0 +1,156 @@
+name: Scry-only Intel registry capture diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: scry-registry-intel-diagnostic
+  cancel-in-progress: false
+
+env:
+  CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+  CARGO_BUILD_JOBS: "1"
+  RUSTFLAGS: -D warnings
+  WGPU_BACKEND: metal
+  GRAFTING_VERSION: "0.6.0"
+  SCRYING_VERSION: "0.7.2"
+  WELDING_VERSION: "0.14.1"
+  SCRY_SOURCE_REF: 4d8d1d3f8dd450b712960c90b74263a45b46e35b
+  CARGO_TARGET_DIR: /Users/markik/Code/targets/wgpu-scry-hardware
+  SCRY_MAC_APP: /Users/markik/Code/targets/wgpu-scry-hardware/debug/scry-demo-mac-hardware.app
+  CAPTURE: "1"
+  TIMEOUT: "90"
+  VISIBLE: "1"
+
+jobs:
+  intel-scry-only:
+    name: Intel Scry-only registry original battery and separate activity diagnosis
+    runs-on: [self-hosted, wgpu-hardware, metal, macos-x64, intel-mac, headed]
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Serialize host hardware use
+        uses: ./.github/actions/host-hardware-lock
+      - uses: dtolnay/rust-toolchain@1.97.1
+      - name: Install relocatable Python tooling
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        env:
+          RUNNER_TOOL_CACHE: ${{ runner.temp }}/uv-tool-cache
+        with:
+          version: "0.12.8"
+          enable-cache: false
+      - name: Put Python 3.13 on PATH
+        env:
+          UV_CACHE_DIR: ${{ runner.temp }}/uv-cache
+          UV_PYTHON_INSTALL_DIR: ${{ runner.temp }}/uv-python
+        run: |
+          uv python install --no-bin 3.13
+          python_bin="$(uv python find 3.13)"
+          mkdir -p "$RUNNER_TEMP/python-bin"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python"
+          ln -sf "$python_bin" "$RUNNER_TEMP/python-bin/python3"
+          echo "$RUNNER_TEMP/python-bin" >> "$GITHUB_PATH"
+      - name: Checkout immutable registry helpers
+        uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-graft
+          ref: e8ffee2d6b680154cae645d54a340116f08acb5d
+          path: .registry-proof-helper
+      - name: Checkout immutable Scry release fixture
+        uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-scry
+          ref: 4d8d1d3f8dd450b712960c90b74263a45b46e35b
+          path: .registry-proof-source/scry
+      - name: Guard host ownership and record exact inputs
+        run: |
+          proof="$RUNNER_TEMP/scry-registry-intel-diagnostic"
+          mkdir -p "$proof"
+          busy="$(ps -axo pid=,comm= | awk '$2 ~ /(^|\/)(cargo|rustc|clang|clang\+\+|demo-mac|demo-weld-mac|demo-servo-winit)$/ { print $1, $2 }')"
+          if [ -n "$busy" ]; then
+            printf '%s\n' "$busy" > "$proof/live-owners.txt"
+            echo "Shared compiler/native slot is occupied" >&2
+            exit 1
+          fi
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git -C .registry-proof-helper rev-parse HEAD)" = e8ffee2d6b680154cae645d54a340116f08acb5d
+          test "$(git -C .registry-proof-source/scry rev-parse HEAD)" = "$SCRY_SOURCE_REF"
+          {
+            printf 'workflow=%s\nhelper=%s\nscry_fixture=%s\n' "$GITHUB_SHA" e8ffee2d6b680154cae645d54a340116f08acb5d "$SCRY_SOURCE_REF"
+            rustc --version
+            cargo --version
+            shasum -a 256 .registry-proof-helper/scripts/stage_registry_triplet.py .registry-proof-helper/scripts/verify_registry_triplet.py
+          } > "$proof/checkout-and-helper-identity.txt"
+      - name: Stage and verify only the registry Scry consumer
+        run: |
+          proof="$RUNNER_TEMP/scry-registry-intel-diagnostic"
+          python3 .registry-proof-helper/scripts/stage_registry_triplet.py --kind scry-mac --source .registry-proof-source/scry --destination "$proof/consumer" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 .registry-proof-helper/scripts/verify_registry_triplet.py --consumer "$proof/consumer" --receipt-dir "$proof/registry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+      - name: Build and bind the registry executable
+        run: |
+          proof="$RUNNER_TEMP/scry-registry-intel-diagnostic"
+          cd "$proof/consumer"
+          cargo build --locked -j 1
+          shasum -a 256 "$CARGO_TARGET_DIR/debug/demo-mac" > "$proof/pre-battery-executable.sha256"
+          python3 - "$proof" <<'PY'
+          import hashlib, json, pathlib, sys
+          proof = pathlib.Path(sys.argv[1])
+          metadata = json.loads((proof / "registry/metadata.json").read_text())
+          facts = []
+          for name in ("grafting", "scrying", "welding"):
+              packages = [p for p in metadata["packages"] if p["name"] == name]
+              if len(packages) != 1:
+                  raise SystemExit(f"expected one registry package for {name}")
+              package = packages[0]
+              manifest = pathlib.Path(package["manifest_path"])
+              vcs = manifest.parent / ".cargo_vcs_info.json"
+              facts.append({"name": name, "version": package["version"], "source": package["source"],
+                            "manifest_sha256": hashlib.sha256(manifest.read_bytes()).hexdigest(),
+                            "cargo_vcs_info": json.loads(vcs.read_text()) if vcs.is_file() else None})
+          scry = next(p for p in facts if p["name"] == "scrying")
+          if not scry["cargo_vcs_info"] or scry["cargo_vcs_info"]["git"]["sha1"] != "4d8d1d3f8dd450b712960c90b74263a45b46e35b":
+              raise SystemExit("registry Scry package does not bind the selected release source")
+          (proof / "registry-package-identity.json").write_text(json.dumps(facts, indent=2) + "\n")
+          PY
+      - name: Run unchanged original ten-mode Scry battery
+        id: ordinary_battery
+        env:
+          CAPTURE_ACTIVITY: "0"
+        run: |
+          proof="$RUNNER_TEMP/scry-registry-intel-diagnostic"
+          caffeinate -u -t 5 &
+          sleep 2
+          set -o pipefail
+          status=0
+          caffeinate -dims bash "$proof/consumer/scripts/test-mac.sh" 2>&1 | tee "$proof/ordinary.log" || status=$?
+          printf '%s\n' "$status" > "$proof/ordinary-exit-code.txt"
+          shasum -a 256 "$CARGO_TARGET_DIR/debug/demo-mac" > "$proof/ordinary-executable.sha256"
+          shasum -a 256 "$SCRY_MAC_APP/Contents/MacOS/demo-mac" > "$proof/ordinary-app-executable.sha256"
+          codesign -d -r- "$SCRY_MAC_APP" > "$proof/ordinary-signing.txt" 2>&1
+          cmp "$proof/pre-battery-executable.sha256" "$proof/ordinary-executable.sha256"
+          exit "$status"
+      - name: Diagnose activity separately without accepting the original failure
+        if: ${{ always() && !cancelled() && steps.ordinary_battery.outcome != 'skipped' }}
+        env:
+          CAPTURE_ACTIVITY: "1"
+        run: |
+          proof="$RUNNER_TEMP/scry-registry-intel-diagnostic"
+          caffeinate -u -t 5 &
+          sleep 2
+          set -o pipefail
+          status=0
+          caffeinate -dims bash "$proof/consumer/scripts/test-mac.sh" 2>&1 | tee "$proof/activity.log" || status=$?
+          printf '%s\n' "$status" > "$proof/activity-exit-code.txt"
+          shasum -a 256 "$CARGO_TARGET_DIR/debug/demo-mac" > "$proof/activity-executable.sha256"
+          shasum -a 256 "$SCRY_MAC_APP/Contents/MacOS/demo-mac" > "$proof/activity-app-executable.sha256"
+          codesign -d -r- "$SCRY_MAC_APP" > "$proof/activity-signing.txt" 2>&1
+          cmp "$proof/pre-battery-executable.sha256" "$proof/activity-executable.sha256"
+          exit "$status"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scry-only-registry-intel-diagnostic
+          path: ${{ runner.temp }}/scry-registry-intel-diagnostic
