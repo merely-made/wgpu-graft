@@ -1,0 +1,47 @@
+{
+  "captured_at_utc": "2026-10-07T03:23:16.7084232Z",
+  "supplier_head": "95bab7e5127e71d2fd6f90cfe8266e6326d7e760",
+  "adapter_production_revision": "01f3c9f3d68df3247e6b7ec7f65ffbca57e9b2d4",
+  "adapter_blob": "335ab26905f8ef30a5bc26e5d8880b4cfa928346",
+  "servo_revision": "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019",
+  "toolchain": "1.97.1-x86_64-pc-windows-msvc",
+  "native_build_scope": "Final paint-present-take source; completed wgpu30 native compile, runtime pending.",
+  "files": [
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\demo-servo-winit\\src\\main.rs",
+      "Hash": "5F1520D91DC8254A0B3477F9DD3A6BE261A74505F5AF852ACA32DED6E3C1FDA0"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\demo-servo-winit\\Cargo.toml",
+      "Hash": "7A63E0BAB3379BD4439CAA0D6A4E0259A9B72531BC7B77FE82651D655A092B91"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\servo-wgpu-interop-adapter\\src\\lib.rs",
+      "Hash": "9ED21788F12063C0C1DBBB58D79CEB1BEB15FD660E9A56D798688A7708C303F4"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\servo-wgpu-interop-adapter\\Cargo.toml",
+      "Hash": "850257EB4CC7836E5845F06471FEC4B34B40F1BE5383A4F24D7D94BA2400CCB0"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\Cargo.lock",
+      "Hash": "86945D977A8CB31E2ABC808D72F7B14D6700FBBEC559151084574423C6EE5ADE"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\Cargo.toml",
+      "Hash": "E1DA718945E59732AAAA26C92ED2162B67DA6A316C8B5B96586CD67C91864E2F"
+    },
+    {
+      "Path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\demo-servo-winit.exe",
+      "Hash": "5C20C3BC239DC1D3E6B7532A9FC04B0E1A8836238E16A53542227A772BEEEFCD"
+    },
+    {
+      "Path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\mozangle-f2b6807973fe390c\\out\\libEGL.dll",
+      "Hash": "A4C0B14F0B6A1BDE6AE88F5512CF22214A14722209AFDAA339C903F255D04D49"
+    },
+    {
+      "Path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\mozangle-f2b6807973fe390c\\out\\libGLESv2.dll",
+      "Hash": "CA963BE19F9D69F108C98784D083E5910651AD1B5941677B182A99463D4597B3"
+    }
+  ]
+}

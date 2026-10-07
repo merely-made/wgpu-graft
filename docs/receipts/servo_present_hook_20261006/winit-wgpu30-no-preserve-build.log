@@ -1,0 +1,5 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling servo-wgpu-interop-adapter v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\servo-wgpu-interop-adapter)
+   Compiling demo-servo-winit v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-winit)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2m 07s

@@ -1,0 +1,22 @@
+{
+  "scope": "Completed native ANGLE prerequisites; donor source correction, final binary and runtime remain pending",
+  "servo_revision": "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019",
+  "mozangle_version": "0.6.0",
+  "native_out_dir": "C:/t/cargo-targets/wgpu-graft/debug/build/mozangle-f2b6807973fe390c/out",
+  "dlls": [
+    {
+      "path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\mozangle-f2b6807973fe390c\\out\\libEGL.dll",
+      "bytes": 569344,
+      "sha256": "A4C0B14F0B6A1BDE6AE88F5512CF22214A14722209AFDAA339C903F255D04D49",
+      "file_version": null,
+      "product_version": null
+    },
+    {
+      "path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\mozangle-f2b6807973fe390c\\out\\libGLESv2.dll",
+      "bytes": 19594240,
+      "sha256": "CA963BE19F9D69F108C98784D083E5910651AD1B5941677B182A99463D4597B3",
+      "file_version": null,
+      "product_version": null
+    }
+  ]
+}

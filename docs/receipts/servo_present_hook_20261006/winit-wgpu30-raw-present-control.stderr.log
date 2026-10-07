@@ -1,0 +1,84 @@
+[wgpu] backend: DirectX 12
+
+thread 'main' (31096) panicked at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\surfman-0.13.0\src\chains.rs:213:17:
+assertion `left == right` failed
+  left: 1282
+ right: 0
+stack backtrace:
+[2026-10-07T03:54:45Z WARN  servo_constellation::constellation] Pipeline(1,1): Visibility change for closed pipeline
+   0: std::panicking::panic_handler
+             at /rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library\std\src\panicking.rs:689
+   1: core::panicking::panic_fmt
+             at /rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library\core\src\panicking.rs:80
+   2: core::panicking::assert_failed_inner
+             at /rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library\core\src\panicking.rs:439
+   3: core::panicking::assert_failed<u32,u32>
+             at C:\Users\mark_\.rustup\toolchains\1.97.1-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\core\src\panicking.rs:394
+   4: surfman::chains::SwapChainData<surfman::angle::device::Device>::swap_buffers<surfman::angle::device::Device>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\surfman-0.13.0\src\chains.rs:213
+   5: surfman::chains::SwapChain<surfman::angle::device::Device>::swap_buffers<surfman::angle::device::Device>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\surfman-0.13.0\src\chains.rs:495
+   6: servo_wgpu_interop_adapter::impl$2::present
+             at C:\Users\mark_\Code\repos\wgpu-graft\servo-wgpu-interop-adapter\src\lib.rs:211
+   7: demo_servo_winit::AppState::render_frame
+             at C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-winit\src\main.rs:413
+   8: demo_servo_winit::impl$1::window_event
+             at C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-winit\src\main.rs:283
+   9: winit::event_loop::dispatch_event_for_app
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\event_loop.rs:642
+  10: winit::event_loop::impl$6::run_app::closure$0<demo_servo_winit::WakerEvent,demo_servo_winit::App>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\event_loop.rs:265
+  11: winit::platform_impl::windows::event_loop::impl$3::run_on_demand::closure$0<demo_servo_winit::WakerEvent,winit::event_loop::impl$6::run_app::closure_env$0<demo_servo_winit::WakerEvent,demo_servo_winit::App> >
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop.rs:264
+  12: alloc::boxed::impl$32::call_mut<tuple$<enum2$<winit::event::Event<winit::platform_impl::windows::event_loop::UserEventPlaceholder> > >,dyn$<core::ops::function::FnMut<tuple$<enum2$<winit::event::Event<winit::platform_impl::windows::event_loop::UserEventPla
+             at C:\Users\mark_\.rustup\toolchains\1.97.1-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\alloc\src\boxed.rs:2282
+  13: winit::platform_impl::windows::event_loop::runner::impl$3::call_event_handler::closure$0<winit::platform_impl::windows::event_loop::UserEventPlaceholder>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop\runner.rs:236
+  14: core::panic::unwind_safe::impl$25::call_once<tuple$<>,winit::platform_impl::windows::event_loop::runner::impl$3::call_event_handler::closure_env$0<winit::platform_impl::windows::event_loop::UserEventPlaceholder> >
+             at C:\Users\mark_\.rustup\toolchains\1.97.1-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\core\src\panic\unwind_safe.rs:275
+  15: std::panicking::catch_unwind::do_call<core::panic::unwind_safe::AssertUnwindSafe<winit::platform_impl::windows::event_loop::runner::impl$3::call_event_handler::closure_env$0<winit::platform_impl::windows::event_loop::UserEventPlaceholder> >,tuple$<> >
+             at C:\Users\mark_\.rustup\toolchains\1.97.1-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\panicking.rs:581
+  16: core::cmp::PartialEq::ne<winit::window::Theme,winit::window::Theme>
+  17: std::panicking::catch_unwind
+             at C:\Users\mark_\.rustup\toolchains\1.97.1-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\panicking.rs:544
+  18: std::panic::catch_unwind<core::panic::unwind_safe::AssertUnwindSafe<winit::platform_impl::windows::event_loop::runner::impl$3::call_event_handler::closure_env$0<winit::platform_impl::windows::event_loop::UserEventPlaceholder> >,tuple$<> >
+             at C:\Users\mark_\.rustup\toolchains\1.97.1-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\std\src\panic.rs:359
+  19: winit::platform_impl::windows::event_loop::runner::EventLoopRunner<winit::platform_impl::windows::event_loop::UserEventPlaceholder>::catch_unwind<winit::platform_impl::windows::event_loop::UserEventPlaceholder,tuple$<>,winit::platform_impl::windows::event_
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop\runner.rs:173
+  20: winit::platform_impl::windows::event_loop::runner::EventLoopRunner<winit::platform_impl::windows::event_loop::UserEventPlaceholder>::call_event_handler<winit::platform_impl::windows::event_loop::UserEventPlaceholder>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop\runner.rs:230
+  21: winit::platform_impl::windows::event_loop::runner::impl$3::dispatch_buffered_events::closure$0<winit::platform_impl::windows::event_loop::UserEventPlaceholder>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop\runner.rs:250
+  22: enum2$<winit::platform_impl::windows::event_loop::runner::BufferedEvent<winit::platform_impl::windows::event_loop::UserEventPlaceholder> >::dispatch_event<winit::platform_impl::windows::event_loop::UserEventPlaceholder,winit::platform_impl::windows::event_
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop\runner.rs:378
+  23: winit::platform_impl::windows::event_loop::runner::EventLoopRunner<winit::platform_impl::windows::event_loop::UserEventPlaceholder>::dispatch_buffered_events<winit::platform_impl::windows::event_loop::UserEventPlaceholder>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop\runner.rs:250
+  24: winit::platform_impl::windows::event_loop::runner::EventLoopRunner<winit::platform_impl::windows::event_loop::UserEventPlaceholder>::call_new_events<winit::platform_impl::windows::event_loop::UserEventPlaceholder>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop\runner.rs:357
+  25: winit::platform_impl::windows::event_loop::runner::EventLoopRunner<winit::platform_impl::windows::event_loop::UserEventPlaceholder>::move_state_to<winit::platform_impl::windows::event_loop::UserEventPlaceholder>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop\runner.rs:294
+  26: winit::platform_impl::windows::event_loop::runner::EventLoopRunner<winit::platform_impl::windows::event_loop::UserEventPlaceholder>::prepare_wait<winit::platform_impl::windows::event_loop::UserEventPlaceholder>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop\runner.rs:201
+  27: winit::platform_impl::windows::event_loop::EventLoop<demo_servo_winit::WakerEvent>::wait_for_messages<demo_servo_winit::WakerEvent>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop.rs:382
+  28: winit::platform_impl::windows::event_loop::EventLoop<demo_servo_winit::WakerEvent>::run_on_demand<demo_servo_winit::WakerEvent,winit::event_loop::impl$6::run_app::closure_env$0<demo_servo_winit::WakerEvent,demo_servo_winit::App> >
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop.rs:270
+  29: winit::platform_impl::windows::event_loop::EventLoop<demo_servo_winit::WakerEvent>::run<demo_servo_winit::WakerEvent,winit::event_loop::impl$6::run_app::closure_env$0<demo_servo_winit::WakerEvent,demo_servo_winit::App> >
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\platform_impl\windows\event_loop.rs:233
+  30: winit::event_loop::EventLoop<demo_servo_winit::WakerEvent>::run_app<demo_servo_winit::WakerEvent,demo_servo_winit::App>
+             at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\winit-0.30.13\src\event_loop.rs:265
+  31: demo_servo_winit::main
+             at C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-winit\src\main.rs:95
+  32: core::ops::function::FnOnce::call_once<enum2$<core::result::Result<tuple$<>,alloc::boxed::Box<dyn$<core::error::Error>,alloc::alloc::Global> > > (*)(),tuple$<> >
+             at C:\Users\mark_\.rustup\toolchains\1.97.1-x86_64-pc-windows-msvc\lib\rustlib\src\rust\library\core\src\ops\function.rs:250
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+[2026-10-07T03:54:50Z WARN  servo_constellation::constellation] fn close_browsing_context: BrowsingContext(0,1): Closing twice
+[2026-10-07T03:54:50Z WARN  servo_constellation::constellation] fn handle_close_top_level_browsing_context BrowsingContext(0,1): Closing twice
+[2026-10-07T03:54:50Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:54:50Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:54:50Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:54:50Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:54:50Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:54:50Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:54:50Z WARN  script::navigation] Failed to send network message to pipeline (1,1): "SendError(..)"
+[2026-10-07T03:54:50Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected

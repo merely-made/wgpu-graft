@@ -1,0 +1,74 @@
+{
+  "captured_at_utc": "2026-10-07T03:59:38.2924396Z",
+  "supplier_head": "95bab7e5127e71d2fd6f90cfe8266e6326d7e760",
+  "adapter_production_revision": "01f3c9f3d68df3247e6b7ec7f65ffbca57e9b2d4",
+  "adapter_change": "No preservation; retained GL.finish and capture/import-before-swap custody",
+  "servo_revision": "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019",
+  "toolchain": "1.97.1-x86_64-pc-windows-msvc",
+  "native_build_scope": "Actual GPU-import initial/click/resize source; runtime pending",
+  "command": "cargo build --offline --locked -p demo-servo-winit --no-default-features --features wgpu-30,servo --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+  "exit_code": 0,
+  "expected_initial_rgba": [
+    23,
+    97,
+    181,
+    255
+  ],
+  "expected_clicked_rgba": [
+    221,
+    79,
+    54,
+    255
+  ],
+  "expected_initial_size": [
+    1024,
+    600
+  ],
+  "expected_resized_size": [
+    960,
+    640
+  ],
+  "pixel_tolerance": 18,
+  "files": [
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\demo-servo-winit\\src\\main.rs",
+      "Hash": "D2AD41F4036C0D9CD46BEFEF70A35FCC541253782D2DFF93B0363CEB43921B27"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\demo-servo-winit\\Cargo.toml",
+      "Hash": "7A63E0BAB3379BD4439CAA0D6A4E0259A9B72531BC7B77FE82651D655A092B91"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\servo-wgpu-interop-adapter\\src\\lib.rs",
+      "Hash": "35057D3B466FA993EC41EB7A01607B4D5271CF79742E7A16353FD24A0A31E976"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\servo-wgpu-interop-adapter\\Cargo.toml",
+      "Hash": "850257EB4CC7836E5845F06471FEC4B34B40F1BE5383A4F24D7D94BA2400CCB0"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\Cargo.lock",
+      "Hash": "86945D977A8CB31E2ABC808D72F7B14D6700FBBEC559151084574423C6EE5ADE"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\Cargo.toml",
+      "Hash": "E1DA718945E59732AAAA26C92ED2162B67DA6A316C8B5B96586CD67C91864E2F"
+    },
+    {
+      "Path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\demo-servo-winit.exe",
+      "Hash": "26C74CA2812D39737DB94D6D96C9CD4FA326DFF4C1422D9AFCE473C229D7995C"
+    },
+    {
+      "Path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\mozangle-f2b6807973fe390c\\out\\libEGL.dll",
+      "Hash": "A4C0B14F0B6A1BDE6AE88F5512CF22214A14722209AFDAA339C903F255D04D49"
+    },
+    {
+      "Path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\mozangle-f2b6807973fe390c\\out\\libGLESv2.dll",
+      "Hash": "CA963BE19F9D69F108C98784D083E5910651AD1B5941677B182A99463D4597B3"
+    },
+    {
+      "Path": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\demo-servo-winit\\fixtures\\smoke.html",
+      "Hash": "F28F27B6DC20406AB29D916F4BB658788B7F44D821CA19C5AECEFB2FF2666C60"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling mozjs_sys v140.14.0-0
+   Compiling mozjs v0.21.6
+   Compiling servo-script-bindings v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+   Compiling servo-script v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+   Compiling servo-layout v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+   Compiling servo v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+   Compiling servo-wgpu-interop-adapter v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\servo-wgpu-interop-adapter)
+   Compiling demo-servo-winit v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-winit)
+error[E0599]: no method named `present` found for struct `Rc<ServoWgpuRenderingContext>` in the current scope
+   --> demo-servo-winit\src\main.rs:413:53
+    |
+413 |             self.interop.rendering_context_handle().present();
+    |                                                     ^^^^^^^ method not found in `Rc<ServoWgpuRenderingContext>`
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `RenderingContext` which provides `present` is implemented but not in scope; perhaps you want to import it
+    |
+ 27 + use servo::RenderingContext;
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `demo-servo-winit` (bin "demo-servo-winit") due to 1 previous error

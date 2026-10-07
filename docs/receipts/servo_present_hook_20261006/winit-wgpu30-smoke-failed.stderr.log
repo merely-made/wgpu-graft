@@ -1,0 +1,23 @@
+[wgpu] backend: DirectX 12
+
+thread 'main' (25912) panicked at C:\Users\mark_\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\surfman-0.13.0\src\chains.rs:213:17:
+assertion `left == right` failed
+  left: 1282
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+[2026-10-07T03:23:31Z WARN  servo_constellation::constellation] fn close_browsing_context: BrowsingContext(0,1): Closing twice
+[2026-10-07T03:23:31Z WARN  servo_constellation::constellation] fn handle_close_top_level_browsing_context BrowsingContext(0,1): Closing twice
+[2026-10-07T03:23:32Z WARN  mozjs::rust] Warning at :865:1: Script terminated by timeout at:
+    @:865:1
+    
+    
+[2026-10-07T03:23:32Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:23:32Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:23:32Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:23:32Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:23:32Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:23:32Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:23:32Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:23:32Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
+[2026-10-07T03:23:32Z WARN  script::navigation] Failed to send network message to pipeline (1,1): "SendError(..)"
+[2026-10-07T03:23:32Z WARN  profile_traits::mem] Error communicating with the memory profiler thread: Disconnected
