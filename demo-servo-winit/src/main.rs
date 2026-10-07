@@ -25,6 +25,19 @@
 //!   cargo run -p demo-servo-winit                     # opens built-in fixture page
 //!   cargo run -p demo-servo-winit -- --smoke          # bounded pixel/input/resize gate
 
+#[cfg(any(
+    all(feature = "wgpu-29", feature = "wgpu-30"),
+    not(any(feature = "wgpu-29", feature = "wgpu-30"))
+))]
+compile_error!("demo-servo-winit requires exactly one of wgpu-29 or wgpu-30");
+#[cfg(not(feature = "servo"))]
+compile_error!("demo-servo-winit requires the servo feature");
+
+#[cfg(feature = "wgpu-29")]
+use wgpu_29 as wgpu;
+#[cfg(all(feature = "wgpu-30", not(feature = "wgpu-29")))]
+use wgpu_30 as wgpu;
+
 use std::{
     borrow::Cow,
     rc::Rc,

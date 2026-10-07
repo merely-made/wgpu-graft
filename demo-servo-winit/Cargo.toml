@@ -5,6 +5,12 @@ edition = "2024"
 license = "MPL-2.0"
 description = "Minimal winit + wgpu proof host for servo-wgpu-interop"
 
+[features]
+default = ["wgpu-29", "servo"]
+wgpu-29 = ["dep:wgpu_29", "grafting/wgpu-29", "servo-wgpu-interop-adapter/wgpu-29"]
+wgpu-30 = ["dep:wgpu_30", "grafting/wgpu-30", "servo-wgpu-interop-adapter/wgpu-30"]
+servo = ["servo-wgpu-interop-adapter/servo"]
+
 [dependencies]
 demo-support = { path = "../demo-support" }
 euclid = "0.22.11"
@@ -12,8 +18,13 @@ image = "0.25"
 servo = { git = "https://github.com/servo/servo", rev = "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019" }
 pollster = "0.4.0"
 rustls = "0.23.37"
-servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
+servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", default-features = false }
 url = "2.5.7"
-wgpu = { version = "29.0.1", features = ["metal"] }
-grafting = { path = "../grafting" }
+wgpu_29 = { package = "wgpu", version = "29.0.1", features = ["metal"], optional = true }
+wgpu_30 = { package = "wgpu", version = "30.0.1", features = ["metal"], optional = true }
+grafting = { path = "../grafting", default-features = false }
 winit = "0.30.13"
+
+[target.'cfg(windows)'.dependencies]
+# Build the matching ANGLE EGL/GLES DLLs for surfman's Windows EGL device.
+servo = { git = "https://github.com/servo/servo", rev = "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019", features = ["no-wgl"] }
