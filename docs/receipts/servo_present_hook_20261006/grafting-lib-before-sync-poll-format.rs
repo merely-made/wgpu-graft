@@ -1009,13 +1009,10 @@ impl TextureImporter for WgpuTextureImporter {
                 // The source allocation is reused by a later GL producer blit.
                 // Finish this exact read/copy before allowing that reuse; queue
                 // submission alone does not synchronize external GL writes.
-                self.host
-                    .device
-                    .poll(wgpu::PollType::Wait {
-                        submission_index: Some(submission),
-                        timeout: Some(timeout),
-                    })
-                    .map_err(InteropError::NormalizationCompletion)?;
+                self.host.device.poll(wgpu::PollType::Wait {
+                    submission_index: Some(submission),
+                    timeout: Some(timeout),
+                }).map_err(InteropError::NormalizationCompletion)?;
             }
             ImportedTexture {
                 texture,

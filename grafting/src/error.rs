@@ -62,6 +62,10 @@ pub enum InteropError {
     #[error("unsupported synchronization mechanism: {0:?}")]
     UnsupportedSynchronization(SyncMechanism),
 
+    /// A diagnostic GPU completion wait failed or timed out.
+    #[error("normalization submission did not complete: {0}")]
+    NormalizationCompletion(#[source] crate::wgpu::PollError),
+
     /// A surfman-level error occurred while preparing the frame.
     #[error("surfman interop failed: {0}")]
     Surfman(String),

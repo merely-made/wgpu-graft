@@ -1,0 +1,11 @@
+{
+  "captured_utc": "2026-10-07T05:43:44.560415+00:00",
+  "scope": "Only new exact-submission poll expression formatting; other baseline formatting debt retained",
+  "raw_before_path": "grafting-lib-before-sync-poll-format.rs",
+  "raw_before_sha256": "576e19b6c3bf33a5c2b60cc1e9847f141a688ff87b1e416c2a7c8de398cbffbc",
+  "raw_after_sha256": "c51ae8163dadcb801c8b0f4c31d15ec51d73837b9eefda8c340ba600e7e8d122",
+  "full_file_rustfmt_normalized_text_equal": true,
+  "normalized_sha256": "255cda090429c03b898c827bcc875fac02420dfff17e5e5d13f9b4b9268bc2fa",
+  "remaining_postformat_corelib_fmt_hunks": 7,
+  "baseline_head_corelib_fmt_hunks": 7
+}

@@ -52,4 +52,4 @@
 *.kojo merge=weave
 *.mill merge=weave
 *.dart merge=weave
-docs/receipts/servo_present_hook_20261006/** -text
+docs/receipts/servo_present_hook_20261006/** -text -whitespace

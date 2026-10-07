@@ -1,0 +1,40 @@
+{
+  "scope": "Opt-in strict GPU ordering diagnostic; native causal control pending",
+  "supplier_head": "1fd089638258148aa56e3405900d7727367e5ed1",
+  "command": "cargo +1.97.1 check --offline --locked -p servo-wgpu-interop-adapter --no-default-features --features wgpu-30,servo --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+  "priority": "BelowNormal",
+  "libclang": "C:/Program Files/LLVM/bin",
+  "cmake_generator": "Visual Studio 17 2022",
+  "sources": [
+    {
+      "path": "grafting/src/error.rs",
+      "sha256": "D9A65DF7EA79B3A0F4CAB44B6749256DB344A055068737DA50C1302413A0AC17",
+      "bytes": 3669
+    },
+    {
+      "path": "grafting/src/lib.rs",
+      "sha256": "576E19B6C3BF33A5C2B60CC1E9847F141A688FF87B1E416C2A7C8DE398CBFFBC",
+      "bytes": 50380
+    },
+    {
+      "path": "grafting/src/raw_gl/texture_normalizer.rs",
+      "sha256": "AEE6BFFB3034E59A913AD40800B856B641C1DD535F5540179B4BDCEEBB512A2D",
+      "bytes": 9705
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows.rs",
+      "sha256": "EC643E91B9342E926054AF8EE2FB649E43F41F8C1BAE11C430F412C9BB8D13D5",
+      "bytes": 7812
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows_dx12_shared.rs",
+      "sha256": "504B55B77C39BFBF941BAC3BCC77143EF844142C06BECC107E596A77C82C4D99",
+      "bytes": 18948
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/src/lib.rs",
+      "sha256": "8E1C8526A46A3645ED98DBF06ADA52C8B3A4EC921C3A86C59020282CC7352F82",
+      "bytes": 22369
+    }
+  ]
+}

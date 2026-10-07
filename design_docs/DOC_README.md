@@ -25,7 +25,8 @@ This is the canonical index for active documentation in this repository.
   Wgpu-graft local addendum.
 - [Wgpu triplet release plan](2026-09-03_wgpu_triplet_release_plan.md):
   release-gating plan for Graft, Scry, and Weld after the browser-surface
-  architecture review.
+  architecture review, including the October Servo GPU ordering diagnostic
+  checkpoint.
 ## Legacy reference documents
 
 These predate this `design_docs/` root and still live under `docs/`. Treat them

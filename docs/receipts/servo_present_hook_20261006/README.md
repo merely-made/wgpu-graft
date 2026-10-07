@@ -269,3 +269,76 @@ response. The adapter README now uses the exact qualified Git correction
 `01f3c9f3d68df3247e6b7ec7f65ffbca57e9b2d4` predates this native swap fix;
 consumer adoption and its native gates remain separate. This lookup does not
 describe the separate published Graft core package.
+
+## GPU ordering diagnostic controls
+
+The follow-up adds an explicit, default-off diagnostic to the Windows
+ANGLE/DX12 Servo pre-present import. `DiagnosticGpuSync::Existing` retains
+the existing path. `ProducerCompletion` finishes the GL shared-texture blit
+before normalization reads it. `NormalizationCompletion { timeout }` waits
+for the exact wgpu normalization submission before returning the frame;
+`Both { timeout }` selects both waits. The caller supplies the queue-wait
+timeout. GL finish itself has no timeout, so native controls retain a guarded
+process deadline. These are GPU waits, with no CPU pixel fallback.
+
+The source ordering gap is explicit: the producer normally blits into a
+size-cached shared D3D11/D3D12 allocation with `finish=false`; normalization
+submits its read/copy asynchronously; the importing hook calls the raw
+context's GL finish after that submission. The default synchronizer validates
+the declared mode without adding an external fence or waiting for the copy.
+Submission alone establishes neither GL-write completion before the wgpu
+read nor wgpu-read completion before the next GL overwrite. Submitted wgpu
+work retains source texture custody; this is an ordering concern, not a
+dropped-lease finding.
+
+`ServoWgpuInteropAdapter::new_with_diagnostic_sync` forwards the selected
+control into the pre-present hook. `take_imported_texture_result` returns
+the original typed `wgpu::PollError` through
+`InteropError::NormalizationCompletion`, or a GL import/completion error.
+A failed diagnostic blocks subsequent import/swap attempts; the caller must
+retire the context on error. Native diagnostics require Windows DX12, a GL
+framebuffer source, and origin normalization. Existing constructors and
+their default synchronization remain unchanged.
+
+Turnstone ran six guarded, same-executable controls with independent fresh
+application/Servo profiles and a 5000 ms queue-wait timeout:
+
+| Mode | Complete pixel checks passed | Native exit / final producers, caches, views |
+| --- | --- | --- |
+| Existing | 1 of 2 | Both exit 0; all final counts zero |
+| Producer completion | 1 of 1 | Exit 0; all final counts zero |
+| Normalization completion | 1 of 1 | Exit 0; all final counts zero |
+| Both | 2 of 2 | Both exit 0; all final counts zero |
+
+The second Existing run reproduced a completely white reopened A view while
+B remained correct. Its title/address assertions and `RESULT ok` still
+passed; pixel review rejected the run. All six controls exited normally
+without timeout. The bounded sample shows an association with the waits;
+it does not establish visual causality or a production fix. The default stays
+Existing. Accessibility, coordinated consumer adoption, and release gates
+are not accepted by these observations.
+
+`turnstone-sync-diagnostic-comparison.json` is a byte-preserved copy of
+Turnstone's `docs/receipts/browser_supplier_integration_20261006/sync-diagnostic/comparison.json`
+(SHA-256 `3d2635abb102d261c90855be39ea52313fde544e3aeb6d72e401ba80034d30c2`).
+It records all six native-file hashes, 98 distinct passing browser tests,
+the 38-input supplier archive hash, and the root source archive hash. Full
+captures and source archives remain in that Turnstone receipt tree. No donor
+smoke substitutes for these consumer controls.
+
+After the controls, only the new queue-wait expression was formatted.
+`grafting-lib-before-sync-poll-format.rs` preserves its exact native-control
+source. `sync-poll-format-equivalence.json` proves full-file rustfmt-normalized
+text identical before/after. Fresh, sequential `-j1` BelowNormal typed checks
+passed for adapter wgpu 30 (26.13 s), core wgpu 28 with surfman (5.00 s), and
+core wgpu 29 with surfman (5.91 s). The postformat inputs, logs, and result
+JSON retain exact source/manifest/lock hashes; native controls used the
+preformat bytes. These checks qualify Windows type compatibility, not other
+platform runtime behavior.
+
+The read-only whole-workspace formatting check failed with 138 reported
+paths. Per-owned-file HEAD/current comparisons isolate the one new poll
+formatting hunk, now corrected; existing formatting debt is preserved.
+`supplier-sync-diagnostic-fmt-check.log`, its result JSON, and the per-file
+baseline/current diffs record that failed gate. This diagnostic checkpoint
+does not claim a green whole-workspace formatting or release gate.

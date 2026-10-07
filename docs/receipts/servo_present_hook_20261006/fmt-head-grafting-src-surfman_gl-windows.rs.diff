@@ -1,0 +1,29 @@
+--- head:grafting/src/surfman_gl/windows.rs
++++ rustfmt:grafting/src/surfman_gl/windows.rs
+@@ -40,10 +40,10 @@
+                 generation: source.generation,
+                 consumer_sync: SyncMechanism::ImplicitGlFlush,
+             });
+-        }
++        },
+         Err(_) => {
+             // Not an ANGLE context, or Vulkan backend unavailable; try GL extension path.
+-        }
++        },
+     }
+ 
+     // ── Slow path: GL_EXT_memory_object_win32 (non-ANGLE Vulkan GL) ──────────────
+@@ -137,11 +137,11 @@
+                 generation: source.generation,
+                 consumer_sync: SyncMechanism::ImplicitGlFlush,
+             });
+-        }
++        },
+         Err(_) => {
+             // Not an ANGLE D3D11 surfman context, or DX12 device unavailable;
+             // try the GL_EXT_memory_object_win32 path against an unbound surface.
+-        }
++        },
+     }
+ 
+     // ── Slow path: GL_EXT_memory_object_win32 (non-ANGLE Vulkan GL) ──────────

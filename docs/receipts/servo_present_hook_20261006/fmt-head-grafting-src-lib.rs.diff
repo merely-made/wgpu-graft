@@ -1,0 +1,149 @@
+--- head:grafting/src/lib.rs
++++ rustfmt:grafting/src/lib.rs
+@@ -25,9 +25,17 @@
+ #[cfg(all(feature = "wgpu-29", not(feature = "wgpu-30")))]
+ pub extern crate wgpu_hal_29 as wgpu_hal;
+ 
+-#[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29"), not(feature = "wgpu-30")))]
++#[cfg(all(
++    feature = "wgpu-28",
++    not(feature = "wgpu-29"),
++    not(feature = "wgpu-30")
++))]
+ pub extern crate wgpu_28 as wgpu;
+-#[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29"), not(feature = "wgpu-30")))]
++#[cfg(all(
++    feature = "wgpu-28",
++    not(feature = "wgpu-29"),
++    not(feature = "wgpu-30")
++))]
+ pub extern crate wgpu_hal_28 as wgpu_hal;
+ 
+ #[cfg(not(any(feature = "wgpu-28", feature = "wgpu-29", feature = "wgpu-30")))]
+@@ -36,8 +44,8 @@
+ );
+ 
+ mod error;
++mod sync;
+ mod wgpu_compat;
+-mod sync;
+ 
+ #[cfg(target_os = "windows")]
+ mod sync_dx12;
+@@ -85,25 +93,24 @@
+ #[cfg(feature = "surfman")]
+ pub mod surfman_gl;
+ 
++#[cfg(target_os = "windows")]
++use std::os::windows::io::{AsRawHandle, OwnedHandle};
+ #[cfg(feature = "gl")]
+ use std::rc::Rc;
+-#[cfg(target_os = "windows")]
+-use std::os::windows::io::{AsRawHandle, OwnedHandle};
+ 
+ use dpi::PhysicalSize;
+ pub use error::{InteropError, UnsupportedReason};
+ pub use grafting_frame;
+-pub use grafting_frame::{
+-    FrameMetadata as NeutralFrameMetadata, FrameSize, FrameSync,
+-    OwnedNativeFrame as NeutralNativeFrame, OwnedNativeFrameKind, OwnedNativeImage, PixelFormat,
+-};
+ #[cfg(target_os = "linux")]
+ pub use grafting_frame::{DmaBufError, DmaBufImage, DmaBufPlane};
+ #[cfg(target_os = "windows")]
+ pub use grafting_frame::{
+-    Dx12SharedFence as OwnedDx12SharedFence,
+-    Dx12SharedResource as OwnedDx12SharedResource,
++    Dx12SharedFence as OwnedDx12SharedFence, Dx12SharedResource as OwnedDx12SharedResource,
+     Dx12SharedTexture as OwnedDx12SharedTexture,
++};
++pub use grafting_frame::{
++    FrameMetadata as NeutralFrameMetadata, FrameSize, FrameSync,
++    OwnedNativeFrame as NeutralNativeFrame, OwnedNativeFrameKind, OwnedNativeImage, PixelFormat,
+ };
+ #[cfg(target_vendor = "apple")]
+ pub use grafting_frame::{IoSurface as OwnedIoSurface, MetalTexture as OwnedMetalTexture};
+@@ -800,14 +807,14 @@
+                         imported,
+                     });
+                 }
+-            }
++            },
+             EpochFrame::ReusedResource { resource_epoch } => {
+                 if self.resource_epoch() != Some(resource_epoch) {
+                     return Err(InteropError::InvalidFrame(
+                         "reused resource epoch has no matching cached import",
+                     ));
+                 }
+-            }
++            },
+         }
+ 
+         self.flush_cached_texture()?;
+@@ -927,10 +934,10 @@
+                 frame_source
+                     .importer
+                     .import_into(&frame_source, &self.host, options)
+-            }
++            },
+             NativeFrame::VulkanExternalImage(frame) => {
+                 import_vulkan_external_image(frame, &self.host)
+-            }
++            },
+             NativeFrame::MetalTextureRef(frame) => import_metal_frame(frame, &self.host),
+             NativeFrame::Dx12SharedTexture(frame) => import_dx12_shared_frame(frame, &self.host),
+         }?;
+@@ -988,10 +995,10 @@
+         let gl_framebuffer_source = match host_backend {
+             InteropBackend::Vulkan | InteropBackend::Metal | InteropBackend::Dx12 => {
+                 CapabilityStatus::Supported
+-            }
++            },
+             InteropBackend::Unknown => {
+                 CapabilityStatus::Unsupported(UnsupportedReason::HostBackendUnavailable)
+-            }
++            },
+         };
+ 
+         let vulkan_external_image = match host_backend {
+@@ -1013,33 +1020,33 @@
+                     // but DMABUF imports are Linux-specific.
+                     CapabilityStatus::Unsupported(UnsupportedReason::PlatformNotImplemented)
+                 }
+-            }
++            },
+             InteropBackend::Metal | InteropBackend::Dx12 => {
+                 CapabilityStatus::Unsupported(UnsupportedReason::HostBackendMismatch)
+-            }
++            },
+             InteropBackend::Unknown => {
+                 CapabilityStatus::Unsupported(UnsupportedReason::HostBackendUnavailable)
+-            }
++            },
+         };
+ 
+         let metal_texture_ref = match host_backend {
+             InteropBackend::Metal => CapabilityStatus::Supported,
+             InteropBackend::Vulkan | InteropBackend::Dx12 => {
+                 CapabilityStatus::Unsupported(UnsupportedReason::HostBackendMismatch)
+-            }
++            },
+             InteropBackend::Unknown => {
+                 CapabilityStatus::Unsupported(UnsupportedReason::HostBackendUnavailable)
+-            }
++            },
+         };
+ 
+         let dx12_shared_texture = match host_backend {
+             InteropBackend::Dx12 => CapabilityStatus::Supported,
+             InteropBackend::Vulkan | InteropBackend::Metal => {
+                 CapabilityStatus::Unsupported(UnsupportedReason::HostBackendMismatch)
+-            }
++            },
+             InteropBackend::Unknown => {
+                 CapabilityStatus::Unsupported(UnsupportedReason::HostBackendUnavailable)
+-            }
++            },
+         };
+ 
+         Self {

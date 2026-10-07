@@ -1,0 +1,57 @@
+{
+  "captured_utc": "2026-10-07T05:44:14.0156525Z",
+  "scope": "Postformat immutable source for sequential adapter30/core28/core29 typed rechecks",
+  "supplier_head": "1fd089638258148aa56e3405900d7727367e5ed1",
+  "priority": "BelowNormal",
+  "jobs": 1,
+  "inputs": [
+    {
+      "path": "Cargo.toml",
+      "sha256": "E1DA718945E59732AAAA26C92ED2162B67DA6A316C8B5B96586CD67C91864E2F"
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "86945D977A8CB31E2ABC808D72F7B14D6700FBBEC559151084574423C6EE5ADE"
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "E37A4C7C4627B0767527085699B1F6CA573F385017907F346290419EF3E9CC58"
+    },
+    {
+      "path": "grafting/Cargo.toml",
+      "sha256": "E6B7A7D0D6303FC6EEEF6544E244C8A16C1326361B520D8C4C7F117851D21356"
+    },
+    {
+      "path": "grafting-frame/Cargo.toml",
+      "sha256": "BF806ABAFB4B964A069A76B3898CCDE375D180C8D0982DBE169FCF7033B26B48"
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/Cargo.toml",
+      "sha256": "850257EB4CC7836E5845F06471FEC4B34B40F1BE5383A4F24D7D94BA2400CCB0"
+    },
+    {
+      "path": "grafting/src/error.rs",
+      "sha256": "D9A65DF7EA79B3A0F4CAB44B6749256DB344A055068737DA50C1302413A0AC17"
+    },
+    {
+      "path": "grafting/src/lib.rs",
+      "sha256": "C51AE8163DADCB801C8B0F4C31D15EC51D73837B9EEFDA8C340BA600E7E8D122"
+    },
+    {
+      "path": "grafting/src/raw_gl/texture_normalizer.rs",
+      "sha256": "AEE6BFFB3034E59A913AD40800B856B641C1DD535F5540179B4BDCEEBB512A2D"
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows.rs",
+      "sha256": "EC643E91B9342E926054AF8EE2FB649E43F41F8C1BAE11C430F412C9BB8D13D5"
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows_dx12_shared.rs",
+      "sha256": "A1FA33CFB28A8B669AF4B2EFAD31EA1188104F16B727CE97BC77CE81B6D18A65"
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/src/lib.rs",
+      "sha256": "0BBF245A1A3E109F460D40173E5EDF446539B3BD5AAE6FF56B0E4E6826611A08"
+    }
+  ]
+}

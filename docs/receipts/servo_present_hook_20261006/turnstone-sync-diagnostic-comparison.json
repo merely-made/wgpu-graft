@@ -1,0 +1,822 @@
+{
+  "recorded_utc": "2026-10-07T05:42:50.890918+00:00",
+  "source_label": "all3-sync-control",
+  "supplier_archive_sha256": "8fa391a79a2d1127830cc42639ff36cbde9daaa6ef7e5cbd539f2970f6b2ee0f",
+  "supplier38inputs_unchanged_through_all_native_controls": true,
+  "root_source_archive_sha256": "f7b2ff089427b5bf7f37d5684c422a27f1703c13fc53be9026376e60c45d7463",
+  "distinct_passing_browser_tests": 98,
+  "passing_test_executions": 99,
+  "native_controls": [
+    {
+      "receipt": "native-servo-sync-both",
+      "mode": "both",
+      "timeout_ms": "5000",
+      "native_exit": 0,
+      "timed_out": false,
+      "scenario_result": "RESULT ok",
+      "pixel_pass": true,
+      "final_producers_caches_views_zero": true,
+      "direct_reopen_review": "Both current alpha/bravo pages with redtop/bluebottom",
+      "process_result_sha256": "8e6d24f0cec9659bb7af50063cdbb2ca7f3aa15b0600733c44c7d5011b0cf114",
+      "pixel_review_sha256": "6c5b42ef9b44c7b6adc503bf32c080d8f04e736d65325e16dbb9a80e0824f83e",
+      "native_files": [
+        {
+          "path": "01_two_upstream_servo_pages.png",
+          "sha256": "75edc1fa76831cb559102039d6444acd1b5e7051074b9cb3d5ed1c591d2c6e9c"
+        },
+        {
+          "path": "02_a_native_input_and_navigation.png",
+          "sha256": "2148d14300204fad1fe2e10850ad59e0a83220423e3df9919ced16b49d3a0efe"
+        },
+        {
+          "path": "03_b_native_input_and_navigation.png",
+          "sha256": "7a80bfcecd388b0cbaacdbfbf1f8d9a70afd69bede6ddd7965e70a8770207be3"
+        },
+        {
+          "path": "04_resize_and_orientation.png",
+          "sha256": "10684f6da965ce78469e04b982546866d3a56ac7ba79378126fa939fb825e8bd"
+        },
+        {
+          "path": "05_a_reader_b_servo.png",
+          "sha256": "7f05085fcf739dea5ff085bdb57f0e346ff7487790e2c64b4876813813cfa761"
+        },
+        {
+          "path": "06_a_servo_reconstructed.png",
+          "sha256": "10684f6da965ce78469e04b982546866d3a56ac7ba79378126fa939fb825e8bd"
+        },
+        {
+          "path": "07_both_servo_views_closed.png",
+          "sha256": "a531fdcc82b46005f1391d92f3d170755bc5ba205baaa510051bd3662db3110c"
+        },
+        {
+          "path": "08_reopened_in_same_servo_process.png",
+          "sha256": "c18c9f1ce3bd2dfed3e0f633356942dabba0dd76bad01562b285c35181dffee1"
+        },
+        {
+          "path": "09_final_servo_teardown.png",
+          "sha256": "a531fdcc82b46005f1391d92f3d170755bc5ba205baaa510051bd3662db3110c"
+        },
+        {
+          "path": "diagnostics.json",
+          "sha256": "63a37a366342616fa53d2d8acd08a61c8163c071eddad08ebd992904fde53f61"
+        },
+        {
+          "path": "final-servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "final-servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "independent-input.surface-frames.json",
+          "sha256": "fc0172ed0fea87f008dfec84c840ac9df2684ec9ea03accbf1f82201b7613b4f"
+        },
+        {
+          "path": "independent-input.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "loaded-modules.json",
+          "sha256": "4f25603639d8f665a7a1d719d1534227c0eb4acab6ab7e05497534e69150f677"
+        },
+        {
+          "path": "process-result.json",
+          "sha256": "8e6d24f0cec9659bb7af50063cdbb2ca7f3aa15b0600733c44c7d5011b0cf114"
+        },
+        {
+          "path": "run.log",
+          "sha256": "7de6428069a15ce7a515b1dc88b2631aeb5772752dc7fdf9e1fdbc53f49d4e2f"
+        },
+        {
+          "path": "run.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "run.stdout.log",
+          "sha256": "92ed5ca24542136b2605de9cf1d1197290ba9f334b03f7d8143ade2dc1c390a9"
+        },
+        {
+          "path": "scenario.done",
+          "sha256": "284a542ed7b4aaf2ee052c26db19477299ebaa067f28c99f4bf846af0c9ab2f0"
+        },
+        {
+          "path": "servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reconstructed.surface-frames.json",
+          "sha256": "ef6a312c1b39947866a877cbb7568db3d11e707db1e973ed46d1b244416ebdb7"
+        },
+        {
+          "path": "servo-reconstructed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reopened.surface-frames.json",
+          "sha256": "ef6a312c1b39947866a877cbb7568db3d11e707db1e973ed46d1b244416ebdb7"
+        },
+        {
+          "path": "servo-reopened.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-resized.surface-frames.json",
+          "sha256": "ef6a312c1b39947866a877cbb7568db3d11e707db1e973ed46d1b244416ebdb7"
+        },
+        {
+          "path": "servo-resized.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "two-servo-pages.surface-frames.json",
+          "sha256": "fc0172ed0fea87f008dfec84c840ac9df2684ec9ea03accbf1f82201b7613b4f"
+        },
+        {
+          "path": "two-servo-pages.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        }
+      ]
+    },
+    {
+      "receipt": "native-servo-sync-existing",
+      "mode": "existing",
+      "timeout_ms": "5000",
+      "native_exit": 0,
+      "timed_out": false,
+      "scenario_result": "RESULT ok",
+      "pixel_pass": true,
+      "final_producers_caches_views_zero": true,
+      "direct_reopen_review": "Both current alpha/bravo pages with redtop/bluebottom",
+      "process_result_sha256": "2f5f3a036166d4e599a71f5c6ed4208e8062147ca854ff5733aa895bed5f47b1",
+      "pixel_review_sha256": "124c2dc85990acdd31ff619173b42976425851b6fe003481b3d71b9e013ab75a",
+      "native_files": [
+        {
+          "path": "01_two_upstream_servo_pages.png",
+          "sha256": "75edc1fa76831cb559102039d6444acd1b5e7051074b9cb3d5ed1c591d2c6e9c"
+        },
+        {
+          "path": "02_a_native_input_and_navigation.png",
+          "sha256": "2148d14300204fad1fe2e10850ad59e0a83220423e3df9919ced16b49d3a0efe"
+        },
+        {
+          "path": "03_b_native_input_and_navigation.png",
+          "sha256": "7a80bfcecd388b0cbaacdbfbf1f8d9a70afd69bede6ddd7965e70a8770207be3"
+        },
+        {
+          "path": "04_resize_and_orientation.png",
+          "sha256": "da80d9498764f0f317323a03544136b8844a3a7659b2c42e268c556954f0164e"
+        },
+        {
+          "path": "05_a_reader_b_servo.png",
+          "sha256": "53b89827975f81a109996edc990893167fc4015b7c8cc24c1f661a39c571197f"
+        },
+        {
+          "path": "06_a_servo_reconstructed.png",
+          "sha256": "dd9ee076ca018627a52034a47589e8152c5967966693c473b705c69a312437ae"
+        },
+        {
+          "path": "07_both_servo_views_closed.png",
+          "sha256": "4cde12de8829bbc9467cc2ed09a256e102a190be9823888e304e4ed04fbefc94"
+        },
+        {
+          "path": "08_reopened_in_same_servo_process.png",
+          "sha256": "60837aa21d5a14c52253f30dbb4f16a74c1c65af2313b4b7720ee42c857c6faf"
+        },
+        {
+          "path": "09_final_servo_teardown.png",
+          "sha256": "4cde12de8829bbc9467cc2ed09a256e102a190be9823888e304e4ed04fbefc94"
+        },
+        {
+          "path": "diagnostics.json",
+          "sha256": "74ed50f77e94312fcedcd692065af357624d4187dbc68c1e8803abacd39238de"
+        },
+        {
+          "path": "final-servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "final-servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "independent-input.surface-frames.json",
+          "sha256": "4a267016682a12e0cb906e758108ca20cc0f6f4b1a6a12a18666bf6a2a05111c"
+        },
+        {
+          "path": "independent-input.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "loaded-modules.json",
+          "sha256": "2a14eba5328ef52f4b732f718a06d0d86908165534d09c5ffcfa534dc8452e48"
+        },
+        {
+          "path": "process-result.json",
+          "sha256": "2f5f3a036166d4e599a71f5c6ed4208e8062147ca854ff5733aa895bed5f47b1"
+        },
+        {
+          "path": "run.log",
+          "sha256": "7c4d7f180bb5619c3e4a145d4973e6e88badc9b7cc115999b24ebd398fac1f3b"
+        },
+        {
+          "path": "run.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "run.stdout.log",
+          "sha256": "6755ae80a3d9b301b35e73fc05bd92a39ae73a3b2e09d5eea331bcb0174f2edf"
+        },
+        {
+          "path": "scenario.done",
+          "sha256": "284a542ed7b4aaf2ee052c26db19477299ebaa067f28c99f4bf846af0c9ab2f0"
+        },
+        {
+          "path": "servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reconstructed.surface-frames.json",
+          "sha256": "c506ff6bbf6fdbfb3a0d4d021d52e95f23356443a2481c1d44785f04ef043e4f"
+        },
+        {
+          "path": "servo-reconstructed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reopened.surface-frames.json",
+          "sha256": "c506ff6bbf6fdbfb3a0d4d021d52e95f23356443a2481c1d44785f04ef043e4f"
+        },
+        {
+          "path": "servo-reopened.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-resized.surface-frames.json",
+          "sha256": "c506ff6bbf6fdbfb3a0d4d021d52e95f23356443a2481c1d44785f04ef043e4f"
+        },
+        {
+          "path": "servo-resized.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "two-servo-pages.surface-frames.json",
+          "sha256": "4a267016682a12e0cb906e758108ca20cc0f6f4b1a6a12a18666bf6a2a05111c"
+        },
+        {
+          "path": "two-servo-pages.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        }
+      ]
+    },
+    {
+      "receipt": "native-servo-sync-existing-repeat",
+      "mode": "existing",
+      "timeout_ms": "5000",
+      "native_exit": 0,
+      "timed_out": false,
+      "scenario_result": "RESULT ok",
+      "pixel_pass": false,
+      "final_producers_caches_views_zero": true,
+      "direct_reopen_review": "Awhite, Bcurrent; title/cache assertions falsepositive",
+      "process_result_sha256": "3ebe9353b8b5cfbc0a1cbe35580c209a50eaf7f5533691aed8d33422173e700d",
+      "pixel_review_sha256": "afffc69c81cd1dc09bbd4712cd0fbb4e73384f6745f32199e2fb65ac19d03bfd",
+      "native_files": [
+        {
+          "path": "01_two_upstream_servo_pages.png",
+          "sha256": "e2f04b7d1070b1bf5f27dd253f859e6fbb3c21ea20d8392de2b831ef101ca72c"
+        },
+        {
+          "path": "02_a_native_input_and_navigation.png",
+          "sha256": "367f76478d2113c7efe91968b9c84aa22e3b5bcd1fa52e820bc55670114618fe"
+        },
+        {
+          "path": "03_b_native_input_and_navigation.png",
+          "sha256": "7a80bfcecd388b0cbaacdbfbf1f8d9a70afd69bede6ddd7965e70a8770207be3"
+        },
+        {
+          "path": "04_resize_and_orientation.png",
+          "sha256": "05edce34400024d62290b0575d2271876f010e960fd45367227d1bf9dd960143"
+        },
+        {
+          "path": "05_a_reader_b_servo.png",
+          "sha256": "064700c81225d1f1dd804162ea883120d312d51cd913014823851d60355ebb38"
+        },
+        {
+          "path": "06_a_servo_reconstructed.png",
+          "sha256": "05edce34400024d62290b0575d2271876f010e960fd45367227d1bf9dd960143"
+        },
+        {
+          "path": "07_both_servo_views_closed.png",
+          "sha256": "7225be96cc05f075bd7bf2d9b9be6287563a1410536c441dc88eb552c7591cca"
+        },
+        {
+          "path": "08_reopened_in_same_servo_process.png",
+          "sha256": "dd83eaf3540b1978ffc284be856ff9ecbe4eb7a295e65be193e0c66231777c33"
+        },
+        {
+          "path": "09_final_servo_teardown.png",
+          "sha256": "7225be96cc05f075bd7bf2d9b9be6287563a1410536c441dc88eb552c7591cca"
+        },
+        {
+          "path": "diagnostics.json",
+          "sha256": "4ea6c80f9f852ad240428e7b69f471bcac06f74ad5abb236f565100c89f458ec"
+        },
+        {
+          "path": "final-servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "final-servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "independent-input.surface-frames.json",
+          "sha256": "b691b083e201599b8717c8980f466873627b50fbda7a2956f01cf83fd00f7bca"
+        },
+        {
+          "path": "independent-input.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "loaded-modules.json",
+          "sha256": "5ce813845ccd62ea9ec05c7263319f91b0adb78c9ff014a760b606686789770d"
+        },
+        {
+          "path": "process-result.json",
+          "sha256": "3ebe9353b8b5cfbc0a1cbe35580c209a50eaf7f5533691aed8d33422173e700d"
+        },
+        {
+          "path": "run.log",
+          "sha256": "7ae03ab9f12486394b82aba0db68c90fb6eab21f22c81ed2ab21e21304914e58"
+        },
+        {
+          "path": "run.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "run.stdout.log",
+          "sha256": "112491df5b73aa39485d6d2e20eb208576cf6b2cf628c447c76dbff0269ad6d8"
+        },
+        {
+          "path": "scenario.done",
+          "sha256": "284a542ed7b4aaf2ee052c26db19477299ebaa067f28c99f4bf846af0c9ab2f0"
+        },
+        {
+          "path": "servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reconstructed.surface-frames.json",
+          "sha256": "649588902ceef9bacf662f0cc3a37fe716271e0ed8bf1e513a1b7d2fb0e0f10f"
+        },
+        {
+          "path": "servo-reconstructed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reopened.surface-frames.json",
+          "sha256": "649588902ceef9bacf662f0cc3a37fe716271e0ed8bf1e513a1b7d2fb0e0f10f"
+        },
+        {
+          "path": "servo-reopened.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-resized.surface-frames.json",
+          "sha256": "649588902ceef9bacf662f0cc3a37fe716271e0ed8bf1e513a1b7d2fb0e0f10f"
+        },
+        {
+          "path": "servo-resized.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "two-servo-pages.surface-frames.json",
+          "sha256": "b691b083e201599b8717c8980f466873627b50fbda7a2956f01cf83fd00f7bca"
+        },
+        {
+          "path": "two-servo-pages.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        }
+      ]
+    },
+    {
+      "receipt": "native-servo-sync-producer",
+      "mode": "producer",
+      "timeout_ms": "5000",
+      "native_exit": 0,
+      "timed_out": false,
+      "scenario_result": "RESULT ok",
+      "pixel_pass": true,
+      "final_producers_caches_views_zero": true,
+      "direct_reopen_review": "Both current alpha/bravo pages with redtop/bluebottom",
+      "process_result_sha256": "536309c0929e3569f963074ea47f645da27f940e0533b8ebe662d4e7fe632556",
+      "pixel_review_sha256": "ab99b6acadd8c3867fb7f607146e0d68c31181c3ea3916928c3c8e95879278b1",
+      "native_files": [
+        {
+          "path": "01_two_upstream_servo_pages.png",
+          "sha256": "75edc1fa76831cb559102039d6444acd1b5e7051074b9cb3d5ed1c591d2c6e9c"
+        },
+        {
+          "path": "02_a_native_input_and_navigation.png",
+          "sha256": "2148d14300204fad1fe2e10850ad59e0a83220423e3df9919ced16b49d3a0efe"
+        },
+        {
+          "path": "03_b_native_input_and_navigation.png",
+          "sha256": "7a80bfcecd388b0cbaacdbfbf1f8d9a70afd69bede6ddd7965e70a8770207be3"
+        },
+        {
+          "path": "04_resize_and_orientation.png",
+          "sha256": "bfcfe5ca5e0740586bc030cf950ca71233493275f140aaa987df6126adce5d8e"
+        },
+        {
+          "path": "05_a_reader_b_servo.png",
+          "sha256": "1b84c1761cbac4b7eb8c0b21f0f1fdb0c2237b8f945acda9cc07693e4aee31b2"
+        },
+        {
+          "path": "06_a_servo_reconstructed.png",
+          "sha256": "bfcfe5ca5e0740586bc030cf950ca71233493275f140aaa987df6126adce5d8e"
+        },
+        {
+          "path": "07_both_servo_views_closed.png",
+          "sha256": "711d6ac76ede538da66d0e8d621f546cc094dcb7abb6a35ae9eb3b004275dd2a"
+        },
+        {
+          "path": "08_reopened_in_same_servo_process.png",
+          "sha256": "83e3997e8c9c3b6d81fa2ba35a6634441198f9ab3c86031d2eedb3e43ed09377"
+        },
+        {
+          "path": "09_final_servo_teardown.png",
+          "sha256": "711d6ac76ede538da66d0e8d621f546cc094dcb7abb6a35ae9eb3b004275dd2a"
+        },
+        {
+          "path": "diagnostics.json",
+          "sha256": "e67d875657e1a2ae30f816ac65ad137bf6c0d864f6052c56caeaca2f5acb766d"
+        },
+        {
+          "path": "final-servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "final-servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "independent-input.surface-frames.json",
+          "sha256": "80d481edbe76a59b0abee350c4fa5bb19d0276d06dbd5386cf3c19ddae337bb3"
+        },
+        {
+          "path": "independent-input.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "loaded-modules.json",
+          "sha256": "4f5d9950d6e3ec3a6791419e2889540c8bce419c8347b643176006b1879931ee"
+        },
+        {
+          "path": "process-result.json",
+          "sha256": "536309c0929e3569f963074ea47f645da27f940e0533b8ebe662d4e7fe632556"
+        },
+        {
+          "path": "run.log",
+          "sha256": "4a3e95d2367cbc0a078f33956fbd3a8e09439960737b05a2aa3571aba9abc05d"
+        },
+        {
+          "path": "run.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "run.stdout.log",
+          "sha256": "9934873027e4155958c63f8b6a40f638163a8f1bf39c0e146a13d132050a9cb6"
+        },
+        {
+          "path": "scenario.done",
+          "sha256": "284a542ed7b4aaf2ee052c26db19477299ebaa067f28c99f4bf846af0c9ab2f0"
+        },
+        {
+          "path": "servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reconstructed.surface-frames.json",
+          "sha256": "395ee6c6e43f7c4b7eb3a02486250549368e8a8f8be7cfcd050857835b76ffb4"
+        },
+        {
+          "path": "servo-reconstructed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reopened.surface-frames.json",
+          "sha256": "395ee6c6e43f7c4b7eb3a02486250549368e8a8f8be7cfcd050857835b76ffb4"
+        },
+        {
+          "path": "servo-reopened.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-resized.surface-frames.json",
+          "sha256": "395ee6c6e43f7c4b7eb3a02486250549368e8a8f8be7cfcd050857835b76ffb4"
+        },
+        {
+          "path": "servo-resized.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "two-servo-pages.surface-frames.json",
+          "sha256": "80d481edbe76a59b0abee350c4fa5bb19d0276d06dbd5386cf3c19ddae337bb3"
+        },
+        {
+          "path": "two-servo-pages.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        }
+      ]
+    },
+    {
+      "receipt": "native-servo-sync-normalization",
+      "mode": "normalization",
+      "timeout_ms": "5000",
+      "native_exit": 0,
+      "timed_out": false,
+      "scenario_result": "RESULT ok",
+      "pixel_pass": true,
+      "final_producers_caches_views_zero": true,
+      "direct_reopen_review": "Both current alpha/bravo pages with redtop/bluebottom",
+      "process_result_sha256": "44c08e6bc7d287f26118e7d7e8305be749c75c0f954a1f6e754bdba7662034b5",
+      "pixel_review_sha256": "87de052ad7265b38336bb68480ac1c403833d02bc25abcc7295abb66ce87b0ec",
+      "native_files": [
+        {
+          "path": "01_two_upstream_servo_pages.png",
+          "sha256": "75edc1fa76831cb559102039d6444acd1b5e7051074b9cb3d5ed1c591d2c6e9c"
+        },
+        {
+          "path": "02_a_native_input_and_navigation.png",
+          "sha256": "2148d14300204fad1fe2e10850ad59e0a83220423e3df9919ced16b49d3a0efe"
+        },
+        {
+          "path": "03_b_native_input_and_navigation.png",
+          "sha256": "7a80bfcecd388b0cbaacdbfbf1f8d9a70afd69bede6ddd7965e70a8770207be3"
+        },
+        {
+          "path": "04_resize_and_orientation.png",
+          "sha256": "4f1aba2278b7dc7f3182a1ba1868c0678fab0900b31a3ea5c792a10a462f54ec"
+        },
+        {
+          "path": "05_a_reader_b_servo.png",
+          "sha256": "0e237dd61c2c8475636e4291164f5be692c37f7b5608405b9382cb3745bfcad7"
+        },
+        {
+          "path": "06_a_servo_reconstructed.png",
+          "sha256": "4f1aba2278b7dc7f3182a1ba1868c0678fab0900b31a3ea5c792a10a462f54ec"
+        },
+        {
+          "path": "07_both_servo_views_closed.png",
+          "sha256": "7e1a3d7abe4833533492204b867c742bc56b160051e5926bf762edbcc7949303"
+        },
+        {
+          "path": "08_reopened_in_same_servo_process.png",
+          "sha256": "f89fb48341640d080649da3ac2c6783ccfa45ebf0edfcaf5921a9a6eaaa747f9"
+        },
+        {
+          "path": "09_final_servo_teardown.png",
+          "sha256": "7e1a3d7abe4833533492204b867c742bc56b160051e5926bf762edbcc7949303"
+        },
+        {
+          "path": "diagnostics.json",
+          "sha256": "8bdacb02ee688271dd1fb454604ab8e5cafcef0a27d60093e2cd1a47351e914d"
+        },
+        {
+          "path": "final-servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "final-servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "independent-input.surface-frames.json",
+          "sha256": "c1829cc6526c2cb514b19d66f1804c4277d32b204cf038607e704c1ff89af3f8"
+        },
+        {
+          "path": "independent-input.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "loaded-modules.json",
+          "sha256": "4136c96d25c2e29f01f0d8db75b3a48655327a783f2b26ca49b16df721fa4520"
+        },
+        {
+          "path": "process-result.json",
+          "sha256": "44c08e6bc7d287f26118e7d7e8305be749c75c0f954a1f6e754bdba7662034b5"
+        },
+        {
+          "path": "run.log",
+          "sha256": "b37db4b11876d4203728c3d5b0742d15793900df82f9b83bc1d4f1cfeadb4d84"
+        },
+        {
+          "path": "run.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "run.stdout.log",
+          "sha256": "a146cbe6abe81be2fe1f8c60fa3e789f0ffb128e1cd291fe0c1f62afbbe1431d"
+        },
+        {
+          "path": "scenario.done",
+          "sha256": "284a542ed7b4aaf2ee052c26db19477299ebaa067f28c99f4bf846af0c9ab2f0"
+        },
+        {
+          "path": "servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reconstructed.surface-frames.json",
+          "sha256": "fe41c262579ca9fe2fa38a0ce0c9417e8a13ecd4ef8b0f9658bebc168cce3870"
+        },
+        {
+          "path": "servo-reconstructed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reopened.surface-frames.json",
+          "sha256": "fe41c262579ca9fe2fa38a0ce0c9417e8a13ecd4ef8b0f9658bebc168cce3870"
+        },
+        {
+          "path": "servo-reopened.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-resized.surface-frames.json",
+          "sha256": "fe41c262579ca9fe2fa38a0ce0c9417e8a13ecd4ef8b0f9658bebc168cce3870"
+        },
+        {
+          "path": "servo-resized.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "two-servo-pages.surface-frames.json",
+          "sha256": "c1829cc6526c2cb514b19d66f1804c4277d32b204cf038607e704c1ff89af3f8"
+        },
+        {
+          "path": "two-servo-pages.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        }
+      ]
+    },
+    {
+      "receipt": "native-servo-sync-both-repeat",
+      "mode": "both",
+      "timeout_ms": "5000",
+      "native_exit": 0,
+      "timed_out": false,
+      "scenario_result": "RESULT ok",
+      "pixel_pass": true,
+      "final_producers_caches_views_zero": true,
+      "direct_reopen_review": "Both current alpha/bravo pages with redtop/bluebottom",
+      "process_result_sha256": "e26a5d95dbd77c3cda799625b1be78762796b1419d5e8be90c57a9bb155b2b2a",
+      "pixel_review_sha256": "5de89b119e555a7e92f26c40ec9761482cba5812c071633fe06f8fcee05a22a1",
+      "native_files": [
+        {
+          "path": "01_two_upstream_servo_pages.png",
+          "sha256": "75edc1fa76831cb559102039d6444acd1b5e7051074b9cb3d5ed1c591d2c6e9c"
+        },
+        {
+          "path": "02_a_native_input_and_navigation.png",
+          "sha256": "2148d14300204fad1fe2e10850ad59e0a83220423e3df9919ced16b49d3a0efe"
+        },
+        {
+          "path": "03_b_native_input_and_navigation.png",
+          "sha256": "7a80bfcecd388b0cbaacdbfbf1f8d9a70afd69bede6ddd7965e70a8770207be3"
+        },
+        {
+          "path": "04_resize_and_orientation.png",
+          "sha256": "ee2537532ddcf503d5877442cd222f3d7d851996013e694220b663ce21713bc7"
+        },
+        {
+          "path": "05_a_reader_b_servo.png",
+          "sha256": "5d149648456fb01f46f9fd5a6fc0b6a6701183d407a3de0a9ab2eb46dd4d4244"
+        },
+        {
+          "path": "06_a_servo_reconstructed.png",
+          "sha256": "ee2537532ddcf503d5877442cd222f3d7d851996013e694220b663ce21713bc7"
+        },
+        {
+          "path": "07_both_servo_views_closed.png",
+          "sha256": "d54f17a7958cda72446e0e5beb8c981247e91e32150c202bbea99d236537aa4b"
+        },
+        {
+          "path": "08_reopened_in_same_servo_process.png",
+          "sha256": "677109b9dc50de1349e37c26be3302a110b660f524d6735ba250611a43bc1867"
+        },
+        {
+          "path": "09_final_servo_teardown.png",
+          "sha256": "d54f17a7958cda72446e0e5beb8c981247e91e32150c202bbea99d236537aa4b"
+        },
+        {
+          "path": "diagnostics.json",
+          "sha256": "0c434064b6eca9fab02162eea7a94289e90b1cfbae6d76f9b776dd4a119f2567"
+        },
+        {
+          "path": "final-servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "final-servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "independent-input.surface-frames.json",
+          "sha256": "6f588949f7b2cf646c62469cd48b4d219460f71253c41838a55b548a9f720a99"
+        },
+        {
+          "path": "independent-input.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "loaded-modules.json",
+          "sha256": "3f267d9473aec2f8fec58c1022a8a2b7c2b95ad07605ab22543d5a0b92bbf455"
+        },
+        {
+          "path": "process-result.json",
+          "sha256": "e26a5d95dbd77c3cda799625b1be78762796b1419d5e8be90c57a9bb155b2b2a"
+        },
+        {
+          "path": "run.log",
+          "sha256": "209c47e130a945d0d6ba964ea69133bc11ded13f7983f450c29dc1d6bdd3c254"
+        },
+        {
+          "path": "run.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "run.stdout.log",
+          "sha256": "0ae6a604bfe978150759c2e936457c898a07d95cac23875802b9145561cfb951"
+        },
+        {
+          "path": "scenario.done",
+          "sha256": "284a542ed7b4aaf2ee052c26db19477299ebaa067f28c99f4bf846af0c9ab2f0"
+        },
+        {
+          "path": "servo-closed.surface-frames.json",
+          "sha256": "1bed58cd98da508010f079af827425c0aef7090b11188293058190b994965ac6"
+        },
+        {
+          "path": "servo-closed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reconstructed.surface-frames.json",
+          "sha256": "6760f73a55feedeb89117d1cdea9d7c39113b1d2f9f921ff62eb6693948c8754"
+        },
+        {
+          "path": "servo-reconstructed.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-reopened.surface-frames.json",
+          "sha256": "6760f73a55feedeb89117d1cdea9d7c39113b1d2f9f921ff62eb6693948c8754"
+        },
+        {
+          "path": "servo-reopened.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "servo-resized.surface-frames.json",
+          "sha256": "6760f73a55feedeb89117d1cdea9d7c39113b1d2f9f921ff62eb6693948c8754"
+        },
+        {
+          "path": "servo-resized.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        },
+        {
+          "path": "two-servo-pages.surface-frames.json",
+          "sha256": "6f588949f7b2cf646c62469cd48b4d219460f71253c41838a55b548a9f720a99"
+        },
+        {
+          "path": "two-servo-pages.txt",
+          "sha256": "4215e9cdefc6c444014403c42e3c5a563a7d45163c851d7a97e4444918458dd3"
+        }
+      ]
+    }
+  ],
+  "interpretation": "Existing passes1/2; producer1/1, normalization1/1, Both2/2. Existing intermittent reopenedAwhite reproduced on identical executable. Association with waits observed; small bounded sample does not establish visual causality or a production fix. Explicit cross-API ordering gap remains source-qualified. Default unchanged. Fullall3/defaultB3/release/U9/accessibility gates held."
+}
