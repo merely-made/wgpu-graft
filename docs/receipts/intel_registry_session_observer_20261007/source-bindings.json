@@ -1,0 +1,13 @@
+{
+  "recorded_utc": "2026-10-07T15:07:30.166582+00:00",
+  "workflow_base_sha": "0e491151d6943d04959fe0ad31477602806ed9df",
+  "source_sha256": {
+    ".github/workflows/scry-registry-intel-diagnostic.yml": "77ce0309f0ab3efd7de7aa07eba9eab616deaff56dea29371d58ccc911909cd5",
+    "scripts/observe_scry_mac_session.py": "feffc58422a0532da7480cb09c68431656bf6539b38d9cbb3f16a75130e0afce"
+  },
+  "scry_fixture_sha": "4d8d1d3f8dd450b712960c90b74263a45b46e35b",
+  "registry_helper_sha": "e8ffee2d6b680154cae645d54a340116f08acb5d",
+  "native_receipt_prefix": "release072-intel-session-",
+  "native_observation_result": null,
+  "qualification_scope": "4 pure checks only; no local sampler/MacAPI/Cargo/app execution"
+}
