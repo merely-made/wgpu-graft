@@ -1,0 +1,50 @@
+{
+  "schema": "artifact_sha256_v1",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 20,
+      "sha256": "e97602ab9cac70102245345c5ab0fc9830df8b17f1072b188265a662a3a547ae"
+    },
+    {
+      "path": "checks-result.json",
+      "bytes": 482,
+      "sha256": "1b2d916bbf26d86080c9968a9eb2e4c72861654ab7d6503829603fb456c4a81b"
+    },
+    {
+      "path": "checks.stderr.log",
+      "bytes": 607,
+      "sha256": "b913c91e2b8cd727df9fdb3e19299c01dfb846a8935f2d266d5eacc5e7409510"
+    },
+    {
+      "path": "checks.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "helper-reviewed.py",
+      "bytes": 11811,
+      "sha256": "feffc58422a0532da7480cb09c68431656bf6539b38d9cbb3f16a75130e0afce"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4580,
+      "sha256": "b2635b497a6ba33bbad1d2148fddd430445b15ec05f5c7ab3a47ffaae4f740a5"
+    },
+    {
+      "path": "source-bindings.json",
+      "bytes": 721,
+      "sha256": "b796cba996f89b5c1be6bd9de962480474e07833de88b3802069c8c234b85ac0"
+    },
+    {
+      "path": "verify.py",
+      "bytes": 4503,
+      "sha256": "3c9f6c9fec3344b39369a5aa667bc3d38911b39b3508a7c5e3ac89c8527a77fe"
+    },
+    {
+      "path": "workflow-reviewed.yml",
+      "bytes": 16293,
+      "sha256": "77ce0309f0ab3efd7de7aa07eba9eab616deaff56dea29371d58ccc911909cd5"
+    }
+  ]
+}

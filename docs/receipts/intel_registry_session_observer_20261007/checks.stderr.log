@@ -1,0 +1,9 @@
+test_exact_own_bundle_and_executable_both_required (__main__.ObserverChecks.test_exact_own_bundle_and_executable_both_required) ... ok
+test_existing_batteries_and_identity_unchanged (__main__.ObserverChecks.test_existing_batteries_and_identity_unchanged) ... ok
+test_missing_wrong_type_and_explicit_false (__main__.ObserverChecks.test_missing_wrong_type_and_explicit_false) ... ok
+test_syntax_bounds_and_redacted_projection (__main__.ObserverChecks.test_syntax_bounds_and_redacted_projection) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.602s
+
+OK

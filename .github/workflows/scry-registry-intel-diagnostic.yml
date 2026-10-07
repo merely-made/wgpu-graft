@@ -8,6 +8,11 @@ on:
         type: boolean
         required: false
         default: false
+      observe_session:
+        description: Passively sample session and exact owned-bundle windows during diagnosis
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -121,6 +126,34 @@ jobs:
               raise SystemExit("registry Scry package does not bind the selected release source")
           (proof / "registry-package-identity.json").write_text(json.dumps(facts, indent=2) + "\n")
           PY
+      - name: Start optional passive session and own-window observer
+        id: session_observer
+        if: ${{ inputs.observe_session }}
+        continue-on-error: true # Preserve the native batteries if observer setup fails; stop step reports failure.
+        run: |
+          proof="$RUNNER_TEMP/scry-registry-intel-diagnostic"
+          cp scripts/observe_scry_mac_session.py "$proof/session-observer.py"
+          shasum -a 256 "$proof/session-observer.py" > "$proof/session-observer-helper.sha256"
+          sdk="$(xcrun --show-sdk-path)"
+          {
+            for header in CoreGraphics/CGSession.h CoreGraphics/CGWindow.h AppKit/NSRunningApplication.h; do
+              framework="${header%%/*}"
+              file="$sdk/System/Library/Frameworks/$framework.framework/Headers/${header#*/}"
+              printf 'header=%s\n' "$header"
+              if [ -f "$file" ]; then
+                grep -nE 'CGSessionCopyCurrentDictionary|kCGSession(OnConsole|LoginDone|UserID)Key|CGWindowListCopyWindowInfo|kCGWindow(IsOnscreen|Alpha|Layer|Bounds|OwnerPID)|isActive|isHidden|activationPolicy' "$file" || true
+              else
+                printf 'unavailable; fields remain unknown\n'
+              fi
+            done
+          } > "$proof/session-api-header-evidence.txt"
+          nice -n 10 python3 -B "$proof/session-observer.py" --proof "$proof" --bundle "$SCRY_MAC_APP" > "$proof/session-observer.stdout.log" 2> "$proof/session-observer.stderr.log" &
+          printf '%s\n' "$!" > "$proof/session-observer-pid.txt"
+          for attempt in {1..50}; do
+            if [ -s "$proof/session-observations.jsonl" ]; then break; fi
+            sleep 0.1
+          done
+          test -s "$proof/session-observations.jsonl"
       - name: Run unchanged original ten-mode Scry battery
         id: ordinary_battery
         env:
@@ -237,6 +270,24 @@ jobs:
           codesign -d -r- "$SCRY_MAC_APP" > "$proof/foreground-activity-signing.txt" 2>&1
           cmp "$proof/pre-battery-executable.sha256" "$proof/foreground-activity-executable.sha256"
           exit "$status"
+      - name: Stop and retain passive observer even after native failures
+        if: ${{ always() && inputs.observe_session && steps.session_observer.outcome != 'skipped' }}
+        run: |
+          proof="$RUNNER_TEMP/scry-registry-intel-diagnostic"
+          touch "$proof/session-observer.stop"
+          for attempt in {1..100}; do
+            if [ -s "$proof/session-observer-finish.json" ]; then break; fi
+            sleep 0.1
+          done
+          test -s "$proof/session-observer-finish.json"
+          python3 - "$proof" <<'PY'
+          import json, pathlib, sys
+          proof = pathlib.Path(sys.argv[1])
+          start = json.loads((proof / "session-observer-start.json").read_text())
+          finish = json.loads((proof / "session-observer-finish.json").read_text())
+          if finish["pid"] != start["pid"] or not finish["stop_requested"] or finish["sample_count"] > 600:
+              raise SystemExit("observer completion identity/bound guard failed")
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:

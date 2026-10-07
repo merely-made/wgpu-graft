@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\mark_\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+    "-B",
+    "docs\\receipts\\intel_registry_session_observer_20261007\\verify.py"
+  ],
+  "started_utc": "2026-10-07T15:05:58.103798+00:00",
+  "finished_utc": "2026-10-07T15:05:58.911224+00:00",
+  "elapsed_seconds": 0.8129999999946449,
+  "exit_code": 0,
+  "scope": "pure missing-field/own-path/syntax/baseline-equality checks; no Mac APIs or observer executed"
+}
