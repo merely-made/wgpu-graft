@@ -167,12 +167,31 @@ still receives three frames; resize passes throughout. Request acceptance
 does not prove effective activation or identify the session cause. A separate
 optional passive observer records session and exact owned-window facts without
 changing the native batteries. Its results remain diagnostic evidence.
+The completed passive-observer run
+[37659346531](https://github.com/merely-made/wgpu-graft/actions/runs/37659346531)
+uses wrapper `d38c14eff9c0928f8a1e79f6ab6e0a5467ff6099`. Its four phases
+fail 8/10, 0/2, 8/10 and 1/2. Base capture receives two or three frames
+against five required; resize misses the original three-frame minimum at one
+size in three phases. All 108 observer samples have matching runner/console
+UIDs and a present WindowServer, but null session/window-list API results and
+empty exact-owned-app queries. Lock state remains unknown. These facts establish
+the observer's visibility failure, not its cause or a Scry library defect.
+The next controlled check is the hardware runner's GUI-session admission before
+another unchanged ordinary qualification run. The prior packet's resize
+threshold metadata mistakenly said five; its native source and assertions
+always required three. The new packet records the erratum without rewriting
+earlier evidence.
 
 The local NVIDIA organization runner has an existing saved configuration
 (`wgpu-windows-nvidia`, pool `wgpu-hardware`) but no running listener. Automatic
 approval review rejects starting it with "blocked by policy"; the user has been
 asked to start that existing configuration. No registration or credential
 change was attempted, and the four-host workflow gate remains open.
+Normal pushes and the public Scry release-note update recovered at 17:28 UTC
+on 2026-10-07. Both pending commits reached origin, and the release body was
+read back against the prepared notes. No source tag was moved. Starting the
+NVIDIA runner and retained-output cleanup were not retried after their automatic
+approval rejections.
 
 The separate local Windows registry-only Scry consumer passes Core 23/23,
 Capture 3/3 and the direct first-frame pixel control. Its three exact library
