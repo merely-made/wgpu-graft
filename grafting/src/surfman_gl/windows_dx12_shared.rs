@@ -46,6 +46,11 @@ use windows::Win32::Graphics::Dxgi::Common::{DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SA
 use windows::Win32::Graphics::Dxgi::IDXGIResource1;
 use windows::core::{IUnknown, Interface, PCWSTR};
 
+fn resize_trace_enabled() -> bool {
+    static ENABLED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *ENABLED.get_or_init(|| std::env::var("GRAFT_SERVO_RESIZE_TRACE").as_deref() == Ok("1"))
+}
+
 use crate::{HostWgpuContext, InteropError};
 
 /// One slot of the size-dependent shared-texture state.
@@ -209,6 +214,11 @@ fn blit_source_into_d3d11_texture(
     size: PhysicalSize<u32>,
     finish: bool,
 ) -> Result<(), InteropError> {
+    if resize_trace_enabled() {
+        let actual = surfman_device.context_surface_info(surfman_context)
+            .map(|surface| surface.map(|surface| (surface.id, surface.size, surface.framebuffer_object)));
+        eprintln!("[servo-resize-trace] dx12-source requested={size:?} source-fbo={source_fbo} actual={actual:?}");
+    }
     let surface_texture = unsafe {
         let texture_size = Size2D::new(size.width as i32, size.height as i32);
         let raw = d3d11_texture.clone().into_raw();
@@ -476,6 +486,16 @@ fn blit_fbo_to_gl_texture(
         gl.bind_framebuffer(glow::READ_FRAMEBUFFER, read_framebuffer);
 
         let (w, h) = (size.width as i32, size.height as i32);
+        if resize_trace_enabled() {
+            let mut viewport = [0; 4];
+            let mut scissor = [0; 4];
+            gl.get_parameter_i32_slice(glow::VIEWPORT, &mut viewport);
+            gl.get_parameter_i32_slice(glow::SCISSOR_BOX, &mut scissor);
+            let enabled = gl.is_enabled(glow::SCISSOR_TEST);
+            let read = gl.get_parameter_i32(glow::READ_FRAMEBUFFER_BINDING);
+            let draw = gl.get_parameter_i32(glow::DRAW_FRAMEBUFFER_BINDING);
+            eprintln!("[servo-resize-trace] dx12-blit extent={size:?} viewport={viewport:?} scissor={scissor:?} scissor-enabled={enabled} read-fbo={read} draw-fbo={draw}");
+        }
         gl.blit_framebuffer(0, 0, w, h, 0, 0, w, h, glow::COLOR_BUFFER_BIT, glow::NEAREST);
         gl.flush();
 

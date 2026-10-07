@@ -32,6 +32,12 @@ use winit::dpi::PhysicalSize;
 
 pub use grafting::DiagnosticGpuSync;
 
+// Opt-in observation only: no readback, completion wait or synchronization change.
+fn resize_trace_enabled() -> bool {
+    static ENABLED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *ENABLED.get_or_init(|| std::env::var("GRAFT_SERVO_RESIZE_TRACE").as_deref() == Ok("1"))
+}
+
 #[cfg(feature = "servo")]
 pub use image;
 #[cfg(feature = "servo")]
@@ -105,7 +111,26 @@ impl ServoWgpuRenderingContext {
     pub fn acquire_native_frame(
         &self,
     ) -> Result<grafting::NativeFrame, InteropError> {
-        self.frame_producer.borrow_mut().acquire_frame()
+        let frame = self.frame_producer.borrow_mut().acquire_frame()?;
+        if resize_trace_enabled() {
+            self.trace_surface("acquire-native");
+            if let grafting::NativeFrame::GlFramebufferSource(source) = &frame {
+                eprintln!("[servo-resize-trace] acquisition_generation={} declared={:?}", source.generation(), source.size());
+            }
+        }
+        Ok(frame)
+    }
+
+    fn trace_surface(&self, phase: &str) {
+        if !resize_trace_enabled() {
+            return;
+        }
+        let info = self.frame_producer.borrow().context();
+        let device = info.device.borrow();
+        let context = info.context.borrow();
+        let actual = device.context_surface_info(&context)
+            .map(|surface| surface.map(|surface| (surface.id, surface.size, surface.framebuffer_object)));
+        eprintln!("[servo-resize-trace] phase={phase} context={:p} logical={:?} actual={actual:?}", Rc::as_ptr(&info), self.size());
     }
 
     /// Export the current frame as a cross-device D3D12 shared texture
@@ -145,7 +170,12 @@ impl ServoWgpuRenderingContext {
         let mut device = surfman_rendering_info.device.borrow_mut();
         let mut context = surfman_rendering_info.context.borrow_mut();
         let size = euclid::default::Size2D::new(size.width as i32, size.height as i32);
-        let _ = self.swap_chain.resize(&mut *device, &mut *context, size);
+        let result = self.swap_chain.resize(&mut *device, &mut *context, size);
+        if resize_trace_enabled() {
+            let actual = device.context_surface_info(&context)
+                .map(|surface| surface.map(|surface| (surface.id, surface.size)));
+            eprintln!("[servo-resize-trace] resize-viewport requested={size:?} result={result:?} actual={actual:?}");
+        }
     }
 
     /// Read the full current frame as a CPU-side RGBA image.
@@ -165,6 +195,7 @@ impl ServoWgpuRenderingContext {
 #[cfg(feature = "servo")]
 impl RenderingContext for ServoWgpuRenderingContext {
     fn prepare_for_rendering(&self) {
+        self.trace_surface("prepare-for-rendering");
         self.frame_producer
             .borrow()
             .context()
@@ -190,12 +221,18 @@ impl RenderingContext for ServoWgpuRenderingContext {
             return;
         }
 
+        self.trace_surface("before-resize");
         self.frame_producer.borrow().set_size(size);
 
         let mut device = surfman_rendering_info.device.borrow_mut();
         let mut context = surfman_rendering_info.context.borrow_mut();
         let size = Size2D::new(size.width as i32, size.height as i32);
-        let _ = self.swap_chain.resize(&mut *device, &mut *context, size);
+        let result = self.swap_chain.resize(&mut *device, &mut *context, size);
+        if resize_trace_enabled() {
+            let actual = device.context_surface_info(&context)
+                .map(|surface| surface.map(|surface| (surface.id, surface.size)));
+            eprintln!("[servo-resize-trace] resize requested={size:?} result={result:?} actual={actual:?}");
+        }
     }
 
     fn present(&self) {
@@ -210,11 +247,16 @@ impl RenderingContext for ServoWgpuRenderingContext {
         {
             let mut device = info.device.borrow_mut();
             let mut context = info.context.borrow_mut();
-            let _ = self.swap_chain.swap_buffers(
+            let result = self.swap_chain.swap_buffers(
                 &mut *device,
                 &mut *context,
                 PreserveBuffer::No,
             );
+            if resize_trace_enabled() {
+                let actual = device.context_surface_info(&context)
+                    .map(|surface| surface.map(|surface| (surface.id, surface.size)));
+                eprintln!("[servo-resize-trace] swap result={result:?} actual={actual:?}");
+            }
         }
         info.gleam_gl.finish();
     }
@@ -391,7 +433,13 @@ impl ImportingRenderingContext {
     /// Returns the frame imported during the last `present()`, clearing it so
     /// repeated calls without a new paint return `None`.
     pub fn take_imported(&self) -> Option<ImportedTexture> {
-        self.last_texture.borrow_mut().take()
+        let imported = self.last_texture.borrow_mut().take();
+        if resize_trace_enabled() {
+            if let Some(frame) = &imported {
+                eprintln!("[servo-resize-trace] handoff generation={} declared={:?} texture={:?}", frame.generation, frame.size, frame.texture.size());
+            }
+        }
+        imported
     }
 
     /// Retrieve a hook result, including a failed completion wait. A failed
@@ -440,12 +488,30 @@ impl RenderingContext for ImportingRenderingContext {
         let gl = self.inner.gleam_gl_api();
         while gl.get_error() != gleam::gl::NO_ERROR {}
 
+        if resize_trace_enabled() {
+            self.inner.trace_surface("pre-import");
+            let mut viewport = [0; 4];
+            let mut scissor = [0; 4];
+            // These GL queries each write four integers into four-element arrays.
+            unsafe {
+                gl.get_integer_v(gleam::gl::VIEWPORT, &mut viewport);
+                gl.get_integer_v(gleam::gl::SCISSOR_BOX, &mut scissor);
+            }
+            let enabled = gl.is_enabled(gleam::gl::SCISSOR_TEST);
+            eprintln!("[servo-resize-trace] pre-import viewport={viewport:?} scissor={scissor:?} scissor-enabled={enabled:?}");
+        }
+
         let result = self
             .inner
             .acquire_native_frame()
             .and_then(|frame| self.importer.import_frame(frame, &self.options));
         match result {
-            Ok(imported) => *self.last_texture.borrow_mut() = Some(imported),
+            Ok(imported) => {
+                if resize_trace_enabled() {
+                    eprintln!("[servo-resize-trace] hook-import generation={} declared={:?} texture={:?}", imported.generation, imported.size, imported.texture.size());
+                }
+                *self.last_texture.borrow_mut() = Some(imported);
+            },
             Err(error) => {
                 eprintln!("[adapter] present-hook import failed: {error:?}");
                 *self.last_error.borrow_mut() = Some(error);
