@@ -1,0 +1,39 @@
+{
+  "command": [
+    "cargo",
+    "+1.97.1",
+    "check",
+    "--locked",
+    "-p",
+    "demo-servo-winit",
+    "--no-default-features",
+    "--features",
+    "wgpu-30,servo",
+    "--target-dir",
+    "C:/t/cargo-targets/wgpu-graft",
+    "-j1"
+  ],
+  "environment": {
+    "RUSTFLAGS": "-D warnings",
+    "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+    "CMAKE_GENERATOR": "Visual Studio 17 2022",
+    "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+  },
+  "priority": "BelowNormal",
+  "owned_pid": 19648,
+  "started_utc": "2026-10-07T10:21:16.074025+00:00",
+  "ended_utc": "2026-10-07T10:21:29.649559+00:00",
+  "elapsed_seconds": 13.578000000008615,
+  "exit_code": 0,
+  "all_inputs_unchanged": true,
+  "input_count": 40,
+  "scope": "Windows typed descriptor-only opt-in trace; no native resource descriptor, fence fix, pixel, AT or release acceptance",
+  "input_manifest": "resource-desc-trace-inputs.json",
+  "input_manifest_sha256": "f2fff34775160d6e69fb0c4055fb7e6a8030d90bff4334584d29ff154783d66b",
+  "input_archive": "resource-desc-trace-inputs.zip",
+  "input_archive_sha256": "14b9848f0b6e1d108f8bd9a667c56d15742dfb042f6f4a68438088ed965c3e22",
+  "source_diff": "resource-desc-trace-source.diff",
+  "source_diff_sha256": "870ded8f93921216962b8d1732001aacd80ba8b040b19fd63f4e6da87746570a",
+  "log": "resource-desc-trace-typed.log",
+  "log_sha256": "c7559c119daa65c5f8f7d70da5ede3c4e5e78e662f31c651acab74b8b78eae1d"
+}

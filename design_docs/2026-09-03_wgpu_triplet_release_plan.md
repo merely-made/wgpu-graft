@@ -88,6 +88,18 @@ Native tracing must identify the faulty boundary before changing those states
 or claiming a fix. Native pixels, accessibility and consumer release gates
 remain open; this is an observation checkpoint without a registry release.
 
+The descriptor-only follow-up adds opt-in `ID3D12Resource::GetDesc` tracing
+after opening the shared texture. Its cached Windows wgpu-30/Servo typed row
+passes with forty unchanged inputs. Before a two-way GPU fence implementation,
+the actual shared resource must qualify
+[`ALLOW_SIMULTANEOUS_ACCESS` and COMMON decay](https://learn.microsoft.com/en-us/windows/win32/direct3d12/using-resource-barriers-to-synchronize-resource-states-in-direct3d-12).
+The canonical normalizer only reads the private shared alias and writes a fresh
+output. Its initial wgpu transition is explicit, so absent that flag a tracked
+COMMON handback requires a separate design. Existing Windows COM features
+already cover D3D11 immediate-context shared fences and the host D3D12 queue.
+See the [descriptor receipt](../docs/receipts/servo_current_20261007/README.md#shared-resource-descriptor-observation-2026-10-07).
+This is a resource-state investigation gate, not a pixel or ordering fix.
+
 ### 2026-10-06 supplier hardware follow-up
 
 The active-session preflight changes are pushed: Weld `b5cf043` and Scry
