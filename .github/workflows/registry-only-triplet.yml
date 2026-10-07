@@ -55,6 +55,7 @@ jobs:
     env:
       WGPU_BACKEND: dx12
       CEF_CACHE_ROOT: C:\Users\mark_\Code\cef-cache\wgpu-weld
+      CARGO_BUILD_JOBS: "1"
 
     steps:
       - uses: actions/checkout@v4
@@ -63,9 +64,24 @@ jobs:
       - name: Select Rust 1.97.1
         shell: pwsh
         run: |
+          [System.Diagnostics.Process]::GetCurrentProcess().PriorityClass = 'BelowNormal'
+          $busy = Get-CimInstance Win32_Process | Where-Object {
+            $_.Name -in @('cargo.exe', 'rustc.exe', 'cl.exe', 'link.exe',
+              'demo-win.exe', 'demo-servo-winit.exe', 'demo-weld-win.exe')
+          }
+          if ($busy) {
+            $owners = ($busy | ForEach-Object { "$($_.Name) PID=$($_.ProcessId)" }) -join ', '
+            throw "Shared build/native slot is occupied: $owners"
+          }
           rustup toolchain install 1.97.1 --profile minimal
           rustup override set 1.97.1
           rustc --version
+      - name: Checkout immutable Graft release fixture
+        uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-graft
+          ref: 816f3e7857afee863200e1c25b300c43b1532aae
+          path: .registry-proof-source/graft
       - uses: actions/checkout@v4
         with:
           repository: merely-made/wgpu-scry
@@ -82,18 +98,42 @@ jobs:
       - name: Stage and verify registry-only consumers
         shell: pwsh
         run: |
+          [System.Diagnostics.Process]::GetCurrentProcess().PriorityClass = 'BelowNormal'
+          $busy = Get-CimInstance Win32_Process | Where-Object {
+            $_.Name -in @('cargo.exe', 'rustc.exe', 'cl.exe', 'link.exe',
+              'demo-win.exe', 'demo-servo-winit.exe', 'demo-weld-win.exe')
+          }
+          if ($busy) {
+            $owners = ($busy | ForEach-Object { "$($_.Name) PID=$($_.ProcessId)" }) -join ', '
+            throw "Shared build/native slot is occupied: $owners"
+          }
           $root = Join-Path $env:RUNNER_TEMP 'registry-triplet'
-          python scripts/stage_registry_triplet.py --kind graft-servo --source . --destination "$root\graft" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          python scripts/stage_registry_triplet.py --kind graft-servo --source .registry-proof-source/graft --destination "$root\graft" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python scripts/stage_registry_triplet.py --kind scry-win --source .registry-proof-source/scry --destination "$root\scry" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python scripts/stage_registry_triplet.py --kind weld-win --source .registry-proof-source/weld --destination "$root\weld" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python scripts/verify_registry_triplet.py --consumer "$root\graft" --receipt-dir "$root\receipts\graft" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION --allow-servo-git
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python scripts/verify_registry_triplet.py --consumer "$root\scry" --receipt-dir "$root\receipts\scry" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python scripts/verify_registry_triplet.py --consumer "$root\weld" --receipt-dir "$root\receipts\weld" --grafting-version $env:GRAFTING_VERSION --scrying-version $env:SCRYING_VERSION --welding-version $env:WELDING_VERSION
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Run Servo registry Graft live frame, input, and resize gate
         shell: pwsh
         run: |
+          [System.Diagnostics.Process]::GetCurrentProcess().PriorityClass = 'BelowNormal'
+          $busy = Get-CimInstance Win32_Process | Where-Object {
+            $_.Name -in @('cargo.exe', 'rustc.exe', 'cl.exe', 'link.exe',
+              'demo-win.exe', 'demo-servo-winit.exe', 'demo-weld-win.exe')
+          }
+          if ($busy) {
+            $owners = ($busy | ForEach-Object { "$($_.Name) PID=$($_.ProcessId)" }) -join ', '
+            throw "Shared build/native slot is occupied: $owners"
+          }
           $stage = Join-Path $env:RUNNER_TEMP 'registry-triplet\graft'
-          $env:CARGO_TARGET_DIR = Join-Path $env:RUNNER_TEMP 'registry-triplet-target\graft'
+          $env:CARGO_TARGET_DIR = 'C:\t\cargo-targets\wgpu-graft'
           Push-Location $stage
           try {
             & .\scripts\smoke-demo.ps1 -Seconds 120 2>&1 |
@@ -103,8 +143,17 @@ jobs:
       - name: Run WebView2 live frame, input, resize, script, and cookie battery
         shell: pwsh
         run: |
+          [System.Diagnostics.Process]::GetCurrentProcess().PriorityClass = 'BelowNormal'
+          $busy = Get-CimInstance Win32_Process | Where-Object {
+            $_.Name -in @('cargo.exe', 'rustc.exe', 'cl.exe', 'link.exe',
+              'demo-win.exe', 'demo-servo-winit.exe', 'demo-weld-win.exe')
+          }
+          if ($busy) {
+            $owners = ($busy | ForEach-Object { "$($_.Name) PID=$($_.ProcessId)" }) -join ', '
+            throw "Shared build/native slot is occupied: $owners"
+          }
           $stage = Join-Path $env:RUNNER_TEMP 'registry-triplet\scry'
-          $env:CARGO_TARGET_DIR = Join-Path $env:RUNNER_TEMP 'registry-triplet-target\scry'
+          $env:CARGO_TARGET_DIR = 'C:\t\cargo-targets\wgpu-scry'
           Push-Location $stage
           try {
             & .\scripts\test-win.ps1 -Suite Core -TimeoutSeconds 120 2>&1 |
@@ -117,11 +166,21 @@ jobs:
       - name: Build and run CEF host-owned-wgpu parity battery
         shell: pwsh
         run: |
+          [System.Diagnostics.Process]::GetCurrentProcess().PriorityClass = 'BelowNormal'
+          $busy = Get-CimInstance Win32_Process | Where-Object {
+            $_.Name -in @('cargo.exe', 'rustc.exe', 'cl.exe', 'link.exe',
+              'demo-win.exe', 'demo-servo-winit.exe', 'demo-weld-win.exe')
+          }
+          if ($busy) {
+            $owners = ($busy | ForEach-Object { "$($_.Name) PID=$($_.ProcessId)" }) -join ', '
+            throw "Shared build/native slot is occupied: $owners"
+          }
           $stage = Join-Path $env:RUNNER_TEMP 'registry-triplet\weld'
-          $env:CARGO_TARGET_DIR = Join-Path $env:RUNNER_TEMP 'registry-triplet-target\weld'
+          $env:CARGO_TARGET_DIR = 'C:\t\cargo-targets\wgpu-weld'
           Push-Location $stage
           try {
-            cargo build --locked
+            cargo build --locked -j 1
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             $archive = Get-ChildItem -LiteralPath $env:CEF_CACHE_ROOT -Recurse -File -Filter archive.json |
               Where-Object { $_.Directory.Name -eq 'cef_windows_x86_64' } |
               Sort-Object LastWriteTime -Descending | Select-Object -First 1
@@ -166,6 +225,12 @@ jobs:
       - name: Serialize host hardware use
         uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
+      - name: Checkout immutable Graft release fixture
+        uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-graft
+          ref: 816f3e7857afee863200e1c25b300c43b1532aae
+          path: .registry-proof-source/graft
       - uses: actions/checkout@v4
         with:
           repository: merely-made/wgpu-scry
@@ -206,7 +271,7 @@ jobs:
       - name: Stage and verify registry-only consumers
         run: |
           root="$RUNNER_TEMP/registry-triplet"
-          python3 scripts/stage_registry_triplet.py --kind graft-servo --source . --destination "$root/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/stage_registry_triplet.py --kind graft-servo --source .registry-proof-source/graft --destination "$root/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
           python3 scripts/stage_registry_triplet.py --kind scry-mac --source .registry-proof-source/scry --destination "$root/scry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
           python3 scripts/stage_registry_triplet.py --kind weld-mac --source .registry-proof-source/weld --destination "$root/weld" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
           python3 scripts/verify_registry_triplet.py --consumer "$root/graft" --receipt-dir "$root/receipts/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION" --allow-servo-git
@@ -271,6 +336,12 @@ jobs:
       - name: Serialize host hardware use
         uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
+      - name: Checkout immutable Graft release fixture
+        uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-graft
+          ref: 816f3e7857afee863200e1c25b300c43b1532aae
+          path: .registry-proof-source/graft
       - uses: actions/checkout@v4
         with:
           repository: merely-made/wgpu-scry
@@ -311,7 +382,7 @@ jobs:
       - name: Stage and verify registry-only consumers
         run: |
           root="$RUNNER_TEMP/registry-triplet"
-          python3 scripts/stage_registry_triplet.py --kind graft-servo --source . --destination "$root/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/stage_registry_triplet.py --kind graft-servo --source .registry-proof-source/graft --destination "$root/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
           python3 scripts/stage_registry_triplet.py --kind scry-mac --source .registry-proof-source/scry --destination "$root/scry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
           python3 scripts/stage_registry_triplet.py --kind weld-mac --source .registry-proof-source/weld --destination "$root/weld" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
           python3 scripts/verify_registry_triplet.py --consumer "$root/graft" --receipt-dir "$root/receipts/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION" --allow-servo-git
@@ -380,6 +451,12 @@ jobs:
       - name: Serialize host hardware use
         uses: ./.github/actions/host-hardware-lock
       - uses: dtolnay/rust-toolchain@1.97.1
+      - name: Checkout immutable Graft release fixture
+        uses: actions/checkout@v4
+        with:
+          repository: merely-made/wgpu-graft
+          ref: 816f3e7857afee863200e1c25b300c43b1532aae
+          path: .registry-proof-source/graft
       - uses: actions/checkout@v4
         with:
           repository: merely-made/wgpu-scry
@@ -398,7 +475,7 @@ jobs:
       - name: Stage and verify registry-only consumers
         run: |
           root="$RUNNER_TEMP/registry-triplet"
-          python3 scripts/stage_registry_triplet.py --kind graft-servo --source . --destination "$root/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
+          python3 scripts/stage_registry_triplet.py --kind graft-servo --source .registry-proof-source/graft --destination "$root/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
           python3 scripts/stage_registry_triplet.py --kind scry-wpe --source .registry-proof-source/scry --destination "$root/scry" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
           python3 scripts/stage_registry_triplet.py --kind weld-linux --source .registry-proof-source/weld --destination "$root/weld" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION"
           python3 scripts/verify_registry_triplet.py --consumer "$root/graft" --receipt-dir "$root/receipts/graft" --grafting-version "$GRAFTING_VERSION" --scrying-version "$SCRYING_VERSION" --welding-version "$WELDING_VERSION" --allow-servo-git
@@ -418,8 +495,10 @@ jobs:
           export CARGO_TARGET_DIR="$RUNNER_TEMP/registry-triplet-target/scry"
           cd "$stage"
           set -o pipefail
-          cargo test --locked --features wpe --test wpe_to_vulkan_roundtrip -- --ignored --nocapture | tee "$RUNNER_TEMP/registry-wpe-vulkan.log"
-          cargo test --locked --features wpe --test wpe_input -- --ignored --nocapture | tee "$RUNNER_TEMP/registry-wpe-input.log"
+          cargo test --locked --features wpe --test wpe_to_vulkan_roundtrip -- --ignored --nocapture 2>&1 | tee "$RUNNER_TEMP/registry-wpe-vulkan.log"
+          cargo test --locked --features wpe --test wpe_input -- --ignored --nocapture 2>&1 | tee "$RUNNER_TEMP/registry-wpe-input.log"
+          grep -Fx "NATIVE WPE GATE PASS: wpe_to_vulkan_roundtrip" "$RUNNER_TEMP/registry-wpe-vulkan.log"
+          grep -Fx "NATIVE WPE GATE PASS: wpe_input" "$RUNNER_TEMP/registry-wpe-input.log"
           ! grep -Eq '^SKIP:' "$RUNNER_TEMP/registry-wpe-vulkan.log" "$RUNNER_TEMP/registry-wpe-input.log"
       - name: Build and run CEF host-owned-wgpu parity battery
         run: |

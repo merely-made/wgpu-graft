@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\mark_\Code\repos\wgpu-graft\docs\receipts\registry_harness_20261007\verify.py", line 13, in <module>
+    import yaml
+ModuleNotFoundError: No module named 'yaml'

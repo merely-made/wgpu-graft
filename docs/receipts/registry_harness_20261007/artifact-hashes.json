@@ -1,0 +1,42 @@
+{
+  ".gitattributes": {
+    "bytes": 20,
+    "sha256": "e97602ab9cac70102245345c5ab0fc9830df8b17f1072b188265a662a3a547ae"
+  },
+  "README.md": {
+    "bytes": 2138,
+    "sha256": "16451e3780f6d0d10ce10b2590ca63ed0f8ed03fdaf8b3ace79b027bc18a423d"
+  },
+  "syntax-result.json": {
+    "bytes": 326,
+    "sha256": "21cb83edcaa2d383a4501f7560323b44dff6309b8806abee84734355c4b645c8"
+  },
+  "verification-interpreter-control-result.json": {
+    "bytes": 1320,
+    "sha256": "af5aecd0d179587d560264e3ea9c7f82cbc27f66f46c82e4ee8cf85308c11c88"
+  },
+  "verification-interpreter-control-stderr.log": {
+    "bytes": 217,
+    "sha256": "b8514d5849c0f6bce7f39483fe81adc94be57fbcb6f1b91759e42ceec1cf9081"
+  },
+  "verification-interpreter-control-stdout.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "verification-result.json": {
+    "bytes": 1443,
+    "sha256": "15868ffd34e70a45636336ee5c772255dfb28279961b639a93f0e6acbc2eeea9"
+  },
+  "verification-stderr.log": {
+    "bytes": 1165,
+    "sha256": "2ae9f0fed0195d21bce0cb88e19220db31678f5332eb4cc8b680da256acc64f0"
+  },
+  "verification-stdout.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "verify.py": {
+    "bytes": 7466,
+    "sha256": "227a5d235942c7fb016ffb762128fba9b38bb31da0ba409d59c1804f2b67b443"
+  }
+}
