@@ -1,0 +1,36 @@
+{
+  "artifacts": [
+    {
+      "path": "resource-desc-trace-inputs.json",
+      "bytes": 6829,
+      "sha256": "f2fff34775160d6e69fb0c4055fb7e6a8030d90bff4334584d29ff154783d66b"
+    },
+    {
+      "path": "resource-desc-trace-inputs.zip",
+      "bytes": 206941,
+      "sha256": "14b9848f0b6e1d108f8bd9a667c56d15742dfb042f6f4a68438088ed965c3e22"
+    },
+    {
+      "path": "resource-desc-trace-source.diff",
+      "bytes": 1046,
+      "sha256": "870ded8f93921216962b8d1732001aacd80ba8b040b19fd63f4e6da87746570a"
+    },
+    {
+      "path": "resource-desc-trace-typed.log",
+      "bytes": 574,
+      "sha256": "c7559c119daa65c5f8f7d70da5ede3c4e5e78e662f31c651acab74b8b78eae1d"
+    },
+    {
+      "path": "resource-desc-trace-typed-result.json",
+      "bytes": 1451,
+      "sha256": "030d95ec156900acb7ce334c53376d59ee70662241861f04c6b7a08419b02a27"
+    }
+  ],
+  "all_artifact_hashes_pass": true,
+  "raw_zip_input_count": 40,
+  "all_zip_and_current_input_hashes_pass": true,
+  "runtime_source_sha256": "b51e2ad08db04754f3cc372dfdcd4a26fc60db77548335862a8bcac366ca2ff1",
+  "native_descriptor_measured": false,
+  "default_behavior_changed": false,
+  "primary_reference": "https://learn.microsoft.com/en-us/windows/win32/direct3d12/using-resource-barriers-to-synchronize-resource-states-in-direct3d-12"
+}

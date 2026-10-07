@@ -415,6 +415,20 @@ fn init_size_dependent_state(
         let dx12_resource = dx12_resource
             .ok_or_else(|| InteropError::Dx12("OpenSharedHandle returned null resource".into()))?;
 
+        if resize_trace_enabled() {
+            let desc = dx12_resource.GetDesc();
+            eprintln!(
+                "graft-servo-resize dx12-resource width={} height={} flags={:#x} layout={:?} format={:?} mips={} samples={}",
+                desc.Width,
+                desc.Height,
+                desc.Flags.0,
+                desc.Layout,
+                desc.Format,
+                desc.MipLevels,
+                desc.SampleDesc.Count,
+            );
+        }
+
         // The NT handle has been opened on both sides; close our copy.
         let _ = CloseHandle(nt_handle);
 

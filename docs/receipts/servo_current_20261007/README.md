@@ -159,3 +159,36 @@ compiler result. No donor application ran. The [input index](resize-trace-inputs
 and [evidence index](resize-trace-evidence.json) bind this checkpoint separately
 from the earlier A native qualification. Formatting and wider platform gates
 retain their prior scope; this typed row does not qualify a pixel fix or AT.
+
+### Shared resource descriptor observation (2026-10-07)
+
+The same opt-in trace now queries `ID3D12Resource::GetDesc` immediately after
+`OpenSharedHandle`, recording actual dimensions, flags, layout, format, mip
+count and sample count. This adds observation only. The [typed result](resource-desc-trace-typed-result.json)
+passes the same Windows wgpu-30/Servo command at BelowNormal `-j1` in 13.58s,
+with all forty [inputs](resource-desc-trace-inputs.json) unchanged. The
+[raw source archive](resource-desc-trace-inputs.zip), [diff](resource-desc-trace-source.diff),
+[log](resource-desc-trace-typed.log) and [evidence index](resource-desc-trace-evidence.json)
+bind this checkpoint. No native descriptor value has been measured here.
+
+The resource-state gate precedes any fence implementation. Microsoft documents
+[automatic COMMON decay](https://learn.microsoft.com/en-us/windows/win32/direct3d12/using-resource-barriers-to-synchronize-resource-states-in-direct3d-12)
+for simultaneous-access textures after GPU command-list execution, including
+explicit transitions. The first wgpu 30 read explicitly transitions the shared
+alias from UNINITIALIZED/COMMON to RESOURCE. Subsequent canonical normalization
+uses only shader reads of this private alias, creating a fresh output texture;
+COMMON can implicitly promote to those reads. Actual
+`D3D12_RESOURCE_FLAG_ALLOW_SIMULTANEOUS_ACCESS` must be observed before relying
+on that decay. Without it, a coherent tracked COMMON handback is required;
+queue fences alone do not establish the resource state.
+
+The existing Windows features already expose `ID3D11Device5::OpenSharedFence`,
+`ID3D11DeviceContext4::Signal/Wait` and D3D12 shared fences. The producer device
+comes from Surfman's ANGLE device; mozangle 0.7.1's `Renderer11::flush` uses its
+immediate context, also obtainable with `GetImmediateContext`. The host queue
+is obtained through `Queue::as_hal::<Dx12>().as_raw()`, as in `sync_dx12.rs`.
+Those are implementation seams, not a qualified synchronization fix. A
+two-way GPU fence must gate normalization on completed producer writes and
+the next producer overwrite on completed normalization, preserving each exact
+allocation and its fence lifetime through resize/retirement. CPU readback,
+default policy changes and GL state-custody changes are outside this checkpoint.
