@@ -1,0 +1,777 @@
+{
+  "observed_utc": "2026-10-07T13:59:20.855756+00:00",
+  "prior_run": 33916390001,
+  "failed_run": 37631036166,
+  "artifacts": [
+    {
+      "run": 33916390001,
+      "artifact_id": 9953699791,
+      "label": "prior-m4",
+      "artifact_zip_sha256": "aa7fa2431a90f1581f56947eef3f1fa79483c35ed1448f3f7c1c031f9fb9931b",
+      "artifact_zip_bytes": 1221036,
+      "lock_path": "registry-triplet/receipts/graft/Cargo.lock",
+      "lock_sha256": "0dc0ebd8ff630f92f96306753f623ac35df44b1fab88b7e8814b552e2695b99c",
+      "selected_packages": [
+        {
+          "name": "der",
+          "version": "0.8.1",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "const-oid",
+            "pem-rfc7468",
+            "zeroize"
+          ]
+        },
+        {
+          "name": "grafting",
+          "version": "0.6.0",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "ash",
+            "dpi",
+            "euclid",
+            "foreign-types-shared",
+            "gl_generator",
+            "gleam",
+            "glow 0.17.0",
+            "image",
+            "libc",
+            "metal",
+            "objc2 0.6.4",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "surfman",
+            "thiserror 2.0.20",
+            "wgpu 28.0.0",
+            "wgpu 29.0.4",
+            "wgpu 30.0.1",
+            "wgpu-hal 28.0.1",
+            "wgpu-hal 29.0.4",
+            "wgpu-hal 30.0.1",
+            "windows 0.62.2",
+            "wio"
+          ]
+        },
+        {
+          "name": "pkcs1",
+          "version": "0.8.0-rc.4",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "der",
+            "spki"
+          ]
+        },
+        {
+          "name": "pkcs8",
+          "version": "0.11.0",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "der",
+            "spki"
+          ]
+        },
+        {
+          "name": "rsa",
+          "version": "0.10.0-rc.18",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "const-oid",
+            "crypto-bigint",
+            "crypto-primes",
+            "digest 0.11.3",
+            "pkcs1",
+            "pkcs8",
+            "rand_core 0.10.1",
+            "signature",
+            "spki",
+            "zeroize"
+          ]
+        },
+        {
+          "name": "scrying",
+          "version": "0.7.1",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "ash",
+            "block2 0.6.2",
+            "dispatch2",
+            "dpi",
+            "grafting",
+            "image",
+            "libc",
+            "objc2 0.6.4",
+            "objc2-app-kit 0.3.2",
+            "objc2-core-foundation",
+            "objc2-core-graphics",
+            "objc2-core-media",
+            "objc2-core-video",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "objc2-screen-capture-kit",
+            "objc2-web-kit",
+            "palette",
+            "pkg-config",
+            "thiserror 2.0.20",
+            "webview2-com",
+            "wgpu 29.0.4",
+            "wgpu-hal 29.0.4",
+            "windows 0.62.2",
+            "windows-numerics 0.3.1"
+          ]
+        },
+        {
+          "name": "spki",
+          "version": "0.8.0",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "base64ct",
+            "der"
+          ]
+        },
+        {
+          "name": "welding",
+          "version": "0.14.1",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "dpi",
+            "grafting",
+            "libc",
+            "log",
+            "objc2 0.6.4",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "thiserror 2.0.20",
+            "wgpu 29.0.4",
+            "wgpu-hal 29.0.4",
+            "windows 0.62.2"
+          ]
+        }
+      ],
+      "retained_lock": {
+        "file": "prior-m4-graft-Cargo.lock",
+        "bytes": 266460,
+        "sha256": "0dc0ebd8ff630f92f96306753f623ac35df44b1fab88b7e8814b552e2695b99c"
+      },
+      "native_log": {
+        "file": "prior-m4-registry-graft.log",
+        "bytes": 691,
+        "sha256": "5adbda6c8f8da3a91dabc040d53909a8dd139dd574d4053af57c75abbf8f901d"
+      },
+      "normal_tree": {
+        "file": "prior-m4-graft-cargo-tree.txt",
+        "bytes": 333993,
+        "sha256": "35ee1b8bd453ff83f775b97f6f19237d95ae0a1e813b6709990d3fee1ed3f100",
+        "wgpu_versions": [
+          "29.0.4"
+        ]
+      }
+    },
+    {
+      "run": 37631036166,
+      "artifact_id": 11487240199,
+      "label": "failed-m4",
+      "artifact_zip_sha256": "a967640c9f9b2ebc2d908d454386d234972d5946bc0b20afd25cd4ae4273e83f",
+      "artifact_zip_bytes": 1190673,
+      "lock_path": "registry-triplet/receipts/graft/Cargo.lock",
+      "lock_sha256": "dad34faa6c60b91b3d1ec325cbaaf5843604a5b5f1ff69094a91507e94f55edc",
+      "selected_packages": [
+        {
+          "name": "der",
+          "version": "0.8.2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "const-oid",
+            "pem-rfc7468",
+            "zeroize"
+          ]
+        },
+        {
+          "name": "grafting",
+          "version": "0.6.0",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "ash",
+            "dpi",
+            "euclid",
+            "foreign-types-shared",
+            "gl_generator",
+            "gleam",
+            "glow 0.17.0",
+            "image",
+            "libc",
+            "metal",
+            "objc2 0.6.5",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "surfman",
+            "thiserror 2.0.21",
+            "wgpu 28.0.0",
+            "wgpu 29.0.4",
+            "wgpu 30.0.1",
+            "wgpu-hal 28.0.1",
+            "wgpu-hal 29.0.4",
+            "wgpu-hal 30.0.1",
+            "windows 0.62.2",
+            "wio"
+          ]
+        },
+        {
+          "name": "pkcs1",
+          "version": "0.8.0-rc.5",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "der",
+            "spki"
+          ]
+        },
+        {
+          "name": "pkcs8",
+          "version": "0.11.0",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "der",
+            "spki"
+          ]
+        },
+        {
+          "name": "rsa",
+          "version": "0.10.0-rc.18",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "const-oid",
+            "crypto-bigint",
+            "crypto-primes",
+            "digest 0.11.3",
+            "pkcs1",
+            "pkcs8",
+            "rand_core 0.10.1",
+            "signature",
+            "spki",
+            "zeroize"
+          ]
+        },
+        {
+          "name": "scrying",
+          "version": "0.7.2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "ash",
+            "block2 0.6.2",
+            "dispatch2",
+            "dpi",
+            "grafting",
+            "image",
+            "libc",
+            "objc2 0.6.5",
+            "objc2-app-kit 0.3.2",
+            "objc2-core-foundation",
+            "objc2-core-graphics",
+            "objc2-core-media",
+            "objc2-core-video",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "objc2-screen-capture-kit",
+            "objc2-web-kit",
+            "palette",
+            "pkg-config",
+            "serde_json",
+            "thiserror 2.0.21",
+            "webview2-com",
+            "wgpu 29.0.4",
+            "wgpu-hal 29.0.4",
+            "windows 0.62.2",
+            "windows-numerics 0.3.1"
+          ]
+        },
+        {
+          "name": "spki",
+          "version": "0.8.1",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "base64ct",
+            "der"
+          ]
+        },
+        {
+          "name": "welding",
+          "version": "0.14.1",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "dpi",
+            "grafting",
+            "libc",
+            "log",
+            "objc2 0.6.5",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "thiserror 2.0.21",
+            "wgpu 29.0.4",
+            "wgpu-hal 29.0.4",
+            "windows 0.62.2"
+          ]
+        }
+      ],
+      "retained_lock": {
+        "file": "failed-m4-graft-Cargo.lock",
+        "bytes": 268121,
+        "sha256": "dad34faa6c60b91b3d1ec325cbaaf5843604a5b5f1ff69094a91507e94f55edc"
+      },
+      "metadata_sha256": "45358bcb36dc9867c08e260950c3aca63691116f43ae709e8cdbad6ab8f37f2a",
+      "rsa_parent_graph": [
+        {
+          "name": "rsa",
+          "version": "0.10.0-rc.18",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "parents": [
+            "servo-script@0.5.0"
+          ]
+        },
+        {
+          "name": "servo-script",
+          "version": "0.5.0",
+          "source": "git+https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019",
+          "parents": [
+            "servo@0.5.0",
+            "servo-layout@0.5.0"
+          ]
+        },
+        {
+          "name": "servo",
+          "version": "0.5.0",
+          "source": "git+https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019",
+          "parents": [
+            "demo-servo-winit@0.1.0",
+            "servo-wgpu-interop-adapter@0.1.0"
+          ]
+        },
+        {
+          "name": "servo-layout",
+          "version": "0.5.0",
+          "source": "git+https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019",
+          "parents": [
+            "servo@0.5.0"
+          ]
+        },
+        {
+          "name": "demo-servo-winit",
+          "version": "0.1.0",
+          "source": null,
+          "parents": []
+        },
+        {
+          "name": "servo-wgpu-interop-adapter",
+          "version": "0.1.0",
+          "source": null,
+          "parents": [
+            "demo-servo-winit@0.1.0"
+          ]
+        }
+      ],
+      "normal_tree": {
+        "file": "failed-m4-graft-cargo-tree.txt",
+        "bytes": 335231,
+        "sha256": "524a42eefae9ac126b7f9de83da8e13c9be96fb1edf7008452907577cf602923",
+        "wgpu_versions": [
+          "29.0.4"
+        ]
+      }
+    },
+    {
+      "run": 37631036166,
+      "artifact_id": 11486083312,
+      "label": "failed-intel",
+      "artifact_zip_sha256": "c2f0ff7954005c9480d818690c28aea2caf63708aced2dbe086ce0d858059131",
+      "artifact_zip_bytes": 1190768,
+      "lock_path": "registry-triplet/receipts/graft/Cargo.lock",
+      "lock_sha256": "dad34faa6c60b91b3d1ec325cbaaf5843604a5b5f1ff69094a91507e94f55edc",
+      "selected_packages": [
+        {
+          "name": "der",
+          "version": "0.8.2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "const-oid",
+            "pem-rfc7468",
+            "zeroize"
+          ]
+        },
+        {
+          "name": "grafting",
+          "version": "0.6.0",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "ash",
+            "dpi",
+            "euclid",
+            "foreign-types-shared",
+            "gl_generator",
+            "gleam",
+            "glow 0.17.0",
+            "image",
+            "libc",
+            "metal",
+            "objc2 0.6.5",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "surfman",
+            "thiserror 2.0.21",
+            "wgpu 28.0.0",
+            "wgpu 29.0.4",
+            "wgpu 30.0.1",
+            "wgpu-hal 28.0.1",
+            "wgpu-hal 29.0.4",
+            "wgpu-hal 30.0.1",
+            "windows 0.62.2",
+            "wio"
+          ]
+        },
+        {
+          "name": "pkcs1",
+          "version": "0.8.0-rc.5",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "der",
+            "spki"
+          ]
+        },
+        {
+          "name": "pkcs8",
+          "version": "0.11.0",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "der",
+            "spki"
+          ]
+        },
+        {
+          "name": "rsa",
+          "version": "0.10.0-rc.18",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "const-oid",
+            "crypto-bigint",
+            "crypto-primes",
+            "digest 0.11.3",
+            "pkcs1",
+            "pkcs8",
+            "rand_core 0.10.1",
+            "signature",
+            "spki",
+            "zeroize"
+          ]
+        },
+        {
+          "name": "scrying",
+          "version": "0.7.2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "ash",
+            "block2 0.6.2",
+            "dispatch2",
+            "dpi",
+            "grafting",
+            "image",
+            "libc",
+            "objc2 0.6.5",
+            "objc2-app-kit 0.3.2",
+            "objc2-core-foundation",
+            "objc2-core-graphics",
+            "objc2-core-media",
+            "objc2-core-video",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "objc2-screen-capture-kit",
+            "objc2-web-kit",
+            "palette",
+            "pkg-config",
+            "serde_json",
+            "thiserror 2.0.21",
+            "webview2-com",
+            "wgpu 29.0.4",
+            "wgpu-hal 29.0.4",
+            "windows 0.62.2",
+            "windows-numerics 0.3.1"
+          ]
+        },
+        {
+          "name": "spki",
+          "version": "0.8.1",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "base64ct",
+            "der"
+          ]
+        },
+        {
+          "name": "welding",
+          "version": "0.14.1",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "dpi",
+            "grafting",
+            "libc",
+            "log",
+            "objc2 0.6.5",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "thiserror 2.0.21",
+            "wgpu 29.0.4",
+            "wgpu-hal 29.0.4",
+            "windows 0.62.2"
+          ]
+        }
+      ]
+    },
+    {
+      "run": 37631036166,
+      "artifact_id": 11486128689,
+      "label": "failed-radv",
+      "artifact_zip_sha256": "6e4ec136bd25c719c4e5da63e8c8a5fd6b32492bfe3934255e7b09ff360626f5",
+      "artifact_zip_bytes": 1101445,
+      "lock_path": "registry-triplet/receipts/graft/Cargo.lock",
+      "lock_sha256": "dad34faa6c60b91b3d1ec325cbaaf5843604a5b5f1ff69094a91507e94f55edc",
+      "selected_packages": [
+        {
+          "name": "der",
+          "version": "0.8.2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "const-oid",
+            "pem-rfc7468",
+            "zeroize"
+          ]
+        },
+        {
+          "name": "grafting",
+          "version": "0.6.0",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "ash",
+            "dpi",
+            "euclid",
+            "foreign-types-shared",
+            "gl_generator",
+            "gleam",
+            "glow 0.17.0",
+            "image",
+            "libc",
+            "metal",
+            "objc2 0.6.5",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "surfman",
+            "thiserror 2.0.21",
+            "wgpu 28.0.0",
+            "wgpu 29.0.4",
+            "wgpu 30.0.1",
+            "wgpu-hal 28.0.1",
+            "wgpu-hal 29.0.4",
+            "wgpu-hal 30.0.1",
+            "windows 0.62.2",
+            "wio"
+          ]
+        },
+        {
+          "name": "pkcs1",
+          "version": "0.8.0-rc.5",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "der",
+            "spki"
+          ]
+        },
+        {
+          "name": "pkcs8",
+          "version": "0.11.0",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "der",
+            "spki"
+          ]
+        },
+        {
+          "name": "rsa",
+          "version": "0.10.0-rc.18",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "const-oid",
+            "crypto-bigint",
+            "crypto-primes",
+            "digest 0.11.3",
+            "pkcs1",
+            "pkcs8",
+            "rand_core 0.10.1",
+            "signature",
+            "spki",
+            "zeroize"
+          ]
+        },
+        {
+          "name": "scrying",
+          "version": "0.7.2",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "ash",
+            "block2 0.6.2",
+            "dispatch2",
+            "dpi",
+            "grafting",
+            "image",
+            "libc",
+            "objc2 0.6.5",
+            "objc2-app-kit 0.3.2",
+            "objc2-core-foundation",
+            "objc2-core-graphics",
+            "objc2-core-media",
+            "objc2-core-video",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "objc2-screen-capture-kit",
+            "objc2-web-kit",
+            "palette",
+            "pkg-config",
+            "serde_json",
+            "thiserror 2.0.21",
+            "webview2-com",
+            "wgpu 29.0.4",
+            "wgpu-hal 29.0.4",
+            "windows 0.62.2",
+            "windows-numerics 0.3.1"
+          ]
+        },
+        {
+          "name": "spki",
+          "version": "0.8.1",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "base64ct",
+            "der"
+          ]
+        },
+        {
+          "name": "welding",
+          "version": "0.14.1",
+          "source": "registry+https://github.com/rust-lang/crates.io-index",
+          "dependencies": [
+            "dpi",
+            "grafting",
+            "libc",
+            "log",
+            "objc2 0.6.5",
+            "objc2-foundation 0.3.2",
+            "objc2-io-surface",
+            "objc2-metal 0.3.2",
+            "thiserror 2.0.21",
+            "wgpu 29.0.4",
+            "wgpu-hal 29.0.4",
+            "windows 0.62.2"
+          ]
+        }
+      ]
+    }
+  ],
+  "primary_sources": [
+    {
+      "url": "https://static.crates.io/crates/rsa/rsa-0.10.0-rc.18.crate",
+      "download_sha256": "30b2aa4ba0d89f73d1e332df05be0eeab8840351c36ca5654341dfdb57bb3caf",
+      "files": [
+        {
+          "file": "rsa-0.10.0-rc.18-Cargo.toml",
+          "bytes": 4197,
+          "sha256": "f4407246b2aa8a50836f5d717b8b9976860f68efca0a30fbf5c4f2b1d81bccfb"
+        },
+        {
+          "file": "rsa-0.10.0-rc.18-src-encoding.rs",
+          "bytes": 8301,
+          "sha256": "67147fce1b7bee73a266cb5f3866f8936632e8465eb43267ab8b615ffc90fec0"
+        }
+      ]
+    },
+    {
+      "url": "https://static.crates.io/crates/pkcs1/pkcs1-0.8.0-rc.4.crate",
+      "download_sha256": "986d2e952779af96ea048f160fd9194e1751b4faea78bcf3ceb456efe008088e",
+      "files": [
+        {
+          "file": "pkcs1-0.8.0-rc.4-Cargo.toml",
+          "bytes": 2004,
+          "sha256": "f2503b8d44e61a24f22a84a597727f836bafd022bdd83ec680edb756fa2dc46b"
+        },
+        {
+          "file": "pkcs1-0.8.0-rc.4-src-private_key.rs",
+          "bytes": 7960,
+          "sha256": "08e3092667137791aa174ec6d1e51e059f4529a50e7b4cfc3bf89ec4e8f9d2e5"
+        },
+        {
+          "file": "pkcs1-0.8.0-rc.4-src-public_key.rs",
+          "bytes": 2229,
+          "sha256": "d6707d6503ed11f75b100f114c1c3940437af3088dcff28aaadc7840002f4b01"
+        }
+      ]
+    },
+    {
+      "url": "https://static.crates.io/crates/pkcs1/pkcs1-0.8.0-rc.5.crate",
+      "download_sha256": "f485dbafe293ea6ccaa7d82bc591651a796eb8a9aec3df040b057b706073dbc3",
+      "files": [
+        {
+          "file": "pkcs1-0.8.0-rc.5-Cargo.toml",
+          "bytes": 2012,
+          "sha256": "e655770314608e8976b3a25265085625c9e76123095e33255986252b2d3f1c3c"
+        },
+        {
+          "file": "pkcs1-0.8.0-rc.5-src-private_key.rs",
+          "bytes": 8903,
+          "sha256": "52edbee880a4766c6026f3c96fb43f991e1e495de820de9b7fa857715a3b56bc"
+        },
+        {
+          "file": "pkcs1-0.8.0-rc.5-src-public_key.rs",
+          "bytes": 2762,
+          "sha256": "6473bb2d33c057710659f5661ac143b1944625791405a7255a5533e6655af46e"
+        }
+      ]
+    }
+  ],
+  "negative_logs": [
+    {
+      "job_id": 112825053959,
+      "path": "C:\\Users\\mark_\\Code\\repos\\wgpu-scry\\docs\\receipts\\scry_release_readiness_20261007\\release072-registry-job-112825053959.log",
+      "sha256": "ce260086228bd9b204249288aab313a3123972409a6770805eb5698859aaa577",
+      "bytes": 152308,
+      "errors_E0107": 8,
+      "native_not_reached": true
+    },
+    {
+      "job_id": 112825054270,
+      "path": "C:\\Users\\mark_\\Code\\repos\\wgpu-scry\\docs\\receipts\\scry_release_readiness_20261007\\release072-registry-job-112825054270.log",
+      "sha256": "a1cfabab5343f3ab7b86417aa81930e9dc17cd9f9c483d68b512704dc03c5309",
+      "bytes": 149365,
+      "errors_E0107": 8,
+      "native_not_reached": true
+    },
+    {
+      "job_id": 112825054211,
+      "path": "C:\\Users\\mark_\\Code\\repos\\wgpu-scry\\docs\\receipts\\scry_release_readiness_20261007\\release072-registry-job-112825054211.log",
+      "sha256": "898112ab65ae8f4b21d71a757fc2dc35da0699c5c55a190c6700d73eb86d5a6f",
+      "bytes": 157532,
+      "errors_E0107": 8,
+      "native_not_reached": true
+    }
+  ],
+  "scope": "Registry-only Graft proof-fixture compatibility; no supplier source or released dependency changes; no current native acceptance.",
+  "rsa_dependencies_api": {
+    "url": "https://crates.io/api/v1/crates/rsa/0.10.0-rc.18/dependencies",
+    "file": "rsa-rc18-dependencies.json",
+    "bytes": 4962,
+    "sha256": "75fe040e45d5440cfd7e6c658ecffcca2ee1a853f34f0f4a5dc8c9d5bd135e7e"
+  }
+}
