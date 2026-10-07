@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\mark_\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe",
+    "-B",
+    "docs\\receipts\\intel_registry_foreground_control_20261007\\verify.py"
+  ],
+  "started_utc": "2026-10-07T14:43:28.520262+00:00",
+  "finished_utc": "2026-10-07T14:43:29.584891+00:00",
+  "elapsed_seconds": 1.062000000005355,
+  "exit_code": 0,
+  "scope": "pure workflow/script syntax and counted-rewrite checks; no Cargo or native execution"
+}
