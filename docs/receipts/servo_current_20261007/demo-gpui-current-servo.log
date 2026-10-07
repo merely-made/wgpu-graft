@@ -1,0 +1,409 @@
+error: invalid type: boolean `true`, expected a map
+ --> ..\..\..\.cargo\git\checkouts\servo-e53a6e7b994a25fe\aac43a3\python\tidy\tests\lints-configuration\no-workspace\Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+ Downloading crates ...
+  Downloaded atomic v0.5.3
+  Downloaded crossbeam-queue v0.3.12
+  Downloaded convert_case v0.4.0
+  Downloaded dirs v4.0.0
+  Downloaded dirs-sys v0.3.7
+  Downloaded deflate64 v0.1.12
+  Downloaded dtor-proc-macro v0.0.5
+  Downloaded derive_more v0.99.20
+  Downloaded ar_archive_writer v0.5.2
+  Downloaded async-tar v0.5.1
+  Downloaded async_zip v0.0.18
+  Downloaded dtor v0.0.6
+  Downloaded float_next_after v1.0.0
+  Downloaded async-global-executor v2.4.1
+  Downloaded async-std v1.13.2
+  Downloaded ctor-proc-macro v0.0.6
+  Downloaded ctor v0.4.3
+  Downloaded embed-resource v3.0.9
+  Downloaded futf v0.1.5
+  Downloaded lyon_path v1.0.19
+  Downloaded mac v0.1.1
+  Downloaded lyon_algorithms v1.0.20
+  Downloaded nanorand v0.7.0
+  Downloaded lyon v1.0.19
+  Downloaded lyon_tessellation v1.0.20
+  Downloaded pin-utils v0.1.0
+  Downloaded psm v0.1.31
+  Downloaded postage v0.5.0
+  Downloaded kv-log-macro v1.0.7
+  Downloaded pollster v0.2.5
+  Downloaded lyon_geom v1.0.19
+  Downloaded rust-embed-impl v8.11.0
+  Downloaded rust-embed-utils v8.11.0
+  Downloaded serde_derive_internals v0.29.1
+  Downloaded schemars_derive v1.2.1
+  Downloaded seahash v4.1.0
+  Downloaded rust-embed v8.11.0
+  Downloaded serde_json_lenient v0.2.4
+  Downloaded stacker v0.1.24
+  Downloaded sysinfo v0.31.4
+  Downloaded tendril v0.4.3
+  Downloaded stacksafe-macro v0.1.4
+  Downloaded stacksafe v0.1.4
+  Downloaded sval_json v2.20.0
+  Downloaded sval_fmt v2.20.0
+  Downloaded sval_ref v2.20.0
+  Downloaded sval_dynamic v2.20.0
+  Downloaded sval_serde v2.20.0
+  Downloaded sval v2.20.0
+  Downloaded sval_buffer v2.20.0
+  Downloaded sval_nested v2.20.0
+  Downloaded value-bag-serde1 v1.12.0
+  Downloaded vswhom v0.1.0
+  Downloaded vswhom-sys v0.1.3
+  Downloaded take-until v0.2.0
+  Downloaded which v6.0.3
+  Downloaded windows-result v0.1.2
+  Downloaded windows-interface v0.57.0
+  Downloaded winreg v0.55.0
+  Downloaded winsafe v0.0.19
+  Downloaded windows-core v0.57.0
+  Downloaded value-bag v1.12.0
+  Downloaded value-bag-sval2 v1.12.0
+  Downloaded windows-capture v1.5.0
+  Downloaded windows-implement v0.57.0
+  Downloaded windows-registry v0.5.3
+  Downloaded windows v0.57.0
+   Compiling getrandom v0.3.4
+   Compiling typeid v1.0.3
+   Compiling erased-serde v0.4.10
+    Checking serde_fmt v1.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\serde_fmt)
+   Compiling jobserver v0.1.34
+    Checking value-bag-serde1 v1.12.0
+    Checking value-bag v1.12.0
+   Compiling cc v1.6.0
+    Checking log v0.4.33
+    Checking bitflags v2.13.0
+    Checking windows-sys v0.61.2
+    Checking indexmap v2.14.0
+    Checking either v1.16.0
+   Compiling winapi v0.3.9
+    Checking mio v1.2.1
+    Checking socket2 v0.6.4
+    Checking tokio v1.52.3
+    Checking rayon v1.12.0
+    Checking aho-corasick v1.1.4
+    Checking regex-automata v0.4.14
+    Checking itertools v0.14.0
+   Compiling slotmap v1.1.1
+    Checking futures-io v0.3.32
+    Checking png v0.18.1
+    Checking regex v1.12.4
+    Checking simplecss v0.2.2
+    Checking uuid v1.23.4
+    Checking wio v0.2.2
+   Compiling glslopt v0.1.14 (https://github.com/jamienicol/glslopt-rs?rev=68019f02a1437d785408ebc8ce7fd20341fffb8a#68019f02)
+    Checking selectors v0.41.0
+    Checking stylo_malloc_size_of v0.22.0
+   Compiling build-parallel v0.1.2
+    Checking markup5ever v0.40.0
+    Checking zeitstempel v0.2.2
+   Compiling serde_json v1.0.150
+    Checking vello_common v0.2.0
+    Checking webrender_api v0.70.0
+    Checking dwrote v0.11.5
+    Checking harfrust v0.12.0
+    Checking fontdb v0.24.0
+    Checking wr_glyph_rasterizer v0.70.0
+    Checking usvg v0.48.1
+    Checking stylo_traits v0.22.0
+    Checking glifo v0.3.0
+    Checking tiny-skia v0.12.0
+    Checking stylo_dom v0.22.0
+    Checking webrender_build v0.70.0
+    Checking plane-split v0.18.0
+    Checking stylo v0.22.0
+    Checking vello_cpu v0.2.0
+    Checking resvg v0.48.1
+    Checking urlpattern v0.3.0
+    Checking ipc-channel v0.23.0
+    Checking keyboard-types v0.8.3
+    Checking content-security-policy v0.9.0
+    Checking servo-allocator v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling futures-macro v0.3.32
+    Checking futures-task v0.3.32
+    Checking futures-util v0.3.32
+    Checking tracing v0.1.44
+    Checking accesskit v0.24.1
+    Checking servo-config v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking av-scenechange v0.14.1
+    Checking av1-grain v0.2.5
+    Checking maybe-rayon v0.1.1
+    Checking rav1e v0.8.1
+    Checking ravif v0.13.0
+    Checking tokio-util v0.7.18
+   Compiling cmake v0.1.58
+   Compiling aws-lc-sys v0.41.0
+    Checking image v0.25.10
+    Checking h2 v0.4.15
+    Checking hyper v1.10.1
+   Compiling webrender v0.70.0
+    Checking hyper-util v0.1.20
+    Checking warp v0.4.3
+    Checking webdriver v0.54.0
+    Checking servo-hyper-serde v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling libc v0.2.186
+    Checking parking v2.2.1
+    Checking surfman v0.14.0
+   Compiling libz-sys v1.1.29
+    Checking concurrent-queue v2.5.0
+   Compiling zstd-sys v2.0.16+zstd.1.5.7
+    Checking futures-lite v2.6.1
+    Checking event-listener v5.4.1
+   Compiling zstd-safe v7.2.4
+    Checking event-listener-strategy v0.5.4
+    Checking async-task v4.7.1
+   Compiling clang-sys v1.8.1
+   Compiling rustix v1.1.4
+    Checking libbz2-rs-sys v0.2.5
+   Compiling bindgen v0.72.1
+    Checking bzip2 v0.6.1
+    Checking zstd v0.13.3
+    Checking async-channel v2.5.0
+    Checking petgraph v0.8.3
+    Checking piper v0.2.5
+    Checking tempfile v3.27.0
+    Checking futures-executor v0.3.32
+    Checking errno v0.3.14
+   Compiling async-io v2.6.0
+    Checking deflate64 v0.1.12
+   Compiling typenum v1.20.1
+   Compiling generic-array v0.14.7
+    Checking compression-codecs v0.4.38
+    Checking futures v0.3.32
+    Checking blocking v1.6.2
+    Checking polling v3.11.0
+   Compiling fontsan v0.7.0
+   Compiling harfbuzz-sys v0.8.0
+    Checking async-compression v0.4.42
+   Compiling object v0.37.3
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.7
+    Checking async-lock v3.4.2
+   Compiling libsqlite3-sys v0.36.0
+    Checking itertools v0.15.0
+   Compiling windows-link v0.1.3
+   Compiling digest v0.10.7
+    Checking async-executor v1.14.0
+   Compiling windows_x86_64_msvc v0.52.6
+   Compiling bstr v1.12.3
+    Checking winapi-util v0.1.11
+   Compiling vswhom-sys v0.1.3
+   Compiling cpufeatures v0.2.17
+   Compiling sha2 v0.10.9
+    Checking same-file v1.0.6
+   Compiling globset v0.4.18
+   Compiling windows-targets v0.52.6
+   Compiling ar_archive_writer v0.5.2
+   Compiling mozjs_sys v153.3.0-1
+   Compiling windows-strings v0.4.2
+   Compiling windows-result v0.3.4
+    Checking async-process v2.5.0
+    Checking html5ever v0.40.1
+    Checking spirv v0.4.0+sdk-1.4.341.0
+   Compiling ref-cast v1.0.25
+    Checking rusqlite v0.38.0
+    Checking naga v29.0.3
+   Compiling windows-registry v0.5.3
+   Compiling psm v0.1.31
+   Compiling windows-sys v0.59.0
+   Compiling rust-embed-utils v8.11.0
+    Checking walkdir v2.5.0
+    Checking wgpu-types v29.0.3
+    Checking ttf-parser v0.25.1
+    Checking lyon_geom v1.0.19
+    Checking gpu-descriptor-types v0.2.0
+   Compiling serde_derive_internals v0.29.1
+   Compiling ref-cast-impl v1.0.25
+   Compiling serde_json_lenient v0.2.4
+    Checking event-listener v2.5.3
+    Checking mac v0.1.1
+   Compiling semver v1.0.28
+   Compiling rustc_version v0.4.1
+    Checking futf v0.1.5
+    Checking gpu-allocator v0.28.0
+    Checking async-channel v1.9.0
+   Compiling schemars_derive v1.2.1
+    Checking rand_core v0.9.5
+    Checking gpu-descriptor v0.3.2
+    Checking lyon_path v1.0.19
+    Checking wgpu-naga-bridge v29.0.3
+    Checking sea-query-rusqlite v0.8.0
+   Compiling vswhom v0.1.0
+   Compiling rust-embed-impl v8.11.0
+   Compiling winreg v0.55.0
+    Checking async-global-executor v2.4.1
+    Checking async-fs v2.2.0
+    Checking async-net v2.0.0
+    Checking ppv-lite86 v0.2.21
+    Checking tiny-skia-path v0.11.4
+    Checking dirs-sys v0.3.7
+    Checking home v0.5.12
+    Checking kurbo v0.11.3
+   Compiling stacker v0.1.24
+    Checking kv-log-macro v1.0.7
+    Checking getrandom v0.2.17
+   Compiling proc-macro-error-attr2 v2.0.0
+    Checking winsafe v0.0.19
+   Compiling heapless v0.9.3
+    Checking unicode-ccc v0.4.0
+    Checking dyn-clone v1.0.20
+    Checking waker-fn v1.2.0
+    Checking unicode-bidi-mirroring v0.4.0
+    Checking fastrand v1.9.0
+    Checking pin-utils v0.1.0
+    Checking tower v0.5.3
+    Checking async-std v1.13.2
+   Compiling aws-lc-rs v1.17.0
+   Compiling rustls v0.23.41
+    Checking futures-lite v1.13.0
+    Checking wgpu-hal v29.0.3
+    Checking rustls-webpki v0.103.13
+    Checking rustybuzz v0.20.1
+    Checking schemars v1.2.1
+    Checking tokio-rustls v0.26.4
+    Checking tungstenite v0.30.0
+    Checking hyper-rustls v0.27.9
+    Checking rustls-platform-verifier v0.7.0
+    Checking which v6.0.3
+   Compiling proc-macro-error2 v2.0.1
+    Checking async-tungstenite v0.35.0
+    Checking nanorand v0.7.0
+    Checking svgtypes v0.15.3
+    Checking dirs v4.0.0
+    Checking rand_chacha v0.9.0
+    Checking smol v2.0.2
+   Compiling embed-resource v3.0.9
+    Checking rust-embed v8.11.0
+    Checking mozjs v0.26.4
+    Checking tendril v0.4.3
+    Checking fontdb v0.23.0
+    Checking async_zip v0.0.18
+    Checking xml5ever v0.40.0
+    Checking hash32 v0.3.1
+    Checking tokio-stream v0.1.18
+    Checking collections v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\collections)
+    Checking spin v0.9.8
+    Checking filetime v0.2.29
+    Checking zune-core v0.4.12
+   Compiling convert_case v0.4.0
+    Checking imagesize v0.13.0
+    Checking shlex v1.3.0
+    Checking dunce v1.0.5
+    Checking float_next_after v1.0.0
+    Checking roxmltree v0.20.0
+   Compiling dtor-proc-macro v0.0.5
+    Checking take-until v0.2.0
+    Checking dtor v0.0.6
+    Checking util v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\util)
+    Checking usvg v0.45.1
+    Checking lyon_tessellation v1.0.20
+   Compiling servo-script v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking anstyle-wincon v3.0.11
+   Compiling derive_more v0.99.20
+    Checking zune-jpeg v0.4.21
+    Checking async-tar v0.5.1
+    Checking flume v0.11.1
+    Checking nom-rfc8288 v0.4.0
+   Compiling gpui v0.2.2 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\gpui)
+    Checking rand v0.9.4
+   Compiling stacksafe-macro v0.1.4
+    Checking wgpu-core-deps-windows-linux-android v29.0.3
+    Checking tiny-skia v0.11.4
+    Checking lyon_algorithms v1.0.20
+    Checking windows-numerics v0.2.0
+    Checking servo-webvtt v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking gif v0.13.3
+    Checking anstyle-query v1.1.5
+   Compiling strum_macros v0.27.2
+    Checking crossbeam-queue v0.3.12
+   Compiling derive_refineable v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\refineable\derive_refineable)
+   Compiling ctor-proc-macro v0.0.6
+    Checking web-time v1.1.0
+    Checking pollster v0.2.5
+    Checking grid v1.0.1
+    Checking atomic v0.5.3
+    Checking postage v0.5.0
+    Checking strum v0.27.2
+    Checking anstream v1.0.0
+    Checking taffy v0.9.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\taffy-0.9)
+    Checking scheduler v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\scheduler)
+    Checking ctor v0.4.3
+    Checking refineable v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\refineable)
+    Checking resvg v0.45.1
+    Checking windows v0.61.3
+    Checking lyon v1.0.19
+    Checking wgpu-core v29.0.3
+    Checking stacksafe v0.1.4
+    Checking http_client v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\http_client)
+    Checking sum_tree v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\sum_tree)
+   Compiling gpui_windows v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\gpui_windows)
+   Compiling mozangle v0.7.1
+    Checking futures-concurrency v7.7.1
+    Checking gpui_util v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\gpui_util)
+    Checking env_filter v2.0.0
+    Checking spin v0.10.0
+   Compiling gpui_macros v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\gpui_macros)
+    Checking seahash v4.1.0
+    Checking env_logger v0.11.11
+    Checking arboard v3.6.1
+    Checking wgpu v29.0.3
+    Checking winit v0.30.13
+    Checking grafting v0.6.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting)
+   Compiling demo-servo-gpui v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-gpui)
+    Checking gpui_platform v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\patches\glass-gpui\crates\gpui_platform)
+    Checking servo-malloc-size-of v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-base v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-url v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-pixels v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-profile-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-geometry v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-embedder-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-paint-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-net-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-fonts-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-streams v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-player v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-devtools-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-webxr-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-canvas-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-audio v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-webrtc v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-storage-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-constellation-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-thread v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-fonts v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-script-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-background-hang-monitor-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-layout-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-timers v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-metrics v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-net v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-script-bindings v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-xpath v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-background-hang-monitor v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-canvas v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-constellation v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-layout v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-devtools v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-paint v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-dummy v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-storage v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-default-resources v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-wakelock v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-profile v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-wgpu-interop-adapter v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\servo-wgpu-interop-adapter)
+    Checking demo-support v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-support)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 12m 19s
+warning: the following packages contain code that will be rejected by a future version of Rust: proc-macro-error2 v2.0.1
+note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`

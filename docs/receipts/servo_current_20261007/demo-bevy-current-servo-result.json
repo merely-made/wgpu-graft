@@ -1,0 +1,30 @@
+{
+  "name": "demo-bevy-current-servo",
+  "command": [
+    "cargo",
+    "+1.97.1",
+    "check",
+    "--locked",
+    "--target-dir",
+    "C:/t/cargo-targets/wgpu-graft",
+    "-p",
+    "demo-servo-bevy",
+    "-j2"
+  ],
+  "environment": {
+    "RUSTFLAGS": "-D warnings",
+    "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+    "CMAKE_GENERATOR": "Visual Studio 17 2022",
+    "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+  },
+  "priority": "BelowNormal",
+  "started_utc": "2026-10-07T07:54:18.614968+00:00",
+  "ended_utc": "2026-10-07T07:58:34.282564+00:00",
+  "elapsed_seconds": 255.67199999999139,
+  "exit_code": 0,
+  "log_sha256": "69377c4e24b205ba58b2315f11362b3d28758ae92ae09d873c5829995a3a6aef",
+  "input_manifest": "donor30-native-inputs.json",
+  "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+  "all_inputs_unchanged": true,
+  "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+}

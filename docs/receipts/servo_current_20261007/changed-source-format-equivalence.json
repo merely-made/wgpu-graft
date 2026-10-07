@@ -1,0 +1,53 @@
+{
+  "method": "Rustfmt stdin of HEAD and current source; transformed HEAD output equals current output. No source files changed.",
+  "results": [
+    {
+      "path": "demo-servo-blitz/src/main.rs",
+      "baseline_has_formatter_debt": true,
+      "current_has_formatter_debt": true,
+      "normalized_change_exactly_reviewed_api_and_comments": true,
+      "baseline_normalized_sha256": "d392efb4a3d7570b5f84cd358973bde241f0168a997bd8571c04215def0b6bbc",
+      "current_normalized_sha256": "57787ebb6a925d278a159ad08d208c2e35ed87218de02b39d04aa92173a2f99e"
+    },
+    {
+      "path": "demo-servo-egui/src/main.rs",
+      "baseline_has_formatter_debt": true,
+      "current_has_formatter_debt": true,
+      "normalized_change_exactly_reviewed_api_and_comments": true,
+      "baseline_normalized_sha256": "291a5cdf5b6be5dd1102f8452a521e8602c263a1680a01e63e812c27f8f5cd52",
+      "current_normalized_sha256": "c723d501820a767c467b0133cbe0b91409fd7498cb88701a84ebc8520213fb32"
+    },
+    {
+      "path": "demo-servo-gpui/src/main.rs",
+      "baseline_has_formatter_debt": true,
+      "current_has_formatter_debt": true,
+      "normalized_change_exactly_reviewed_api_and_comments": true,
+      "baseline_normalized_sha256": "77c8e9cbf582e1eb8fd97b71d3ceb5d6a93e16a6141f06f160d4cfbe3e6ad96f",
+      "current_normalized_sha256": "3ad00b9562236b334e79dae1d9fa4af52bddf8499f38a3a236cc4b2209c2822b"
+    },
+    {
+      "path": "demo-servo-iced/src/main.rs",
+      "baseline_has_formatter_debt": true,
+      "current_has_formatter_debt": true,
+      "normalized_change_exactly_reviewed_api_and_comments": true,
+      "baseline_normalized_sha256": "d631bef2b6d42d6271b69642dbc36f5c9519b6dd35dd1085e6ad0a776338c3f3",
+      "current_normalized_sha256": "e88cd01376278ff4bfe5f0c3db7b38dee03390502f540df381594837173951da"
+    },
+    {
+      "path": "demo-servo-winit/src/main.rs",
+      "baseline_has_formatter_debt": true,
+      "current_has_formatter_debt": true,
+      "normalized_change_exactly_reviewed_api_and_comments": true,
+      "baseline_normalized_sha256": "940e211de877ee9a681a383896c3724e7c68afb92959a63409ec432d49973968",
+      "current_normalized_sha256": "d4dc5c335e794b6610139cb639498198d2a91340e65620395fc8f1b8fb8c4bde"
+    },
+    {
+      "path": "demo-servo-xilem/src/main.rs",
+      "baseline_has_formatter_debt": true,
+      "current_has_formatter_debt": true,
+      "normalized_change_exactly_reviewed_api_and_comments": true,
+      "baseline_normalized_sha256": "2fcda9ae2e623d76317b84c7831640f13a8e042748cc4ed14e71c763292b90db",
+      "current_normalized_sha256": "a4141a0816c6988aa7fba96ef7f4e43e2c7c264150b766c40266aa32ac687df8"
+    }
+  ]
+}

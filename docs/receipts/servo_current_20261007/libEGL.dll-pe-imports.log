@@ -1,0 +1,29 @@
+Microsoft (R) COFF/PE Dumper Version 14.51.36241.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file C:\t\cargo-targets\wgpu-graft\debug\build\mozangle-315def473559b043\out\libEGL.dll
+
+File Type: DLL
+
+  Image has the following dependencies:
+
+    KERNEL32.dll
+    MSVCP140.dll
+    VCRUNTIME140.dll
+    api-ms-win-crt-stdio-l1-1-0.dll
+    api-ms-win-crt-heap-l1-1-0.dll
+    api-ms-win-crt-string-l1-1-0.dll
+    api-ms-win-crt-filesystem-l1-1-0.dll
+    api-ms-win-crt-runtime-l1-1-0.dll
+
+  Summary
+
+        1000 .00cfg
+        1000 .data
+        3000 .idata
+        4000 .pdata
+       1A000 .rdata
+        1000 .reloc
+       69000 .text
+        1000 .tls

@@ -8,8 +8,8 @@ Minimal Servo embedding using winit + wgpu with no GUI toolkit. This is the prim
 
 - The host owns the `wgpu::Device`, `wgpu::Queue`, and presentation surface
 - Servo renders offscreen through `servo-wgpu-interop-adapter`
-- GPU texture import (zero-copy) is attempted first; if the driver lacks the required GL extensions, the demo falls back to CPU readback
-- Mouse, scroll, and keyboard events are forwarded to Servo for full page interactivity (clickable links, scrolling, text input)
+- GPU texture import and normalization is attempted first; if the driver lacks the required GL extensions, the demo falls back to CPU readback
+- Mouse, scroll, and keyboard events are forwarded to Servo (clickable links, scrolling, text input)
 
 This demo has no URL bar UI. Pass URLs via the command line; the current URL is shown in the window title. For demos with a URL bar, see the [xilem](../demo-servo-xilem/), [iced](../demo-servo-iced/), or [gpui](../demo-servo-gpui/) demos.
 
@@ -27,7 +27,7 @@ cargo run -p demo-servo-winit -- --smoke                       # bounded hardwar
 texture, forwards a mouse click that changes the deterministic page color,
 requests a 960×640 window resize, and exits successfully only after the changed
 pixel arrives in a 960×640 imported frame. The validation readback is confined
-to this test mode; ordinary presentation remains zero-copy.
+to this test mode; ordinary presentation stays on the GPU and normalizes into a fresh texture.
 
 ## Fixtures
 
@@ -42,8 +42,8 @@ On startup, the demo logs the URL, host backend, and capability matrix to stdout
 ## Platform notes
 
 - **Linux / macOS**: GPU import path works on compatible drivers. Falls back to CPU readback if GL extensions are missing.
-- **Windows**: GPU import is attempted first. The demo uses DX12 by default for the ANGLE D3D11 → DX12 shared-texture path; set `WGPU_BACKEND=vulkan` to exercise the ANGLE D3D11 → Vulkan path. CPU readback remains the fallback if sharing is unavailable.
-- **Windows multi-GPU (iGPU + dGPU)**: the import LUID-matches surfman/ANGLE to the host wgpu adapter so the shared handle stays on one GPU. This match reads the adapter LUID through the DX12 backend, so DX12 is required for zero-copy here; a cross-GPU share garbles into flicker.
+- **Windows**: the adapter constructor requires a DX12 host device for ANGLE D3D11 shared-texture import. Upstream Servo uses its `no-wgl` feature. Regular mode may fall back to CPU readback after a frame-import failure; `--smoke` rejects that fallback.
+- **Windows multi-GPU (iGPU + dGPU)**: the import LUID-matches surfman/ANGLE to the host wgpu adapter so the shared handle stays on one GPU. This match reads the adapter LUID through the DX12 backend, so DX12 is required for this adapter constructor; a cross-GPU share garbles into flicker.
 - **Windows ANGLE DLLs**: `libEGL.dll` / `libGLESv2.dll` are produced by `mozangle`'s `build_dlls` feature (forced via `demo-support`) and copied next to the binary by `build.rs`.
 - **Windows without nasm**: set `AWS_LC_SYS_NO_ASM=1` before building.
 

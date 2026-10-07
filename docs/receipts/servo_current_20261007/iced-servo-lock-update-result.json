@@ -1,0 +1,5 @@
+{
+  "completed_utc": "2026-10-07T06:34:21.938596+00:00",
+  "command": "cargo +1.97.1 update --manifest-path demo-servo-iced/Cargo.toml -p servo --precise aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+  "exit_code": 0
+}

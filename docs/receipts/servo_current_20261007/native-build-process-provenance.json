@@ -1,0 +1,38 @@
+[
+  {
+    "pid": 11824,
+    "parent": 18908,
+    "name": "cargo.exe",
+    "cpu": 10.421875,
+    "working_set": 203472896,
+    "priority": 16384,
+    "command": "\"C:\\Users\\mark_\\.rustup\\toolchains\\1.97.1-x86_64-pc-windows-msvc\\bin\\cargo.exe\" build --locked -p demo-servo-winit --no-default-features --features wgpu-30,servo --target-dir C:/t/cargo-targets/wgpu-graft -j2 --message-format=json-render-diagnostics"
+  },
+  {
+    "pid": 50352,
+    "parent": 11824,
+    "name": "build-script-build.exe",
+    "cpu": 6.109375,
+    "working_set": 163647488,
+    "priority": 16384,
+    "command": "\"C:/t/cargo-targets/wgpu-graft\\debug\\build\\mozangle-d4643413de7c120e\\build-script-build\""
+  },
+  {
+    "pid": 48688,
+    "parent": 50352,
+    "name": "cl.exe",
+    "cpu": 2.5625,
+    "working_set": 245837824,
+    "priority": 16384,
+    "command": "\"C:\\Program Files\\Microsoft Visual Studio\\18\\Insiders\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe\" -nologo -MD -Z7 -Brepro -std:c++17 -I C:/t/cargo-targets/wgpu-graft/debug/build/libz-sys-737524ee2533ec70/out/include -I gfx/angle/checkout/include/ -I gfx/angle/checkout/out/gen/angle/ -I gfx/angle/checkout/src/ -I gfx/angle/checkout/src/common/third_party/base/ -I gfx/angle/checkout/third_party/zlib/ -I gfx/angle/checkout/third_party/zlib/google/ -W4 /wd4100 /wd4127 -DANGLE_CAPTURE_ENABLED=0 -DANGLE_DISABLE_POOL_ALLOC -DANGLE_ENABLE_D3D11 -DANGLE_ENABLE_D3D11_COMPOSITOR_NATIVE_WINDOW -DANGLE_ENABLE_D3D9 -DANGLE_ENABLE_KEYEDMUTEX -DANGLE_ENABLE_SHARE_CONTEXT_LOCK=1 -DANGLE_PLATFORM_EXPORT= -DANGLE_SKIP_DXGI_1_2_CHECK -DANGLE_TRANSLATOR_ESSL_ONLY -DANGLE_VMA_VERSION=2003000 -DCR_CLANG_REVISION=\\\"llvmorg-16-init-6578-g0d30e92f-2\\\" -DDYNAMIC_ANNOTATIONS_ENABLED=0 -DEGL_EGLEXT_PROTOTYPES -DEGL_EGL_PROTOTYPES=1 -DGL_API= -DGL_APICALL= -DGL_GLES_PROTOTYPES=1 -DGL_GLEXT_PROTOTYPES -DLIBANGLE_IMPLEMENTATION -DLIBGLESV2_IMPLEMENTATION -DNOMINMAX -DUNICODE -DWINVER=0x0A00 -D_ATL_NO_OPENGL -D_CRT_NONSTDC_NO_WARNINGS -D_CRT_RAND_S -D_CRT_SECURE_NO_DEPRECATE -D_HAS_EXCEPTIONS=0 -D_SCL_SECURE_NO_DEPRECATE -D_SECURE_ATL -D_UNICODE -D_WINSOCK_DEPRECATED_NO_WARNINGS -D__NDK_FPABI__= -DANGLE_USE_EGL_LOADER -FoC:/t/cargo-targets/wgpu-graft\\debug\\build\\mozangle-315def473559b043\\out\\ea49530864776c39-Framebuffer11.o -c gfx/angle/checkout/src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp"
+  },
+  {
+    "pid": 47040,
+    "parent": 50352,
+    "name": "cl.exe",
+    "cpu": 2.546875,
+    "working_set": 244547584,
+    "priority": 16384,
+    "command": "\"C:\\Program Files\\Microsoft Visual Studio\\18\\Insiders\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe\" -nologo -MD -Z7 -Brepro -std:c++17 -I C:/t/cargo-targets/wgpu-graft/debug/build/libz-sys-737524ee2533ec70/out/include -I gfx/angle/checkout/include/ -I gfx/angle/checkout/out/gen/angle/ -I gfx/angle/checkout/src/ -I gfx/angle/checkout/src/common/third_party/base/ -I gfx/angle/checkout/third_party/zlib/ -I gfx/angle/checkout/third_party/zlib/google/ -W4 /wd4100 /wd4127 -DANGLE_CAPTURE_ENABLED=0 -DANGLE_DISABLE_POOL_ALLOC -DANGLE_ENABLE_D3D11 -DANGLE_ENABLE_D3D11_COMPOSITOR_NATIVE_WINDOW -DANGLE_ENABLE_D3D9 -DANGLE_ENABLE_KEYEDMUTEX -DANGLE_ENABLE_SHARE_CONTEXT_LOCK=1 -DANGLE_PLATFORM_EXPORT= -DANGLE_SKIP_DXGI_1_2_CHECK -DANGLE_TRANSLATOR_ESSL_ONLY -DANGLE_VMA_VERSION=2003000 -DCR_CLANG_REVISION=\\\"llvmorg-16-init-6578-g0d30e92f-2\\\" -DDYNAMIC_ANNOTATIONS_ENABLED=0 -DEGL_EGLEXT_PROTOTYPES -DEGL_EGL_PROTOTYPES=1 -DGL_API= -DGL_APICALL= -DGL_GLES_PROTOTYPES=1 -DGL_GLEXT_PROTOTYPES -DLIBANGLE_IMPLEMENTATION -DLIBGLESV2_IMPLEMENTATION -DNOMINMAX -DUNICODE -DWINVER=0x0A00 -D_ATL_NO_OPENGL -D_CRT_NONSTDC_NO_WARNINGS -D_CRT_RAND_S -D_CRT_SECURE_NO_DEPRECATE -D_HAS_EXCEPTIONS=0 -D_SCL_SECURE_NO_DEPRECATE -D_SECURE_ATL -D_UNICODE -D_WINSOCK_DEPRECATED_NO_WARNINGS -D__NDK_FPABI__= -DANGLE_USE_EGL_LOADER -FoC:/t/cargo-targets/wgpu-graft\\debug\\build\\mozangle-315def473559b043\\out\\ea49530864776c39-Image11.o -c gfx/angle/checkout/src/libANGLE/renderer/d3d/d3d11/Image11.cpp"
+  }
+]

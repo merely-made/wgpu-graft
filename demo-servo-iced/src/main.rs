@@ -634,9 +634,9 @@ fn servo_point(position: iced::Point) -> DevicePoint {
 
 fn map_mouse_button(btn: mouse::Button) -> Option<ServoMouseButton> {
     Some(match btn {
-        mouse::Button::Left => ServoMouseButton::Left,
-        mouse::Button::Right => ServoMouseButton::Right,
-        mouse::Button::Middle => ServoMouseButton::Middle,
+        mouse::Button::Left => ServoMouseButton::Primary,
+        mouse::Button::Right => ServoMouseButton::Secondary,
+        mouse::Button::Middle => ServoMouseButton::Auxiliary,
         mouse::Button::Back => ServoMouseButton::Back,
         mouse::Button::Forward => ServoMouseButton::Forward,
         mouse::Button::Other(v) => ServoMouseButton::Other(v),

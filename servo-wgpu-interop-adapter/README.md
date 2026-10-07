@@ -12,7 +12,7 @@ This crate bridges Servo's rendering context to the host application. It provide
 - **CPU readback** (`ServoWgpuRenderingContext::read_full_frame()`): Works on all platforms. Simpler to integrate — just display the returned image in your framework's image widget. Adds a GPU→CPU→GPU round-trip per frame.
 - **GPU import** (`ServoWgpuInteropAdapter`): Avoids CPU frame readback, but requires compatible native sharing support between Servo's GL producer and the host wgpu backend. Default GL normalization copies the imported surface into a fresh GPU texture with top-left origin. Linux uses Vulkan external memory and Apple uses IOSurface/Metal. On Windows this adapter requires DX12 to match the host's physical GPU and imports ANGLE D3D11 output through a shared NT handle. Graft's lower-level Windows Vulkan importer is a separate route; this adapter constructor refuses a Vulkan host device.
 
-The CPU readback demos ([xilem](../demo-servo-xilem/), [iced](../demo-servo-iced/), [gpui](../demo-servo-gpui/)) use `read_full_frame()`. The [winit demo](../demo-servo-winit/) tries GPU import first and falls back to CPU readback.
+The CPU readback demos ([xilem](../demo-servo-xilem/), [gpui](../demo-servo-gpui/)) use `read_full_frame()`. The [winit demo](../demo-servo-winit/) tries GPU import first and falls back to CPU readback.
 
 ## Feature flags
 
@@ -25,6 +25,10 @@ Without `servo`, only the surfman-level types are available (useful for testing 
 
 The adapter is unpublished. Use its exact Git revision; the published Graft
 core package has a separate distribution status.
+
+The installation below retains the previous Servo 0.5 donor checkpoint while
+the [current Servo 0.7 migration](../design_docs/2026-09-03_wgpu_triplet_release_plan.md)
+completes its typed and native gates.
 
 ```toml
 [dependencies]

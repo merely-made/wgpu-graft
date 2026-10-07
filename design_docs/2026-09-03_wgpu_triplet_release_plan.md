@@ -341,6 +341,39 @@ Matching native-build ANGLE outputs, PE imports and actual loaded-module
 identities remain required. Typed-check DLL hashes cannot substitute for
 those runtime observations.
 
+### 2026-10-07 current Servo migration (Windows supplier qualified)
+
+The renewed current-dependency instruction migrates the published diagnostic
+checkpoint `e1fc5e6` to official latest stable
+[Servo v0.7.0](https://github.com/servo/servo/releases/tag/v0.7.0), released
+October 5, at immutable revision
+`aac43a3f31a259f04a574f5ec4e959c943ad7cc7`. All ten Servo declarations across
+nine adapter/demo manifests and both root/Iced locks use that one source.
+Matching resolved dependencies are Surfman 0.14.0, mozangle 0.7.1, IPC 0.23.0,
+SpiderMonkey wrapper 0.26.4, AccessKit 0.24.1, and fontsan 0.7 with wuff.
+The obsolete Surfman `chains` feature is removed because 0.14 enables it
+unconditionally. Six demos map 22 renamed Servo mouse-button sites while
+preserving framework values; adapter/core Rust rendering code is unchanged.
+
+Eleven separate Windows typed rows pass: core wgpu 28/29/30 + Surfman,
+default winit donor29, Xilem, GPUI, Bevy, Blitz, egui, Slint, and isolated
+Iced28. The wgpu 30 native donor build and GPU initial/click/resize smoke pass
+with exact completed-build ANGLE DLLs, PE imports, actual loaded-module hashes,
+and all 84 raw inputs archived. The donor exits through `process::exit`; full
+process-root teardown is outside that gate. GPU synchronization remains default
+`Existing`, PreserveBuffer::No is retained, and prior failures/raw receipts keep
+their original identity. The [current supplier receipt](../docs/receipts/servo_current_20261007/README.md)
+records commands, source/archive/artifact binding and the observed pixels.
+
+Read-only formatting still fails on 138 existing root paths and the Iced demo;
+changed-file normalized comparisons prove only the reviewed enum/comment edits.
+Fresh CI and Linux/macOS runtime qualification remain open. Turnstone owns the
+current consumer repin/host gates; Weld owns the separate CEF migration.
+Accessibility trees/actions, intermittent default reopened-view reliability,
+U9/current-stack acceptance, and version/tag/registry releases remain separate.
+The source checkpoint and exact-installation documentation follow-up retain
+separate identities, with the latter pointing to the qualified source commit.
+
 ### 2026-10-07 Servo GPU ordering diagnostic checkpoint
 
 The additive `DiagnosticGpuSync` policy and

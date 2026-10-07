@@ -1,0 +1,44 @@
+{
+  "recorded_utc": "2026-10-07T07:06:05.515384+00:00",
+  "exact_upstream": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+  "enum_source": "components/shared/embedder/input_events.rs:209-247",
+  "semantic_mapping": {
+    "Left": "Primary",
+    "Middle": "Auxiliary",
+    "Right": "Secondary"
+  },
+  "replaced_sites": 22,
+  "files": [
+    {
+      "path": "demo-servo-winit/src/main.rs",
+      "before_sha256": "d2ad41f4036c0d9cd46befef70a35fcc541253782d2dff93b0363ceb43921b27",
+      "after_sha256": "f1bcd24ba444eb8ba81820958c7aaf9e4726aa8f9efbba1e65395cb0b48189ac"
+    },
+    {
+      "path": "demo-servo-xilem/src/main.rs",
+      "before_sha256": "3d8af71363d225d8f66b5c9f88c191520f5f7bb63c6e4eb2ff999fb59cee8b3a",
+      "after_sha256": "1a2662072ffcae03ac4e62d359912e9ec9a656d9e99046fd6336b6177681631e"
+    },
+    {
+      "path": "demo-servo-iced/src/main.rs",
+      "before_sha256": "bb2b4eab3e6f3706dea7075fc4a956baa51bfd35f5360c33778022b7cee0581c",
+      "after_sha256": "6d9a521891e4def932826e10ff6b7bdb169cbf2f006c2150b7bbad43db9a765c"
+    },
+    {
+      "path": "demo-servo-egui/src/main.rs",
+      "before_sha256": "b4e91fa55497e163ecd4ff4e90c674c4086c75d67c4dcd3c36485f8fbc5db7cd",
+      "after_sha256": "4765745e87f9d4eb980c5fb9ee8c8b000187ed32bcc94d6234f27796f43c818e"
+    },
+    {
+      "path": "demo-servo-gpui/src/main.rs",
+      "before_sha256": "7d9adbc3eded13e0abef6c352d7f5866e4f41700571211256f1cb8b977c968e9",
+      "after_sha256": "0180a42580d7227005c99b37835144673aa2f6889f10ceb4c6d27ab3537c622d"
+    },
+    {
+      "path": "demo-servo-blitz/src/main.rs",
+      "before_sha256": "783805b487acaa89bd31d684d4f271e31acb31f8540e9b41b1c5f934c7c0305b",
+      "after_sha256": "7ecc20c8d55d332fcb7b790aeffd85b9f739ac40114ca7626d652b2ae1d020a8"
+    }
+  ],
+  "pre_fix_archive_sha256": "eb06b5591d44196ca04cc5cc30ad78f3ce91ab4f2d7e25d02ca64d81f7094549"
+}

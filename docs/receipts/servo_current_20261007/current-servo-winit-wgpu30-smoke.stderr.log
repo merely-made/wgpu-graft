@@ -1,0 +1,10 @@
+[wgpu] backend: DirectX 12
+[2026-10-07T07:34:31Z WARN  script::event_loop::timers] Resuming an already resumed timer.
+[2026-10-07T07:34:31Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T07:34:31Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T07:34:31Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T07:34:31Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T07:34:31Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T07:34:31Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T07:34:31Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None
+[2026-10-07T07:34:31Z WARN  webrender::device::gl] Cropping texture upload Box2D((0, 0), (0, 1)) to None

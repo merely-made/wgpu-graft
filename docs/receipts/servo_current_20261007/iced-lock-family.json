@@ -1,0 +1,312 @@
+{
+  "lock_sha256": "e9928d76dcafb4b1d76085872e977eaad6dbfe8a4c055527071eafc39aa0056b",
+  "servo_source_family": [
+    {
+      "name": "servo",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-allocator",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-background-hang-monitor",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-background-hang-monitor-api",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-base",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-canvas",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-canvas-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-config",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-config-macro",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-constellation",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-constellation-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-default-resources",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-deny-public-fields",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-devtools",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-devtools-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-dom-struct",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-embedder-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-fonts",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-fonts-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-geometry",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-hyper-serde",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-jstraceable-derive",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-layout",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-layout-api",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-malloc-size-of",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media-audio",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media-derive",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media-dummy",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media-ohos",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media-player",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media-streams",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media-thread",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-media-webrtc",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-metrics",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-net",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-net-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-paint",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-paint-api",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-pixels",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-profile",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-profile-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-script",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-script-bindings",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-script-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-storage",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-storage-traits",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-timers",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-tracing",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-url",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-wakelock",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-webvtt",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-webxr-api",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    },
+    {
+      "name": "servo-xpath",
+      "version": "0.7.0",
+      "source": "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+    }
+  ],
+  "selected": {
+    "servo": [
+      "0.7.0"
+    ],
+    "surfman": [
+      "0.14.0"
+    ],
+    "mozangle": [
+      "0.7.1"
+    ],
+    "ipc-channel": [
+      "0.23.0"
+    ],
+    "mozjs": [
+      "0.26.4"
+    ],
+    "mozjs_sys": [
+      "153.3.0-1"
+    ],
+    "fontsan": [
+      "0.7.0"
+    ],
+    "wgpu": [
+      "28.0.0"
+    ],
+    "accesskit": [
+      "0.24.1"
+    ],
+    "stylo": [
+      "0.22.0"
+    ]
+  }
+}

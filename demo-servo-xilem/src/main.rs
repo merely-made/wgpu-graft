@@ -326,9 +326,9 @@ impl ApplicationHandler<MasonryUserEvent> for ServoXilemApp {
                         ElementState::Released => MouseButtonAction::Up,
                     };
                     let btn = match button {
-                        winit::event::MouseButton::Left => ServoMouseButton::Left,
-                        winit::event::MouseButton::Right => ServoMouseButton::Right,
-                        winit::event::MouseButton::Middle => ServoMouseButton::Middle,
+                        winit::event::MouseButton::Left => ServoMouseButton::Primary,
+                        winit::event::MouseButton::Right => ServoMouseButton::Secondary,
+                        winit::event::MouseButton::Middle => ServoMouseButton::Auxiliary,
                         winit::event::MouseButton::Back => ServoMouseButton::Back,
                         winit::event::MouseButton::Forward => ServoMouseButton::Forward,
                         winit::event::MouseButton::Other(v) => ServoMouseButton::Other(*v),

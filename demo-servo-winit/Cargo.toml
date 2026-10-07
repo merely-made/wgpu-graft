@@ -15,7 +15,7 @@ servo = ["servo-wgpu-interop-adapter/servo"]
 demo-support = { path = "../demo-support" }
 euclid = "0.22.11"
 image = "0.25"
-servo = { git = "https://github.com/servo/servo", rev = "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019" }
+servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5ec4e959c943ad7cc7" }
 pollster = "0.4.0"
 rustls = "0.23.37"
 servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", default-features = false }
@@ -27,4 +27,4 @@ winit = "0.30.13"
 
 [target.'cfg(windows)'.dependencies]
 # Build the matching ANGLE EGL/GLES DLLs for surfman's Windows EGL device.
-servo = { git = "https://github.com/servo/servo", rev = "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019", features = ["no-wgl"] }
+servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5ec4e959c943ad7cc7", features = ["no-wgl"] }

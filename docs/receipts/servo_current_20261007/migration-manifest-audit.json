@@ -1,0 +1,115 @@
+{
+  "recorded_utc": "2026-10-07T06:59:46.723789+00:00",
+  "manifest_declarations": [
+    {
+      "path": "servo-wgpu-interop-adapter/Cargo.toml",
+      "scope": "dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [],
+      "sha256": "483162112aafef42958acd9bedcefc09a5e6498dd17dc6be13dde066955ba425"
+    },
+    {
+      "path": "demo-servo-bevy/Cargo.toml",
+      "scope": "dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [],
+      "sha256": "05652531ef38cc1b97470a0f932593bd51b633a70592193927d3d13fc6bf0918"
+    },
+    {
+      "path": "demo-servo-blitz/Cargo.toml",
+      "scope": "dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [],
+      "sha256": "81829bcb45a3058238330cbf9ff1d076bcacd07fb4bb91c7539b70f5ab998017"
+    },
+    {
+      "path": "demo-servo-egui/Cargo.toml",
+      "scope": "dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [],
+      "sha256": "eb3a559993f63c04758abfecef3b9a8c42d4a47efb5fff805d8f08a3b808ce4e"
+    },
+    {
+      "path": "demo-servo-gpui/Cargo.toml",
+      "scope": "dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [],
+      "sha256": "ccf14055346e933698af09548943073cafaf0e7df735c07e860efdb14424395e"
+    },
+    {
+      "path": "demo-servo-iced/Cargo.toml",
+      "scope": "dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [],
+      "sha256": "5e40553f643c015f05b937d88accd5e172125132437b23b3ad01ce9db2d937d8"
+    },
+    {
+      "path": "demo-servo-slint/Cargo.toml",
+      "scope": "dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [],
+      "sha256": "9068e483c0525f0e854c383057a5928659e2f9906dcc46de11ad0e0e71f3c587"
+    },
+    {
+      "path": "demo-servo-winit/Cargo.toml",
+      "scope": "dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [],
+      "sha256": "37bfe5f397173ce4605374eabced511af89c0f7c37e9ed4a8f616c151439332d"
+    },
+    {
+      "path": "demo-servo-winit/Cargo.toml",
+      "scope": "target.cfg(windows).dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [
+        "no-wgl"
+      ],
+      "sha256": "37bfe5f397173ce4605374eabced511af89c0f7c37e9ed4a8f616c151439332d"
+    },
+    {
+      "path": "demo-servo-xilem/Cargo.toml",
+      "scope": "dependencies",
+      "revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+      "features": [],
+      "sha256": "2d9d4fec314ece839f76e321bd8a8a131fb75b0b296378267688f755f9aaba76"
+    }
+  ],
+  "locks": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "70a46ae6e802ede655b18a2e98cb11b73d099d8ac617866fdc6a73983674b25d",
+      "servo_packages": 55,
+      "servo_sources": [
+        "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+      ],
+      "surfman": [
+        "0.14.0"
+      ],
+      "mozangle": [
+        "0.7.1"
+      ],
+      "ipc_channel": [
+        "0.23.0"
+      ]
+    },
+    {
+      "path": "demo-servo-iced/Cargo.lock",
+      "sha256": "e9928d76dcafb4b1d76085872e977eaad6dbfe8a4c055527071eafc39aa0056b",
+      "servo_packages": 55,
+      "servo_sources": [
+        "git+https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f31a259f04a574f5ec4e959c943ad7cc7"
+      ],
+      "surfman": [
+        "0.14.0"
+      ],
+      "mozangle": [
+        "0.7.1"
+      ],
+      "ipc_channel": [
+        "0.23.0"
+      ]
+    }
+  ],
+  "all_exact_revision": true,
+  "runtime_qualification": "pending"
+}

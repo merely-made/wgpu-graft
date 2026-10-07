@@ -1,0 +1,16 @@
+{
+  "recorded_utc": "2026-10-07T08:30:53.635849+00:00",
+  "source_inputs": 84,
+  "source_archive_and_current_inputs": "PASS",
+  "typed_rows": 11,
+  "typed_results_and_logs": "PASS",
+  "native_build_artifacts_executable_and_runtime_angle": "PASS",
+  "default_sync": "Existing",
+  "loaded_angle_count": 2,
+  "markdown_relative_links": "PASS",
+  "changed_rust_normalized_equivalence": "PASS",
+  "git_diff_check": "PASS",
+  "formatting_scope": "FAIL existing138 root paths and one Iced path; no broad formatting applied",
+  "source_mismatches": [],
+  "missing_links": []
+}

@@ -1,0 +1,31 @@
+{
+  "command": [
+    "cargo",
+    "+1.97.1",
+    "check",
+    "--locked",
+    "-p",
+    "demo-servo-winit",
+    "--no-default-features",
+    "--features",
+    "wgpu-30,servo",
+    "--target-dir",
+    "C:/t/cargo-targets/wgpu-graft",
+    "-j2"
+  ],
+  "environment": {
+    "RUSTFLAGS": "-D warnings",
+    "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+    "CMAKE_GENERATOR": "Visual Studio 17 2022",
+    "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+  },
+  "priority": "BelowNormal",
+  "started_utc": "2026-10-07T06:48:18.006435+00:00",
+  "ended_utc": "2026-10-07T07:04:15.118539+00:00",
+  "elapsed_seconds": 957.140000000014,
+  "exit_code": 101,
+  "log_sha256": "be731f552df830af6b4639841509652f1fbc9e5c8e453b817acb359b5e68f333",
+  "input_manifest": "donor30-check-inputs.json",
+  "all_inputs_unchanged": true,
+  "exception": "Minimum -j2 after preserved -j1 WebRender jobserver wait diagnostic; same source, no cache patch."
+}

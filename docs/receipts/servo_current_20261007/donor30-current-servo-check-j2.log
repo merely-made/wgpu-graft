@@ -1,0 +1,299 @@
+    Blocking waiting for file lock on package cache
+error: invalid type: boolean `true`, expected a map
+ --> ..\..\..\.cargo\git\checkouts\servo-e53a6e7b994a25fe\aac43a3\python\tidy\tests\lints-configuration\no-workspace\Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling webrender v0.70.0
+   Compiling anstream v1.0.0
+    Checking warp v0.4.3
+    Checking thiserror v1.0.69
+    Checking cookie v0.16.2
+    Checking rustls-pki-types v1.14.1
+    Checking aws-lc-sys v0.41.0
+   Compiling clap_lex v1.1.0
+   Compiling servo-embedder-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking aws-lc-rs v1.17.0
+   Compiling clap_builder v4.6.0
+    Checking webdriver v0.54.0
+   Compiling getrandom v0.4.3
+    Checking servo-hyper-serde v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling toml_datetime v0.7.5+spec-1.1.0
+   Compiling cbindgen v0.29.4
+   Compiling winnow v0.7.15
+   Compiling rustls v0.23.41
+    Checking inventory v0.3.24
+   Compiling once_cell v1.21.4
+    Checking untrusted v0.9.0
+    Checking rustls-webpki v0.103.13
+   Compiling tempfile v3.27.0
+   Compiling toml v0.9.12+spec-1.1.0
+   Compiling clap v4.6.1
+    Checking subtle v2.6.1
+   Compiling surfman v0.14.0
+    Checking cpufeatures v0.3.0
+   Compiling darling_core v0.23.0
+    Checking chacha20 v0.10.1
+   Compiling libz-sys v1.1.29
+    Checking rand v0.10.2
+   Compiling darling_macro v0.23.0
+   Compiling darling v0.23.0
+   Compiling servo-tracing v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling serde_with_macros v3.22.0
+    Checking read-fonts v0.43.3
+    Checking serde_with v3.22.0
+    Checking alloc-no-stdlib v2.0.4
+   Compiling icu_casemap_data v2.1.1
+    Checking sys-locale v0.3.2
+    Checking alloc-stdlib v0.2.4
+   Compiling clang-sys v1.8.1
+   Compiling libc v0.2.186
+    Checking brotli-decompressor v5.0.3
+   Compiling minimal-lexical v0.2.1
+   Compiling regex-syntax v0.8.11
+    Checking strength_reduce v0.2.4
+    Checking transpose v0.2.3
+   Compiling nom v7.1.3
+   Compiling regex-automata v0.4.14
+    Checking icu_casemap v2.1.1
+    Checking hashbrown v0.16.1
+    Checking primal-check v0.3.4
+   Compiling libloading v0.8.9
+    Checking num-complex v0.4.6
+   Compiling either v1.16.0
+   Compiling bindgen v0.72.1
+   Compiling itertools v0.13.0
+    Checking hashbrown v0.15.5
+    Checking rustfft v6.4.1
+   Compiling regex v1.12.4
+    Checking mozjs_icu_collections v153.3.0
+   Compiling cexpr v0.6.0
+    Checking fixedbitset v0.5.7
+   Compiling shlex v1.3.0
+   Compiling rustc-hash v2.1.2
+   Compiling wuff-capi v0.2.0
+    Checking petgraph v0.8.3
+    Checking realfft v3.5.0
+   Compiling servo-media-derive v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling mozjs_icu_normalizer_data v153.3.0
+    Checking speexdsp-resampler v0.1.0
+    Checking byte-slice-cast v1.2.3
+    Checking wuff v0.2.8
+   Compiling fontsan v0.7.0
+   Compiling zstd-sys v2.0.16+zstd.1.5.7
+   Compiling harfbuzz-sys v0.8.0
+   Compiling icu_calendar_data v2.1.1
+    Checking mozjs_utf16_iter v153.3.0
+    Checking mozjs_utf8_iter v153.3.0
+    Checking hybrid-array v0.4.14
+    Checking write16 v1.0.0
+    Checking ohos-deviceinfo-sys v0.1.7
+   Compiling mozjs_icu_collator_data v153.3.0
+   Compiling simd-adler32 v0.3.9
+   Compiling adler2 v2.0.1
+   Compiling icu_time_data v2.1.1
+   Compiling thiserror v2.0.18
+   Compiling miniz_oxide v0.8.9
+    Checking ohos-deviceinfo v0.1.0
+    Checking mozjs_icu_normalizer v153.3.0
+    Checking skrifa v0.46.2
+   Compiling mozjs_collator_glue v153.3.0
+   Compiling mozjs_properties_glue v153.3.0
+   Compiling mozjs_unicode_bidi_ffi v153.3.0
+   Compiling mozjs_locale_glue v153.3.0
+   Compiling mozjs_normalizer_glue v153.3.0
+   Compiling libsqlite3-sys v0.36.0
+    Checking calendrical_calculations v0.2.4
+    Checking itertools v0.15.0
+   Compiling crc32fast v1.5.0
+   Compiling filetime v0.2.29
+   Compiling strck v1.0.0
+   Compiling encoding_c_mem v0.2.6
+   Compiling smallvec v1.15.2
+   Compiling zstd-safe v7.2.4
+    Checking ixdtf v0.6.6
+   Compiling encoding_c v0.9.8
+    Checking unicode-properties v0.1.4
+    Checking icu_calendar v2.1.1
+    Checking naga-types v30.0.1
+   Compiling diplomat_core v0.14.0
+   Compiling tar v0.4.46
+   Compiling flate2 v1.1.9
+    Checking crypto-common v0.2.2
+    Checking block-buffer v0.12.1
+    Checking const-oid v0.10.2
+    Checking fastrand v2.4.1
+   Compiling heck v0.4.1
+    Checking digest v0.11.3
+   Compiling sea-query-derive v1.0.0
+    Checking mozjs_icu_collator v153.3.0
+    Checking icu_time v2.1.1
+   Compiling mozjs_sys v153.3.0-1
+   Compiling diplomat v0.14.0
+    Checking hashlink v0.11.1
+    Checking icu_provider_adapters v2.1.1
+    Checking html5ever v0.40.1
+   Compiling glutin_wgl_sys v0.6.1
+    Checking arraystring v0.3.0
+    Checking spirv v0.4.0+sdk-1.4.341.0
+   Compiling num-traits v0.2.19
+    Checking diplomat-runtime v0.14.0
+   Compiling prettyplease v0.2.37
+    Checking fallible-streaming-iterator v0.1.9
+    Checking fallible-iterator v0.3.0
+    Checking naga v30.0.1
+    Checking rusqlite v0.38.0
+    Checking icu_capi v2.1.2
+    Checking sea-query v1.0.2
+    Checking zstd v0.13.3
+    Checking sha1 v0.11.0
+    Checking wgpu-types v30.0.1
+    Checking brotli v8.0.4
+    Checking tokio-rustls v0.26.4
+    Checking webpki-roots v1.0.8
+   Compiling servo-script-bindings v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking chrono v0.4.45
+    Checking data-encoding v2.11.0
+   Compiling fst v0.4.7
+   Compiling windows_x86_64_msvc v0.53.1
+    Checking compression-core v0.4.32
+    Checking futures-io v0.3.32
+    Checking rustc-demangle v0.1.27
+    Checking gpu-allocator v0.28.0
+    Checking backtrace v0.3.76
+    Checking compression-codecs v0.4.38
+    Checking tungstenite v0.30.0
+    Checking wgpu-naga-bridge v30.0.1
+    Checking sea-query-rusqlite v0.8.0
+   Compiling windows_x86_64_msvc v0.52.6
+    Checking tower-layer v0.3.3
+    Checking cmov v0.5.4
+    Checking sync_wrapper v1.0.2
+    Checking wgpu-hal v30.0.1
+    Checking tower v0.5.3
+    Checking ctutils v0.4.2
+   Compiling servo-dom-struct v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking mozjs v0.26.4
+    Checking async-tungstenite v0.35.0
+    Checking async-compression v0.4.42
+    Checking futures v0.3.32
+    Checking hyper-rustls v0.27.9
+   Compiling mozangle v0.7.1
+    Checking rustls-platform-verifier v0.7.0
+    Checking nom-language v0.1.0
+    Checking tokio-stream v0.1.18
+    Checking xml5ever v0.40.0
+    Checking quick_cache v0.7.0
+   Compiling servo-deny-public-fields v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling servo-jstraceable-derive v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling async-recursion v1.1.1
+   Compiling servo-script v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking cpubits v0.1.1
+    Checking once_cell_polyfill v1.70.2
+    Checking anstyle v1.0.14
+    Checking utf8parse v0.2.2
+    Checking imsz v0.4.1
+    Checking anstyle-wincon v3.0.11
+    Checking anstyle-parse v1.0.0
+    Checking crypto-bigint v0.7.5
+    Checking nom-rfc8288 v0.4.0
+    Checking windows-targets v0.53.5
+   Compiling servo-devtools v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking wgpu-core-deps-windows-linux-android v30.0.1
+    Checking servo-webvtt v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking chardetng v1.0.0
+    Checking anstyle-query v1.1.5
+    Checking buf-read-ext v0.4.0
+    Checking base64ct v1.8.3
+    Checking colorchoice v1.0.5
+    Checking error-code v3.3.2
+    Checking swapper v0.1.0
+    Checking is_terminal_polyfill v1.70.2
+    Checking clipboard-win v5.4.1
+    Checking wgpu-core v30.0.1
+    Checking windows-targets v0.52.6
+    Checking windows-sys v0.60.2
+   Compiling winit v0.30.13
+    Checking env_filter v2.0.0
+   Compiling grafting v0.6.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting)
+    Checking unicode_categories v0.1.1
+    Checking jiff v0.2.29
+    Checking env_logger v0.11.11
+    Checking arboard v3.6.1
+    Checking windows-sys v0.52.0
+    Checking wgpu v30.0.1
+    Checking grafting-frame v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting-frame)
+    Checking smol_str v0.2.2
+    Checking cursor-icon v1.2.0
+   Compiling demo-servo-winit v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-winit)
+    Checking pollster v0.4.0
+    Checking servo-malloc-size-of v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-base v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-url v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-profile-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-pixels v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-geometry v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-paint-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-net-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-fonts-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-streams v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-player v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-devtools-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-webxr-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-canvas-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-audio v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-webrtc v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-storage-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-constellation-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-thread v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-fonts v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-script-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-background-hang-monitor-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-layout-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-timers v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-metrics v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-net v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-xpath v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-background-hang-monitor v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-canvas v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-constellation v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-layout v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-paint v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-dummy v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-storage v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-default-resources v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-wakelock v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-profile v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking demo-support v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-support)
+    Checking servo-wgpu-interop-adapter v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\servo-wgpu-interop-adapter)
+error[E0599]: no variant, associated function, or constant named `Left` found for enum `servo::MouseButton` in the current scope
+   --> demo-servo-winit\src\main.rs:329:74
+    |
+329 |                     winit::event::MouseButton::Left => ServoMouseButton::Left,
+    |                                                                          ^^^^ variant, associated function, or constant not found in `servo::MouseButton`
+
+error[E0599]: no variant, associated function, or constant named `Right` found for enum `servo::MouseButton` in the current scope
+   --> demo-servo-winit\src\main.rs:330:75
+    |
+330 |                     winit::event::MouseButton::Right => ServoMouseButton::Right,
+    |                                                                           ^^^^^ variant, associated function, or constant not found in `servo::MouseButton`
+
+error[E0599]: no variant, associated function, or constant named `Middle` found for enum `servo::MouseButton` in the current scope
+   --> demo-servo-winit\src\main.rs:331:76
+    |
+331 |                     winit::event::MouseButton::Middle => ServoMouseButton::Middle,
+    |                                                                            ^^^^^^ variant, associated function, or constant not found in `servo::MouseButton`
+
+error[E0599]: no variant, associated function, or constant named `Left` found for enum `servo::MouseButton` in the current scope
+   --> demo-servo-winit\src\main.rs:520:43
+    |
+520 |                         ServoMouseButton::Left,
+    |                                           ^^^^ variant, associated function, or constant not found in `servo::MouseButton`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `demo-servo-winit` (bin "demo-servo-winit") due to 4 previous errors

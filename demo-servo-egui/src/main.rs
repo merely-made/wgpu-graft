@@ -443,9 +443,9 @@ impl App for ServoEguiApp {
 
 fn map_button(button: egui::PointerButton) -> Option<ServoMouseButton> {
     Some(match button {
-        egui::PointerButton::Primary => ServoMouseButton::Left,
-        egui::PointerButton::Secondary => ServoMouseButton::Right,
-        egui::PointerButton::Middle => ServoMouseButton::Middle,
+        egui::PointerButton::Primary => ServoMouseButton::Primary,
+        egui::PointerButton::Secondary => ServoMouseButton::Secondary,
+        egui::PointerButton::Middle => ServoMouseButton::Auxiliary,
         egui::PointerButton::Extra1 => ServoMouseButton::Back,
         egui::PointerButton::Extra2 => ServoMouseButton::Forward,
     })

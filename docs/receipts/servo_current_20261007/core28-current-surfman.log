@@ -1,0 +1,10 @@
+    Blocking waiting for file lock on package cache
+error: invalid type: boolean `true`, expected a map
+ --> ..\..\..\.cargo\git\checkouts\servo-e53a6e7b994a25fe\aac43a3\python\tidy\tests\lints-configuration\no-workspace\Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+    Blocking waiting for file lock on package cache
+   Compiling surfman v0.14.0
+   Compiling grafting v0.6.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 58.36s

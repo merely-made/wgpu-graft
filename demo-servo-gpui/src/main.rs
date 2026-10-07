@@ -254,37 +254,37 @@ impl Render for ServoView {
                     cx.listener(|view, event: &MouseDownEvent, window, cx| {
                         view.url_focused = false;
                         view.viewport_focus.focus(window, cx);
-                        view.servo_mouse_down(ServoMouseButton::Left, event.position);
+                        view.servo_mouse_down(ServoMouseButton::Primary, event.position);
                     }),
                 )
                 .on_mouse_down(
                     GpuiMouseButton::Right,
                     cx.listener(|view, event: &MouseDownEvent, _window, _cx| {
-                        view.servo_mouse_down(ServoMouseButton::Right, event.position);
+                        view.servo_mouse_down(ServoMouseButton::Secondary, event.position);
                     }),
                 )
                 .on_mouse_down(
                     GpuiMouseButton::Middle,
                     cx.listener(|view, event: &MouseDownEvent, _window, _cx| {
-                        view.servo_mouse_down(ServoMouseButton::Middle, event.position);
+                        view.servo_mouse_down(ServoMouseButton::Auxiliary, event.position);
                     }),
                 )
                 .on_mouse_up(
                     GpuiMouseButton::Left,
                     cx.listener(|view, event: &MouseUpEvent, _window, _cx| {
-                        view.servo_mouse_up(ServoMouseButton::Left, event.position);
+                        view.servo_mouse_up(ServoMouseButton::Primary, event.position);
                     }),
                 )
                 .on_mouse_up(
                     GpuiMouseButton::Right,
                     cx.listener(|view, event: &MouseUpEvent, _window, _cx| {
-                        view.servo_mouse_up(ServoMouseButton::Right, event.position);
+                        view.servo_mouse_up(ServoMouseButton::Secondary, event.position);
                     }),
                 )
                 .on_mouse_up(
                     GpuiMouseButton::Middle,
                     cx.listener(|view, event: &MouseUpEvent, _window, _cx| {
-                        view.servo_mouse_up(ServoMouseButton::Middle, event.position);
+                        view.servo_mouse_up(ServoMouseButton::Auxiliary, event.position);
                     }),
                 )
                 .on_mouse_move(

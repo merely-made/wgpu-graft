@@ -1,0 +1,360 @@
+    Updating crates.io index
+    Updating git repository `https://github.com/iced-rs/iced`
+From https://github.com/iced-rs/iced
+ * [new ref]           4255f613b887c3362214edd128acb8d2722bd0de -> refs/commit/4255f613b887c3362214edd128acb8d2722bd0de
+    Updating git repository `https://github.com/servo/servo`
+error: invalid type: boolean `true`, expected a map
+ --> ..\..\..\.cargo\git\checkouts\servo-e53a6e7b994a25fe\aac43a3\python\tidy\tests\lints-configuration\no-workspace\Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+    Updating git repository `https://github.com/iced-rs/winit.git`
+From https://github.com/iced-rs/winit
+ * [new ref]           05b8ff17a06562f0a10bb46e6eaacbe2a95cb5ed -> refs/commit/05b8ff17a06562f0a10bb46e6eaacbe2a95cb5ed
+    Updating git repository `https://github.com/iced-rs/cryoglyph.git`
+From https://github.com/iced-rs/cryoglyph
+ * [new ref]         1d68895e9c4c9b73739f826e81c2e3012c155cce -> refs/commit/1d68895e9c4c9b73739f826e81c2e3012c155cce
+    Removing aead v0.6.1
+    Removing aead-stream v0.6.0
+    Removing aes v0.9.3
+    Removing aes-gcm v0.11.1
+    Removing aes-kw v0.3.1
+    Removing argon2 v0.6.0-rc.8
+      Adding arraystring v0.3.0
+    Removing base16ct v1.0.0
+    Removing blake2 v0.11.0
+    Removing block-padding v0.4.2
+      Adding bs58 v0.5.1
+    Updating calendrical_calculations v0.1.3 -> v0.2.4
+    Removing cbc v0.2.1
+      Adding cbindgen v0.29.4
+    Removing chacha20poly1305 v0.11.0
+    Updating chardetng v0.1.17 -> v1.0.0
+    Removing cipher v0.5.2
+      Adding clap v4.6.7
+      Adding clap_builder v4.6.7
+      Adding clap_lex v1.1.1
+    Updating content-security-policy v0.8.2 -> v0.9.0
+    Removing crypto-primes v0.7.2
+    Removing cshake v0.2.1
+    Updating cssparser v0.37.0 -> v0.38.0
+    Removing ctr v0.10.1
+    Removing curve25519-dalek v5.0.0
+    Removing curve25519-dalek-derive v0.1.1
+      Adding darling v0.24.1
+      Adding darling_core v0.24.1
+      Adding darling_macro v0.24.1
+    Removing dbl v0.5.0
+    Removing der v0.8.1
+    Updating diplomat v0.8.0 -> v0.14.0
+    Updating diplomat-runtime v0.8.3 -> v0.14.0
+    Updating diplomat_core v0.8.1 -> v0.14.0
+      Adding dyn-clone v1.0.20
+    Removing ecdsa v0.17.0
+    Removing ed25519 v3.0.0
+    Removing ed25519-dalek v3.0.0
+    Removing ed448 v0.5.0
+    Removing ed448-goldilocks v0.14.0-pre.15
+    Removing elliptic-curve v0.14.1
+    Removing ff v0.14.0
+    Removing fiat-crypto v0.3.0
+    Updating fixed_decimal v0.5.6 -> v0.7.2
+    Removing ghash v0.6.0
+    Updating glifo v0.1.1 -> v0.3.0
+    Removing grid v1.0.1
+    Removing group v0.14.0
+    Updating harfbuzz-sys v0.7.0 -> v0.8.0
+    Removing hash2curve v0.14.0
+      Adding hashbrown v0.12.3
+      Adding hex v0.4.3
+    Removing hkdf v0.13.0
+    Removing hmac v0.13.0
+    Updating html5ever v0.39.0 -> v0.40.1
+    Removing http v0.2.12
+    Updating icu_calendar v1.5.2 -> v2.1.1 (available: v2.3.0)
+    Updating icu_calendar_data v1.5.1 -> v2.1.1 (available: v2.3.0)
+    Updating icu_capi v1.5.0 -> v2.1.2 (available: v2.3.2)
+    Updating icu_casemap v1.5.1 -> v2.1.1 (available: v2.3.0)
+    Updating icu_casemap_data v1.5.1 -> v2.1.1 (available: v2.3.0)
+    Updating icu_collator v1.5.0 -> v2.1.2 (available: v2.3.1)
+    Updating icu_collator_data v1.5.1 -> v2.1.1 (available: v2.3.0)
+ Downgrading icu_collections v2.3.0 -> v2.1.1 (available: v2.3.0)
+    Updating icu_datetime v1.5.1 -> v2.1.1 (available: v2.3.0)
+    Updating icu_datetime_data v1.5.1 -> v2.1.2 (available: v2.3.0)
+    Updating icu_decimal v1.5.0 -> v2.1.1 (available: v2.3.0)
+    Updating icu_decimal_data v1.5.1 -> v2.1.1 (available: v2.3.0)
+    Updating icu_experimental v0.1.0 -> v0.4.0
+    Updating icu_experimental_data v0.1.1 -> v0.4.1
+    Updating icu_list v1.5.0 -> v2.1.1 (available: v2.3.0)
+    Updating icu_list_data v1.5.1 -> v2.1.1 (available: v2.3.0)
+      Adding icu_locale v2.1.1 (available: v2.3.1)
+      Adding icu_locale_data v2.1.2 (available: v2.3.0)
+    Removing icu_locid_transform v1.5.0
+    Removing icu_locid_transform_data v1.5.1
+    Removing icu_normalizer v1.5.0
+    Removing icu_normalizer v2.3.0
+      Adding icu_normalizer v2.1.1 (available: v2.3.0)
+    Removing icu_normalizer_data v1.5.1
+    Removing icu_normalizer_data v2.3.0
+      Adding icu_normalizer_data v2.1.1 (available: v2.3.0)
+    Updating icu_pattern v0.2.0 -> v0.4.2
+    Updating icu_plurals v1.5.0 -> v2.1.1 (available: v2.3.0)
+    Updating icu_plurals_data v1.5.1 -> v2.1.1 (available: v2.3.0)
+    Removing icu_properties v1.5.1
+    Removing icu_properties v2.3.0
+      Adding icu_properties v2.1.2 (available: v2.3.0)
+    Removing icu_properties_data v1.5.1
+    Removing icu_properties_data v2.3.0
+      Adding icu_properties_data v2.1.2 (available: v2.3.0)
+    Updating icu_provider_adapters v1.5.0 -> v2.1.1 (available: v2.3.0)
+      Adding icu_segmenter v2.1.2 (available: v2.3.0)
+      Adding icu_segmenter_data v2.1.1 (available: v2.3.0)
+      Adding icu_time v2.1.1 (available: v2.3.0)
+      Adding icu_time_data v2.1.1 (available: v2.3.1)
+    Removing icu_timezone v1.5.0
+    Removing icu_timezone_data v1.5.1
+ Downgrading idna_adapter v1.2.2 -> v1.2.1 (available: v1.2.2)
+      Adding indexmap v1.9.3
+    Removing inout v0.2.2
+    Updating ipc-channel v0.22.0 -> v0.23.0
+      Adding ixdtf v0.6.6
+      Adding jiff-tzdb v0.1.9
+      Adding jiff-tzdb-platform v0.1.3
+    Removing k12 v0.5.1
+    Removing keccak v0.2.2
+    Removing kem v0.3.0
+    Updating mach2 v0.6.0 -> v0.7.0
+    Updating markup5ever v0.39.0 -> v0.40.0
+    Removing ml-dsa v0.1.1
+    Removing ml-kem v0.3.2
+    Removing module-lattice v0.2.3
+    Updating mozangle v0.6.0 -> v0.7.1
+    Updating mozjs v0.21.6 -> v0.26.4 (available: v0.26.7)
+      Adding mozjs_collator_glue v153.3.0
+      Adding mozjs_icu_collator v153.3.0
+      Adding mozjs_icu_collator_data v153.3.0
+      Adding mozjs_icu_collections v153.3.0
+      Adding mozjs_icu_normalizer v153.3.0
+      Adding mozjs_icu_normalizer_data v153.3.0
+      Adding mozjs_locale_glue v153.3.0
+      Adding mozjs_normalizer_glue v153.3.0
+      Adding mozjs_properties_glue v153.3.0
+    Updating mozjs_sys v140.14.0-0 -> v153.3.0-1 (available: v153.3.0-3)
+      Adding mozjs_unicode_bidi_ffi v153.3.0
+      Adding mozjs_utf16_iter v153.3.0
+      Adding mozjs_utf8_iter v153.3.0
+    Removing ocb3 v0.2.0-rc.3
+      Adding ohos-deviceinfo v0.1.0
+      Adding ohos-pasteboard v0.1.0
+      Adding ohos-pasteboard-sys v0.1.6
+    Updating ohos-sys-opaque-types v0.1.11 -> v0.1.12
+      Adding os_pipe v1.2.3
+    Removing p256 v0.14.0
+    Removing p384 v0.14.0
+    Removing p521 v0.14.0
+    Removing password-hash v0.6.1
+    Removing pem-rfc7468 v1.0.0
+    Removing phc v0.6.1
+    Updating phf v0.13.1 -> v0.14.0
+    Updating phf_codegen v0.13.1 -> v0.14.0
+    Updating phf_generator v0.13.1 -> v0.14.0
+    Updating phf_macros v0.13.1 -> v0.14.0
+    Updating phf_shared v0.13.1 -> v0.14.0
+    Removing pkcs1 v0.8.0-rc.4
+    Removing pkcs8 v0.11.0
+    Removing poly1305 v0.9.1
+    Removing polyval v0.7.3
+      Adding primal-check v0.3.4
+    Removing primefield v0.14.0
+    Removing primeorder v0.14.0
+    Updating quick_cache v0.6.24 -> v0.7.0
+    Updating read-fonts v0.39.2 -> v0.43.3
+      Adding realfft v3.5.0
+      Adding ref-cast v1.0.27
+      Adding ref-cast-impl v1.0.27
+    Removing regex-automata v0.2.0
+    Removing rfc6979 v0.6.0
+    Removing ron v0.12.2
+    Removing rsa v0.10.0-rc.18
+      Adding rustfft v6.4.1
+      Adding ryu v1.0.23
+      Adding schemars v0.9.0
+      Adding schemars v1.2.2
+    Removing sec1 v0.8.1
+    Updating selectors v0.40.0 -> v0.41.0
+    Removing seq-macro v0.3.6
+      Adding serde_urlencoded v0.7.1
+      Adding serde_with v3.24.0
+      Adding serde_with_macros v3.24.0
+    Removing serdect v0.4.3
+    Removing servo v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-allocator v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-allocator v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-background-hang-monitor v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-background-hang-monitor v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-background-hang-monitor-api v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-background-hang-monitor-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-base v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-base v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-canvas v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-canvas v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-canvas-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-canvas-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-config v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-config v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-config-macro v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-config-macro v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-constellation v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-constellation v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-constellation-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-constellation-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-default-resources v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-default-resources v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-deny-public-fields v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-deny-public-fields v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-devtools v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-devtools v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-devtools-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-devtools-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-dom-struct v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-dom-struct v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-embedder-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-embedder-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-fonts v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-fonts v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-fonts-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-fonts-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-geometry v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-geometry v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-hyper-serde v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-hyper-serde v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-jstraceable-derive v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-jstraceable-derive v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-layout v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-layout v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-layout-api v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-layout-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-malloc-size-of v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-malloc-size-of v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media-audio v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media-audio v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media-derive v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media-derive v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media-dummy v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media-dummy v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media-ohos v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media-ohos v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media-player v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media-player v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media-streams v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media-streams v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media-thread v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media-thread v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-media-webrtc v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-media-webrtc v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-metrics v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-metrics v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-net v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-net v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-net-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-net-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-paint v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-paint v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-paint-api v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-paint-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-pixels v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-pixels v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-profile v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-profile v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-profile-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-profile-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-script v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-script v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-script-bindings v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-script-bindings v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-script-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-script-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-storage v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-storage v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-storage-traits v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-storage-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-timers v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-timers v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-tracing v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-tracing v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-url v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-url v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-wakelock v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-wakelock v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-webgl v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+    Removing servo-webvtt v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-webvtt v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-webxr-api v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-webxr-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Removing servo-xpath v0.5.0 (https://github.com/servo/servo?rev=1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019#1d44e5dd)
+      Adding servo-xpath v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Updating servo_arc v0.4.3 -> v0.5.0
+    Removing sha2 v0.11.0
+    Removing sha3 v0.11.0
+    Removing sha3 v0.12.0
+    Removing shake v0.1.0
+      Adding signal-hook-registry v1.4.8
+    Removing signature v3.0.0
+    Updating skrifa v0.42.1 -> v0.46.2
+    Removing spki v0.8.0
+    Removing sponge-cursor v0.1.0
+    Updating strck v0.1.2 -> v1.0.0
+    Removing strck_ident v0.1.2
+      Adding strength_reduce v0.2.4
+    Updating string_cache v0.9.0 -> v0.11.0
+    Updating string_cache_codegen v0.6.1 -> v0.11.2
+      Adding strsim v0.11.1
+    Updating stylo v0.20.0 -> v0.22.0
+    Updating stylo_atoms v0.20.0 -> v0.22.0
+    Updating stylo_derive v0.20.0 -> v0.22.0
+    Updating stylo_dom v0.20.0 -> v0.22.0
+    Updating stylo_malloc_size_of v0.20.0 -> v0.22.0
+    Updating stylo_static_prefs v0.20.0 -> v0.22.0
+    Updating stylo_traits v0.20.0 -> v0.22.0
+    Updating surfman v0.13.0 -> v0.14.0
+    Updating taffy v0.12.2 -> v0.14.0
+    Removing tikv-jemalloc-sys v0.6.1+5.3.0-1-ge13ca993e8ccb9ba9847cc330696e02839f328f7
+    Removing tikv-jemallocator v0.6.1
+    Updating to_shmem v0.5.0 -> v0.6.0
+    Updating to_shmem_derive v0.1.0 -> v0.2.0
+      Adding toml v0.9.12+spec-1.1.0
+      Adding toml_datetime v0.7.5+spec-1.1.0
+      Adding transpose v0.2.3
+      Adding tree_magic_mini v3.2.2
+    Removing turboshake v0.7.1
+    Removing typeid v1.0.3
+      Adding udmf v0.1.1
+      Adding udmf-sys v0.1.5
+    Removing universal-hash v0.6.1
+    Updating vello_common v0.0.9 -> v0.2.0
+    Updating vello_cpu v0.0.9 -> v0.2.0
+      Adding warp v0.4.3
+    Updating web_atoms v0.2.6 -> v0.3.0
+    Updating webdriver v0.53.0 -> v0.54.0
+    Removing windows v0.61.3
+    Removing windows-collections v0.2.0
+    Removing windows-core v0.61.2
+    Removing windows-future v0.2.1
+    Removing windows-link v0.1.3
+    Removing windows-numerics v0.2.0
+    Removing windows-result v0.3.4
+    Removing windows-strings v0.4.2
+    Removing windows-threading v0.1.0
+      Adding winnow v0.7.15
+      Adding wl-clipboard-rs v0.9.4
+    Removing wnaf v0.14.0
+    Removing x25519-dalek v3.0.0
+    Removing x448 v0.14.0-pre.12
+    Updating xml5ever v0.39.0 -> v0.40.0
+    Removing zerotrie v0.1.3
+note: pass `--verbose` to see 84 unchanged dependencies behind latest

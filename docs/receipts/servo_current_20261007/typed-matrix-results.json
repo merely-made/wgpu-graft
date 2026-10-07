@@ -1,0 +1,346 @@
+{
+  "started_utc": "2026-10-07T07:36:16.397647+00:00",
+  "completed_rows": [
+    {
+      "name": "core28-current-surfman",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "grafting",
+        "--no-default-features",
+        "--features",
+        "wgpu-28,surfman",
+        "-j1"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T07:36:16.397647+00:00",
+      "ended_utc": "2026-10-07T07:37:20.868657+00:00",
+      "elapsed_seconds": 64.46799999999348,
+      "exit_code": 0,
+      "log_sha256": "6338304ede8c23b01eda93f77223de7da78d50ed6b13938be95bd4654c58cbe7",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "core29-current-surfman",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "grafting",
+        "--no-default-features",
+        "--features",
+        "wgpu-29,surfman",
+        "-j1"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T07:37:20.893837+00:00",
+      "ended_utc": "2026-10-07T07:37:26.317715+00:00",
+      "elapsed_seconds": 5.437000000005355,
+      "exit_code": 0,
+      "log_sha256": "9961a05286058bf349a734ed598d8b971ee7be273127910a39e89abd151b646e",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "core30-current-surfman",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "grafting",
+        "--no-default-features",
+        "--features",
+        "wgpu-30,surfman",
+        "-j1"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T07:37:26.326553+00:00",
+      "ended_utc": "2026-10-07T07:37:31.468580+00:00",
+      "elapsed_seconds": 5.14100000000326,
+      "exit_code": 0,
+      "log_sha256": "a1f55debcc32d24c487eb76bd69ef140c025fc5e7ce9338267943f47fe5c0e7d",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "donor29-current-servo",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "demo-servo-winit",
+        "-j2"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T07:37:31.490172+00:00",
+      "ended_utc": "2026-10-07T07:39:46.290585+00:00",
+      "elapsed_seconds": 134.7970000000205,
+      "exit_code": 0,
+      "log_sha256": "9d8f9535b242a636466c953617c2bdc1675ca114ff20cd3256fd315f38a0c2c5",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "demo-xilem-current-servo",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "demo-servo-xilem",
+        "-j2"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T07:39:46.319841+00:00",
+      "ended_utc": "2026-10-07T07:41:58.941730+00:00",
+      "elapsed_seconds": 132.625,
+      "exit_code": 0,
+      "log_sha256": "52c8653f6c9b9d77298b8e5eb810214f4ffe4582df3d7de4d5a6ea398895e293",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "demo-gpui-current-servo",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "demo-servo-gpui",
+        "-j2"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T07:41:58.970900+00:00",
+      "ended_utc": "2026-10-07T07:54:18.573603+00:00",
+      "elapsed_seconds": 739.6089999999967,
+      "exit_code": 0,
+      "log_sha256": "d05d7f7b6314a6405c96e955d25e426dc5d60b4a0cb1ae0357345563259e8559",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "demo-bevy-current-servo",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "demo-servo-bevy",
+        "-j2"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T07:54:18.614968+00:00",
+      "ended_utc": "2026-10-07T07:58:34.282564+00:00",
+      "elapsed_seconds": 255.67199999999139,
+      "exit_code": 0,
+      "log_sha256": "69377c4e24b205ba58b2315f11362b3d28758ae92ae09d873c5829995a3a6aef",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "demo-blitz-current-servo",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "demo-servo-blitz",
+        "-j2"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T07:58:34.307562+00:00",
+      "ended_utc": "2026-10-07T08:00:10.549184+00:00",
+      "elapsed_seconds": 96.23399999999674,
+      "exit_code": 0,
+      "log_sha256": "94214352da6e5ffa37f81a70be297242b38c049e7b5f1de69f0b290cfd5530e1",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "demo-egui-current-servo",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "demo-servo-egui",
+        "-j2"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T08:00:10.580772+00:00",
+      "ended_utc": "2026-10-07T08:01:51.374146+00:00",
+      "elapsed_seconds": 100.79699999999139,
+      "exit_code": 0,
+      "log_sha256": "c8d7bb7a124e9b66ed5051815f6c1cba81dfcfd8062cf4d2b0d9e2f01cc9f670",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "demo-slint-current-servo",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "-p",
+        "demo-servo-slint",
+        "-j2"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T08:01:51.410548+00:00",
+      "ended_utc": "2026-10-07T08:11:54.693081+00:00",
+      "elapsed_seconds": 603.2969999999914,
+      "exit_code": 0,
+      "log_sha256": "eed7f53bd90132a1e02bcacae1ba361d5559164f84d527b17423a80b5f1a14ef",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    },
+    {
+      "name": "demo-iced-current-servo",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "check",
+        "--locked",
+        "--target-dir",
+        "C:/t/cargo-targets/wgpu-graft",
+        "--manifest-path",
+        "demo-servo-iced/Cargo.toml",
+        "-j2"
+      ],
+      "environment": {
+        "RUSTFLAGS": "-D warnings",
+        "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+        "CMAKE_GENERATOR": "Visual Studio 17 2022",
+        "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+      },
+      "priority": "BelowNormal",
+      "started_utc": "2026-10-07T08:11:55.237929+00:00",
+      "ended_utc": "2026-10-07T08:26:46.659057+00:00",
+      "elapsed_seconds": 891.4379999999946,
+      "exit_code": 0,
+      "log_sha256": "04ac47c22815ca3afd3cb788c2dd3329b1f37b1a3790b10ebe193c972fc5e5d3",
+      "input_manifest": "donor30-native-inputs.json",
+      "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+      "all_inputs_unchanged": true,
+      "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+    }
+  ],
+  "expected_rows": 11,
+  "all_completed": true
+}

@@ -31,7 +31,7 @@ eframe = { version = "0.35", default-features = false, features = [
 ] }
 euclid = "0.22.11"
 image = "0.25"
-servo = { git = "https://github.com/servo/servo", rev = "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019" }
+servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5ec4e959c943ad7cc7" }
 rustls = "0.23.37"
 servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
 url = "2.5.7"

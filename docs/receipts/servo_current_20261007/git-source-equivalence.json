@@ -1,0 +1,598 @@
+{
+  "recorded_utc": "2026-10-07T08:31:21.227523+00:00",
+  "source_input_manifest": "donor30-native-inputs.json",
+  "method": "Compare each raw input with staged Git blob; only standard CRLF-to-LF filtering may differ.",
+  "all84_inputs_exact_or_git_lf_equivalent": true,
+  "raw_exact_count": 72,
+  "git_lf_count": 12,
+  "inputs": [
+    {
+      "path": ".gitattributes",
+      "raw_sha256": "5a6c395d70ce6a7d10ed1dc0cbca9daed3359d2486cf70c8aebe478b410690b3",
+      "staged_sha256": "5a6c395d70ce6a7d10ed1dc0cbca9daed3359d2486cf70c8aebe478b410690b3",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "Cargo.lock",
+      "raw_sha256": "70a46ae6e802ede655b18a2e98cb11b73d099d8ac617866fdc6a73983674b25d",
+      "staged_sha256": "70a46ae6e802ede655b18a2e98cb11b73d099d8ac617866fdc6a73983674b25d",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "Cargo.toml",
+      "raw_sha256": "e1da718945e59732aaaa26c92ed2162b67da6a316c8b5b96586cd67c91864e2f",
+      "staged_sha256": "e1da718945e59732aaaa26c92ed2162b67da6a316c8b5b96586cd67c91864e2f",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-bevy/Cargo.toml",
+      "raw_sha256": "05652531ef38cc1b97470a0f932593bd51b633a70592193927d3d13fc6bf0918",
+      "staged_sha256": "c10556616c54361a140655aaffb835aecb0ec00d1d723841942c107b570474d1",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "demo-servo-bevy/README.md",
+      "raw_sha256": "2aa8d9a63900c7be6af415c98a98f90f4cc69f3c2b0beff8fac17de35772b930",
+      "staged_sha256": "2aa8d9a63900c7be6af415c98a98f90f4cc69f3c2b0beff8fac17de35772b930",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-bevy/build.rs",
+      "raw_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "staged_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-bevy/src/main.rs",
+      "raw_sha256": "af78287b43050b78d06bb36897cd08a75a0671747b56063f96b15b18960b1ac9",
+      "staged_sha256": "af78287b43050b78d06bb36897cd08a75a0671747b56063f96b15b18960b1ac9",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-blitz/Cargo.toml",
+      "raw_sha256": "81829bcb45a3058238330cbf9ff1d076bcacd07fb4bb91c7539b70f5ab998017",
+      "staged_sha256": "670b0ab7efe6cde63ac992cfe1c98b1cd202b4d0b17e80e5d065eaf96b1c23e2",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "demo-servo-blitz/README.md",
+      "raw_sha256": "db87a21e125eeb57d2dbcd68a64ae716a7eea0b1f2de60c8d5436b453bd26d01",
+      "staged_sha256": "db87a21e125eeb57d2dbcd68a64ae716a7eea0b1f2de60c8d5436b453bd26d01",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-blitz/build.rs",
+      "raw_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "staged_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-blitz/src/keyutils.rs",
+      "raw_sha256": "a36ac2b2f3713d35cab3d902c65700656a68aab0fa40185b088aacedd5a12d28",
+      "staged_sha256": "a36ac2b2f3713d35cab3d902c65700656a68aab0fa40185b088aacedd5a12d28",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-blitz/src/main.rs",
+      "raw_sha256": "7ecc20c8d55d332fcb7b790aeffd85b9f739ac40114ca7626d652b2ae1d020a8",
+      "staged_sha256": "7ecc20c8d55d332fcb7b790aeffd85b9f739ac40114ca7626d652b2ae1d020a8",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-egui/Cargo.toml",
+      "raw_sha256": "eb3a559993f63c04758abfecef3b9a8c42d4a47efb5fff805d8f08a3b808ce4e",
+      "staged_sha256": "01cc4a1c3d0464d9fac3f6e83b67fb48a4cd9e237d8e9a02c0bf14c7a0556a0b",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "demo-servo-egui/README.md",
+      "raw_sha256": "5d49434052aac08e11ab09477d5883b6185a0145be120d4f527518aab4ad5ead",
+      "staged_sha256": "5d49434052aac08e11ab09477d5883b6185a0145be120d4f527518aab4ad5ead",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-egui/build.rs",
+      "raw_sha256": "cd419d2f36d7b878429d3badaed5dec43303b18f30267307f271b2c0346e2cb6",
+      "staged_sha256": "cd419d2f36d7b878429d3badaed5dec43303b18f30267307f271b2c0346e2cb6",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-egui/src/keyutils.rs",
+      "raw_sha256": "24c470ceff79210259f20ec0c8cb9f2b22f69f8aa5b61fc16a856b50c78cc421",
+      "staged_sha256": "24c470ceff79210259f20ec0c8cb9f2b22f69f8aa5b61fc16a856b50c78cc421",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-egui/src/main.rs",
+      "raw_sha256": "4765745e87f9d4eb980c5fb9ee8c8b000187ed32bcc94d6234f27796f43c818e",
+      "staged_sha256": "4765745e87f9d4eb980c5fb9ee8c8b000187ed32bcc94d6234f27796f43c818e",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-gpui/Cargo.toml",
+      "raw_sha256": "ccf14055346e933698af09548943073cafaf0e7df735c07e860efdb14424395e",
+      "staged_sha256": "15007a96b466449368d8b13ad826e27999a795cd733b10897ba6c414be0bb59a",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "demo-servo-gpui/README.md",
+      "raw_sha256": "c0af1a76f2cbc8cc640294e993e1cb6bf499cad1682f8d6fc02f6578d5269b77",
+      "staged_sha256": "c0af1a76f2cbc8cc640294e993e1cb6bf499cad1682f8d6fc02f6578d5269b77",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-gpui/build.rs",
+      "raw_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "staged_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-gpui/src/keyutils.rs",
+      "raw_sha256": "ed9a9a0302c13a1f48d5bd8e244d150125b3f685fa9f6e829d603c55d79a47e8",
+      "staged_sha256": "ed9a9a0302c13a1f48d5bd8e244d150125b3f685fa9f6e829d603c55d79a47e8",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-gpui/src/main.rs",
+      "raw_sha256": "0180a42580d7227005c99b37835144673aa2f6889f10ceb4c6d27ab3537c622d",
+      "staged_sha256": "0180a42580d7227005c99b37835144673aa2f6889f10ceb4c6d27ab3537c622d",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-iced/Cargo.lock",
+      "raw_sha256": "e9928d76dcafb4b1d76085872e977eaad6dbfe8a4c055527071eafc39aa0056b",
+      "staged_sha256": "e9928d76dcafb4b1d76085872e977eaad6dbfe8a4c055527071eafc39aa0056b",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-iced/Cargo.toml",
+      "raw_sha256": "5e40553f643c015f05b937d88accd5e172125132437b23b3ad01ce9db2d937d8",
+      "staged_sha256": "889b196489b0828c887433ec2daf589af50c1084832fc07bff05c2b1379b6412",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "demo-servo-iced/README.md",
+      "raw_sha256": "078994b837aa64f376afb95df0434ce42e2a8ff03bf3345e8cc46cf72583f4cd",
+      "staged_sha256": "078994b837aa64f376afb95df0434ce42e2a8ff03bf3345e8cc46cf72583f4cd",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-iced/build.rs",
+      "raw_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "staged_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-iced/src/keyutils.rs",
+      "raw_sha256": "8650204b97f6df4aeebb4bc87ca5e7c99c6bd24d730749c810200a93ab225dba",
+      "staged_sha256": "8650204b97f6df4aeebb4bc87ca5e7c99c6bd24d730749c810200a93ab225dba",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-iced/src/main.rs",
+      "raw_sha256": "6d9a521891e4def932826e10ff6b7bdb169cbf2f006c2150b7bbad43db9a765c",
+      "staged_sha256": "6d9a521891e4def932826e10ff6b7bdb169cbf2f006c2150b7bbad43db9a765c",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-slint/Cargo.toml",
+      "raw_sha256": "9068e483c0525f0e854c383057a5928659e2f9906dcc46de11ad0e0e71f3c587",
+      "staged_sha256": "f0775a13b6dec1ecf251fd8849b63c54780b8fd983ad94ff87857270e1caab46",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "demo-servo-slint/README.md",
+      "raw_sha256": "4063342bea32629754a13e135190fa3f4b18faf940fbf2d7b35f9efd1ac3fb86",
+      "staged_sha256": "4063342bea32629754a13e135190fa3f4b18faf940fbf2d7b35f9efd1ac3fb86",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-slint/build.rs",
+      "raw_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "staged_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-slint/src/main.rs",
+      "raw_sha256": "9257d99748d5f0871fb899ab82962b78badaf61f59233818f1714ed78a610fbf",
+      "staged_sha256": "9257d99748d5f0871fb899ab82962b78badaf61f59233818f1714ed78a610fbf",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-winit/Cargo.toml",
+      "raw_sha256": "37bfe5f397173ce4605374eabced511af89c0f7c37e9ed4a8f616c151439332d",
+      "staged_sha256": "10784e30557c8b4f9b2f2647fde5c2cda5b7da5ca6b11d8601d7e252e44ee758",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "demo-servo-winit/README.md",
+      "raw_sha256": "5db426755a97b28832ae394ec009703cad3e695ce151acd7e7b53ca388bebe91",
+      "staged_sha256": "5db426755a97b28832ae394ec009703cad3e695ce151acd7e7b53ca388bebe91",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-winit/build.rs",
+      "raw_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "staged_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-winit/src/keyutils.rs",
+      "raw_sha256": "a36ac2b2f3713d35cab3d902c65700656a68aab0fa40185b088aacedd5a12d28",
+      "staged_sha256": "a36ac2b2f3713d35cab3d902c65700656a68aab0fa40185b088aacedd5a12d28",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-winit/src/main.rs",
+      "raw_sha256": "3d02aff6517b58755b0453985db6f941701fb9eb0ca6b2f5704437641c0fbe62",
+      "staged_sha256": "3d02aff6517b58755b0453985db6f941701fb9eb0ca6b2f5704437641c0fbe62",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-xilem/Cargo.toml",
+      "raw_sha256": "2d9d4fec314ece839f76e321bd8a8a131fb75b0b296378267688f755f9aaba76",
+      "staged_sha256": "50f65720ecf71666500c6a3b95bd41ef432d65fa6a15e42d7bbbf1de99fc5960",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "demo-servo-xilem/README.md",
+      "raw_sha256": "2ce8f45f081cac3a66333fd0dedd12a07b9dafefa3622bee0cb9b5f6f514afb0",
+      "staged_sha256": "2ce8f45f081cac3a66333fd0dedd12a07b9dafefa3622bee0cb9b5f6f514afb0",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-xilem/build.rs",
+      "raw_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "staged_sha256": "67d5ce3b6a04c8b907fc7b5395706166995a8ce89b57a8cc06c0c90c4eab17a6",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-xilem/src/keyutils.rs",
+      "raw_sha256": "a36ac2b2f3713d35cab3d902c65700656a68aab0fa40185b088aacedd5a12d28",
+      "staged_sha256": "a36ac2b2f3713d35cab3d902c65700656a68aab0fa40185b088aacedd5a12d28",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-xilem/src/main.rs",
+      "raw_sha256": "1a2662072ffcae03ac4e62d359912e9ec9a656d9e99046fd6336b6177681631e",
+      "staged_sha256": "1a2662072ffcae03ac4e62d359912e9ec9a656d9e99046fd6336b6177681631e",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-support/Cargo.toml",
+      "raw_sha256": "fceeeb2c57a91b5679fd5585461498026d4f8f8909170680d780cb8338098bbe",
+      "staged_sha256": "fceeeb2c57a91b5679fd5585461498026d4f8f8909170680d780cb8338098bbe",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-support/src/lib.rs",
+      "raw_sha256": "a63a8d22883a40adadbe710cd33ae51e8b4d3d5beebe27aea7a68aff86d5c521",
+      "staged_sha256": "a63a8d22883a40adadbe710cd33ae51e8b4d3d5beebe27aea7a68aff86d5c521",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting-frame/Cargo.toml",
+      "raw_sha256": "bf806abafb4b964a069a76b3898ccde375d180c8d0982dbe169fcf7033b26b48",
+      "staged_sha256": "bf806abafb4b964a069a76b3898ccde375d180c8d0982dbe169fcf7033b26b48",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting-frame/README.md",
+      "raw_sha256": "750fe4e013a9ce722759ec81011559f06f1ed831b9b05912a6366cf86f50cb83",
+      "staged_sha256": "750fe4e013a9ce722759ec81011559f06f1ed831b9b05912a6366cf86f50cb83",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting-frame/src/lib.rs",
+      "raw_sha256": "b2dd12f20ba59107a9326748bd7a0f16be5647667c2111a66407b14afcc7f169",
+      "staged_sha256": "b2dd12f20ba59107a9326748bd7a0f16be5647667c2111a66407b14afcc7f169",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/Cargo.toml",
+      "raw_sha256": "b75ab1db9c57defb06638f759bf2b8dac6d2674ae347248e575b1bb2d1728afe",
+      "staged_sha256": "7fa0b1d8e12cd1bed0947e42d772a013e26e960953ac99a3b38e2d37e0f353a4",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "grafting/README.md",
+      "raw_sha256": "300cafb9935953b532bb5f8edbc12216693a8e1a685f9ec9915147a9762d403d",
+      "staged_sha256": "76db4c08c232e6a1a2243d362af09854ce73d2f46c0d34865e69ccbadab0c683",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "grafting/build.rs",
+      "raw_sha256": "91a1961d00ebb90790dc804d16374485e3022b2d546acad3d01687a2251611f2",
+      "staged_sha256": "91a1961d00ebb90790dc804d16374485e3022b2d546acad3d01687a2251611f2",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/dx12_shared_texture.rs",
+      "raw_sha256": "0deaae38b6ed09b7d785ef096b4eea7234e76c0e32c8b7e71d3cf8ed60d38ecb",
+      "staged_sha256": "0deaae38b6ed09b7d785ef096b4eea7234e76c0e32c8b7e71d3cf8ed60d38ecb",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/error.rs",
+      "raw_sha256": "d9a65df7ea79b3a0f4cab44b6749256db344a055068737da50c1302413a0ac17",
+      "staged_sha256": "d9a65df7ea79b3a0f4cab44b6749256db344a055068737da50c1302413a0ac17",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/lib.rs",
+      "raw_sha256": "bbbca008253778c25b109070e527c2051de30e14c61d52bd63cfbe1556f8a4c5",
+      "staged_sha256": "bbbca008253778c25b109070e527c2051de30e14c61d52bd63cfbe1556f8a4c5",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/metal_texture_ref.rs",
+      "raw_sha256": "8330b53f60d0ef0458835638fcfe6389fdd66f4dec9a9c0ef9046f0e67b11e7a",
+      "staged_sha256": "8330b53f60d0ef0458835638fcfe6389fdd66f4dec9a9c0ef9046f0e67b11e7a",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/raw_gl/angle_d3d11.rs",
+      "raw_sha256": "23d511e0e21802b42b03ee0d53b106382209fb49b3395884fbd1d569e4728e66",
+      "staged_sha256": "23d511e0e21802b42b03ee0d53b106382209fb49b3395884fbd1d569e4728e66",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/raw_gl/dx12.rs",
+      "raw_sha256": "9defc3be1e60937ba2708c2c8586cac96b45a5c04a9b287c216f33e011c9a0a3",
+      "staged_sha256": "9defc3be1e60937ba2708c2c8586cac96b45a5c04a9b287c216f33e011c9a0a3",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/raw_gl/linux.rs",
+      "raw_sha256": "100cd6ef39648d85655090a3a62aa13ffa02fcd2089530dbd7a52477edce12ad",
+      "staged_sha256": "100cd6ef39648d85655090a3a62aa13ffa02fcd2089530dbd7a52477edce12ad",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/raw_gl/metal.rs",
+      "raw_sha256": "aab229b803807dd5c00f40078fbcda522da6a25ee7aba5543001e41ade6a1301",
+      "staged_sha256": "aab229b803807dd5c00f40078fbcda522da6a25ee7aba5543001e41ade6a1301",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/raw_gl/mod.rs",
+      "raw_sha256": "2e528f577f8d0227fdca5bf28c309c0baea6db9cb79a54e67659b2ed2dd9232c",
+      "staged_sha256": "2e528f577f8d0227fdca5bf28c309c0baea6db9cb79a54e67659b2ed2dd9232c",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/raw_gl/producer.rs",
+      "raw_sha256": "fe15af0f85a68fc7e87fb5a458261e704b55f2e3e77ec9fee2bfadb8d46c097b",
+      "staged_sha256": "fe15af0f85a68fc7e87fb5a458261e704b55f2e3e77ec9fee2bfadb8d46c097b",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/raw_gl/texture_normalizer.rs",
+      "raw_sha256": "aee6bffb3034e59a913ad40800b856b641c1dd535f5540179b4bdceebb512a2d",
+      "staged_sha256": "aee6bffb3034e59a913ad40800b856b641c1dd535f5540179b4bdceebb512a2d",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/raw_gl/windows.rs",
+      "raw_sha256": "d1db327f8fd3e4f429fd046d3211b8dc6e0f9995dbbf821b02771b6d201bb876",
+      "staged_sha256": "d1db327f8fd3e4f429fd046d3211b8dc6e0f9995dbbf821b02771b6d201bb876",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/surfman_gl/adapter.rs",
+      "raw_sha256": "3eb0385b7fe2ef5827dff2e7ee224e06c09dd6fe31e9f56b878264da92af5882",
+      "staged_sha256": "3eb0385b7fe2ef5827dff2e7ee224e06c09dd6fe31e9f56b878264da92af5882",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/surfman_gl/linux.rs",
+      "raw_sha256": "39187f8d9a7e94f580ad99fcff97f4bed05d9d54cdbe8af4c2f32ce6c35ae598",
+      "staged_sha256": "39187f8d9a7e94f580ad99fcff97f4bed05d9d54cdbe8af4c2f32ce6c35ae598",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/surfman_gl/metal/mod.rs",
+      "raw_sha256": "78f7dd351b5ec0f2ab673631d269a9919953839cbc2ecbabc150fefd57a905c7",
+      "staged_sha256": "78f7dd351b5ec0f2ab673631d269a9919953839cbc2ecbabc150fefd57a905c7",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/surfman_gl/mod.rs",
+      "raw_sha256": "2b04fb96b136dd35506a6cda4c6e4e5fb4cb2adcafaea0b80bd3ece2710b5f9d",
+      "staged_sha256": "2b04fb96b136dd35506a6cda4c6e4e5fb4cb2adcafaea0b80bd3ece2710b5f9d",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/surfman_gl/surfman_frame_context.rs",
+      "raw_sha256": "baff3333570fd6f25c6442e799a4fba61e9ffdf9cebeee5069812d483a324c77",
+      "staged_sha256": "baff3333570fd6f25c6442e799a4fba61e9ffdf9cebeee5069812d483a324c77",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows.rs",
+      "raw_sha256": "ec643e91b9342e926054af8ee2fb649e43f41f8c1bae11c430f412c9bb8d13d5",
+      "staged_sha256": "ec643e91b9342e926054af8ee2fb649e43f41f8c1bae11c430f412c9bb8d13d5",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows_dx12_shared.rs",
+      "raw_sha256": "a1fa33cfb28a8b669af4b2efad31ea1188104f16b727ce97bc77ce81b6d18a65",
+      "staged_sha256": "a1fa33cfb28a8b669af4b2efad31ea1188104f16b727ce97bc77ce81b6d18a65",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/sync.rs",
+      "raw_sha256": "94f2da58e71587005709a8550856c0264354d067c030102fb1293f7cdf93e694",
+      "staged_sha256": "94f2da58e71587005709a8550856c0264354d067c030102fb1293f7cdf93e694",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/sync_dx12.rs",
+      "raw_sha256": "7bd23a167f1ba1a4dbe2b732e7c7ef28602ba590692d0dec1a7387bdbc273ffb",
+      "staged_sha256": "7bd23a167f1ba1a4dbe2b732e7c7ef28602ba590692d0dec1a7387bdbc273ffb",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/sync_metal.rs",
+      "raw_sha256": "ee333ad5e66a2ae4034d2b4ce96f8c1e7ff39a2f358a307734e0a67f34e8b9b3",
+      "staged_sha256": "ee333ad5e66a2ae4034d2b4ce96f8c1e7ff39a2f358a307734e0a67f34e8b9b3",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/sync_vulkan.rs",
+      "raw_sha256": "87a769246185227e979819de43ffab4df4a746ff18d341be7f5f3e028734fb1e",
+      "staged_sha256": "87a769246185227e979819de43ffab4df4a746ff18d341be7f5f3e028734fb1e",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/vulkan_dmabuf.rs",
+      "raw_sha256": "2024672175268ed055a75c71ccfa3583dc0e6608e2b7d44ff60ab7a3f7f5e1be",
+      "staged_sha256": "2024672175268ed055a75c71ccfa3583dc0e6608e2b7d44ff60ab7a3f7f5e1be",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/src/wgpu_compat.rs",
+      "raw_sha256": "88f750d3908e3bf0a1fb22884a8b259d4490fd1f359d6effba96788f11494449",
+      "staged_sha256": "88f750d3908e3bf0a1fb22884a8b259d4490fd1f359d6effba96788f11494449",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "grafting/tests/dmabuf_roundtrip.rs",
+      "raw_sha256": "e523febc6880702c8ba84320b6cc5275adcf346b59b4e568c3558afa90b08efd",
+      "staged_sha256": "e523febc6880702c8ba84320b6cc5275adcf346b59b4e568c3558afa90b08efd",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "raw_sha256": "e37a4c7c4627b0767527085699b1f6ca573f385017907f346290419ef3e9cc58",
+      "staged_sha256": "e37a4c7c4627b0767527085699b1f6ca573f385017907f346290419ef3e9cc58",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/Cargo.toml",
+      "raw_sha256": "483162112aafef42958acd9bedcefc09a5e6498dd17dc6be13dde066955ba425",
+      "staged_sha256": "d5953ff3178062d7a270ca82e6d1e77429a326515d1eefeb5ff5bfb84e16e379",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/README.md",
+      "raw_sha256": "b5c7ea100b0b86f3a3bf12a1681b94acafd87c59acf620533de45891a03a8d42",
+      "staged_sha256": "7349e6426a4da0dd671fe035463760bac6b3ef279c0ca47f33a049939eaf39ea",
+      "raw_exact": false,
+      "only_git_lf_normalization": true
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/src/lib.rs",
+      "raw_sha256": "0bbf245a1a3e109f460d40173e5edf446539b3bd5aae6ff56b0e4e6826611a08",
+      "staged_sha256": "0bbf245a1a3e109f460d40173e5edf446539b3bd5aae6ff56b0e4e6826611a08",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "docs/receipts/servo_current_20261007/run-winit-smoke.ps1",
+      "raw_sha256": "219bb02b7ec3b061abd7a746cfadfc0be469ff8ff9cef34ab05c6579f9e2ba53",
+      "staged_sha256": "219bb02b7ec3b061abd7a746cfadfc0be469ff8ff9cef34ab05c6579f9e2ba53",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-winit/fixtures/animated.html",
+      "raw_sha256": "279990cb826ab99e3113dd25b59ab70dc56b9a9c3a786061c60022e26afda8b7",
+      "staged_sha256": "279990cb826ab99e3113dd25b59ab70dc56b9a9c3a786061c60022e26afda8b7",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-winit/fixtures/smoke.html",
+      "raw_sha256": "f28f27b6dc20406ab29d916f4bb658788b7f44d821ca19c5aecefb2ff2666c60",
+      "staged_sha256": "f28f27b6dc20406ab29d916f4bb658788b7f44d821ca19c5aecefb2ff2666c60",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    },
+    {
+      "path": "demo-servo-winit/fixtures/static.html",
+      "raw_sha256": "07551ff02b3a74aa058503da1aa27744fe2f52f7264d233e2f39866d79b4a0d1",
+      "staged_sha256": "07551ff02b3a74aa058503da1aa27744fe2f52f7264d233e2f39866d79b4a0d1",
+      "raw_exact": true,
+      "only_git_lf_normalization": false
+    }
+  ]
+}
