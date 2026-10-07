@@ -1,0 +1,13 @@
+test_actual_immutable_graft_fixture_rewrites (__main__.StagerChecks.test_actual_immutable_graft_fixture_rewrites) ... ok
+test_distinct_fixture_helper_and_workflow_provenance (__main__.StagerChecks.test_distinct_fixture_helper_and_workflow_provenance) ... ok
+test_rewrite_missing_and_duplicate_negative_controls (__main__.StagerChecks.test_rewrite_missing_and_duplicate_negative_controls) ... ok
+test_standalone_manifests_and_exact_registry_versions (__main__.StagerChecks.test_standalone_manifests_and_exact_registry_versions) ... ok
+test_unreleased_graft_source_is_not_silently_accepted (__main__.StagerChecks.test_unreleased_graft_source_is_not_silently_accepted) ... ok
+test_windows_stable_targets_priority_and_failure_guards (__main__.StagerChecks.test_windows_stable_targets_priority_and_failure_guards) ... ok
+test_workflow_immutable_fixture_and_wpe_acceptance_guards (__main__.StagerChecks.test_workflow_immutable_fixture_and_wpe_acceptance_guards) ... ok
+test_wpe_custom_main_contract (__main__.StagerChecks.test_wpe_custom_main_contract) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.179s
+
+OK

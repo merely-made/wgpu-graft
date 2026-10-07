@@ -1,0 +1,34 @@
+{
+  "started_utc": "2026-10-07T13:38:54.296606+00:00",
+  "finished_utc": "2026-10-07T13:38:54.604556+00:00",
+  "elapsed_seconds": 0.2970000000204891,
+  "exit_code": 1,
+  "command": [
+    "python",
+    "-B",
+    "docs/receipts/registry_harness_20261007/verify.py"
+  ],
+  "scope": "Pure in-memory manifests and mocked copies, Git fixture reads, YAML/guard checks. No Cargo, native apps, or actual fixture staging.",
+  "files": {
+    "scripts/stage_registry_triplet.py": {
+      "bytes": 16131,
+      "sha256": "8ba5aac06b01bd6f8a64604df38853afed6c123d83c13dc7787c84a852ae5f5d"
+    },
+    ".github/workflows/registry-only-triplet.yml": {
+      "bytes": 29310,
+      "sha256": "84a94c920905a155c65cbfcec9e86f44e24cd588c159f3e970c12f6e7fdd3d3b"
+    },
+    "docs/receipts/registry_harness_20261007/verify.py": {
+      "bytes": 7466,
+      "sha256": "227a5d235942c7fb016ffb762128fba9b38bb31da0ba409d59c1804f2b67b443"
+    },
+    "docs/receipts/registry_harness_20261007/verification-stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/receipts/registry_harness_20261007/verification-stderr.log": {
+      "bytes": 217,
+      "sha256": "b8514d5849c0f6bce7f39483fe81adc94be57fbcb6f1b91759e42ceec1cf9081"
+    }
+  }
+}

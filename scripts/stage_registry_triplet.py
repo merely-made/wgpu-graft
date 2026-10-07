@@ -15,7 +15,11 @@ the intended consumer, while verification records what Cargo actually picked.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
+import os
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -93,6 +97,8 @@ version = "0.1.0"
 edition = "2024"
 publish = false
 
+[workspace]
+
 '''
     binary_name = KIND_TO_DEMO[kind]
     binary = f'''[[bin]]
@@ -159,6 +165,16 @@ objc2-app-kit = "=0.3.2"
 default = ["wgpu-30"]
 wpe = []
 wgpu-30 = []
+
+[[test]]
+name = "wpe_to_vulkan_roundtrip"
+harness = false
+required-features = ["wpe"]
+
+[[test]]
+name = "wpe_input"
+harness = false
+required-features = ["wpe"]
 
 [dependencies]
 ''' + "\n".join(dependencies) + "\n"
@@ -349,6 +365,28 @@ run_case cookie 'weld_probe=(w5|parity)' WELD_COOKIE_URL=https://example.com/
             staged.chmod(staged.stat().st_mode | 0o111)
 
 
+def record_staging_source(source: Path, destination: Path, kind: str) -> None:
+    """Keep the fixture revision distinct from the workflow/helper revision."""
+    helper = Path(__file__).resolve()
+
+    def git_revision(root: Path) -> str:
+        return subprocess.check_output(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            text=True, encoding="utf-8",
+        ).strip()
+
+    facts = {
+        "kind": kind,
+        "fixture_source_sha": git_revision(source),
+        "workflow_source_sha": os.environ.get("GITHUB_SHA"),
+        "helper_source_sha": git_revision(helper.parent),
+        "helper_sha256": hashlib.sha256(helper.read_bytes()).hexdigest(),
+    }
+    (destination / "staging-source.json").write_text(
+        json.dumps(facts, indent=2, sort_keys=True) + "\n", encoding="utf-8",
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--kind", choices=sorted(KIND_TO_DEMO))
@@ -381,6 +419,7 @@ def main() -> int:
                 manifest_for(args.kind, args.grafting_version, args.scrying_version, args.welding_version),
                 encoding="utf-8",
             )
+        record_staging_source(source, destination, args.kind)
     except Exception:
         shutil.rmtree(destination, ignore_errors=True)
         raise

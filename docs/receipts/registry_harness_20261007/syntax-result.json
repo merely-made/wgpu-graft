@@ -1,0 +1,9 @@
+{
+  "checked_utc": "2026-10-07T13:40:53.852416+00:00",
+  "workflow_sha256": "84a94c920905a155c65cbfcec9e86f44e24cd588c159f3e970c12f6e7fdd3d3b",
+  "powershell_AST_blocks": 6,
+  "powershell_AST_exit": 0,
+  "bash_syntax_blocks": 17,
+  "bash_syntax_exit": 0,
+  "scope": "Syntax checks only; scripts were not executed."
+}
