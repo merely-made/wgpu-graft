@@ -2,6 +2,8 @@
 
 **Status (2026-10-07):** the September registry release is complete;
 the bounded Windows Turnstone Scry/direct Weld slice has native receipts.
+Scry 0.7.2 is now published, with a passing fresh Windows registry consumer;
+the updated four-host registry triplet proof remains open.
 Post-release contracts, Servo and wider application gates remain in progress.
 The completed baseline is `grafting` 0.6.0, `scrying` 0.7.1,
 and `welding` 0.14.1; all are published, and the crates.io-only four-host proof is
@@ -67,6 +69,67 @@ Windows, Linux, and macOS while retaining the named trusted-content mode.
    releases must run on DX12, Metal, and Vulkan. This is the packaging proof.
 
 ## Findings
+
+### 2026-10-07 Scry 0.7.2 publication and fresh consumers
+
+[`scrying` 0.7.2](https://github.com/merely-made/wgpu-scry/releases/tag/scrying-v0.7.2)
+is published from `4d8d1d3f8dd450b712960c90b74263a45b46e35b`. Its downloaded
+registry archive exactly matches the Rust 1.92 verified package: 338,664 bytes,
+SHA-256 `74486b58a87ac1ea36ba33e24ffaf513570845bcd1d1c099cc872923dc83d740`.
+The fresh twelve-job MSRV matrix and regular compile/test CI pass.
+
+Native qualification closes the earlier Mac cadence gate: M4 passes the
+original ten-mode battery and separate two-mode activity diagnostic; Intel's
+rerun also passes both after the user reported its desktop unlocked. Earlier
+hidden-page failures remain retained, without a proven causal explanation.
+ThinkPad RADV passes native WPE construction, pixels and input. Local RTX 4060
+DX12 passes Core 23/23 and Capture 3/3, including first-generation imported
+pixels with four exact background corners and an exact contrasting center.
+See Scry's `docs/receipts/scry_release_readiness_20261007/` continuation.
+
+The WebView2 fix separates navigation completion from a caller-explicit,
+timeout-configurable animation-callback wait. The old Promise evaluation
+did not confirm those callbacks finished. An actual DPR-2 DOM diagnostic also
+shows the normal form-control fixture covers its bottom pixel sample points;
+its negative oracle remains retained. The new pixel fixture keeps the capture
+size, acquisition count and corner tolerance, and additionally checks its
+opaque center. Callback completion is not a compositor-paint guarantee.
+
+The first fresh registry-only attempt is retained in
+[run 37631036166](https://github.com/merely-made/wgpu-graft/actions/runs/37631036166),
+using corrected wrapper `dcab3700cb8bbf208d1c4206433275c2c97cd715`, immutable
+Graft 0.6 fixture `816f3e7857afee863200e1c25b300c43b1532aae`, published Scry
+source `4d8d1d3`, and Weld 0.14.1 fixture
+`c7b7b4c52138643e22580a918542e8e036a0b24a`. The wrapper preserves WPE's
+process-main-thread test harnesses, requires positive native markers and
+rejects SKIP. Actual libraries are exact registry dependencies. M4, Intel
+and RADV all failed before native execution: fresh resolution selected
+`pkcs1` 0.8.0-rc.5, whose API does not compile with `rsa` 0.10.0-rc.18 in
+the historical Servo fixture. The fixture's own lock uses rc.4. The failed
+run was cancelled after those three jobs completed because NVIDIA remained
+unassigned; all three failure logs are retained.
+
+Wrapper `e8ffee2d6b680154cae645d54a340116f08acb5d` adds the exact registry
+rc.4 constraint only to the copied Graft/Servo fixture. The prior successful
+registry run's actual lock and native log confirm that RSA/PKCS1 pairing.
+Eleven pure staging and provenance checks pass, including all eight previous
+guards. No supplier package or native assertion changes. This fixes the
+observed dependency edge without freezing unrelated transitive versions;
+fresh compilation and native execution remain required. See the
+[fixture correction receipt](../docs/receipts/registry_rsa_reconciliation_20261007/README.md).
+The corrected four-host run is
+[37633624184](https://github.com/merely-made/wgpu-graft/actions/runs/37633624184),
+dispatched with the same three release versions and immutable source fixtures.
+
+The separate local Windows registry-only Scry consumer passes Core 23/23,
+Capture 3/3 and the direct first-frame pixel control. Its three exact library
+dependencies come from crates.io, with one wgpu 30.0.1 and no Git or path
+overrides. Executable SHA-256 is
+`09727985de18cf1d73a270cbdff66596647ad31ed0581117890063bac1b2ad87`.
+Neither that local row nor publication alone establishes a green four-host
+workflow.
+Servo ordering/pixel, foreign accessibility and wider application gates
+remain separate.
 
 ### 2026-10-07 opt-in Servo resize/import observation
 
