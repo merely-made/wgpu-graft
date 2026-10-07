@@ -28,7 +28,7 @@ core package has a separate distribution status.
 
 ```toml
 [dependencies]
-servo-wgpu-interop-adapter = { git = "https://github.com/merely-made/wgpu-graft", rev = "01f3c9f3d68df3247e6b7ec7f65ffbca57e9b2d4", default-features = false, features = ["wgpu-30", "servo"] }
+servo-wgpu-interop-adapter = { git = "https://github.com/merely-made/wgpu-graft", rev = "dec11bbd2c9c8676e66987fb6ca32cd4ae6310eb", default-features = false, features = ["wgpu-30", "servo"] }
 servo = { git = "https://github.com/servo/servo", rev = "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019" }
 ```
 
