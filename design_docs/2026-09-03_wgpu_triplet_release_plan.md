@@ -78,7 +78,7 @@ registry archive exactly matches the Rust 1.92 verified package: 338,664 bytes,
 SHA-256 `74486b58a87ac1ea36ba33e24ffaf513570845bcd1d1c099cc872923dc83d740`.
 The fresh twelve-job MSRV matrix and regular compile/test CI pass.
 
-Native qualification closes the earlier Mac cadence gate: M4 passes the
+The pre-publication native qualification passed the earlier Mac cadence gate: M4 passes the
 original ten-mode battery and separate two-mode activity diagnostic; Intel's
 rerun also passes both after the user reported its desktop unlocked. Earlier
 hidden-page failures remain retained, without a proven causal explanation.
@@ -120,6 +120,30 @@ fresh compilation and native execution remain required. See the
 The corrected four-host run is
 [37633624184](https://github.com/merely-made/wgpu-graft/actions/runs/37633624184),
 dispatched with the same three release versions and immutable source fixtures.
+Its M4 and RADV Graft and Scry/WPE steps pass. Intel passes Graft but the
+original Scry battery fails 9/10: only three base capture frames arrive in
+30 seconds against the unchanged five-frame minimum. Resize passes with
+twelve acquired frames; thirteen Complete callbacks are a separate count.
+The host is reported visible and unminimized but unfocused, with 1,741 Idle
+callbacks. This reopens Intel's fresh registry cadence acceptance. Page
+activity and a causal explanation require a separate diagnostic; the user
+reporting the desktop unlocked does not prove page visibility or animation.
+M4's complete corrected registry job passes: Graft imports 82 frames with
+changed pixels and resize, Scry passes 10/10 with five base and 427 resize
+frames across four sizes, and Weld passes 17 cases with zero skips/failures.
+RADV's complete job also passes: Graft imports fifteen frames with changed
+pixels and resize; both WPE native gates pass without skips; Weld passes
+sixteen cases with the existing explicit crash-test skip. Linux crash recovery
+is not established. The run was cancelled after all assigned jobs completed
+because NVIDIA remained unassigned. Intel cadence and the NVIDIA runner
+remain open gates, so this is not a green four-host workflow.
+Dedicated Scry-only Intel diagnostic
+[37637005234](https://github.com/merely-made/wgpu-graft/actions/runs/37637005234)
+uses wrapper `d6c119f2b41cf5e81c99157166885c7f3800ab67`, the same exact
+published source and helper, stable authorized app/target, unchanged ordinary
+ten-mode battery and a separate two-mode activity probe. The ordinary failure
+remains a job failure even if its diagnostic passes. This diagnostic does not
+change foreground state or establish four-host triplet acceptance.
 
 The separate local Windows registry-only Scry consumer passes Core 23/23,
 Capture 3/3 and the direct first-frame pixel control. Its three exact library
