@@ -1,0 +1,54 @@
+Microsoft (R) COFF/PE Dumper Version 14.51.36241.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file C:\t\cargo-targets\wgpu-graft\debug\demo-servo-winit.exe
+
+File Type: EXECUTABLE IMAGE
+
+  Image has the following dependencies:
+
+    kernel32.dll
+    bcryptprimitives.dll
+    api-ms-win-core-synch-l1-2-0.dll
+    crypt32.dll
+    ws2_32.dll
+    advapi32.dll
+    ntdll.dll
+    user32.dll
+    gdi32.dll
+    dbghelp.dll
+    dxgi.dll
+    d3d11.dll
+    opengl32.dll
+    setupapi.dll
+    oleaut32.dll
+    api-ms-win-core-winrt-error-l1-1-0.dll
+    ole32.dll
+    shell32.dll
+    dwmapi.dll
+    imm32.dll
+    uxtheme.dll
+    MSVCP140.dll
+    VCRUNTIME140.dll
+    VCRUNTIME140_1.dll
+    api-ms-win-crt-math-l1-1-0.dll
+    api-ms-win-crt-string-l1-1-0.dll
+    api-ms-win-crt-heap-l1-1-0.dll
+    api-ms-win-crt-utility-l1-1-0.dll
+    api-ms-win-crt-time-l1-1-0.dll
+    api-ms-win-crt-runtime-l1-1-0.dll
+    api-ms-win-crt-stdio-l1-1-0.dll
+    api-ms-win-crt-convert-l1-1-0.dll
+    api-ms-win-crt-environment-l1-1-0.dll
+    api-ms-win-crt-filesystem-l1-1-0.dll
+    api-ms-win-crt-locale-l1-1-0.dll
+
+  Summary
+
+       D0000 .data
+      992000 .pdata
+     27DB000 .rdata
+       98000 .reloc
+      C49000 .rodata
+     9A96000 .text

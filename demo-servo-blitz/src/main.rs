@@ -229,9 +229,9 @@ impl ApplicationHandler<WakerEvent> for App {
                 ..
             } => {
                 let servo_button = match button {
-                    winit::event::MouseButton::Left => ServoMouseButton::Left,
-                    winit::event::MouseButton::Right => ServoMouseButton::Right,
-                    winit::event::MouseButton::Middle => ServoMouseButton::Middle,
+                    winit::event::MouseButton::Left => ServoMouseButton::Primary,
+                    winit::event::MouseButton::Right => ServoMouseButton::Secondary,
+                    winit::event::MouseButton::Middle => ServoMouseButton::Auxiliary,
                     _ => return,
                 };
                 let action = match btn_state {

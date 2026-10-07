@@ -1,0 +1,37 @@
+{
+  "build_binding": "C:\\Users\\mark_\\Code\\repos\\wgpu-graft\\docs\\receipts\\servo_current_20261007\\native30-build-binding.json",
+  "build_binding_sha256": "2295BD581E84E11B6F59C843D9E5CC4DC8798AF8B6E29819A5BCC0C3C118056F",
+  "upstream_servo_revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+  "diagnostic_sync": "Existing (unchanged adapter default)",
+  "executable": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\demo-servo-winit.exe",
+  "executable_sha256": "870376EBAEE07F808CDDBF31DFC8CCC5C439E4DF862190EF2C079EE69F1B5597",
+  "executable_file_version": null,
+  "executable_product_version": null,
+  "process_id": 45336,
+  "exit_code": 0,
+  "elapsed_seconds": 2.0027191,
+  "timed_out": false,
+  "requested_backend": "dx12",
+  "requested_priority": "BelowNormal",
+  "arguments": "--smoke",
+  "qualification_scope": "GPU-import initial pixel, click pixel, and resize smoke.",
+  "loaded_angle": [
+    {
+      "process_id": 45336,
+      "module": "libEGL.dll",
+      "path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\libEGL.dll",
+      "sha256": "72F1B00F60CD38A7A0F377EEBD34E35AA630EE20A4184ACA932E621F89439D69",
+      "file_version": null,
+      "product_version": null
+    },
+    {
+      "process_id": 45336,
+      "module": "libGLESv2.dll",
+      "path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\libGLESv2.dll",
+      "sha256": "E3178DB217A98504B50E6D32822B6048F1B3F584305886299E1E7D0DA8043C07",
+      "file_version": null,
+      "product_version": null
+    }
+  ],
+  "shutdown_scope": "Donor process::exit; full process-root teardown is not qualified."
+}

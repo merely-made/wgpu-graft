@@ -1,0 +1,19 @@
+    Updating crates.io index
+    Updating git repository `https://github.com/servo/servo`
+From https://github.com/servo/servo
+ * [new ref]                 aac43a3f31a259f04a574f5ec4e959c943ad7cc7 -> refs/commit/aac43a3f31a259f04a574f5ec4e959c943ad7cc7
+error: invalid type: boolean `true`, expected a map
+ --> ..\..\..\.cargo\git\checkouts\servo-e53a6e7b994a25fe\aac43a3\python\tidy\tests\lints-configuration\no-workspace\Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+error: failed to select a version for `surfman`.
+    ... required by package `grafting v0.6.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting)`
+    ... which satisfies path dependency `grafting` (locked to 0.6.0) of package `demo-raw-gl v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-raw-gl)`
+versions that meet the requirements `^0.14.0` are: 0.14.0
+
+package `grafting` depends on `surfman` with feature `chains` but `surfman` does not have that feature.
+help: available features: mozangle, osmesa-sys, sm-angle, sm-angle-builtin, sm-angle-default, sm-no-wgl, sm-test, sm-wayland-default, sm-x11, x11-dl
+
+
+failed to select a version for `surfman` which could resolve this conflict

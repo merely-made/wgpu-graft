@@ -1,0 +1,297 @@
+error: invalid type: boolean `true`, expected a map
+ --> ..\..\..\.cargo\git\checkouts\servo-e53a6e7b994a25fe\aac43a3\python\tidy\tests\lints-configuration\no-workspace\Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+ Downloading crates ...
+  Downloaded countme v3.0.1
+  Downloaded bincode v2.0.1
+  Downloaded field-offset v0.3.6
+  Downloaded annotate-snippets v0.12.16
+  Downloaded const-field-offset-macro v0.2.0
+  Downloaded const-field-offset v0.2.0
+  Downloaded accesskit_windows v0.33.1
+  Downloaded borsh v1.7.0
+  Downloaded accesskit_winit v0.33.1
+  Downloaded clru v0.6.3
+  Downloaded derive_utils v0.15.1
+  Downloaded auto_enums v0.8.9
+  Downloaded femtovg v0.25.1
+  Downloaded htmlparser v0.2.1
+  Downloaded i-slint-renderer-software v1.17.0
+  Downloaded i-slint-backend-testing v1.17.0
+  Downloaded i-slint-core v1.17.0
+  Downloaded i-slint-renderer-skia v1.17.0
+  Downloaded i-slint-core-macros v1.17.0
+  Downloaded i-slint-backend-selector v1.17.0
+  Downloaded i-slint-renderer-femtovg v1.17.0
+  Downloaded i-slint-compiler v1.17.0
+  Downloaded i-slint-common v1.17.0
+  Downloaded i-slint-backend-winit v1.17.0
+  Downloaded imagesize v0.14.0
+  Downloaded integer-sqrt v0.1.5
+  Downloaded keyboard-types v0.7.0
+  Downloaded linked-hash-map v0.5.6
+  Downloaded linked_hash_set v0.1.6
+  Downloaded lyon_extra v1.1.0
+  Downloaded muda v0.19.3
+  Downloaded pin-weak v1.1.0
+  Downloaded pulldown-cmark-escape v0.11.0
+  Downloaded rowan v0.16.1
+  Downloaded resvg v0.47.0
+  Downloaded scoped-tls-hkt v0.1.5
+  Downloaded skia-bindings v0.99.0
+  Downloaded skia-safe v0.99.0
+  Downloaded softbuffer v0.4.8
+  Downloaded slint-macros v1.17.0
+  Downloaded slint v1.17.0
+  Downloaded spin_on v0.1.1
+  Downloaded text-size v1.1.1
+  Downloaded typed-index-collections v3.5.0
+  Downloaded unty v0.0.4
+  Downloaded usvg v0.47.0
+  Downloaded vtable v0.4.0
+  Downloaded vtable-macro v0.4.0
+   Compiling portable-atomic v1.13.1
+    Checking critical-section v1.2.0
+    Checking windows-sys v0.61.2
+    Checking once_cell v1.21.4
+    Checking windows v0.62.2
+   Compiling derive_more-impl v2.1.1
+    Checking derive_more v2.1.1
+    Checking mio v1.2.1
+    Checking socket2 v0.6.4
+    Checking tokio v1.52.3
+    Checking read-fonts v0.41.0
+    Checking selectors v0.41.0
+    Checking skrifa v0.44.0
+   Compiling memchr v2.8.2
+    Checking stylo_malloc_size_of v0.22.0
+    Checking zeitstempel v0.2.2
+    Checking webrender_api v0.70.0
+    Checking harfrust v0.12.0
+    Checking fontdb v0.24.0
+    Checking wr_glyph_rasterizer v0.70.0
+    Checking usvg v0.48.1
+    Checking stylo_traits v0.22.0
+    Checking glifo v0.3.0
+    Checking stylo_dom v0.22.0
+    Checking stylo v0.22.0
+    Checking resvg v0.48.1
+    Checking webrender v0.70.0
+    Checking vello_cpu v0.2.0
+    Checking content-security-policy v0.9.0
+    Checking ipc-channel v0.23.0
+    Checking servo-allocator v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking tracing-core v0.1.36
+    Checking tracing v0.1.44
+   Compiling serde_json v1.0.150
+    Checking tokio-util v0.7.18
+    Checking h2 v0.4.15
+    Checking hyper v1.10.1
+    Checking hyper-util v0.1.20
+    Checking warp v0.4.3
+    Checking webdriver v0.54.0
+    Checking servo-hyper-serde v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking sys-locale v0.3.2
+    Checking rustls v0.23.41
+   Compiling cbindgen v0.29.4
+    Checking servo-malloc-size-of v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-base v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-url v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-profile-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-pixels v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-geometry v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-embedder-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling either v1.16.0
+    Checking read-fonts v0.43.3
+    Checking servo-paint-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-net-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling smallvec v1.15.2
+   Compiling zerofrom v0.1.8
+   Compiling stable_deref_trait v1.2.1
+   Compiling nom v7.1.3
+   Compiling yoke v0.8.3
+    Checking servo-fonts-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-streams v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling num-traits v0.2.19
+   Compiling thiserror v2.0.18
+   Compiling pulldown-cmark v0.13.4
+    Checking naga v29.0.3
+   Compiling cexpr v0.6.0
+   Compiling itertools v0.13.0
+    Checking servo-media-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking gpu-allocator v0.28.0
+   Compiling bindgen v0.72.1
+    Checking wgpu-naga-bridge v29.0.3
+    Checking servo-media-player v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling zerovec v0.11.6
+    Checking servo-devtools-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-webxr-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-audio v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-canvas-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking wgpu-hal v29.0.3
+    Checking servo-media-webrtc v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-storage-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking wgpu-core-deps-windows-linux-android v29.0.3
+    Checking servo-media v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking ttf-parser v0.25.1
+   Compiling memoffset v0.9.1
+    Checking servo-constellation-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking wgpu-core v29.0.3
+    Checking harfbuzz-sys v0.8.0
+   Compiling field-offset v0.3.6
+   Compiling tinystr v0.8.3
+    Checking skrifa v0.42.1
+    Checking skrifa v0.46.2
+   Compiling mozjs_normalizer_glue v153.3.0
+   Compiling mozjs_collator_glue v153.3.0
+   Compiling mozjs_unicode_bidi_ffi v153.3.0
+   Compiling mozjs_locale_glue v153.3.0
+   Compiling mozjs_properties_glue v153.3.0
+   Compiling writeable v0.6.3
+   Compiling icu_decimal_data v2.1.1
+   Compiling litemap v0.8.2
+    Checking rustybuzz v0.20.1
+   Compiling icu_locale_core v2.2.0
+   Compiling diplomat_core v0.14.0
+    Checking servo-fonts v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking wgpu v29.0.3
+    Checking fontdb v0.23.0
+    Checking windows-sys v0.52.0
+    Checking servo-media-thread v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling potential_utf v0.1.5
+   Compiling zerotrie v0.2.4
+    Checking lyon_geom v1.0.19
+    Checking parlance v0.1.0
+    Checking imagesize v0.14.0
+    Checking fontique v0.10.0
+    Checking usvg v0.47.0
+    Checking lyon_path v1.0.19
+    Checking tempfile v3.27.0
+   Compiling sea-query-derive v1.0.0
+   Compiling icu_provider v2.2.0
+   Compiling icu_collections v2.1.1
+   Compiling diplomat v0.14.0
+   Compiling mozjs_sys v153.3.0-1
+   Compiling getopts v0.2.24
+    Checking fixed_decimal v0.7.2
+   Compiling const-field-offset-macro v0.2.0
+   Compiling pulldown-cmark-escape v0.11.0
+    Checking zeno v0.3.3
+    Checking yazi v0.2.1
+    Checking swash v0.2.9
+    Checking const-field-offset v0.2.0
+    Checking icu_capi v2.1.2
+    Checking icu_decimal v2.1.1
+    Checking sea-query v1.0.2
+    Checking resvg v0.47.0
+    Checking servo-script-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking harfrust v0.8.4
+    Checking servo-background-hang-monitor-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking tokio-rustls v0.26.4
+   Compiling servo-script-bindings v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling icu_normalizer_data v2.1.1
+    Checking parley_data v0.10.0
+   Compiling glutin_egl_sys v0.7.1
+   Compiling icu_properties_data v2.1.2
+   Compiling vtable-macro v0.4.0
+   Compiling derive_utils v0.15.1
+   Compiling htmlparser v0.2.1
+    Checking tungstenite v0.30.0
+    Checking i-slint-common v1.17.0
+    Checking winit v0.30.13
+   Compiling auto_enums v0.8.9
+    Checking vtable v0.4.0
+   Compiling icu_properties v2.1.2
+    Checking parley v0.10.0
+   Compiling icu_normalizer v2.1.1
+    Checking sea-query-rusqlite v0.8.0
+    Checking lyon_extra v1.1.0
+    Checking lyon_algorithms v1.0.20
+   Compiling euclid v0.22.14
+    Checking clru v0.6.3
+   Compiling i-slint-core-macros v1.17.0
+   Compiling glutin v0.32.3
+    Checking taffy v0.10.1
+    Checking pin-weak v1.1.0
+   Compiling arrayvec v0.7.7
+    Checking unicode-linebreak v0.1.5
+    Checking i-slint-core v1.17.0
+   Compiling idna_adapter v1.2.1
+    Checking mozjs v0.26.4
+    Checking async-tungstenite v0.35.0
+    Checking async-compression v0.4.42
+    Checking hyper-rustls v0.27.9
+    Checking servo-layout-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling chrono v0.4.45
+    Checking servo-timers v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking rustls-platform-verifier v0.7.0
+    Checking accesskit_consumer v0.37.0
+    Checking tokio-stream v0.1.18
+   Compiling glutin-winit v0.5.0
+   Compiling percent-encoding v2.3.2
+   Compiling utf8_iter v1.0.4
+   Compiling form_urlencoded v1.2.2
+   Compiling idna v1.1.0
+    Checking anstyle-wincon v3.0.11
+   Compiling servo-script v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-net v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling servo-devtools v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking accesskit_windows v0.33.1
+    Checking servo-metrics v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking femtovg v0.25.1
+    Checking servo-xpath v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking keyboard-types v0.7.0
+   Compiling i-slint-backend-winit v1.17.0
+    Checking anstyle-query v1.1.5
+    Checking integer-sqrt v0.1.5
+   Compiling rustc-hash v1.1.0
+   Compiling countme v3.0.1
+   Compiling text-size v1.1.1
+   Compiling linked-hash-map v0.5.6
+   Compiling hashbrown v0.14.5
+   Compiling i-slint-compiler v1.17.0
+    Checking anstream v1.0.0
+   Compiling rowan v0.16.1
+   Compiling linked_hash_set v0.1.6
+    Checking i-slint-renderer-software v1.17.0
+    Checking muda v0.19.3
+    Checking i-slint-renderer-femtovg v1.17.0
+    Checking accesskit_winit v0.33.1
+   Compiling url v2.5.8
+   Compiling i-slint-backend-selector v1.17.0
+    Checking servo-background-hang-monitor v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking copypasta v0.10.2
+    Checking servo-canvas v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling annotate-snippets v0.12.16
+   Compiling mozangle v0.7.1
+   Compiling itertools v0.14.0
+    Checking softbuffer v0.4.8
+   Compiling num_enum v0.7.6
+   Compiling strum v0.28.0
+   Compiling smol_str v0.3.6
+    Checking scoped-tls-hkt v0.1.5
+   Compiling pin-utils v0.1.0
+   Compiling data-url v0.3.2
+   Compiling typed-index-collections v3.5.0
+   Compiling by_address v1.2.1
+   Compiling spin_on v0.1.1
+    Checking env_logger v0.11.11
+    Checking servo-layout v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-constellation v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-paint v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-storage v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-dummy v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-default-resources v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-wakelock v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-profile v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking grafting-frame v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting-frame)
+    Checking grafting v0.6.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting)
+    Checking servo v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling slint-macros v1.17.0
+   Compiling demo-servo-slint v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-slint)
+    Checking slint v1.17.0
+    Checking servo-wgpu-interop-adapter v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\servo-wgpu-interop-adapter)
+    Checking demo-support v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-support)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 10m 03s

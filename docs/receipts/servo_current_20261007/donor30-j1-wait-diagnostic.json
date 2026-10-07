@@ -1,0 +1,32 @@
+{
+  "recorded_utc": "2026-10-07T06:47:49.9590805Z",
+  "scope": "Owned donor30 current-Servo -j1 diagnostic stopped. WebRender shader optimizer remained CPU0.125s, no worker children and incomplete unchanged shaders; aws-lc finished as capture occurred. Jobserver wait inferred, not a proved dependency source defect or typed failure.",
+  "processes": [
+    {
+      "pid": 43144,
+      "parent_pid": 37580,
+      "name": "cargo.exe",
+      "command": "\"C:\\Users\\mark_\\.rustup\\toolchains\\1.97.1-x86_64-pc-windows-msvc\\bin\\cargo.exe\" check --locked -p demo-servo-winit --no-default-features --features wgpu-30,servo --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+      "started": "2026-10-07T02:36:57.946614-04:00",
+      "cpu_seconds": 28.140625,
+      "priority": "BelowNormal"
+    },
+    {
+      "pid": 47352,
+      "parent_pid": 43144,
+      "name": "build-script-build.exe",
+      "command": "\"C:/t/cargo-targets/wgpu-graft\\debug\\build\\webrender-1e1c400cbd505e70\\build-script-build\"",
+      "started": "2026-10-07T02:42:13.324151-04:00",
+      "cpu_seconds": 0.125,
+      "priority": "BelowNormal"
+    }
+  ],
+  "shader_output": [
+    {
+      "FullName": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\webrender-cae6c0f72fd38163\\out\\shaders.rs",
+      "Length": 10287,
+      "LastWriteTime": "2026-10-07T02:42:13.9296638-04:00"
+    }
+  ],
+  "log_sha256": "d64a9c92c0c7d2b9130f8d918a60d837ca440f65c7db41f1f4b858e982fa3de9"
+}

@@ -8,14 +8,16 @@ adapter sits on top, and nine demos show the embedding pattern across Rust
 GUI frameworks. Derived from the
 [Slint Servo embedding example](https://github.com/slint-ui/slint/tree/master/examples/servo).
 
-## Status (2026-08-31)
+## Status (2026-10-07)
 
-- `grafting` 0.5.1 is the published baseline; `main` is the 0.6.0 compatibility
-  revision. It makes borrowed Metal frame descriptors move-only and carries
+- `grafting` 0.6.0 is the published baseline; `main` carries subsequent compatibility
+  and diagnostic changes. It makes borrowed Metal frame descriptors move-only and carries
   feature-selected wgpu 28/29/30, including the corrected wgpu-28 Metal arm.
   wgpu 29 remains the default while the GUI ecosystem straddles majors.
-- Servo demos use the immutable Servo 0.5.0 snapshot
-  `1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019`; no local Servo checkout is needed.
+- Servo demos use the immutable Servo 0.7.0 release
+  `aac43a3f31a259f04a574f5ec4e959c943ad7cc7`, with Surfman 0.14 and ANGLE 0.7.
+  Current migration checks and runtime acceptance are recorded in the
+  [triplet release plan](design_docs/2026-09-03_wgpu_triplet_release_plan.md).
 - Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,
   Bevy, Xilem, GPUI) plus a Servo-free GL demo. Six Servo GUI paths use GPU
   import; Xilem and GPUI intentionally demonstrate CPU readback. Bevy and

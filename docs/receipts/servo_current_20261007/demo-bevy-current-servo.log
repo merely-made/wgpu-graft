@@ -1,0 +1,291 @@
+error: invalid type: boolean `true`, expected a map
+ --> ..\..\..\.cargo\git\checkouts\servo-e53a6e7b994a25fe\aac43a3\python\tidy\tests\lints-configuration\no-workspace\Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+ Downloading crates ...
+  Downloaded bevy_derive v0.19.0
+  Downloaded bevy_ecs_macro_logic v0.19.0
+  Downloaded bevy_internal v0.19.0
+  Downloaded bevy_encase_derive v0.19.0
+  Downloaded atomicow v1.2.0
+  Downloaded bevy_gizmos_macros v0.19.0
+  Downloaded bevy_shader v0.19.0
+  Downloaded bevy_macro_utils v0.19.0
+  Downloaded bevy_asset_macros v0.19.0
+  Downloaded bevy_material_macros v0.19.0
+  Downloaded bevy_utils v0.19.0
+  Downloaded bevy_a11y v0.19.0
+  Downloaded bevy_ecs_macros v0.19.0
+  Downloaded bevy_ptr v0.19.0
+  Downloaded bevy_render_macros v0.19.0
+  Downloaded bevy_log v0.19.0
+  Downloaded bevy_diagnostic v0.19.0
+  Downloaded bevy_material v0.19.0
+  Downloaded bevy_sprite v0.19.0
+  Downloaded bevy_tasks v0.19.0
+  Downloaded bevy_time v0.19.0
+  Downloaded bevy_transform v0.19.0
+  Downloaded bevy_window v0.19.0
+  Downloaded bevy_color v0.19.0
+  Downloaded bevy_gizmos_render v0.19.0
+  Downloaded bevy_image v0.19.0
+  Downloaded bevy_input_focus v0.19.0
+  Downloaded bevy_platform v0.19.0
+  Downloaded bevy_input v0.19.0
+  Downloaded bevy_reflect_derive v0.19.0
+  Downloaded bevy_app v0.19.0
+  Downloaded bevy_camera v0.19.0
+  Downloaded bevy_gizmos v0.19.0
+  Downloaded bevy_sprite_render v0.19.0
+  Downloaded bevy_light v0.19.0
+  Downloaded bevy_mesh v0.19.0
+  Downloaded bevy_winit v0.19.0
+  Downloaded bevy_math v0.19.0
+  Downloaded bevy_reflect v0.19.0
+  Downloaded bevy_render v0.19.0
+  Downloaded bevy_core_pipeline v0.19.0
+  Downloaded bevy_ecs v0.19.0
+  Downloaded bevy v0.19.0
+  Downloaded const-fnv1a-hash v1.1.0
+  Downloaded const_panic v0.2.15
+  Downloaded bevy_asset v0.19.0
+  Downloaded const_soft_float v0.1.4
+  Downloaded constgebra v0.1.4
+  Downloaded encase_derive_impl v0.12.0
+  Downloaded encase v0.12.0
+  Downloaded encase_derive v0.12.0
+  Downloaded hexasphere v18.0.0
+  Downloaded naga_oil v0.22.0
+  Downloaded offset-allocator v0.2.0
+  Downloaded pp-rs v0.2.1
+  Downloaded radsort v0.1.1
+  Downloaded rectangle-pack v0.4.2
+  Downloaded stackfuture v0.3.1
+  Downloaded typewit v1.15.2
+  Downloaded weak-table v0.3.2
+    Checking windows-sys v0.61.2
+    Checking bytemuck v1.25.0
+   Compiling unicode-segmentation v1.13.3
+   Compiling convert_case v0.10.0
+   Compiling unicode-xid v0.2.6
+   Compiling derive_more-impl v2.1.1
+    Checking derive_more v2.1.1
+    Checking windows-core v0.62.2
+    Checking windows-future v0.3.2
+    Checking windows-numerics v0.3.1
+    Checking windows-collections v0.3.2
+    Checking rgb v0.8.53
+    Checking windows v0.62.2
+    Checking socket2 v0.6.4
+    Checking mio v1.2.1
+    Checking tokio v1.52.3
+    Checking font-types v0.12.4
+    Checking read-fonts v0.41.0
+    Checking hashbrown v0.16.1
+    Checking half v2.7.1
+    Checking selectors v0.41.0
+    Checking skrifa v0.44.0
+    Checking color v0.3.3
+    Checking stylo_malloc_size_of v0.22.0
+    Checking peniko v0.6.1
+    Checking tiny-skia-path v0.12.0
+    Checking vello_common v0.2.0
+    Checking webrender_api v0.70.0
+    Checking harfrust v0.12.0
+    Checking wr_glyph_rasterizer v0.70.0
+    Checking stylo_traits v0.22.0
+    Checking glifo v0.3.0
+    Checking tiny-skia v0.12.0
+    Checking stylo_dom v0.22.0
+    Checking usvg v0.48.1
+    Checking stylo v0.22.0
+    Checking resvg v0.48.1
+    Checking webrender v0.70.0
+    Checking futures-util v0.3.32
+    Checking vello_cpu v0.2.0
+    Checking content-security-policy v0.9.0
+    Checking ipc-channel v0.23.0
+    Checking servo-allocator v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking exr v1.74.0
+    Checking tiff v0.11.3
+    Checking ravif v0.13.0
+    Checking qoi v0.4.1
+    Checking fixedbitset v0.5.7
+    Checking image v0.25.10
+   Compiling bevy_macro_utils v0.19.0
+    Checking wgpu-types v29.0.3
+    Checking event-listener-strategy v0.5.4
+    Checking tokio-util v0.7.18
+   Compiling encase_derive_impl v0.12.0
+    Checking typewit v1.15.2
+    Checking const_panic v0.2.15
+    Checking h2 v0.4.15
+    Checking servo-malloc-size-of v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-base v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling encase_derive v0.12.0
+    Checking async-channel v2.5.0
+    Checking hyper v1.10.1
+    Checking smol_str v0.2.2
+    Checking spin v0.10.0
+    Checking bevy_platform v0.19.0
+    Checking encase v0.12.0
+    Checking glam v0.32.1
+    Checking hyper-util v0.1.20
+    Checking disqualified v1.0.0
+    Checking bevy_utils v0.19.0
+    Checking servo-url v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling bevy_reflect_derive v0.19.0
+   Compiling assert_type_match v0.1.1
+   Compiling variadics_please v1.1.0
+    Checking bevy_ptr v0.19.0
+    Checking downcast-rs v2.0.2
+    Checking warp v0.4.3
+    Checking bevy_reflect v0.19.0
+    Checking webdriver v0.54.0
+    Checking servo-hyper-serde v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-pixels v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-profile-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-geometry v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling bevy_ecs_macro_logic v0.19.0
+    Checking crossbeam-queue v0.3.12
+    Checking nonmax v0.5.5
+    Checking bevy_tasks v0.19.0
+   Compiling bevy_ecs_macros v0.19.0
+    Checking servo-embedder-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking bumpalo v3.20.3
+    Checking bevy_ecs v0.19.0
+   Compiling bevy_derive v0.19.0
+    Checking ctrlc v3.5.2
+    Checking surfman v0.14.0
+    Checking servo-paint-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking winapi-util v0.1.11
+    Checking termcolor v1.4.1
+    Checking rand_distr v0.6.0
+    Checking read-fonts v0.43.3
+    Checking bevy_app v0.19.0
+    Checking servo-net-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking bevy_math v0.19.0
+   Compiling naga v29.0.3
+    Checking servo-fonts-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking codespan-reporting v0.13.1
+    Checking rustc-hash v1.1.0
+    Checking servo-media-streams v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling blake3 v1.8.5
+    Checking blocking v1.6.2
+    Checking bevy_time v0.19.0
+    Checking servo-media-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking async-lock v3.4.2
+    Checking constant_time_eq v0.4.2
+    Checking const-fnv1a-hash v1.1.0
+    Checking bevy_diagnostic v0.19.0
+    Checking wgpu-naga-bridge v29.0.3
+    Checking async-fs v2.2.0
+    Checking servo-media-player v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-devtools-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking ron v0.12.2
+    Checking servo-webxr-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking petgraph v0.8.3
+    Checking stackfuture v0.3.1
+    Checking async-broadcast v0.7.2
+   Compiling bevy_asset_macros v0.19.0
+    Checking atomicow v1.2.0
+    Checking servo-media-audio v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking bevy_asset v0.19.0
+    Checking servo-canvas-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-webrtc v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-storage-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+   Compiling wgpu-hal v29.0.3
+    Checking const_soft_float v0.1.4
+    Checking gpu-allocator v0.28.0
+    Checking constgebra v0.1.4
+    Checking servo-media v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking bevy_input v0.19.0
+    Checking bevy_window v0.19.0
+    Checking harfbuzz-sys v0.8.0
+    Checking hexasphere v18.0.0
+    Checking servo-constellation-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking bevy_transform v0.19.0
+    Checking skrifa v0.46.2
+   Compiling bevy_encase_derive v0.19.0
+   Compiling wgpu-core v29.0.3
+    Checking tracing-log v0.2.0
+    Checking nu-ansi-term v0.50.3
+    Checking servo-fonts v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking tracing-subscriber v0.3.23
+    Checking bevy_mesh v0.19.0
+    Checking wgpu-core-deps-windows-linux-android v29.0.3
+    Checking servo-media-thread v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking bevy_color v0.19.0
+   Compiling wgpu v29.0.3
+    Checking rectangle-pack v0.4.2
+    Checking bevy_image v0.19.0
+    Checking bevy_log v0.19.0
+    Checking codespan-reporting v0.12.0
+    Checking tempfile v3.27.0
+    Checking hashlink v0.11.1
+    Checking rusqlite v0.38.0
+    Checking naga_oil v0.22.0
+    Checking bevy_camera v0.19.0
+    Checking servo-script-traits v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking tokio-rustls v0.26.4
+    Checking servo-background-hang-monitor-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking sea-query-rusqlite v0.8.0
+    Checking bevy_shader v0.19.0
+   Compiling bevy_material_macros v0.19.0
+    Checking winit v0.30.13
+    Checking bevy_material v0.19.0
+    Checking tower v0.5.3
+    Checking async-tungstenite v0.35.0
+    Checking async-compression v0.4.42
+    Checking servo-layout-api v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking hyper-rustls v0.27.9
+    Checking rustls-platform-verifier v0.7.0
+    Checking offset-allocator v0.2.0
+    Checking servo-timers v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking futures v0.3.32
+   Compiling bevy_render_macros v0.19.0
+    Checking accesskit_consumer v0.35.0
+    Checking tokio-stream v0.1.18
+    Checking weak-table v0.3.2
+    Checking anstyle-wincon v3.0.11
+    Checking bevy_render v0.19.0
+    Checking servo-net v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-script-bindings v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking accesskit_windows v0.32.1
+    Checking servo-metrics v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking bevy_light v0.19.0
+    Checking servo-xpath v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking anstyle-query v1.1.5
+    Checking radsort v0.1.1
+    Checking anstream v1.0.0
+    Checking bevy_sprite v0.19.0
+    Checking bevy_core_pipeline v0.19.0
+    Checking accesskit_winit v0.32.2
+    Checking servo-background-hang-monitor v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-canvas v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking bevy_input_focus v0.19.0
+    Checking bevy_a11y v0.19.0
+   Compiling grafting v0.6.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting)
+    Checking approx v0.5.1
+    Checking env_logger v0.11.11
+    Checking bevy_winit v0.19.0
+    Checking servo-script v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-constellation v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking arboard v3.6.1
+    Checking servo-devtools v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking bevy_sprite_render v0.19.0
+    Checking servo-paint v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-storage v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-media-dummy v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-wakelock v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-default-resources v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-profile v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking grafting-frame v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting-frame)
+    Checking bevy_internal v0.19.0
+   Compiling demo-servo-bevy v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-bevy)
+    Checking bevy v0.19.0
+    Checking servo-layout v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo v0.7.0 (https://github.com/servo/servo?rev=aac43a3f31a259f04a574f5ec4e959c943ad7cc7#aac43a3f)
+    Checking servo-wgpu-interop-adapter v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\servo-wgpu-interop-adapter)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4m 15s

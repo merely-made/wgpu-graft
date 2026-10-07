@@ -41,7 +41,7 @@ pwsh -File scripts/smoke-demo.ps1
 bash scripts/smoke-demo-mac.sh
 ```
 
-The check script uses two Cargo jobs. Servo 0.5's WebRender 0.70 shader build
+The check script uses two Cargo jobs. Pinned Servo's WebRender 0.70 shader build
 needs one jobserver worker in addition to the build script itself, so `-j 1`
 does not make progress. It checks demos in separate Cargo invocations because
 Bevy and Xilem otherwise unify incompatible diagnostics features across their

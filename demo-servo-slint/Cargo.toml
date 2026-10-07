@@ -18,7 +18,7 @@ slint = { version = "1.17", features = [
     "unstable-wgpu-29",
     "renderer-femtovg-wgpu",
 ] }
-servo = { git = "https://github.com/servo/servo", rev = "1d44e5dd6a8b64c02f9dbf7fcbdf4ebdd0740019" }
+servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5ec4e959c943ad7cc7" }
 rustls = "0.23.37"
 grafting = { path = "../grafting" }
 servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }

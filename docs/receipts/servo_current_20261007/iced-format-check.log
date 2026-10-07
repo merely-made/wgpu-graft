@@ -1,0 +1,190 @@
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:39:
+ use iced::wgpu;
+ use iced::widget::shader::{Pipeline, Primitive};
+ use iced::widget::{column, shader, text, text_input};
+-use iced::{Element, Event, Length, Rectangle, Size, Subscription, Task, event, keyboard, mouse, window};
++use iced::{
++    Element, Event, Length, Rectangle, Size, Subscription, Task, event, keyboard, mouse, window,
++};
+ use rustls::crypto::aws_lc_rs;
+ use servo::{
+     DevicePoint, EventLoopWaker, InputEvent, KeyState, MouseButton as ServoMouseButton,
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:107:
+     let viewport_h = DEFAULT_HEIGHT - NAV_BAR_HEIGHT;
+     let size = PhysicalSize::new(viewport_w as u32, viewport_h as u32);
+ 
+-    let render_ctx = Rc::new(
+-        create_luid_anchored_context(size).expect("failed to create rendering context"),
+-    );
++    let render_ctx =
++        Rc::new(create_luid_anchored_context(size).expect("failed to create rendering context"));
+ 
+     let servo = ServoBuilder::default()
+         .event_loop_waker(Box::new(NoopWaker))
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:192:
+                         height: metadata.size.height,
+                         generation: metadata.generation,
+                     });
+-                }
++                },
+                 Err(e) => eprintln!("[iced] shared-texture export failed: {e:?}"),
+             }
+-        }
++        },
+ 
+         Message::UrlInputChanged(url) => state.url_input = url,
+ 
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:205:
+                 Ok(url) => state.webview.load(url),
+                 Err(_) => eprintln!("invalid URL: {raw}"),
+             }
+-        }
++        },
+ 
+         Message::IcedEvent(event) => handle_event(state, event),
+     }
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:219:
+             let vp_w = new_size.width;
+             let vp_h = (new_size.height - NAV_BAR_HEIGHT).max(1.0);
+             state.viewport_size = Size::new(vp_w, vp_h);
+-            state.webview.resize(PhysicalSize::new(vp_w as u32, vp_h as u32));
+-        }
++            state
++                .webview
++                .resize(PhysicalSize::new(vp_w as u32, vp_h as u32));
++        },
+ 
+         Event::Mouse(mouse::Event::CursorMoved { position }) => {
+             state.cursor_position = position;
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:241:
+                         MouseLeftViewportEvent::default(),
+                     ));
+             }
+-        }
++        },
+ 
+         Event::Mouse(mouse::Event::CursorLeft) => {
+             if state.cursor_in_viewport {
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:252:
+                     ));
+                 state.cursor_in_viewport = false;
+             }
+-        }
++        },
+ 
+         Event::Mouse(mouse::Event::ButtonPressed(btn)) if state.cursor_in_viewport => {
+             if let Some(servo_btn) = map_mouse_button(btn) {
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:265:
+                         servo::WebViewPoint::Device(pt),
+                     )));
+             }
+-        }
++        },
+ 
+         Event::Mouse(mouse::Event::ButtonReleased(btn)) if state.cursor_in_viewport => {
+             if let Some(servo_btn) = map_mouse_button(btn) {
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:278:
+                         servo::WebViewPoint::Device(pt),
+                     )));
+             }
+-        }
++        },
+ 
+         Event::Mouse(mouse::Event::WheelScrolled { delta }) if state.cursor_in_viewport => {
+             let (dx, dy, mode) = match delta {
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:285:
+                 mouse::ScrollDelta::Lines { x, y } => {
+                     ((x as f64) * 38.0, (y as f64) * 38.0, WheelMode::DeltaLine)
+-                }
++                },
+                 mouse::ScrollDelta::Pixels { x, y } => (x as f64, y as f64, WheelMode::DeltaPixel),
+             };
+             let pt = servo_point(state.cursor_position);
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:299:
+                     },
+                     servo::WebViewPoint::Device(pt),
+                 )));
+-        }
++        },
+ 
+         Event::Keyboard(keyboard::Event::KeyPressed {
+             key,
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:318:
+                 repeat,
+             );
+             state.webview.notify_input_event(InputEvent::Keyboard(kbd));
+-        }
++        },
+ 
+         Event::Keyboard(keyboard::Event::KeyReleased {
+             key,
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:336:
+                 false,
+             );
+             state.webview.notify_input_event(InputEvent::Keyboard(kbd));
+-        }
++        },
+ 
+-        _ => {}
++        _ => {},
+     }
+ }
+ 
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:455:
+             source: wgpu::ShaderSource::Wgsl(SHADER_WGSL.into()),
+         });
+ 
+-        let bind_group_layout =
+-            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+-                label: Some("servo-iced-bgl"),
+-                entries: &[
+-                    wgpu::BindGroupLayoutEntry {
+-                        binding: 0,
+-                        visibility: wgpu::ShaderStages::FRAGMENT,
+-                        ty: wgpu::BindingType::Texture {
+-                            sample_type: wgpu::TextureSampleType::Float { filterable: true },
+-                            view_dimension: wgpu::TextureViewDimension::D2,
+-                            multisampled: false,
+-                        },
+-                        count: None,
++        let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
++            label: Some("servo-iced-bgl"),
++            entries: &[
++                wgpu::BindGroupLayoutEntry {
++                    binding: 0,
++                    visibility: wgpu::ShaderStages::FRAGMENT,
++                    ty: wgpu::BindingType::Texture {
++                        sample_type: wgpu::TextureSampleType::Float { filterable: true },
++                        view_dimension: wgpu::TextureViewDimension::D2,
++                        multisampled: false,
+                     },
+-                    wgpu::BindGroupLayoutEntry {
+-                        binding: 1,
+-                        visibility: wgpu::ShaderStages::FRAGMENT,
+-                        ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+-                        count: None,
+-                    },
+-                ],
+-            });
++                    count: None,
++                },
++                wgpu::BindGroupLayoutEntry {
++                    binding: 1,
++                    visibility: wgpu::ShaderStages::FRAGMENT,
++                    ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
++                    count: None,
++                },
++            ],
++        });
+ 
+         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
+             label: Some("servo-iced-pl"),
+Diff in \\?\C:\Users\mark_\Code\repos\wgpu-graft\demo-servo-iced\src\main.rs:581:
+                     _texture: texture,
+                     bind_group,
+                 });
+-            }
++            },
+             Err(e) => eprintln!("[iced] import_dx12_shared_texture failed: {e:?}"),
+         }
+     }

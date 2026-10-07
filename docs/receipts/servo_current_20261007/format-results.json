@@ -1,0 +1,33 @@
+{
+  "results": [
+    {
+      "name": "root-format-check",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 1,
+      "log_sha256": "90c04707e6002c202995736df6a0f061824f1c791de34de74b1e0d8bfb309870",
+      "scope": "Read-only formatting check. No formatter edits applied."
+    },
+    {
+      "name": "iced-format-check",
+      "command": [
+        "cargo",
+        "+1.97.1",
+        "fmt",
+        "--manifest-path",
+        "demo-servo-iced/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "exit_code": 1,
+      "log_sha256": "e429e38ae754a78cca8ca90c5492b525f5874eb5867cf7da29ef6f459804bf3f",
+      "scope": "Read-only formatting check. No formatter edits applied."
+    }
+  ]
+}

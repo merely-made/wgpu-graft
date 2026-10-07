@@ -1,0 +1,33 @@
+{
+  "name": "core30-current-surfman",
+  "command": [
+    "cargo",
+    "+1.97.1",
+    "check",
+    "--locked",
+    "--target-dir",
+    "C:/t/cargo-targets/wgpu-graft",
+    "-p",
+    "grafting",
+    "--no-default-features",
+    "--features",
+    "wgpu-30,surfman",
+    "-j1"
+  ],
+  "environment": {
+    "RUSTFLAGS": "-D warnings",
+    "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+    "CMAKE_GENERATOR": "Visual Studio 17 2022",
+    "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+  },
+  "priority": "BelowNormal",
+  "started_utc": "2026-10-07T07:37:26.326553+00:00",
+  "ended_utc": "2026-10-07T07:37:31.468580+00:00",
+  "elapsed_seconds": 5.14100000000326,
+  "exit_code": 0,
+  "log_sha256": "a1f55debcc32d24c487eb76bd69ef140c025fc5e7ce9338267943f47fe5c0e7d",
+  "input_manifest": "donor30-native-inputs.json",
+  "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+  "all_inputs_unchanged": true,
+  "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+}

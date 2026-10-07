@@ -53,3 +53,4 @@
 *.mill merge=weave
 *.dart merge=weave
 docs/receipts/servo_present_hook_20261006/** -text -whitespace
+docs/receipts/servo_current_20261007/** -text -whitespace

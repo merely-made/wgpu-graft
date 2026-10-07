@@ -1,0 +1,30 @@
+{
+  "name": "demo-iced-current-servo",
+  "command": [
+    "cargo",
+    "+1.97.1",
+    "check",
+    "--locked",
+    "--target-dir",
+    "C:/t/cargo-targets/wgpu-graft",
+    "--manifest-path",
+    "demo-servo-iced/Cargo.toml",
+    "-j2"
+  ],
+  "environment": {
+    "RUSTFLAGS": "-D warnings",
+    "LIBCLANG_PATH": "C:/Program Files/LLVM/bin",
+    "CMAKE_GENERATOR": "Visual Studio 17 2022",
+    "CARGO_NET_GIT_FETCH_WITH_CLI": "true"
+  },
+  "priority": "BelowNormal",
+  "started_utc": "2026-10-07T08:11:55.237929+00:00",
+  "ended_utc": "2026-10-07T08:26:46.659057+00:00",
+  "elapsed_seconds": 891.4379999999946,
+  "exit_code": 0,
+  "log_sha256": "04ac47c22815ca3afd3cb788c2dd3329b1f37b1a3790b10ebe193c972fc5e5d3",
+  "input_manifest": "donor30-native-inputs.json",
+  "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+  "all_inputs_unchanged": true,
+  "scope": "Windows typed check; individual demo graph, no additional native GPU/AT/teardown acceptance"
+}

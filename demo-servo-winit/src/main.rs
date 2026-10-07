@@ -326,9 +326,9 @@ impl ApplicationHandler<WakerEvent> for App {
                 ..
             } => {
                 let servo_button = match button {
-                    winit::event::MouseButton::Left => ServoMouseButton::Left,
-                    winit::event::MouseButton::Right => ServoMouseButton::Right,
-                    winit::event::MouseButton::Middle => ServoMouseButton::Middle,
+                    winit::event::MouseButton::Left => ServoMouseButton::Primary,
+                    winit::event::MouseButton::Right => ServoMouseButton::Secondary,
+                    winit::event::MouseButton::Middle => ServoMouseButton::Auxiliary,
                     _ => return,
                 };
                 let action = match btn_state {
@@ -517,7 +517,7 @@ impl AppState {
                 self.webview
                     .notify_input_event(InputEvent::MouseButton(MouseButtonEvent::new(
                         action,
-                        ServoMouseButton::Left,
+                        ServoMouseButton::Primary,
                         servo::WebViewPoint::Device(point),
                     )));
             }
@@ -631,7 +631,7 @@ impl Renderer {
             .map_err(|error| error.to_string())?;
 
         // Request VULKAN_EXTERNAL_MEMORY_WIN32 if the adapter supports it.
-        // This is required for the ANGLE D3D11 share handle zero-copy import path.
+        // This is required for the ANGLE D3D11 shared-texture import path.
         // If unsupported, we fall back to the CPU readback path transparently.
         #[cfg(target_os = "windows")]
         let extra_features = adapter.features() & wgpu::Features::VULKAN_EXTERNAL_MEMORY_WIN32;
@@ -773,7 +773,7 @@ impl Renderer {
         self.surface.configure(&self.device, &self.config);
     }
 
-    /// Render a GPU-imported wgpu texture (zero-copy path).
+    /// Render a normalized GPU-imported wgpu texture.
     fn render_texture(&self, texture: &wgpu::Texture) -> Result<(), String> {
         let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
         let bind_group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
@@ -794,7 +794,7 @@ impl Renderer {
     }
 
     /// Read one texel from the normalized imported texture. This is used only
-    /// by the bounded smoke gate; regular presentation remains zero-copy.
+    /// by the bounded smoke gate; regular presentation stays on the GPU.
     fn read_texture_pixel(
         &self,
         texture: &wgpu::Texture,

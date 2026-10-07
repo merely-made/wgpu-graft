@@ -1,0 +1,26 @@
+{
+  "recorded_utc": "2026-10-07T07:33:53.771914+00:00",
+  "upstream_servo_revision": "aac43a3f31a259f04a574f5ec4e959c943ad7cc7",
+  "build_result": "donor30-current-servo-native-build-result.json",
+  "build_result_sha256": "a012cc95f2663e1820d0f656d597d408456ce3dbb8d1f51a2553167cac72f83e",
+  "cargo_artifacts_sha256": "22570bb3fcea64ffd025622f5d4125524b3336b51aaac121f9aa68a8f33c65d1",
+  "input_manifest": "donor30-native-inputs.json",
+  "input_manifest_sha256": "47b47a9d7c39a48be729d35107716b63b27506d2d13cde52317738e9b5f16759",
+  "source_archive_sha256": "8a4db1c7c6426ef3473d936e340264759e7e3891647641b064bcee6bf04e8310",
+  "executable": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\demo-servo-winit.exe",
+  "executable_sha256": "870376ebaee07f808cddbf31dfc8ccc5c439e4df862190ef2c079ee69f1b5597",
+  "angle_out_dir": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\mozangle-315def473559b043\\out",
+  "angle_dlls": [
+    {
+      "name": "libEGL.dll",
+      "source_path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\mozangle-315def473559b043\\out\\libEGL.dll",
+      "sha256": "72f1b00f60cd38a7a0f377eebd34e35aa630ee20a4184aca932e621f89439d69"
+    },
+    {
+      "name": "libGLESv2.dll",
+      "source_path": "C:\\t\\cargo-targets\\wgpu-graft\\debug\\build\\mozangle-315def473559b043\\out\\libGLESv2.dll",
+      "sha256": "e3178db217a98504b50e6d32822b6048f1b3f584305886299e1e7d0da8043c07"
+    }
+  ],
+  "scope": "Completed native build binding. Runtime GPU qualification pending."
+}
