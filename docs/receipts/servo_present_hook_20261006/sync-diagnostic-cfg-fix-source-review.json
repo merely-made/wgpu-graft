@@ -1,0 +1,14 @@
+{
+  "verified_utc": "2026-10-07T06:09:01.845240+00:00",
+  "base_commit": "9ccccf94122504b4318381887ae3dd0434a91042",
+  "path": "grafting/src/lib.rs",
+  "base_sha256": "c51ae8163dadcb801c8b0f4c31d15ec51d73837b9eefda8c340ba600e7e8d122",
+  "cfg_fix_sha256": "bbbca008253778c25b109070e527c2051de30e14c61d52bd63cfbe1556f8a4c5",
+  "only_two_private_helper_cfg_attributes_changed": true,
+  "windows_gl_surfman_retains_both_helper_bodies": true,
+  "native_input_status": "Previous native controls remain bound to preserved preformat archive; this check adds no runtime evidence",
+  "failed_ci_log_sha256": {
+    "ci-9cccc-linux-job-112653795853.log": "2a7047e587eae09ccc6453592be4ed4cb94420f0b169983a7fac3f5801df6ca9",
+    "ci-9cccc-windows-job-112653795952.log": "a44dca1dfac8891974bc8e55c504acaddbf79278da085285ce649de910577f61"
+  }
+}

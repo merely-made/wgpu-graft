@@ -1,0 +1,134 @@
+{
+  "completed_utc": "2026-10-07T06:14:11.031773+00:00",
+  "scope": "Windows typed cfg matrix only; Linux/macOS await fresh CI; no native rerun",
+  "priority": "BelowNormal",
+  "jobs": 1,
+  "rustflags": "-D warnings",
+  "checks": [
+    {
+      "row": "core28",
+      "features": "wgpu-28",
+      "exit_code": 0,
+      "command": "cargo +1.97.1 check --offline --locked -p grafting --no-default-features --features wgpu-28 --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+      "elapsed_seconds": 121.396778,
+      "log": "grafting-core28-sync-diagnostic-cfg-fix-check.log",
+      "log_sha256": "016dc969e36a2e8887c74e4c7efac8ea3bad3a8299ebfb96896ae0a87d4e353e"
+    },
+    {
+      "row": "core29",
+      "features": "wgpu-29",
+      "exit_code": 0,
+      "command": "cargo +1.97.1 check --offline --locked -p grafting --no-default-features --features wgpu-29 --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+      "elapsed_seconds": 29.835342,
+      "log": "grafting-core29-sync-diagnostic-cfg-fix-check.log",
+      "log_sha256": "000d859f427eda7e87836ae222fa3173ccc2901c0e8fa42830aaf08baebc703a"
+    },
+    {
+      "row": "core30",
+      "features": "wgpu-30",
+      "exit_code": 0,
+      "command": "cargo +1.97.1 check --offline --locked -p grafting --no-default-features --features wgpu-30 --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+      "elapsed_seconds": 37.447456,
+      "log": "grafting-core30-sync-diagnostic-cfg-fix-check.log",
+      "log_sha256": "1665abb0cb4143b887aad1c528d531e6a2093c25ce9032345096482e5c7e1896"
+    },
+    {
+      "row": "gl30",
+      "features": "wgpu-30,gl",
+      "exit_code": 0,
+      "command": "cargo +1.97.1 check --offline --locked -p grafting --no-default-features --features wgpu-30,gl --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+      "elapsed_seconds": 5.826252,
+      "log": "grafting-gl30-sync-diagnostic-cfg-fix-check.log",
+      "log_sha256": "b9cdaf4efa0d72faf4175be017985e7419e9c735dc225642293deab8cb29b0d0"
+    },
+    {
+      "row": "surfman28",
+      "features": "wgpu-28,surfman",
+      "exit_code": 0,
+      "command": "cargo +1.97.1 check --offline --locked -p grafting --no-default-features --features wgpu-28,surfman --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+      "elapsed_seconds": 114.823225,
+      "log": "grafting-surfman28-sync-diagnostic-cfg-fix-check.log",
+      "log_sha256": "1c8cd79be51af8e9bd06a64038422113fba99f5d17b031f9300212b091d0496a"
+    },
+    {
+      "row": "surfman29",
+      "features": "wgpu-29,surfman",
+      "exit_code": 0,
+      "command": "cargo +1.97.1 check --offline --locked -p grafting --no-default-features --features wgpu-29,surfman --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+      "elapsed_seconds": 26.925735,
+      "log": "grafting-surfman29-sync-diagnostic-cfg-fix-check.log",
+      "log_sha256": "a570cd62da1e93b7b5aa81097404d32eb364469b8fbe0b058f5d59cdb9d597dc"
+    },
+    {
+      "row": "surfman30",
+      "features": "wgpu-30,surfman",
+      "exit_code": 0,
+      "command": "cargo +1.97.1 check --offline --locked -p grafting --no-default-features --features wgpu-30,surfman --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+      "elapsed_seconds": 38.818594,
+      "log": "grafting-surfman30-sync-diagnostic-cfg-fix-check.log",
+      "log_sha256": "dea3c8df02fbd07f8d52e9bc8f58fc953a32258c0ef9c0324d680d875d82bf81"
+    }
+  ],
+  "source_verification": [
+    {
+      "path": "Cargo.toml",
+      "sha256": "e1da718945e59732aaaa26c92ed2162b67da6a316c8b5b96586cd67c91864e2f",
+      "matches_input": true
+    },
+    {
+      "path": "Cargo.lock",
+      "sha256": "86945d977a8cb31e2abc808d72f7b14d6700fbbec559151084574423c6ee5ade",
+      "matches_input": true
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "e37a4c7c4627b0767527085699b1f6ca573f385017907f346290419ef3e9cc58",
+      "matches_input": true
+    },
+    {
+      "path": "grafting/Cargo.toml",
+      "sha256": "e6b7a7d0d6303fc6eeef6544e244c8a16c1326361b520d8c4c7f117851d21356",
+      "matches_input": true
+    },
+    {
+      "path": "grafting-frame/Cargo.toml",
+      "sha256": "bf806abafb4b964a069a76b3898ccde375d180c8d0982dbe169fcf7033b26b48",
+      "matches_input": true
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/Cargo.toml",
+      "sha256": "850257eb4cc7836e5845f06471fec4b34b40f1be5383a4f24d7d94ba2400ccb0",
+      "matches_input": true
+    },
+    {
+      "path": "grafting/src/error.rs",
+      "sha256": "d9a65df7ea79b3a0f4cab44b6749256db344a055068737da50c1302413a0ac17",
+      "matches_input": true
+    },
+    {
+      "path": "grafting/src/lib.rs",
+      "sha256": "bbbca008253778c25b109070e527c2051de30e14c61d52bd63cfbe1556f8a4c5",
+      "matches_input": true
+    },
+    {
+      "path": "grafting/src/raw_gl/texture_normalizer.rs",
+      "sha256": "aee6bffb3034e59a913ad40800b856b641c1dd535f5540179b4bdceebb512a2d",
+      "matches_input": true
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows.rs",
+      "sha256": "ec643e91b9342e926054af8ee2fb649e43f41f8c1bae11c430f412c9bb8d13d5",
+      "matches_input": true
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows_dx12_shared.rs",
+      "sha256": "a1fa33cfb28a8b669af4b2efad31ea1188104f16b727ce97bc77ce81b6d18a65",
+      "matches_input": true
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/src/lib.rs",
+      "sha256": "0bbf245a1a3e109f460d40173e5edf446539b3bd5aae6ff56b0e4e6826611a08",
+      "matches_input": true
+    }
+  ]
+}

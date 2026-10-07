@@ -1,0 +1,16 @@
+    Checking hashbrown v0.17.1
+    Checking indexmap v2.14.0
+    Checking naga-types v30.0.1
+   Compiling naga v30.0.1
+    Checking bit-set v0.10.0
+    Checking windows v0.62.2
+    Checking wgpu-types v30.0.1
+   Compiling wgpu-hal v30.0.1
+    Checking gpu-allocator v0.28.0
+    Checking wgpu-naga-bridge v30.0.1
+   Compiling wgpu-core v30.0.1
+    Checking wgpu-core-deps-windows-linux-android v30.0.1
+   Compiling wgpu v30.0.1
+   Compiling grafting v0.6.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting)
+    Checking grafting-frame v0.1.0 (C:\Users\mark_\Code\repos\wgpu-graft\grafting-frame)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 37.33s
