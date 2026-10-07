@@ -1,0 +1,52 @@
+{
+  "completed_utc": "2026-10-07T05:37:56.9849085Z",
+  "exit_code": 0,
+  "cargo_reported_duration": "26.24s",
+  "command": "cargo +1.97.1 check --offline --locked -p grafting --no-default-features --features wgpu-29,surfman --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+  "selected_wgpu": "29.0.3",
+  "selected_wgpu_hal": "29.0.3",
+  "scope": "Windows typed core wgpu29+surfman; no native application acceptance",
+  "log_sha256": "B8D1C17D093E685FA5A3B436E6E852B4EBED3810DC1222DFF507D92911F153C0",
+  "frozen_input_verification": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "86945D977A8CB31E2ABC808D72F7B14D6700FBBEC559151084574423C6EE5ADE",
+      "matches_frozen_input": true
+    },
+    {
+      "path": "grafting/Cargo.toml",
+      "sha256": "E6B7A7D0D6303FC6EEEF6544E244C8A16C1326361B520D8C4C7F117851D21356",
+      "matches_frozen_input": true
+    },
+    {
+      "path": "grafting/src/error.rs",
+      "sha256": "D9A65DF7EA79B3A0F4CAB44B6749256DB344A055068737DA50C1302413A0AC17",
+      "matches_frozen_input": true
+    },
+    {
+      "path": "grafting/src/lib.rs",
+      "sha256": "576E19B6C3BF33A5C2B60CC1E9847F141A688FF87B1E416C2A7C8DE398CBFFBC",
+      "matches_frozen_input": true
+    },
+    {
+      "path": "grafting/src/raw_gl/texture_normalizer.rs",
+      "sha256": "AEE6BFFB3034E59A913AD40800B856B641C1DD535F5540179B4BDCEEBB512A2D",
+      "matches_frozen_input": true
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows.rs",
+      "sha256": "EC643E91B9342E926054AF8EE2FB649E43F41F8C1BAE11C430F412C9BB8D13D5",
+      "matches_frozen_input": true
+    },
+    {
+      "path": "grafting/src/surfman_gl/windows_dx12_shared.rs",
+      "sha256": "A1FA33CFB28A8B669AF4B2EFAD31EA1188104F16B727CE97BC77CE81B6D18A65",
+      "matches_frozen_input": true
+    },
+    {
+      "path": "servo-wgpu-interop-adapter/src/lib.rs",
+      "sha256": "0BBF245A1A3E109F460D40173E5EDF446539B3BD5AAE6FF56B0E4E6826611A08",
+      "matches_frozen_input": true
+    }
+  ]
+}

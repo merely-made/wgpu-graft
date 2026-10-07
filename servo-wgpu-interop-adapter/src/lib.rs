@@ -30,6 +30,8 @@ use grafting::{
 };
 use winit::dpi::PhysicalSize;
 
+pub use grafting::DiagnosticGpuSync;
+
 #[cfg(feature = "servo")]
 pub use image;
 #[cfg(feature = "servo")]
@@ -360,16 +362,29 @@ pub struct ImportingRenderingContext {
     importer: WgpuTextureImporter,
     options: ImportOptions,
     last_texture: RefCell<Option<ImportedTexture>>,
+    last_error: RefCell<Option<InteropError>>,
+    diagnostic_failed: std::cell::Cell<bool>,
 }
 
 #[cfg(feature = "servo")]
 impl ImportingRenderingContext {
     pub fn new(inner: Rc<ServoWgpuRenderingContext>, importer: WgpuTextureImporter) -> Self {
+        Self::with_options(inner, importer, ImportOptions::default())
+    }
+
+    /// Create an importing hook with explicit import and diagnostic options.
+    pub fn with_options(
+        inner: Rc<ServoWgpuRenderingContext>,
+        importer: WgpuTextureImporter,
+        options: ImportOptions,
+    ) -> Self {
         Self {
             inner,
             importer,
-            options: ImportOptions::default(),
+            options,
             last_texture: RefCell::new(None),
+            last_error: RefCell::new(None),
+            diagnostic_failed: std::cell::Cell::new(false),
         }
     }
 
@@ -377,6 +392,16 @@ impl ImportingRenderingContext {
     /// repeated calls without a new paint return `None`.
     pub fn take_imported(&self) -> Option<ImportedTexture> {
         self.last_texture.borrow_mut().take()
+    }
+
+    /// Retrieve a hook result, including a failed completion wait. A failed
+    /// diagnostic blocks subsequent import/swap attempts. The caller must
+    /// retire this context on error; a later WebView paint can precede the hook.
+    pub fn take_imported_result(&self) -> Result<Option<ImportedTexture>, InteropError> {
+        if let Some(error) = self.last_error.borrow_mut().take() {
+            return Err(error);
+        }
+        Ok(self.take_imported())
     }
 }
 
@@ -403,17 +428,34 @@ impl RenderingContext for ImportingRenderingContext {
         // A failed paint must not leave a previous, unconsumed frame available
         // as though it belonged to this paint.
         self.last_texture.borrow_mut().take();
+        self.last_error.borrow_mut().take();
+        if self.diagnostic_failed.get() {
+            *self.last_error.borrow_mut() = Some(InteropError::InvalidFrame(
+                "a previous GPU synchronization diagnostic failed; replace this context",
+            ));
+            return;
+        }
         // Drain GL errors left by Servo's rendering so the import's own error
         // checks aren't tripped by pending producer errors.
         let gl = self.inner.gleam_gl_api();
         while gl.get_error() != gleam::gl::NO_ERROR {}
 
-        match self.inner.acquire_native_frame() {
-            Ok(frame) => match self.importer.import_frame(frame, &self.options) {
-                Ok(imported) => *self.last_texture.borrow_mut() = Some(imported),
-                Err(e) => eprintln!("[adapter] present-hook import_frame failed: {e:?}"),
+        let result = self
+            .inner
+            .acquire_native_frame()
+            .and_then(|frame| self.importer.import_frame(frame, &self.options));
+        match result {
+            Ok(imported) => *self.last_texture.borrow_mut() = Some(imported),
+            Err(error) => {
+                eprintln!("[adapter] present-hook import failed: {error:?}");
+                *self.last_error.borrow_mut() = Some(error);
+                if self.options.diagnostic_gpu_sync != DiagnosticGpuSync::Existing {
+                    // A timed-out copy may still read the shared allocation.
+                    // Do not swap or allow a later import to reuse it.
+                    self.diagnostic_failed.set(true);
+                    return;
+                }
             },
-            Err(e) => eprintln!("[adapter] present-hook acquire_native_frame failed: {e:?}"),
         }
         self.inner.present();
     }
@@ -456,6 +498,23 @@ impl ServoWgpuInteropAdapter {
         queue: wgpu::Queue,
         size: PhysicalSize<u32>,
     ) -> Result<Self, InteropError> {
+        Self::new_with_diagnostic_sync(device, queue, size, DiagnosticGpuSync::Existing)
+    }
+
+    /// Opt into native Windows ANGLE/DX12 completion diagnostics. Existing
+    /// constructors retain their behavior. Use `take_imported_texture_result`
+    /// to propagate failures, and discard the context after a diagnostic error.
+    pub fn new_with_diagnostic_sync(
+        device: wgpu::Device,
+        queue: wgpu::Queue,
+        size: PhysicalSize<u32>,
+        diagnostic_gpu_sync: DiagnosticGpuSync,
+    ) -> Result<Self, InteropError> {
+        if !cfg!(feature = "servo") && diagnostic_gpu_sync != DiagnosticGpuSync::Existing {
+            return Err(InteropError::InvalidFrame(
+                "Servo GPU synchronization diagnostic requires the Servo present hook",
+            ));
+        }
         // LUID-match surfman/ANGLE to the host wgpu GPU so the zero-copy shared
         // handle stays on a single GPU (cross-GPU sharing garbles → flicker).
         let rendering_context = Rc::new(ServoWgpuRenderingContext::new_for_device(size, &device)?);
@@ -463,9 +522,16 @@ impl ServoWgpuInteropAdapter {
             WgpuTextureImporter::new(HostWgpuContext::new(device.clone(), queue.clone()));
 
         #[cfg(feature = "servo")]
-        let importing_context = Rc::new(ImportingRenderingContext::new(
+        let options = {
+            let mut options = ImportOptions::default();
+            options.diagnostic_gpu_sync = diagnostic_gpu_sync;
+            options
+        };
+        #[cfg(feature = "servo")]
+        let importing_context = Rc::new(ImportingRenderingContext::with_options(
             rendering_context.clone(),
             WgpuTextureImporter::new(HostWgpuContext::new(device, queue)),
+            options,
         ));
 
         Ok(Self {
@@ -490,6 +556,12 @@ impl ServoWgpuInteropAdapter {
     #[cfg(feature = "servo")]
     pub fn take_imported_texture(&self) -> Option<ImportedTexture> {
         self.importing_context.take_imported()
+    }
+
+    /// Retrieve the pre-present import or its exact synchronization failure.
+    #[cfg(feature = "servo")]
+    pub fn take_imported_texture_result(&self) -> Result<Option<ImportedTexture>, InteropError> {
+        self.importing_context.take_imported_result()
     }
 
     pub fn rendering_context_handle(&self) -> Rc<ServoWgpuRenderingContext> {

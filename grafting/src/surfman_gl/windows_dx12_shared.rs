@@ -142,6 +142,7 @@ pub(super) fn import_current_frame(
     source_fbo: u32,
     size: PhysicalSize<u32>,
     host: &HostWgpuContext,
+    finish_before_read: bool,
 ) -> Result<wgpu::Texture, InteropError> {
     // Verify the wgpu device is running on DX12 before doing any allocation work.
     let _ = unsafe { host.device.as_hal::<wgpu::wgc::api::Dx12>() }.ok_or(
@@ -175,8 +176,17 @@ pub(super) fn import_current_frame(
         &state.d3d11_shared_texture,
         source_fbo,
         size,
-        false,
+        finish_before_read,
     )?;
+
+    if finish_before_read {
+        let error = unsafe { glow_gl.get_error() };
+        if error != glow::NO_ERROR {
+            return Err(InteropError::OpenGl(format!(
+                "shared-texture producer completion reported GL error {error:#x}"
+            )));
+        }
+    }
 
     Ok(state.wgpu_texture.clone())
 }
@@ -187,8 +197,9 @@ pub(super) fn import_current_frame(
 ///
 /// When `finish` is set, issues a `glFinish` after the blit so a consumer on a
 /// *different* device (e.g. the shared-handle export path) reads completed work
-/// rather than racing the in-flight GL blit. The same-device import path passes
-/// `false` (the importer's normalizer blit serialises the read instead).
+/// rather than racing the in-flight GL blit. The default same-device import
+/// passes `false`; its wgpu normalization submission does not establish
+/// cross-API ordering. The diagnostic can select producer completion here.
 fn blit_source_into_d3d11_texture(
     surfman_device: &surfman::Device,
     surfman_context: &mut surfman::Context,

@@ -243,6 +243,38 @@ impl HostWgpuContext {
     }
 }
 
+/// Opt-in diagnostic waits for the native Windows ANGLE-to-DX12 import path.
+///
+/// These controls test external producer/copy ordering. They are blocking GPU
+/// waits, not CPU pixel readback, and do not establish that an observed visual
+/// defect was caused by ordering. Other backends reject these controls.
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub enum DiagnosticGpuSync {
+    /// Preserve the existing import behavior.
+    #[default]
+    Existing,
+    /// Finish the GL shared-texture blit before wgpu reads that texture.
+    /// GL finish itself has no timeout; a native control needs a process guard.
+    ProducerCompletion,
+    /// Wait for the exact normalization submission before returning the frame.
+    NormalizationCompletion { timeout: std::time::Duration },
+    /// Apply both waits, using this timeout for the normalization submission.
+    Both { timeout: std::time::Duration },
+}
+
+impl DiagnosticGpuSync {
+    pub(crate) fn wait_for_producer(self) -> bool {
+        matches!(self, Self::ProducerCompletion | Self::Both { .. })
+    }
+
+    fn normalization_timeout(self) -> Option<std::time::Duration> {
+        match self {
+            Self::NormalizationCompletion { timeout } | Self::Both { timeout } => Some(timeout),
+            _ => None,
+        }
+    }
+}
+
 /// Options that control how [`WgpuTextureImporter`] processes each frame.
 #[derive(Clone, Copy, Debug)]
 #[non_exhaustive]
@@ -255,6 +287,9 @@ pub struct ImportOptions {
     /// RGBA so that all returned textures have a consistent
     /// `Rgba8Unorm` format.
     pub normalize_format: bool,
+    /// Default-off, native Windows ANGLE/DX12 synchronization diagnostic.
+    /// Requires origin normalization into a separate host-owned texture.
+    pub diagnostic_gpu_sync: DiagnosticGpuSync,
 }
 
 impl Default for ImportOptions {
@@ -262,6 +297,7 @@ impl Default for ImportOptions {
         Self {
             normalize_origin: true,
             normalize_format: true,
+            diagnostic_gpu_sync: DiagnosticGpuSync::Existing,
         }
     }
 }
@@ -913,6 +949,24 @@ impl TextureImporter for WgpuTextureImporter {
         frame: NativeFrame,
         options: &ImportOptions,
     ) -> Result<ImportedTexture, InteropError> {
+        if options.diagnostic_gpu_sync != DiagnosticGpuSync::Existing {
+            if !cfg!(target_os = "windows") || self.host.backend != InteropBackend::Dx12 {
+                return Err(InteropError::InvalidFrame(
+                    "GPU synchronization diagnostic requires native Windows DX12",
+                ));
+            }
+            #[cfg(feature = "gl")]
+            if !matches!(&frame, NativeFrame::GlFramebufferSource(_)) {
+                return Err(InteropError::InvalidFrame(
+                    "GPU synchronization diagnostic requires a GL framebuffer source",
+                ));
+            }
+            if !cfg!(feature = "gl") || !options.normalize_origin {
+                return Err(InteropError::InvalidFrame(
+                    "GPU synchronization diagnostic requires origin normalization",
+                ));
+            }
+        }
         self.synchronizer
             .producer_complete(&frame, frame.producer_sync())?;
 
@@ -945,12 +999,24 @@ impl TextureImporter for WgpuTextureImporter {
         // left untouched.
         #[cfg(feature = "gl")]
         let imported = if options.normalize_origin && imported.origin == TextureOrigin::BottomLeft {
-            let texture = self.normalizer.normalize(
+            let (texture, submission) = self.normalizer.normalize_with_submission(
                 &self.host.device,
                 &self.host.queue,
                 &imported.texture,
                 imported.size,
             );
+            if let Some(timeout) = options.diagnostic_gpu_sync.normalization_timeout() {
+                // The source allocation is reused by a later GL producer blit.
+                // Finish this exact read/copy before allowing that reuse; queue
+                // submission alone does not synchronize external GL writes.
+                self.host
+                    .device
+                    .poll(wgpu::PollType::Wait {
+                        submission_index: Some(submission),
+                        timeout: Some(timeout),
+                    })
+                    .map_err(InteropError::NormalizationCompletion)?;
+            }
             ImportedTexture {
                 texture,
                 format: wgpu::TextureFormat::Rgba8Unorm,
@@ -1233,6 +1299,7 @@ mod tests {
 
         assert!(options.normalize_origin);
         assert!(options.normalize_format);
+        assert_eq!(options.diagnostic_gpu_sync, DiagnosticGpuSync::Existing);
     }
 
     #[test]

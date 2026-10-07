@@ -1,0 +1,8 @@
+{
+  "completed_utc": "2026-10-07T05:36:33.2748760Z",
+  "exit_code": 0,
+  "cargo_reported_duration": "1m38s",
+  "command": "cargo +1.97.1 check --locked -p grafting --no-default-features --features wgpu-28,surfman --target-dir C:/t/cargo-targets/wgpu-graft -j1",
+  "scope": "Windows typed core wgpu28+surfman; no native application acceptance",
+  "log_sha256": "0287D48B6F7CE1231C38CF8DDEB2D2ABA7D34D16C71457F220ABA3E6EFDAECE8"
+}

@@ -1,6 +1,6 @@
 # Wgpu Triplet Release Plan
 
-**Status (2026-10-06):** the September registry release is complete;
+**Status (2026-10-07):** the September registry release is complete;
 the bounded Windows Turnstone Scry/direct Weld slice has native receipts.
 Post-release contracts, Servo and wider application gates remain in progress.
 The completed baseline is `grafting` 0.6.0, `scrying` 0.7.1,
@@ -340,6 +340,45 @@ Vulkan import facilities do not establish a runnable Servo adapter route.
 Matching native-build ANGLE outputs, PE imports and actual loaded-module
 identities remain required. Typed-check DLL hashes cannot substitute for
 those runtime observations.
+
+### 2026-10-07 Servo GPU ordering diagnostic checkpoint
+
+The additive `DiagnosticGpuSync` policy and
+`ServoWgpuInteropAdapter::new_with_diagnostic_sync` expose producer completion,
+normalization completion with a configurable exact-submission wait, and both
+controls. Existing constructors retain `Existing` as their default. The fallible
+import getter propagates diagnostic failures so the host can retire the surface.
+This is an owner diagnostic checkpoint; the default import behavior is unchanged.
+
+The source trace found a cached shared GL/DX12 allocation whose producer blit
+normally omits completion before wgpu normalization, followed by asynchronous
+normalization without an explicit wait before the next shared-source write.
+The [supplier receipt](../docs/receipts/servo_present_hook_20261006/README.md)
+separates this ordering gap from the still-unproved cause of the white reopened
+Servo view. Six fresh-profile controls used the same Turnstone executable:
+`Existing` passed one of two pixel reviews, with the other reopening view A white;
+producer-only and normalization-only each passed once; `Both` passed twice.
+All six exited normally with final producer, frame-cache, and view counts zero.
+Scenario/title assertions remained positive in the failed pixel run, so they do
+not replace the capture review. The bounded samples establish neither a default
+fault fix nor a causal explanation.
+
+Windows typed checks passed for core `wgpu-28,surfman`, core
+`wgpu-29,surfman`, and adapter `wgpu-30,servo`. Native controls used the archived
+preformat source. The only subsequent source change formats the new poll
+expression; byte-preserved preformat input and full-file rustfmt-normalized text
+equivalence are recorded, followed by fresh passing checks for all three rows.
+Whole-workspace `cargo fmt --all -- --check` still fails on the retained formatting
+debt across 138 reported paths; the new formatting hunk was corrected without
+applying the unrelated changes.
+
+This checkpoint accepts no accessibility gate, U9 coordinated consumer landing,
+production default change, crate release, or broader platform qualification.
+Foreign AccessKit subtree/action integration and the coordinated current-stack
+Knot → Redshank → Turnstone gate remain open. The
+[postformat checks](../docs/receipts/servo_present_hook_20261006/sync-diagnostic-postformat-check-results.json)
+and [same-binary comparison](../docs/receipts/servo_present_hook_20261006/turnstone-sync-diagnostic-comparison.json)
+retain the exact evidence boundaries.
 
 ### 2026-10-05 source audit and next gates
 

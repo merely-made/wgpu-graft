@@ -1,0 +1,74 @@
+--- current:servo-wgpu-interop-adapter/src/lib.rs
++++ rustfmt:servo-wgpu-interop-adapter/src/lib.rs
+@@ -8,12 +8,16 @@
+ 
+ // Alias the feature-selected wgpu back to `wgpu` crate-wide, matching grafting.
+ // The newest enabled version wins, same precedence as grafting's.
++#[cfg(all(
++    feature = "wgpu-28",
++    not(feature = "wgpu-29"),
++    not(feature = "wgpu-30")
++))]
++extern crate wgpu_28 as wgpu;
++#[cfg(all(feature = "wgpu-29", not(feature = "wgpu-30")))]
++extern crate wgpu_29 as wgpu;
+ #[cfg(feature = "wgpu-30")]
+ extern crate wgpu_30 as wgpu;
+-#[cfg(all(feature = "wgpu-29", not(feature = "wgpu-30")))]
+-extern crate wgpu_29 as wgpu;
+-#[cfg(all(feature = "wgpu-28", not(feature = "wgpu-29"), not(feature = "wgpu-30")))]
+-extern crate wgpu_28 as wgpu;
+ #[cfg(not(any(feature = "wgpu-28", feature = "wgpu-29", feature = "wgpu-30")))]
+ compile_error!(
+     "servo-wgpu-interop-adapter needs one wgpu version feature: `wgpu-29` (default), `wgpu-30`, or `wgpu-28`"
+@@ -22,12 +26,12 @@
+ use std::{cell::RefCell, rc::Rc};
+ 
+ use euclid::default::Size2D;
+-use surfman::{Connection, Device, SurfaceType, chains::SwapChain};
+ use grafting::{
+     FrameProducer, HostWgpuContext, ImportOptions, ImportedTexture, InteropError, TextureImporter,
+     WgpuTextureImporter,
+     surfman_gl::{SurfmanFrameContext, SurfmanFrameProducer, select_adapter_matching_surfman_luid},
+ };
++use surfman::{Connection, Device, SurfaceType, chains::SwapChain};
+ use winit::dpi::PhysicalSize;
+ 
+ pub use grafting::DiagnosticGpuSync;
+@@ -102,9 +106,7 @@
+         })
+     }
+ 
+-    pub fn acquire_native_frame(
+-        &self,
+-    ) -> Result<grafting::NativeFrame, InteropError> {
++    pub fn acquire_native_frame(&self) -> Result<grafting::NativeFrame, InteropError> {
+         self.frame_producer.borrow_mut().acquire_frame()
+     }
+ 
+@@ -118,9 +120,7 @@
+     /// with [`grafting::import_dx12_shared_texture`]. The content is
+     /// **bottom-left** origin `Rgba8Unorm` (flip on the consumer).
+     #[cfg(target_os = "windows")]
+-    pub fn current_dx12_shared_texture(
+-        &self,
+-    ) -> Result<grafting::Dx12SharedTexture, InteropError> {
++    pub fn current_dx12_shared_texture(&self) -> Result<grafting::Dx12SharedTexture, InteropError> {
+         self.frame_producer.borrow().export_dx12_shared_texture()
+     }
+ 
+@@ -210,11 +210,9 @@
+         {
+             let mut device = info.device.borrow_mut();
+             let mut context = info.context.borrow_mut();
+-            let _ = self.swap_chain.swap_buffers(
+-                &mut *device,
+-                &mut *context,
+-                PreserveBuffer::No,
+-            );
++            let _ = self
++                .swap_chain
++                .swap_buffers(&mut *device, &mut *context, PreserveBuffer::No);
+         }
+         info.gleam_gl.finish();
+     }

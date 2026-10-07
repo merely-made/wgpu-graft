@@ -150,6 +150,18 @@ impl ImportedTextureNormalizer {
         source_texture: &wgpu::Texture,
         size: PhysicalSize<u32>,
     ) -> wgpu::Texture {
+        self.normalize_with_submission(device, queue, source_texture, size)
+            .0
+    }
+
+    /// Return the exact submission so a diagnostic can wait before source reuse.
+    pub(crate) fn normalize_with_submission(
+        &self,
+        device: &wgpu::Device,
+        queue: &wgpu::Queue,
+        source_texture: &wgpu::Texture,
+        size: PhysicalSize<u32>,
+    ) -> (wgpu::Texture, wgpu::SubmissionIndex) {
         let output = device.create_texture(&wgpu::TextureDescriptor {
             label: Some("normalized-imported-frame"),
             size: wgpu::Extent3d {
@@ -214,7 +226,7 @@ impl ImportedTextureNormalizer {
             pass.draw(0..3, 0..1);
         }
 
-        queue.submit(std::iter::once(encoder.finish()));
-        output
+        let submission = queue.submit(std::iter::once(encoder.finish()));
+        (output, submission)
     }
 }

@@ -1,0 +1,61 @@
+--- current:grafting/src/surfman_gl/windows_dx12_shared.rs
++++ rustfmt:grafting/src/surfman_gl/windows_dx12_shared.rs
+@@ -354,7 +354,8 @@
+                     BindFlags: (D3D11_BIND_RENDER_TARGET.0 | D3D11_BIND_SHADER_RESOURCE.0) as u32,
+                     CPUAccessFlags: 0,
+                     MiscFlags: (D3D11_RESOURCE_MISC_SHARED.0
+-                        | D3D11_RESOURCE_MISC_SHARED_NTHANDLE.0) as u32,
++                        | D3D11_RESOURCE_MISC_SHARED_NTHANDLE.0)
++                        as u32,
+                 },
+                 None,
+                 Some(&mut d3d11_shared),
+@@ -390,12 +391,13 @@
+ 
+     unsafe {
+         // 2. Open the handle on the wgpu DX12 device.
+-        let hal_device = wgpu_device
+-            .as_hal::<wgpu::wgc::api::Dx12>()
+-            .ok_or(InteropError::BackendMismatch {
+-                expected: "Dx12",
+-                actual: "non-Dx12",
+-            })?;
++        let hal_device =
++            wgpu_device
++                .as_hal::<wgpu::wgc::api::Dx12>()
++                .ok_or(InteropError::BackendMismatch {
++                    expected: "Dx12",
++                    actual: "non-Dx12",
++                })?;
+         let dx12_device = hal_device.raw_device().clone();
+ 
+         let mut dx12_resource: Option<ID3D12Resource> = None;
+@@ -424,7 +426,7 @@
+         );
+ 
+         let wgpu_texture = crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Dx12>(
+-                &wgpu_device,
++            &wgpu_device,
+             hal_texture,
+             &wgpu::TextureDescriptor {
+                 label: Some("angle-d3d11-shared-dx12-import"),
+@@ -476,7 +478,18 @@
+         gl.bind_framebuffer(glow::READ_FRAMEBUFFER, read_framebuffer);
+ 
+         let (w, h) = (size.width as i32, size.height as i32);
+-        gl.blit_framebuffer(0, 0, w, h, 0, 0, w, h, glow::COLOR_BUFFER_BIT, glow::NEAREST);
++        gl.blit_framebuffer(
++            0,
++            0,
++            w,
++            h,
++            0,
++            0,
++            w,
++            h,
++            glow::COLOR_BUFFER_BIT,
++            glow::NEAREST,
++        );
+         gl.flush();
+ 
+         gl.bind_framebuffer(glow::DRAW_FRAMEBUFFER, None);

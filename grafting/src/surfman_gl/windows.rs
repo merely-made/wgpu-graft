@@ -106,7 +106,7 @@ pub(super) fn import_current_frame_dx12(
     source: &SurfmanGlFrameSource,
     frame: &GlFramebufferSource,
     host: &HostWgpuContext,
-    _options: &ImportOptions,
+    options: &ImportOptions,
 ) -> Result<ImportedTexture, InteropError> {
     let device = &source.context.device.borrow();
     let mut context = source.context.context.borrow_mut();
@@ -127,6 +127,7 @@ pub(super) fn import_current_frame_dx12(
         bound_fbo,
         source.size,
         host,
+        options.diagnostic_gpu_sync.wait_for_producer(),
     ) {
         Ok(texture) => {
             return Ok(ImportedTexture {
@@ -137,7 +138,12 @@ pub(super) fn import_current_frame_dx12(
                 generation: source.generation,
                 consumer_sync: SyncMechanism::ImplicitGlFlush,
             });
-        }
+        },
+        Err(error) if options.diagnostic_gpu_sync != crate::DiagnosticGpuSync::Existing => {
+            // This control diagnoses the ANGLE shared-source path. Do not
+            // silently substitute another import path after a failed wait.
+            return Err(error);
+        },
         Err(_) => {
             // Not an ANGLE D3D11 surfman context, or DX12 device unavailable;
             // try the GL_EXT_memory_object_win32 path against an unbound surface.

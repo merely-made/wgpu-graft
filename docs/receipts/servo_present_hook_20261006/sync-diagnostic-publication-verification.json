@@ -1,0 +1,243 @@
+{
+  "verified_utc": "2026-10-07T05:54:45.371300+00:00",
+  "scope": "Receipt integrity, current typed source, archived native inputs, and relative Markdown links; not a new native or release gate",
+  "integrity_pass": true,
+  "typed_rows_pass": true,
+  "native_pixels": "Existing 1/2; Producer 1/1; Normalization 1/1; Both 2/2; causality unproved",
+  "whole_workspace_formatting": "FAIL preserved; exit 1; 138 reported paths; only new poll hunk fixed",
+  "receipt_json_count": 26,
+  "native_file_count": 180,
+  "checks": [
+    {
+      "check": "receipt_json_parse",
+      "pass": true,
+      "count": 26
+    },
+    {
+      "check": "log_hash:adapter-wgpu30-sync-diagnostic-check.log",
+      "pass": true,
+      "sha256": "d1b83ec19bd48d854f4e15ec1850bba913772809a4606b53c7533c771dd432dc",
+      "exit_code": 0
+    },
+    {
+      "check": "log_hash:grafting-wgpu28-sync-diagnostic-check.log",
+      "pass": true,
+      "sha256": "0287d48b6f7ce1231c38cf8ddeb2d2aba7d34d16c71457f220aba3e6efdaece8",
+      "exit_code": 0
+    },
+    {
+      "check": "log_hash:grafting-wgpu29-sync-diagnostic-check.log",
+      "pass": true,
+      "sha256": "b8d1c17d093e685fa5a3b436e6e852b4ebed3810dc1222dff507d92911f153c0",
+      "exit_code": 0
+    },
+    {
+      "check": "log_hash:supplier-sync-diagnostic-fmt-check.log",
+      "pass": true,
+      "sha256": "2fd0035163d3c8c59b30078b86f3f13d3238da7d591c88574e80da0f28ee4928",
+      "exit_code": 1
+    },
+    {
+      "check": "postformat_typed:adapter30",
+      "pass": true,
+      "sha256": "0c62cbe90963b02c811a8ddb8a39e7cf1f3fac23236a44bbc2c620cdf8b61ff3"
+    },
+    {
+      "check": "postformat_typed:core28",
+      "pass": true,
+      "sha256": "50ae626cca3856b5c17c18cf007e4229717a1f0f50eacde9b9c62431732e5690"
+    },
+    {
+      "check": "postformat_typed:core29",
+      "pass": true,
+      "sha256": "774d58125a17b65bf43471e03344dec0369a59e78d848f1e2ccd880dcc3756a9"
+    },
+    {
+      "check": "current_input:Cargo.toml",
+      "pass": true,
+      "sha256": "e1da718945e59732aaaa26c92ed2162b67da6a316c8b5b96586cd67c91864e2f"
+    },
+    {
+      "check": "current_input:Cargo.lock",
+      "pass": true,
+      "sha256": "86945d977a8cb31e2abc808d72f7b14d6700fbbec559151084574423c6ee5ade"
+    },
+    {
+      "check": "current_input:rust-toolchain.toml",
+      "pass": true,
+      "sha256": "e37a4c7c4627b0767527085699b1f6ca573f385017907f346290419ef3e9cc58"
+    },
+    {
+      "check": "current_input:grafting/Cargo.toml",
+      "pass": true,
+      "sha256": "e6b7a7d0d6303fc6eeef6544e244c8a16c1326361b520d8c4c7f117851d21356"
+    },
+    {
+      "check": "current_input:grafting-frame/Cargo.toml",
+      "pass": true,
+      "sha256": "bf806abafb4b964a069a76b3898ccde375d180c8d0982dbe169fcf7033b26b48"
+    },
+    {
+      "check": "current_input:servo-wgpu-interop-adapter/Cargo.toml",
+      "pass": true,
+      "sha256": "850257eb4cc7836e5845f06471fec4b34b40f1be5383a4f24d7d94ba2400ccb0"
+    },
+    {
+      "check": "current_input:grafting/src/error.rs",
+      "pass": true,
+      "sha256": "d9a65df7ea79b3a0f4cab44b6749256db344a055068737da50c1302413a0ac17"
+    },
+    {
+      "check": "current_input:grafting/src/lib.rs",
+      "pass": true,
+      "sha256": "c51ae8163dadcb801c8b0f4c31d15ec51d73837b9eefda8c340ba600e7e8d122"
+    },
+    {
+      "check": "current_input:grafting/src/raw_gl/texture_normalizer.rs",
+      "pass": true,
+      "sha256": "aee6bffb3034e59a913ad40800b856b641c1dd535f5540179b4bdceebb512a2d"
+    },
+    {
+      "check": "current_input:grafting/src/surfman_gl/windows.rs",
+      "pass": true,
+      "sha256": "ec643e91b9342e926054af8ee2fb649e43f41f8c1bae11c430f412c9bb8d13d5"
+    },
+    {
+      "check": "current_input:grafting/src/surfman_gl/windows_dx12_shared.rs",
+      "pass": true,
+      "sha256": "a1fa33cfb28a8b669af4b2efad31ea1188104f16b727ce97bc77ce81b6d18a65"
+    },
+    {
+      "check": "current_input:servo-wgpu-interop-adapter/src/lib.rs",
+      "pass": true,
+      "sha256": "0bbf245a1a3e109f460d40173e5edf446539b3bd5aae6ff56b0e4e6826611a08"
+    },
+    {
+      "check": "initial_typed_input_result_consistency",
+      "pass": true
+    },
+    {
+      "check": "preformat_raw_source_hash",
+      "pass": true,
+      "sha256": "576e19b6c3bf33a5c2b60cc1e9847f141a688ff87b1e416c2a7c8de398cbffbc"
+    },
+    {
+      "check": "postformat_raw_source_hash",
+      "pass": true,
+      "sha256": "c51ae8163dadcb801c8b0f4c31d15ec51d73837b9eefda8c340ba600e7e8d122"
+    },
+    {
+      "check": "full_file_normalized_equivalence",
+      "pass": true,
+      "sha256": "255cda090429c03b898c827bcc875fac02420dfff17e5e5d13f9b4b9268bc2fa"
+    },
+    {
+      "check": "comparison_copy",
+      "pass": true,
+      "sha256": "3d2635abb102d261c90855be39ea52313fde544e3aeb6d72e401ba80034d30c2"
+    },
+    {
+      "check": "archive_hash:supplier-source-inputs.zip",
+      "pass": true,
+      "sha256": "8fa391a79a2d1127830cc42639ff36cbde9daaa6ef7e5cbd539f2970f6b2ee0f"
+    },
+    {
+      "check": "native_archive_matches_raw_preformat",
+      "pass": true
+    },
+    {
+      "check": "archive_manifest:supplier-source-inputs.zip",
+      "pass": true,
+      "count": 38,
+      "mismatches": []
+    },
+    {
+      "check": "archive_hash:source-inputs-all3-sync-control.zip",
+      "pass": true,
+      "sha256": "f7b2ff089427b5bf7f37d5684c422a27f1703c13fc53be9026376e60c45d7463"
+    },
+    {
+      "check": "archive_manifest:source-inputs-all3-sync-control.zip",
+      "pass": true,
+      "count": 176,
+      "mismatches": []
+    },
+    {
+      "check": "native_files:native-servo-sync-both",
+      "pass": true,
+      "count": 30,
+      "mismatches": [],
+      "pixel_pass": true
+    },
+    {
+      "check": "native_files:native-servo-sync-existing",
+      "pass": true,
+      "count": 30,
+      "mismatches": [],
+      "pixel_pass": true
+    },
+    {
+      "check": "native_files:native-servo-sync-existing-repeat",
+      "pass": true,
+      "count": 30,
+      "mismatches": [],
+      "pixel_pass": false
+    },
+    {
+      "check": "native_files:native-servo-sync-producer",
+      "pass": true,
+      "count": 30,
+      "mismatches": [],
+      "pixel_pass": true
+    },
+    {
+      "check": "native_files:native-servo-sync-normalization",
+      "pass": true,
+      "count": 30,
+      "mismatches": [],
+      "pixel_pass": true
+    },
+    {
+      "check": "native_files:native-servo-sync-both-repeat",
+      "pass": true,
+      "count": 30,
+      "mismatches": [],
+      "pixel_pass": true
+    },
+    {
+      "check": "relative_markdown_links",
+      "pass": true,
+      "count": 7,
+      "missing": []
+    },
+    {
+      "check": "receipt_named_evidence_paths",
+      "pass": true,
+      "local_count": 30,
+      "upstream_source_pointers": [
+        {
+          "path": "ports/servoshell/window.rs",
+          "source": "immutable upstream Servo 1d44e5d",
+          "exists": true
+        },
+        {
+          "path": "components/servo/servo.rs",
+          "source": "immutable upstream Servo 1d44e5d",
+          "exists": true
+        },
+        {
+          "path": "components/net/resource_thread.rs",
+          "source": "immutable upstream Servo 1d44e5d",
+          "exists": true
+        },
+        {
+          "path": "components/storage/storage_thread.rs",
+          "source": "immutable upstream Servo 1d44e5d",
+          "exists": true
+        }
+      ],
+      "missing": []
+    }
+  ],
+  "failures": []
+}
