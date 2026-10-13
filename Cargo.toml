@@ -78,6 +78,7 @@ yeslogic-fontconfig-sys = { path = "patches/yeslogic-fontconfig-sys" }
 taffy = { path = "patches/taffy-0.9" }
 
 [workspace.package]
+rust-version = "1.97.1"
 edition = "2024"
 license = "MPL-2.0"
 repository = "https://github.com/merely-made/wgpu-graft"

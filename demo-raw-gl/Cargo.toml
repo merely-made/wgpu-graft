@@ -1,4 +1,5 @@
 [package]
+rust-version = "1.97.1"
 name = "demo-raw-gl"
 version.workspace = true
 edition.workspace = true

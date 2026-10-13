@@ -1,4 +1,5 @@
 [package]
+rust-version = "1.97.1"
 name = "demo-servo-iced"
 version = "0.1.0"
 edition = "2024"
@@ -38,3 +39,6 @@ servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", default-f
 ] }
 url = "2.5.7"
 winit = "0.30.13"
+
+[workspace.package]
+rust-version = "1.97.1"

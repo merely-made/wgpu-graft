@@ -1,4 +1,5 @@
 [package]
+rust-version = "1.97.1"
 name = "demo-servo-egui"
 version = "0.1.0"
 edition = "2024"

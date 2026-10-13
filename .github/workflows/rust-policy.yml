@@ -1,0 +1,32 @@
+name: Rust version policy
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  manifest-policy:
+    name: Manifest policy / Rust ${{ matrix.toolchain }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain: ["1.97.1", "1.99.0"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+      - name: Resolve first-party package declarations
+        run: cargo metadata --no-deps --format-version 1 > rust-policy-metadata.json
+      - name: Check declared support floor
+        shell: python
+        run: |
+          import json
+          data = json.load(open("rust-policy-metadata.json"))
+          members = set(data["workspace_members"])
+          owned = [p for p in data["packages"] if p["id"] in members and "/vendor/" not in p["manifest_path"] and "/patches/" not in p["manifest_path"]]
+          assert owned, "No owned packages in policy scope"
+          bad = [(p["name"], p["rust_version"]) for p in owned if p["rust_version"] != "1.97.1"]
+          assert not bad, bad
+          print(f"{len(owned)} package declarations match MSRV 1.97.1; compiler compatibility is checked by build lanes")
