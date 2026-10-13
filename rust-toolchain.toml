@@ -5,4 +5,5 @@
 # Do not lower below 1.92, where wgpu's HAL layer picks up stabilized APIs;
 # bevy 0.19 pulls the floor the rest of the way to 1.95. The pin itself sits
 # above the floor and moves with stable.
-channel = "1.97.1"
+
+channel = "1.99.0"

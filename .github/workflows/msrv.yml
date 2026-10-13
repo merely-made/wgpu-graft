@@ -31,7 +31,7 @@ jobs:
     uses: merely-made/.github/.github/workflows/wgpu-msrv.yml@main
     with:
       crate: grafting
-      toolchain: 1.92.0
+      toolchain: 1.97.1
       run-library: false
       # This is the published library contract.
       extra-check: -p grafting --all-features

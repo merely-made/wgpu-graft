@@ -1,5 +1,7 @@
 # Wgpu-graft documentation
 
+Rust policy (2026-10-13): working toolchain 1.99.0 and shared MSRV 1.97.1, qualified separately. Canonical policy: `mere/design_docs/2026-08-12_family_composition_thesis_brief.md`, section "Shared Rust toolchain and minimum version".
+
 This is the canonical index for active documentation in this repository.
 
 ## Working principles
