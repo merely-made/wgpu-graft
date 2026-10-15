@@ -57,6 +57,9 @@ dpi = "0.1.2"
 [target.'cfg(any(target_os = "linux", target_os = "android", target_os = "windows"))'.dependencies]
 ash = "0.38.0"
 
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"
+
 [target.'cfg(target_os = "windows")'.dependencies]
 windows = { version = "0.62", features = [
     "Win32_Foundation",
