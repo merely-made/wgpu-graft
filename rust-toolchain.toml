@@ -6,4 +6,4 @@
 # bevy 0.19 pulls the floor the rest of the way to 1.95. The pin itself sits
 # above the floor and moves with stable.
 
-channel = "1.99.0"
+channel = "1.99.1"

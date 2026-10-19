@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Serialize host hardware use
         uses: ./.github/actions/host-hardware-lock
-      - uses: dtolnay/rust-toolchain@1.99.0
+      - uses: dtolnay/rust-toolchain@1.99.1
       - name: Install relocatable Python tooling
         uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         env:
