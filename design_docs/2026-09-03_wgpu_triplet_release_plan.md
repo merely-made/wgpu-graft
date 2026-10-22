@@ -29,6 +29,13 @@ Servo-demo jobs. The package dry-run and upload each verified six files at
 23.2 KiB unpacked / 6.7 KiB compressed, and `grafting-frame` 0.1.0 is published
 on crates.io.
 
+**2026-10-22:** published heads are `grafting` 0.6.0, `grafting-frame` 0.1.0,
+`scrying` 0.7.2 and `welding` 0.15.0. Graft's main has unreleased breaking
+changes, and Turnstone still pins Graft and its Servo adapter by Git revision.
+The [coordinated-release cues](#2026-10-22-coordinated-graft-07--scry-08--weld-0151-cues)
+record what a `grafting` 0.7 / `scrying` 0.8 / `welding` 0.15.1 / adapter train
+involves. Nothing in it is tagged or published.
+
 This plan is the cross-repo release gate for:
 
 - `wgpu-graft` / `grafting`
@@ -69,6 +76,76 @@ Windows, Linux, and macOS while retaining the named trusted-content mode.
    releases must run on DX12, Metal, and Vulkan. This is the packaging proof.
 
 ## Findings
+
+### 2026-10-22 coordinated Graft 0.7 / Scry 0.8 / Weld 0.15.1 cues
+
+Source read at Graft `574ebc4`, Scry `2b3d6dd`, Weld `776ed44`, Mere
+`7136592c` and Turnstone `cfb2904`. These are cues: what is wrong and what
+fixing it would improve. None of it is tagged or published.
+
+**Graft's main is a breaking release.** Since `grafting-v0.6.0` the `surfman`
+feature moved Surfman 0.13 to 0.14 for Servo v0.7.0, and
+`surfman_gl::SurfmanFrameContext` exposes Surfman's `Device`, `Context`,
+`Surface` and `Error`. 0.5.0 treated the same move as breaking. The other
+changes are additive: `grafting-frame` re-exports, DX12 custody backed by
+`OwnedDx12SharedResource`, `DiagnosticGpuSync` on the non-exhaustive
+`ImportOptions`, `InteropError::NormalizationCompletion` on a non-exhaustive
+enum, and MSRV 1.92 to 1.97.1. The honest version is 0.7.0.
+`cargo package -p grafting --features wgpu-30` verifies on macOS against
+registry `grafting-frame` 0.1.0, whose source has changed only in MSRV
+metadata since publication. `CHANGELOG.md` still holds the 0.6.0 notes under
+`[Unreleased]` with no 0.6.0 heading and omits everything after it, so a
+release cut from it would misdescribe both versions.
+
+**Upstream currency.** Servo `aac43a3` is v0.7.0, the newest tag, and is the
+same source as crates.io `servo` 0.7.0 (published 2026-10-05). Servo main and
+v0.7.0 both pin glow 0.17, gleam 0.15 and Surfman 0.14; glow 0.18 and gleam
+0.16 exist, but taking them would split the GL types across the adapter
+boundary. wgpu 30.0.1 is current and the 29 row resolves up to 29.0.4.
+`cargo update --dry-run` finds no compatible updates. The one lagging direct
+dependency is dev-only `pollster` 0.4 (1.0.1 exists).
+
+**Why Turnstone still carries Git pins.** Turnstone pins `grafting` and
+`servo-wgpu-interop-adapter` to `bb48281` and patches crates.io `grafting` to
+the same revision, because the Git-only adapter carries its sibling path
+`grafting` and Scry and Weld must share it to keep one Grafting. Publishing
+`grafting` alone removes neither pin. The adapter names Servo by Git revision,
+which crates.io rejects; naming registry `servo` 0.7.0 instead would make it
+publishable at the same source. Turnstone's Servo route is Windows/DX12 with
+`no-wgl`, so only a Windows build of that route qualifies a registry-Servo
+adapter; Graft's macOS and Linux checks do not reach it.
+
+**What grafting 0.7 does to its siblings.**
+
+- `scrying` 0.7.2 requires `grafting` ^0.6.0 and re-exports
+  `grafting::Dx12SharedResource` (`scrying/src/native_frame/mod.rs:155`), so
+  moving the dependency changes a public type: `scrying` 0.8.0. Scry still
+  defines its own `NativeFrame` beside `grafting-frame`. A breaking Scry
+  release is the cheapest moment to adopt the wgpu-free custody vocabulary; a
+  later adoption costs another breaking release.
+- `welding` 0.15.0 requires `grafting` ^0.6.0 with default features off, and
+  its Grafting use is private (Metal and DMABUF import internals;
+  `build_dmabuf_capable_device` returns plain wgpu types). Moving it is a
+  compatible `welding` 0.15.1. Weld's own `NativeFrame` stays duplicated
+  unless it adopts `grafting-frame`, which would be a breaking 0.16.
+- Shipping grafting 0.7 without its siblings gives a registry consumer two
+  Grafting copies. Turnstone passes no Grafting type between them today (Scry
+  and Weld import through their own importers; Turnstone's direct call is the
+  borrowed DX12 escape hatch on a raw handle), so it would build, but it loses
+  the one-Grafting property the patch exists for and compiles the wgpu-hal
+  glue twice.
+- Mere's `scrying-engine` requires `scrying` "0.7.1" and the workspace pins
+  `welding-0-15` at "0.15.0". Scry 0.8 needs a Mere change, and every Mere
+  change forces the family repin (Knot, Redshank, Turnstone). Welding 0.15.1
+  resolves under the existing requirement.
+
+**Registry proof.** `registry-only-triplet.yml` stages exact versions. Its
+last complete green run, `33916390001`, proved 0.6.0 / 0.7.1 / 0.14.1, not
+the current heads; this plan records no four-host registry run for Weld 0.15.0. The NVIDIA
+runner listener and Intel Metal cadence gates recorded below are still open,
+so a new train inherits no four-host proof. A published adapter could also
+move from the verifier's separately recorded local copy to a checked registry
+package.
 
 ### 2026-10-07 Scry 0.7.2 publication and fresh consumers
 
