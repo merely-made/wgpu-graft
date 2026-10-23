@@ -117,7 +117,9 @@ pub enum OwnedNativeImage {
 
 impl OwnedNativeImage {
     pub fn kind(&self) -> OwnedNativeFrameKind {
-        match self {
+        // Match the value: on targets with no native variants the value is
+        // uninhabited, while a reference is still considered inhabited.
+        match *self {
             #[cfg(target_os = "windows")]
             Self::Dx12SharedTexture(_) => OwnedNativeFrameKind::Dx12SharedTexture,
             #[cfg(target_os = "linux")]
