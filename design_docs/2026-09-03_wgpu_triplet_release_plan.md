@@ -52,6 +52,16 @@ WPE runtime resizing, or Electron/Tauri replacement. Weld exposes the security
 choice explicitly; the completed receipts prove its sandboxed CEF mode on
 Windows, Linux, and macOS while retaining the named trusted-content mode.
 
+### 2026-10-22 Webcue prerequisite patch
+
+`grafting-frame` 0.1.1 carries the wasm empty-native-image discriminator fix
+from PR #1. Native frame ownership and importer behavior are unchanged. The
+PR also removes a deprecated `std::usize` import from the vendored GPUI demo,
+which caused the old Linux/macOS/Windows demo CI failures under Rust 1.99.1.
+The exact frame package is checked independently; this patch does not release
+the breaking Grafting 0.7 / Scry 0.8 train. Publication and registry consumer
+receipts live in `wgpu-cue/docs/2026-10-22-proof.md`.
+
 ## Confirmed decisions
 
 1. Graft's public safe API becomes an owned front door with an unsafe raw escape
