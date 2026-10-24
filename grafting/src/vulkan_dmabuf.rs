@@ -228,8 +228,16 @@ fn map_drm_format(
     const DRM_FORMAT_XBGR8888: u32 = 0x3432_4258; // XB24
 
     match drm_format {
-        DRM_FORMAT_ARGB8888 | DRM_FORMAT_XRGB8888 => Ok(vk::Format::B8G8R8A8_UNORM),
-        DRM_FORMAT_ABGR8888 | DRM_FORMAT_XBGR8888 => Ok(vk::Format::R8G8B8A8_UNORM),
+        DRM_FORMAT_ARGB8888 | DRM_FORMAT_XRGB8888 => Ok(if fallback.is_srgb() {
+            vk::Format::B8G8R8A8_SRGB
+        } else {
+            vk::Format::B8G8R8A8_UNORM
+        }),
+        DRM_FORMAT_ABGR8888 | DRM_FORMAT_XBGR8888 => Ok(if fallback.is_srgb() {
+            vk::Format::R8G8B8A8_SRGB
+        } else {
+            vk::Format::R8G8B8A8_UNORM
+        }),
         0 => map_format(fallback),
         other => Err(InteropError::Vulkan(format!(
             "DMABUF import does not support DRM fourcc {other:#010x}"
@@ -241,9 +249,8 @@ fn map_drm_format(
 ///
 /// Shared-fd multi-plane layouts are supported. Every plane must refer to the
 /// same kernel DMABUF; disjoint per-plane allocations require Vulkan disjoint
-/// binding and are rejected. Callers must serialize this function with other
-/// submissions to the host queue because the foreign-ownership path records a
-/// direct Vulkan submit through wgpu-hal.
+/// binding and are rejected. Foreign acquisition is recorded through a wgpu-owned
+/// command encoder and submitted on its queue, without a CPU completion wait.
 pub fn import_dmabuf(
     frame: VulkanDmaBufImport,
     host: &HostWgpuContext,
@@ -286,7 +293,8 @@ pub fn import_dmabuf(
     let width = frame.size.width;
     let height = frame.size.height;
 
-    unsafe {
+    let mut acquisition = None;
+    let texture = unsafe {
         let hal_device = host.device.as_hal::<wgpu::wgc::api::Vulkan>().ok_or(
             InteropError::BackendMismatch {
                 expected: "Vulkan",
@@ -348,23 +356,14 @@ pub fn import_dmabuf(
             Err(err) => {
                 vk_device.destroy_image(vulkan_image, None);
                 return Err(err);
-            }
+            },
         };
 
         let initial_state = match frame.queue_ownership {
             VulkanDmaBufQueueOwnership::Foreign => {
-                if let Err(err) = acquire_from_foreign_queue(
-                    &vk_device,
-                    hal_device.raw_queue(),
-                    hal_device.queue_family_index(),
-                    vulkan_image,
-                ) {
-                    vk_device.free_memory(memory, None);
-                    vk_device.destroy_image(vulkan_image, None);
-                    return Err(err);
-                }
+                acquisition = Some((vk_device.clone(), hal_device.queue_family_index()));
                 wgpu::TextureUses::RESOURCE
-            }
+            },
             VulkanDmaBufQueueOwnership::LocalUninitialized => wgpu::TextureUses::UNINITIALIZED,
         };
 
@@ -394,9 +393,7 @@ pub fn import_dmabuf(
             wgpu_hal::vulkan::TextureMemory::External,
         );
 
-        Ok(crate::wgpu_compat::create_texture_from_hal::<
-            wgpu_hal::api::Vulkan,
-        >(
+        crate::wgpu_compat::create_texture_from_hal::<wgpu_hal::api::Vulkan>(
             &host.device,
             hal_texture,
             &wgpu::TextureDescriptor {
@@ -414,8 +411,30 @@ pub fn import_dmabuf(
                 view_formats: &[],
             },
             initial_state,
-        ))
+        )
+    };
+    if let Some((device, queue_family)) = acquisition {
+        let mut encoder = host
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+                label: Some("grafting foreign image acquisition"),
+            });
+        record_foreign_acquire(&device, &mut encoder, queue_family, unsafe {
+            texture
+                .as_hal::<wgpu::wgc::api::Vulkan>()
+                .ok_or(InteropError::InvalidFrame(
+                    "imported texture lost its Vulkan backend",
+                ))?
+                .raw_handle()
+        })?;
+        // Raw and wgpu encoding cannot be mixed in one encoder. The raw
+        // command buffer is tracked/retired by wgpu; retain its image until
+        // that submission completes, then allow normal texture retirement.
+        let keep_alive = texture.clone();
+        host.queue.submit([encoder.finish()]);
+        host.queue.on_submitted_work_done(move || drop(keep_alive));
     }
+    Ok(texture)
 }
 
 fn host_has_foreign_queue_support(host: &HostWgpuContext) -> bool {
@@ -494,90 +513,48 @@ unsafe fn allocate_and_bind_dmabuf_memory(
     Ok(memory)
 }
 
-unsafe fn acquire_from_foreign_queue(
-    vk_device: &ash::Device,
-    queue: vk::Queue,
-    queue_family_index: u32,
+fn record_foreign_acquire(
+    device: &ash::Device,
+    encoder: &mut wgpu::CommandEncoder,
+    queue_family: u32,
     image: vk::Image,
 ) -> Result<(), InteropError> {
-    let pool = unsafe {
-        vk_device
-            .create_command_pool(
-                &vk::CommandPoolCreateInfo::default()
-                    .queue_family_index(queue_family_index)
-                    .flags(vk::CommandPoolCreateFlags::TRANSIENT),
-                None,
-            )
-            .map_err(|err| {
-                InteropError::Vulkan(format!("vkCreateCommandPool (DMABUF acquire): {err}"))
-            })?
-    };
-
-    let result = unsafe {
-        let command_buffer = vk_device
-            .allocate_command_buffers(
-                &vk::CommandBufferAllocateInfo::default()
-                    .command_pool(pool)
-                    .level(vk::CommandBufferLevel::PRIMARY)
-                    .command_buffer_count(1),
-            )
-            .map_err(|err| {
-                InteropError::Vulkan(format!("vkAllocateCommandBuffers (DMABUF acquire): {err}"))
-            })?[0];
-        vk_device
-            .begin_command_buffer(
-                command_buffer,
-                &vk::CommandBufferBeginInfo::default()
-                    .flags(vk::CommandBufferUsageFlags::ONE_TIME_SUBMIT),
-            )
-            .map_err(|err| {
-                InteropError::Vulkan(format!("vkBeginCommandBuffer (DMABUF acquire): {err}"))
+    // SAFETY: wgpu begins/ends/owns the command buffer. We only record this
+    // image's foreign acquisition. Its image is retained through completion.
+    // The frame is an immutable producer-complete snapshot, still owned here.
+    unsafe {
+        encoder.as_hal_mut::<wgpu::wgc::api::Vulkan, _, _>(|hal| {
+            let hal = hal.ok_or(InteropError::BackendMismatch {
+                expected: "Vulkan",
+                actual: "non-Vulkan encoder",
             })?;
-
-        let barrier = vk::ImageMemoryBarrier::default()
-            .src_access_mask(vk::AccessFlags::empty())
-            .dst_access_mask(vk::AccessFlags::SHADER_READ | vk::AccessFlags::TRANSFER_READ)
-            .old_layout(vk::ImageLayout::UNDEFINED)
-            .new_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)
-            .src_queue_family_index(vk::QUEUE_FAMILY_FOREIGN_EXT)
-            .dst_queue_family_index(queue_family_index)
-            .image(image)
-            .subresource_range(vk::ImageSubresourceRange {
-                aspect_mask: vk::ImageAspectFlags::COLOR,
-                base_mip_level: 0,
-                level_count: 1,
-                base_array_layer: 0,
-                layer_count: 1,
-            });
-        vk_device.cmd_pipeline_barrier(
-            command_buffer,
-            vk::PipelineStageFlags::TOP_OF_PIPE,
-            vk::PipelineStageFlags::ALL_COMMANDS,
-            vk::DependencyFlags::empty(),
-            &[],
-            &[],
-            &[barrier],
-        );
-        vk_device
-            .end_command_buffer(command_buffer)
-            .map_err(|err| {
-                InteropError::Vulkan(format!("vkEndCommandBuffer (DMABUF acquire): {err}"))
-            })?;
-
-        let command_buffers = [command_buffer];
-        let submit = vk::SubmitInfo::default().command_buffers(&command_buffers);
-        vk_device
-            .queue_submit(queue, &[submit], vk::Fence::null())
-            .map_err(|err| {
-                InteropError::Vulkan(format!("vkQueueSubmit (DMABUF acquire): {err}"))
-            })?;
-        vk_device
-            .queue_wait_idle(queue)
-            .map_err(|err| InteropError::Vulkan(format!("vkQueueWaitIdle (DMABUF acquire): {err}")))
-    };
-
-    unsafe { vk_device.destroy_command_pool(pool, None) };
-    result
+            let barrier = vk::ImageMemoryBarrier::default()
+                .src_access_mask(vk::AccessFlags::empty())
+                .dst_access_mask(vk::AccessFlags::SHADER_READ | vk::AccessFlags::TRANSFER_READ)
+                .old_layout(vk::ImageLayout::GENERAL)
+                .new_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)
+                .src_queue_family_index(vk::QUEUE_FAMILY_FOREIGN_EXT)
+                .dst_queue_family_index(queue_family)
+                .image(image)
+                .subresource_range(vk::ImageSubresourceRange {
+                    aspect_mask: vk::ImageAspectFlags::COLOR,
+                    base_mip_level: 0,
+                    level_count: 1,
+                    base_array_layer: 0,
+                    layer_count: 1,
+                });
+            device.cmd_pipeline_barrier(
+                hal.raw_handle(),
+                vk::PipelineStageFlags::TOP_OF_PIPE,
+                vk::PipelineStageFlags::ALL_COMMANDS,
+                vk::DependencyFlags::empty(),
+                &[],
+                &[],
+                &[barrier],
+            );
+            Ok(())
+        })
+    }
 }
 
 pub(crate) fn import_vulkan_external_image(
@@ -670,6 +647,26 @@ pub fn create_dmabuf_host_context(
 mod tests {
     use super::*;
     use std::os::fd::{AsRawFd, FromRawFd};
+
+    #[test]
+    fn drm_channels_preserve_the_declared_transfer_function() {
+        assert_eq!(
+            map_drm_format(
+                u32::from_le_bytes(*b"AB24"),
+                wgpu::TextureFormat::Rgba8UnormSrgb
+            )
+            .unwrap(),
+            vk::Format::R8G8B8A8_SRGB
+        );
+        assert_eq!(
+            map_drm_format(
+                u32::from_le_bytes(*b"AR24"),
+                wgpu::TextureFormat::Bgra8UnormSrgb
+            )
+            .unwrap(),
+            vk::Format::B8G8R8A8_SRGB
+        );
+    }
 
     // File-descriptor numbers are process-wide and may be reused immediately
     // after close. Keep these tests from opening pipes underneath one another

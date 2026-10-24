@@ -1,0 +1,82 @@
+error: invalid type: boolean `true`, expected a map
+ --> ../../../.cargo/git/checkouts/servo-e53a6e7b994a25fe/aac43a3/python/tidy/tests/lints-configuration/no-workspace/Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+   Compiling proc-macro2 v1.0.106
+   Compiling quote v1.0.46
+   Compiling unicode-ident v1.0.24
+   Compiling bitflags v2.13.0
+   Compiling libc v0.2.186
+   Compiling objc2 v0.6.4
+   Compiling objc2-encode v4.1.0
+   Compiling cfg_aliases v0.2.2
+   Compiling cfg-if v1.0.4
+   Compiling log v0.4.33
+   Compiling foldhash v0.2.0
+   Compiling libm v0.2.16
+   Compiling autocfg v1.5.1
+   Compiling thiserror v2.0.18
+   Compiling dispatch2 v0.3.1
+   Compiling syn v2.0.118
+   Compiling block2 v0.6.2
+   Compiling num-traits v0.2.19
+   Compiling objc2-core-foundation v0.3.2
+   Compiling hashbrown v0.17.1
+   Compiling zerocopy v0.8.52
+   Compiling equivalent v1.0.2
+   Compiling indexmap v2.14.0
+   Compiling rustc-hash v1.1.0
+   Compiling naga v30.0.1
+   Compiling objc2-foundation v0.3.2
+   Compiling parking_lot_core v0.9.12
+   Compiling unicode-width v0.2.2
+   Compiling bit-vec v0.9.1
+   Compiling codespan-reporting v0.13.1
+   Compiling bit-set v0.10.0
+   Compiling thiserror-impl v2.0.18
+   Compiling zerocopy-derive v0.8.52
+   Compiling bytemuck_derive v1.10.2
+   Compiling bytemuck v1.25.0
+   Compiling naga-types v30.0.1
+   Compiling objc2-core-graphics v0.3.2
+   Compiling once_cell v1.21.4
+   Compiling scopeguard v1.2.0
+   Compiling arrayvec v0.7.7
+   Compiling raw-window-handle v0.6.2
+   Compiling smallvec v1.15.2
+   Compiling static_assertions v1.1.0
+   Compiling wgpu-types v30.0.1
+   Compiling lock_api v0.4.14
+   Compiling wgpu-hal v30.0.1
+   Compiling khronos_api v3.1.0
+   Compiling parking_lot v0.12.5
+   Compiling libloading v0.8.9
+   Compiling profiling v1.0.18
+   Compiling wgpu-core v30.0.1
+   Compiling litrs v1.0.0
+   Compiling half v2.7.1
+   Compiling xml-rs v0.8.28
+   Compiling document-features v0.2.12
+   Compiling gl_generator v0.14.0
+   Compiling wgpu v30.0.1
+   Compiling grafting v0.6.1 (/Users/markik/Code/worktrees/wgpu-graft-linux-20261023/grafting)
+   Compiling dpi v0.1.2
+   Compiling wgpu-naga-bridge v30.0.1
+   Compiling objc2-io-surface v0.3.2
+   Compiling objc2-metal v0.3.2
+   Compiling objc2-quartz-core v0.3.2
+   Compiling grafting-frame v0.1.1 (/Users/markik/Code/worktrees/wgpu-graft-linux-20261023/grafting-frame)
+   Compiling raw-window-metal v1.1.0
+   Compiling wgpu-core-deps-apple v30.0.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 48.51s
+     Running unittests src/lib.rs (target/build/debug/deps/grafting-3a3e0faec8fbf699)
+
+running 4 tests
+test tests::capability_matrix_tracks_backend_shape ... ok
+test tests::implicit_synchronizer_accepts_implicit_flush ... ok
+test tests::implicit_synchronizer_rejects_explicit_sync ... ok
+test tests::import_options_default_prefers_normalized_textures ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

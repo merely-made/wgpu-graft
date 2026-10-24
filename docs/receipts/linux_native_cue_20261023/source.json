@@ -1,0 +1,16 @@
+{
+  "version": "grafting 0.6.1",
+  "toolchain": "Rust 1.99.1",
+  "source_sha256": {
+    "grafting/Cargo.toml": "a54d0e344b2a4ff896664f31115a1b363756068654fe573f73727510bf3f1968",
+    "grafting/src/vulkan_dmabuf.rs": "f1c8ffce4981d0e14cb46e8a368d8eea6dfcd9bdb8728305c999d7907fdcc7d4",
+    "grafting/src/surfman_gl/mod.rs": "6c57d1b1de02dfbb23cd2c20bbbf9733a8b7d9e4c453212487044c28c3f30e81",
+    "grafting/src/surfman_gl/surfman_frame_context.rs": "05fc8fd0c3e8952c99cd2c3f74c334e052536ec7d0fdc93163dd523da7a9955e",
+    "grafting/src/surfman_gl/dmabuf_export.rs": "91af5690f212e4c98c05961026557d1e2f512af7d6ff95633fc4e4f9b9e7aa27",
+    "grafting/tests/dmabuf_roundtrip.rs": "f8ad995005d676c63d5244f4779e7d9446a15fccf9a1f7dc05f116926b6115ff",
+    "servo-wgpu-interop-adapter/src/lib.rs": "617b346951b1e9c8888db79d656d099fd866a27135f0dac99a4803c385517858",
+    "servo-wgpu-interop-adapter/src/native_dmabuf.rs": "c22d0db60b1ce1260d11e9eb183c45c72a0207870b3de65b9419f572487f435f",
+    "Cargo.lock": "bbd17ca81d915ed1b804c32c4af367dba553f42db58bfdee0de791068ff15813"
+  },
+  "limits": "Lower hardware fixture and Servo adapter compile; concrete product receiving recorded separately in Turnstone. Source comments/copyright headers were completed after the lower fixture; registry receiving follows publication."
+}

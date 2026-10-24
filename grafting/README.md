@@ -65,15 +65,36 @@ uses, or the imported texture will not share a device.
 grafting = "0.6.0"
 
 # Same, against wgpu 28.
-grafting = { version = "0.6.0", default-features = false, features = ["wgpu-28", "surfman"] }
+grafting = { version = "0.6.1", default-features = false, features = ["wgpu-28", "surfman"] }
 
 # Shared-texture import only (DX12 / Metal / Vulkan DMABUF). No GL, no
 # surfman, no glow. This is what wgpu-weld takes.
-grafting = { version = "0.6.0", default-features = false, features = ["wgpu-29"] }
+grafting = { version = "0.6.1", default-features = false, features = ["wgpu-29"] }
 
 # Same shared-texture surface against wgpu 30.
-grafting = { version = "0.6.0", default-features = false, features = ["wgpu-30"] }
+grafting = { version = "0.6.1", default-features = false, features = ["wgpu-30"] }
 ```
+
+## Completed Linux native snapshots
+
+With `surfman` enabled, `SurfmanFrameProducer::export_dmabuf_frame` creates an
+immutable top-left RGBA snapshot in an explicitly linear GBM allocation on the
+current EGL display's DRM render node. `PendingDmaBufFrame::try_take_frame`
+polls a GL fence with zero timeout. It yields owned descriptors only after the
+snapshot completes; cancellation releases custody without waiting. This path
+uses EGL DMA-BUF import and GBM, with no guessed layout or CPU pixel readback.
+
+The wgpu-30 host creates its Vulkan device with
+`vulkan_dmabuf::create_dmabuf_host_context` before constructing its renderers.
+`import_dmabuf` records foreign ownership acquisition through a wgpu-owned raw
+command encoder and retains the image through submission completion. It does
+not wait for queue idle. A completed producer snapshot is required; merely
+flushing GL does not establish completion across the two APIs.
+
+The repository's `servo-wgpu-interop-adapter` also exports a Linux
+`ServoDmaBufAdapter` pre-present hook. Its completed snapshots can enter the
+shared `wgpu-cue` native-frame importer while the browser control protocol stays
+with its existing host.
 
 ## License
 

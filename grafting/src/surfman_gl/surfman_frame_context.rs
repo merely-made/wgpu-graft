@@ -162,7 +162,7 @@ impl SurfmanFrameContext {
         Some(self.device.borrow().connection())
     }
 
-    fn framebuffer(&self) -> Option<NativeFramebuffer> {
+    pub(super) fn framebuffer(&self) -> Option<NativeFramebuffer> {
         let device = &self.device.borrow();
         let context = &self.context.borrow();
         device

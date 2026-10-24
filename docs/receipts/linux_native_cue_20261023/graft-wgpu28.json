@@ -1,0 +1,29 @@
+{
+  "command": [
+    "nice",
+    "-n",
+    "10",
+    "cargo",
+    "+1.99.1",
+    "check",
+    "-p",
+    "grafting",
+    "--no-default-features",
+    "--features",
+    "wgpu-28,surfman",
+    "--locked",
+    "--offline",
+    "-j2"
+  ],
+  "cwd": "/home/markik/Code/worktrees/wgpu-graft-cue-native-20261023",
+  "started": 1792808725.1316335,
+  "environment": {
+    "CARGO_TARGET_DIR": "/home/markik/Code/target",
+    "CARGO_BUILD_BUILD_DIR": "/home/markik/Code/repos/wgpu-graft/target/build",
+    "WGPU_BACKEND": "vulkan",
+    "VK_DRIVER_FILES": "/usr/share/vulkan/icd.d/radeon_icd.x86_64.json",
+    "VK_INSTANCE_LAYERS": "VK_LAYER_KHRONOS_validation"
+  },
+  "exit": 0,
+  "elapsed_seconds": 12.76
+}

@@ -8,3 +8,6 @@
 *.exe binary
 docs/receipts/servo_present_hook_20261006/** -text -whitespace
 docs/receipts/servo_current_20261007/** -text -whitespace
+
+# Native Cue receiving retains exact diagnostic and source identity bytes.
+docs/receipts/linux_native_cue_20261023/** -text -whitespace
