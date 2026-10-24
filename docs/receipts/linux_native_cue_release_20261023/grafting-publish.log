@@ -1,0 +1,14 @@
+    Updating crates.io index
+error: invalid type: boolean `true`, expected a map
+ --> ../../../.cargo/git/checkouts/servo-e53a6e7b994a25fe/aac43a3/python/tidy/tests/lints-configuration/no-workspace/Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+   Packaging grafting v0.6.1 (/Users/markik/Code/worktrees/wgpu-graft-linux-20261023/grafting)
+    Updating crates.io index
+    Packaged 33 files, 353.4KiB (82.4KiB compressed)
+   Uploading grafting v0.6.1 (/Users/markik/Code/worktrees/wgpu-graft-linux-20261023/grafting)
+    Uploaded grafting v0.6.1 to registry `crates-io`
+note: waiting for grafting v0.6.1 to be available at registry `crates-io`
+help: you may press ctrl-c to skip waiting; the crate should be available shortly
+   Published grafting v0.6.1 at registry `crates-io`
