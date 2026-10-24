@@ -1,9 +1,11 @@
 # Linux native frames through Cue
 
-**Status (2026-10-23): in progress.** The lower GL/Vulkan pixel fixtures and
-Servo adapter compile pass on the ThinkPad. Shared-importer receiving, the
-published dependency cohort and real Turnstone product receiving remain under
-validation. This is the canonical cross-repository record for this pass.
+**Status (2026-10-23): implemented with bounded ThinkPad receiving.** The lower
+GL/Vulkan pixel fixtures, registry shared-importer receiving and real Turnstone
+Servo controls/lens/mixed-card receiving pass on hardware RADV Renoir in native
+GNOME Wayland. Graft 0.6.1 and Wgpu Cue 0.1.2 are published. This is the canonical
+cross-repository record; the consumer receipt binds executable and source to
+those platform results rather than claiming blanket browser acceptance.
 
 ## Feature targets and validation criteria
 
@@ -93,10 +95,32 @@ frame directions accompany each accepted case.
 ## Progress — 2026-10-23
 
 The snapshot producer, asynchronous foreign import, shared importer, host device
-provisioning and Linux browser binding are implemented. Hardware pixel receiving
-and compile evidence are being collected before publication and product
-acceptance. The final receipt and exact release/source identities will replace
-this in-progress statement after those gates complete.
+provisioning and Linux browser binding are implemented. Graft 0.6.1 is published
+at `db2736815e9d1893b8f9372355126056093f7155`; Wgpu Cue 0.1.2 is published
+at `e18584a80e5cf23268ea0330ee70386b01e25de8`. Downloaded Rust sources match
+those commits. Shared-importer tests pass 12/0 against registry Graft; the Mac
+regression passes 11 portable and two explicit Metal GPU tests. Mere `114f4ea26`
+receives that cohort and Genet `2b5c0181`; Pelt passes nine Linux/Vulkan receiving
+tests. The root receiving lock and standalone Iced workspace's local package
+version rows have separate metadata follow-ups; they do not change published
+SDK source bytes.
+
+Turnstone `a2655c6e` builds and passes the full native controls/lifecycle and
+mixed-card cases on executable
+`5b77504a3bc627d9b70b9de92ec5cbf6da75db0ee33f918bedd75827701a16aa`.
+Seven source rasters pass exact opaque RGB/orientation checks through inspector
+sizing, primary, navigation, zoom, lens, docking and reopen. Four native rasters
+pass in the mixed case, where each checkpoint also captures retained Genet on
+the same device. Source IDs must match the actual captured rasters; cached
+entries cannot establish that result. The two mixed global idle waits still
+reach their 240-frame bounds, retaining the known work/wake scheduling cue.
+
+The first full native scenario shows correct lens pixels but omits the lens
+source-raster diagnostic. The stronger driver rejects it. Lens composition now
+uses the same asynchronous diagnostic path as primary composition; the repeated
+case passes. The [consumer receipt](https://github.com/merely-made/turnstone/tree/main/docs/receipts/cue_native_linux_20261023)
+retains both that failed receiving gate and the final positive cases. Diagnostic
+readback remains opt-in evidence collection rather than frame transport.
 
 The consumer record belongs to
 `turnstone/design_docs/2026-08-25_browser_surface_implementation_plan.md`; the

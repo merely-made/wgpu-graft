@@ -1,0 +1,57 @@
+{
+  "grafting": {
+    "crate_sha256": "abf232561ba111ce565d554679edcc1a4f36f5350a99624bce688dede7b283ad",
+    "vcs": {
+      "git": {
+        "sha1": "db2736815e9d1893b8f9372355126056093f7155"
+      },
+      "path_in_vcs": "grafting"
+    },
+    "source_matches": {
+      "build.rs": true,
+      "tests/dmabuf_roundtrip.rs": true,
+      "src/vulkan_dmabuf.rs": true,
+      "src/error.rs": true,
+      "src/lib.rs": true,
+      "src/metal_texture_ref.rs": true,
+      "src/wgpu_compat.rs": true,
+      "src/sync.rs": true,
+      "src/sync_vulkan.rs": true,
+      "src/sync_dx12.rs": true,
+      "src/dx12_shared_texture.rs": true,
+      "src/sync_metal.rs": true,
+      "src/raw_gl/texture_normalizer.rs": true,
+      "src/raw_gl/producer.rs": true,
+      "src/raw_gl/angle_d3d11.rs": true,
+      "src/raw_gl/mod.rs": true,
+      "src/raw_gl/metal.rs": true,
+      "src/raw_gl/dx12.rs": true,
+      "src/raw_gl/windows.rs": true,
+      "src/raw_gl/linux.rs": true,
+      "src/surfman_gl/adapter.rs": true,
+      "src/surfman_gl/surfman_frame_context.rs": true,
+      "src/surfman_gl/windows_dx12_shared.rs": true,
+      "src/surfman_gl/dmabuf_export.rs": true,
+      "src/surfman_gl/mod.rs": true,
+      "src/surfman_gl/windows.rs": true,
+      "src/surfman_gl/linux.rs": true,
+      "src/surfman_gl/metal/mod.rs": true
+    }
+  },
+  "wgpu-cue": {
+    "crate_sha256": "8a3eb8cf5451ccaf64cb4b8aa989707a581cfd89c4602f2b356ce855e0a6eeae",
+    "vcs": {
+      "git": {
+        "sha1": "e18584a80e5cf23268ea0330ee70386b01e25de8"
+      },
+      "path_in_vcs": "crates/wgpu-cue"
+    },
+    "source_matches": {
+      "tests/vulkan.rs": true,
+      "tests/presentation.rs": true,
+      "src/vulkan.rs": true,
+      "src/lib.rs": true,
+      "src/metal.rs": true
+    }
+  }
+}

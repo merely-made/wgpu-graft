@@ -11,3 +11,4 @@ docs/receipts/servo_current_20261007/** -text -whitespace
 
 # Native Cue receiving retains exact diagnostic and source identity bytes.
 docs/receipts/linux_native_cue_20261023/** -text -whitespace
+docs/receipts/linux_native_cue_release_20261023/** -text -whitespace
