@@ -33,6 +33,10 @@ use crate::{
 };
 
 pub use surfman_frame_context::SurfmanFrameContext;
+#[cfg(target_os = "linux")]
+mod dmabuf_export;
+#[cfg(target_os = "linux")]
+pub use dmabuf_export::PendingDmaBufFrame;
 
 pub struct SurfmanFrameProducer {
     context: Rc<SurfmanFrameContext>,
@@ -54,6 +58,16 @@ struct SurfmanGlFrameSource {
 }
 
 impl SurfmanFrameProducer {
+    /// Begin an immutable, top-left DMA-BUF snapshot of the current GL frame.
+    /// The returned job polls completion without a CPU wait, and only hands
+    /// over descriptors after producer rendering and the snapshot copy finish.
+    #[cfg(target_os = "linux")]
+    pub fn export_dmabuf_frame(&self) -> Result<PendingDmaBufFrame, InteropError> {
+        let generation = self.generation.get().checked_add(1)
+            .ok_or(InteropError::InvalidFrame("GL frame generation exhausted"))?;
+        self.generation.set(generation);
+        dmabuf_export::export(self.context.clone(), self.size.get(), generation)
+    }
     pub fn new(context: Rc<SurfmanFrameContext>, initial_size: PhysicalSize<u32>) -> Self {
         Self {
             context,

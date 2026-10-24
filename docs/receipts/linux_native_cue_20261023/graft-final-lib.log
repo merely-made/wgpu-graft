@@ -1,0 +1,23 @@
+error: invalid type: boolean `true`, expected a map
+ --> ../../../.cargo/git/checkouts/servo-e53a6e7b994a25fe/aac43a3/python/tidy/tests/lints-configuration/no-workspace/Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+   Compiling grafting v0.6.1 (/home/markik/Code/worktrees/wgpu-graft-cue-native-20261023/grafting)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.82s
+     Running unittests src/lib.rs (/home/markik/Code/repos/wgpu-graft/target/build/debug/deps/grafting-d38a4119e81821bd)
+
+running 10 tests
+test tests::capability_matrix_tracks_backend_shape ... ok
+test tests::implicit_synchronizer_accepts_implicit_flush ... ok
+test vulkan_dmabuf::tests::disjoint_plane_layout_has_a_specific_error_and_closes_every_fd ... ok
+test tests::import_options_default_prefers_normalized_textures ... ok
+test vulkan_dmabuf::tests::drm_channels_preserve_the_declared_transfer_function ... ok
+test vulkan_dmabuf::tests::invalid_plane_fd_is_conservatively_disjoint ... ok
+test vulkan_dmabuf::tests::repeated_descriptor_is_closed_once ... ok
+test tests::implicit_synchronizer_rejects_explicit_sync ... ok
+test vulkan_dmabuf::tests::independent_plane_fds_are_disjoint ... ok
+test vulkan_dmabuf::tests::duplicated_plane_fds_are_one_kernel_object ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

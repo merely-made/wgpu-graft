@@ -32,6 +32,11 @@ use winit::dpi::PhysicalSize;
 
 pub use grafting::DiagnosticGpuSync;
 
+#[cfg(all(target_os = "linux", feature = "servo"))]
+mod native_dmabuf;
+#[cfg(all(target_os = "linux", feature = "servo"))]
+pub use native_dmabuf::ServoDmaBufAdapter;
+
 // Opt-in observation only: no readback, completion wait or synchronization change.
 fn resize_trace_enabled() -> bool {
     static ENABLED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
@@ -60,6 +65,15 @@ impl Drop for ServoWgpuRenderingContext {
 }
 
 impl ServoWgpuRenderingContext {
+    /// Swap the pre-present snapshot's source without waiting for GL completion.
+    /// The native DMA-BUF hook owns its snapshot and polls a separate GL fence.
+    #[cfg(all(target_os = "linux", feature = "servo"))]
+    fn present_without_wait(&self) {
+        let info = self.frame_producer.borrow().context();
+        let mut device = info.device.borrow_mut();
+        let mut context = info.context.borrow_mut();
+        let _ = self.swap_chain.swap_buffers(&mut *device, &mut *context, PreserveBuffer::No);
+    }
     /// Create a rendering context on surfman's default GPU. Use this for the
     /// CPU readback path, which routes frames through the CPU and does not need
     /// the surfman GPU to match any host wgpu device.

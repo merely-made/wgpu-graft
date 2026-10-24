@@ -48,6 +48,86 @@ const BGRA_CLEAR_BYTES: [u8; 4] = [128, 0, 255, 255];
 const DRM_FORMAT_MOD_LINEAR: u64 = 0;
 const DRM_FORMAT_ARGB8888: u32 = 0x3432_5241;
 
+#[cfg(feature = "surfman")]
+#[test]
+#[ignore = "requires hardware Vulkan and EGL_MESA_image_dma_buf_export"]
+fn completed_gl_snapshot_preserves_pixels_orientation_alpha_and_custody() {
+    use grafting::surfman_gl::{SurfmanFrameContext, SurfmanFrameProducer};
+    use grafting::{OwnedNativeImage, PixelFormat};
+    use glow::HasContext;
+    use std::{rc::Rc, time::{Duration, Instant}};
+    let host = setup_vulkan_host();
+    let connection = surfman::Connection::new().expect("native EGL connection");
+    let adapter = connection.create_adapter().expect("GL adapter");
+    let context = Rc::new(SurfmanFrameContext::new(&connection, &adapter).expect("GL context"));
+    let surface = context.create_surface(surfman::SurfaceType::Generic {
+        size: euclid::default::Size2D::new(WIDTH as i32, HEIGHT as i32),
+    }).expect("GL surface");
+    context.bind_surface(surface).expect("bind source");
+    context.make_current().expect("make current");
+    context.prepare_for_rendering();
+    let producer = SurfmanFrameProducer::new(context.clone(), PhysicalSize::new(WIDTH, HEIGHT));
+    let gl = &context.glow_gl;
+    unsafe {
+        eprintln!("native GL renderer: {}", gl.get_parameter_string(glow::RENDERER));
+        gl.disable(glow::SCISSOR_TEST);
+        gl.clear_color(0., 0., 1., 1.);
+        gl.clear(glow::COLOR_BUFFER_BIT);
+        gl.enable(glow::SCISSOR_TEST);
+        gl.scissor(0, 0, WIDTH as i32/2, HEIGHT as i32/2);
+        gl.clear_color(0., 1., 0., 1.);
+        gl.clear(glow::COLOR_BUFFER_BIT);
+        gl.scissor(WIDTH as i32/2, HEIGHT as i32/2, WIDTH as i32/2, HEIGHT as i32/2);
+        gl.clear_color(0.5, 0., 0., 0.5);
+        gl.clear(glow::COLOR_BUFFER_BIT);
+    }
+    let mut pending = producer.export_dmabuf_frame().expect("begin owned snapshot");
+    // A snapshot must not alias a mutable Servo back buffer. Overwrite the
+    // source before polling; the exported frame must retain the earlier paint.
+    unsafe {
+        gl.disable(glow::SCISSOR_TEST);
+        gl.clear_color(1., 1., 0., 1.);
+        gl.clear(glow::COLOR_BUFFER_BIT);
+        gl.flush();
+    }
+    let start = Instant::now();
+    let frame = loop {
+        if let Some(frame) = pending.try_take_frame().expect("nonblocking poll") { break frame; }
+        assert!(start.elapsed() < Duration::from_secs(5), "GL snapshot completion bound");
+        std::thread::sleep(Duration::from_millis(1));
+    };
+    assert!(pending.try_take_frame().unwrap().is_none(), "one take per snapshot");
+    assert_eq!(frame.metadata().format, PixelFormat::Rgba8Unorm);
+    let (_, image, sync) = frame.into_parts();
+    assert!(matches!(sync, grafting::FrameSync::None));
+    let OwnedNativeImage::DmaBufImage(image) = image else { panic!("owned DMA-BUF") };
+    let (buffers, planes, fourcc, modifier) = image.into_parts();
+    eprintln!("snapshot fourcc={fourcc:#x} modifier={modifier:#x} planes={planes:?}");
+    let descriptor = grafting::vulkan_dmabuf::VulkanDmaBufImport::new(
+        PhysicalSize::new(WIDTH, HEIGHT), wgpu::TextureFormat::Rgba8Unorm,
+        fourcc, modifier, buffers,
+        planes.into_iter().map(|p| grafting::vulkan_dmabuf::VulkanDmaBufPlane {
+            buffer_index:p.buffer_index as usize, offset:p.offset, stride:p.stride,
+        }).collect(),
+        grafting::vulkan_dmabuf::VulkanDmaBufQueueOwnership::Foreign,
+    ).unwrap();
+    let texture = grafting::vulkan_dmabuf::import_dmabuf(descriptor, &host).expect("native Vulkan import");
+    drop(pending);
+    drop(producer);
+    let mut surface = context.unbind_surface().unwrap().unwrap();
+    context.device.borrow().destroy_surface(&mut context.context.borrow_mut(), &mut surface).unwrap();
+    drop(context);
+    // The producer, GL snapshot, EGLImage and exported descriptor custody are
+    // now gone. Read only the consumer allocation on the hardware Vulkan queue.
+    let pixels = readback_rgba(&host.device, &host.queue, &texture, WIDTH, HEIGHT);
+    for (x,y,expected) in [(8,8,[0,0,255,255]), (WIDTH-8,8,[128,0,0,128]),
+        (8,HEIGHT-8,[0,255,0,255]), (WIDTH-8,HEIGHT-8,[0,0,255,255])] {
+        let offset=((y*WIDTH+x)*4) as usize;
+        assert_eq!(&pixels[offset..offset+4], &expected, "top-left pixel ({x},{y})");
+    }
+    host.device.poll(wgpu::PollType::wait_indefinitely()).expect("test cleanup");
+}
+
 #[test]
 #[ignore = "requires VK_EXT_image_drm_format_modifier; run manually with --ignored"]
 fn dmabuf_clear_roundtrip() {

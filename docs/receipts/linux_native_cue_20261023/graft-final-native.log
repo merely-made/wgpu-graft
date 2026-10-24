@@ -1,0 +1,18 @@
+error: invalid type: boolean `true`, expected a map
+ --> ../../../.cargo/git/checkouts/servo-e53a6e7b994a25fe/aac43a3/python/tidy/tests/lints-configuration/no-workspace/Cargo.toml:8:7
+  |
+8 | foo = true
+  |       ^^^^
+   Compiling grafting v0.6.1 (/home/markik/Code/worktrees/wgpu-graft-cue-native-20261023/grafting)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.95s
+     Running tests/dmabuf_roundtrip.rs (/home/markik/Code/repos/wgpu-graft/target/build/debug/deps/dmabuf_roundtrip-78861faa9b603bec)
+
+running 3 tests
+test bgra_dmabuf_clear_roundtrip ... ok
+test completed_gl_snapshot_preserves_pixels_orientation_alpha_and_custody ... native GL renderer: AMD Radeon Graphics (radeonsi, renoir, ACO, DRM 3.64, 7.2.11-200.fc44.x86_64)
+snapshot fourcc=0x34324241 modifier=0x0 planes=[DmaBufPlane { buffer_index: 0, offset: 0, stride: 256 }]
+ok
+test dmabuf_clear_roundtrip ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+

@@ -12,6 +12,8 @@ This is the canonical index for active documentation in this repository.
 - Treat resource ownership as part of the ABI. Copyable descriptors may carry
   only borrowed handles or scalar metadata; descriptors whose handles are
   consumed by a driver need move-only ownership in the safe API.
+- A foreign image keeps its producer contents and explicit layout; a completed
+  producer snapshot and a GL flush are different synchronization guarantees.
 - Keep compile coverage, resource-import shape, pixel correctness, and headed
   hardware receipts as separate claims.
 - Keep the feature-selected wgpu row identical to the host row and re-export
@@ -29,6 +31,9 @@ This is the canonical index for active documentation in this repository.
   release-gating plan for Graft, Scry, and Weld after the browser-surface
   architecture review, including the October Servo GPU ordering diagnostic
   checkpoint and the Windows-qualified current Servo migration.
+- [Linux native frames through Cue](2026-10-23_linux_native_cue_plan.md): owned
+  producer snapshots, non-blocking Vulkan import and shared Turnstone receiving.
+
 ## Legacy reference documents
 
 These predate this `design_docs/` root and still live under `docs/`. Treat them
