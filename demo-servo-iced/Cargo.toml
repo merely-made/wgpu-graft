@@ -33,7 +33,7 @@ grafting = { path = "../grafting", default-features = false, features = [
     "wgpu-28",
     "surfman",
 ] }
-servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", default-features = false, features = [
+grafting-servo = { path = "../servo-wgpu-interop-adapter", default-features = false, features = [
     "wgpu-28",
     "servo",
 ] }

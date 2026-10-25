@@ -7,7 +7,7 @@ Minimal Servo embedding using winit + wgpu with no GUI toolkit. This is the prim
 ## What it demonstrates
 
 - The host owns the `wgpu::Device`, `wgpu::Queue`, and presentation surface
-- Servo renders offscreen through `servo-wgpu-interop-adapter`
+- Servo renders offscreen through `grafting-servo`
 - GPU texture import and normalization is attempted first; if the driver lacks the required GL extensions, the demo falls back to CPU readback
 - Mouse, scroll, and keyboard events are forwarded to Servo (clickable links, scrolling, text input)
 

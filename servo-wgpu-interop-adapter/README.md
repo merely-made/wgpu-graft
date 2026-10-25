@@ -1,4 +1,4 @@
-# servo-wgpu-interop-adapter
+# grafting-servo
 
 Servo-specific offscreen rendering adapter built on [`grafting`](../grafting/).
 
@@ -35,7 +35,7 @@ remains bound to the archived source of that earlier commit.
 
 ```toml
 [dependencies]
-servo-wgpu-interop-adapter = { git = "https://github.com/merely-made/wgpu-graft", rev = "7907ff295da2c20c2a791419e6658d1c05350345", default-features = false, features = ["wgpu-30", "servo"] }
+grafting-servo = { git = "https://github.com/merely-made/wgpu-graft", rev = "7907ff295da2c20c2a791419e6658d1c05350345", default-features = false, features = ["wgpu-30", "servo"] }
 servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5ec4e959c943ad7cc7" }
 ```
 

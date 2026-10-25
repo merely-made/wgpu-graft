@@ -3540,10 +3540,10 @@ dependencies = [
  "demo-support",
  "euclid",
  "grafting",
+ "grafting-servo",
  "pollster 0.4.0",
  "rustls",
  "servo",
- "servo-wgpu-interop-adapter",
  "url",
  "wgpu 29.0.3",
  "winit",
@@ -3558,10 +3558,10 @@ dependencies = [
  "demo-support",
  "euclid",
  "grafting",
+ "grafting-servo",
  "pollster 0.4.0",
  "rustls",
  "servo",
- "servo-wgpu-interop-adapter",
  "url",
  "vello 0.9.0",
  "wgpu 29.0.3",
@@ -3575,10 +3575,10 @@ dependencies = [
  "demo-support",
  "eframe",
  "euclid",
+ "grafting-servo",
  "image",
  "rustls",
  "servo",
- "servo-wgpu-interop-adapter",
  "url",
  "winit",
 ]
@@ -3591,10 +3591,10 @@ dependencies = [
  "euclid",
  "gpui",
  "gpui_platform",
+ "grafting-servo",
  "image",
  "rustls",
  "servo",
- "servo-wgpu-interop-adapter",
  "smallvec",
  "url",
  "winit",
@@ -3607,9 +3607,9 @@ dependencies = [
  "demo-support",
  "euclid",
  "grafting",
+ "grafting-servo",
  "rustls",
  "servo",
- "servo-wgpu-interop-adapter",
  "slint",
  "url",
  "winit",
@@ -3622,11 +3622,11 @@ dependencies = [
  "demo-support",
  "euclid",
  "grafting",
+ "grafting-servo",
  "image",
  "pollster 0.4.0",
  "rustls",
  "servo",
- "servo-wgpu-interop-adapter",
  "url",
  "wgpu 29.0.3",
  "wgpu 30.0.1",
@@ -3639,12 +3639,12 @@ version = "0.1.0"
 dependencies = [
  "demo-support",
  "euclid",
+ "grafting-servo",
  "image",
  "masonry",
  "masonry_winit",
  "rustls",
  "servo",
- "servo-wgpu-interop-adapter",
  "tokio",
  "url",
  "winit",
@@ -5730,6 +5730,25 @@ dependencies = [
  "objc2-metal 0.3.2",
  "static_assertions",
  "windows 0.62.2",
+]
+
+[[package]]
+name = "grafting-servo"
+version = "0.1.0"
+dependencies = [
+ "dpi",
+ "euclid",
+ "gleam",
+ "glow 0.17.0",
+ "grafting",
+ "image",
+ "rustls",
+ "servo",
+ "surfman",
+ "wgpu 28.0.0",
+ "wgpu 29.0.3",
+ "wgpu 30.0.1",
+ "winit",
 ]
 
 [[package]]
@@ -12549,25 +12568,6 @@ dependencies = [
  "servo-embedder-traits",
  "servo-malloc-size-of",
  "servo-profile-traits",
-]
-
-[[package]]
-name = "servo-wgpu-interop-adapter"
-version = "0.1.0"
-dependencies = [
- "dpi",
- "euclid",
- "gleam",
- "glow 0.17.0",
- "grafting",
- "image",
- "rustls",
- "servo",
- "surfman",
- "wgpu 28.0.0",
- "wgpu 29.0.3",
- "wgpu 30.0.1",
- "winit",
 ]
 
 [[package]]

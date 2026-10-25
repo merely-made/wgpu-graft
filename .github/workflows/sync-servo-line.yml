@@ -138,7 +138,7 @@ jobs:
       - name: Validate adapter and portable Servo demos
         if: steps.repin.outputs.skip != 'true' && steps.refresh.outputs.unchanged != 'true'
         run: |
-          cargo check -p servo-wgpu-interop-adapter --features servo
+          cargo check -p grafting-servo --features servo
           cargo check \
             -p demo-servo-winit \
             -p demo-servo-xilem \

@@ -54,7 +54,7 @@ integration cannot transfer custody to Graft.
 
 ## Usage
 
-For Servo embedding, pair this crate with [`servo-wgpu-interop-adapter`](../servo-wgpu-interop-adapter/) which handles Servo-specific setup. For standalone GL import, see [`demo-raw-gl`](../demo-raw-gl/) which uses the `raw_gl` module directly.
+For Servo embedding, pair this crate with [`grafting-servo`](../servo-wgpu-interop-adapter/) which handles Servo-specific setup. For standalone GL import, see [`demo-raw-gl`](../demo-raw-gl/) which uses the `raw_gl` module directly.
 
 Pick exactly one `wgpu-*` feature; it must match the wgpu your host already
 uses, or the imported texture will not share a device.
@@ -91,7 +91,7 @@ command encoder and retains the image through submission completion. It does
 not wait for queue idle. A completed producer snapshot is required; merely
 flushing GL does not establish completion across the two APIs.
 
-The repository's `servo-wgpu-interop-adapter` also exports a Linux
+The repository's `grafting-servo` also exports a Linux
 `ServoDmaBufAdapter` pre-present hook. Its completed snapshots can enter the
 shared `wgpu-cue` native-frame importer while the browser control protocol stays
 with its existing host.

@@ -12,7 +12,7 @@ size tracks the window: eframe owns the surface, so resizing fills cleanly.
 
 ## How it works
 
-1. `servo-wgpu-interop-adapter` drives Servo into an offscreen surfman surface
+1. `grafting-servo` drives Servo into an offscreen surfman surface
    and exposes the painted GL framebuffer.
 2. `grafting` imports that framebuffer into the host `wgpu` device as a texture
    (D3D11 shared handle opened on the wgpu DX12 device), normalizing it to a

@@ -1367,11 +1367,11 @@ dependencies = [
  "demo-support",
  "euclid",
  "grafting",
+ "grafting-servo",
  "iced",
  "pollster",
  "rustls",
  "servo",
- "servo-wgpu-interop-adapter",
  "url",
  "winit 0.30.13",
 ]
@@ -2302,6 +2302,23 @@ dependencies = [
  "objc2-io-surface",
  "objc2-metal 0.3.2",
  "windows",
+]
+
+[[package]]
+name = "grafting-servo"
+version = "0.1.0"
+dependencies = [
+ "dpi 0.1.2",
+ "euclid",
+ "gleam",
+ "glow 0.17.0",
+ "grafting",
+ "image",
+ "rustls",
+ "servo",
+ "surfman",
+ "wgpu",
+ "winit 0.30.13",
 ]
 
 [[package]]
@@ -7446,23 +7463,6 @@ dependencies = [
  "servo-embedder-traits",
  "servo-malloc-size-of",
  "servo-profile-traits",
-]
-
-[[package]]
-name = "servo-wgpu-interop-adapter"
-version = "0.1.0"
-dependencies = [
- "dpi 0.1.2",
- "euclid",
- "gleam",
- "glow 0.17.0",
- "grafting",
- "image",
- "rustls",
- "servo",
- "surfman",
- "wgpu",
- "winit 0.30.13",
 ]
 
 [[package]]

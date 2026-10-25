@@ -1,11 +1,14 @@
 [package]
 rust-version = "1.97.1"
-name = "servo-wgpu-interop-adapter"
+name = "grafting-servo"
 version = "0.1.0"
 edition = "2024"
 license = "MPL-2.0"
 repository = "https://github.com/merely-made/wgpu-graft"
 description = "Servo-specific offscreen rendering adapter built on grafting"
+
+[lib]
+name = "servo_wgpu_interop_adapter"
 
 [features]
 default = ["wgpu-29"]

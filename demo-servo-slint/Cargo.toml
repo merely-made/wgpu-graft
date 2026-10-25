@@ -22,6 +22,6 @@ slint = { version = "1.17", features = [
 servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5ec4e959c943ad7cc7" }
 rustls = "0.23.37"
 grafting = { path = "../grafting" }
-servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
+grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
 url = "2.5.7"
 winit = "0.30.13"

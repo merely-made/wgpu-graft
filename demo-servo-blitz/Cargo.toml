@@ -16,7 +16,7 @@ servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5
 rustls = "0.23.37"
 pollster = "0.4.0"
 grafting = { path = "../grafting" }
-servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
+grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
 url = "2.5.7"
 winit = "0.30.13"
 wgpu = { version = "29.0.1", features = ["metal"] }

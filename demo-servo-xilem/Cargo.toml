@@ -14,7 +14,7 @@ servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5
 masonry = "0.4.0"
 masonry_winit = "0.4.0"
 rustls = "0.23.37"
-servo-wgpu-interop-adapter = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
+grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
 tokio = { version = "1", features = ["sync"] }
 url = "2.5.7"
 winit = "0.30.13"
