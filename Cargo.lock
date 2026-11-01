@@ -16684,7 +16684,3 @@ dependencies = [
  "syn 2.0.118",
  "winnow 1.0.3",
 ]
-
-[[patch.unused]]
-name = "serde_fmt"
-version = "1.1.0"

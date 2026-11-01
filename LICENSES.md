@@ -41,7 +41,6 @@ relicensed, and nothing here receives a Merely copyright line.
 
 | Path | License | Upstream | Notice files |
 |---|---|---|---|
-| `patches/serde_fmt` | Apache-2.0 OR MIT | [KodrAus/serde_fmt](https://github.com/KodrAus/serde_fmt) 1.1.0; `Copyright (c) 2019 Ashley Mannix` | `LICENSE-APACHE`, `LICENSE-MIT` in-tree |
 | `patches/yeslogic-fontconfig-sys` | MIT | [yeslogic/fontconfig-rs](https://github.com/yeslogic/fontconfig-rs) 6.0.0 | its manifest |
 
 Until 2026-11-01 this table also listed `patches/glass-gpui` (the vendored
