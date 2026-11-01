@@ -41,14 +41,14 @@ relicensed, and nothing here receives a Merely copyright line.
 
 | Path | License | Upstream | Notice files |
 |---|---|---|---|
-| `patches/glass-gpui` | Apache-2.0 | [glass-hq/gpui](https://github.com/glass-hq/gpui), a fork of [zed-industries/zed](https://github.com/zed-industries/zed)'s GPUI; `Copyright 2022 - 2025 Zed Industries, Inc.` | `LICENSE-APACHE` in eleven member crates; `assets/fonts/ibm-plex-sans/license.txt` (SIL OFL 1.1, IBM Plex) and `assets/fonts/lilex/OFL.txt` (SIL OFL 1.1, Lilex) for the bundled fonts |
-| `patches/taffy-0.9` | MIT | [DioxusLabs/taffy](https://github.com/DioxusLabs/taffy) 0.9.2, republished as 0.9.0 to satisfy GPUI's exact pin | its manifest; upstream's `LICENSE.md` |
-| `patches/serde_fmt` | Apache-2.0 OR MIT | [KodrAus/serde_fmt](https://github.com/KodrAus/serde_fmt) 1.1.0; `Copyright (c) 2019 Ashley Mannix` | `LICENSE-APACHE`, `LICENSE-MIT` in-tree |
 | `patches/yeslogic-fontconfig-sys` | MIT | [yeslogic/fontconfig-rs](https://github.com/yeslogic/fontconfig-rs) 6.0.0 | its manifest |
 
-460 tracked files. `patches/glass-gpui` also contains three files carrying
-`Copyright (c) Microsoft Corporation.` (Windows API shims inside GPUI); those
-travel with GPUI under its own terms and are not separated out.
+Until 2026-11-01 this table also listed `patches/glass-gpui` (the vendored
+glass-hq GPUI fork, Apache-2.0, which carried three files marked `Copyright (c)
+Microsoft Corporation.`) and `patches/taffy-0.9` (taffy 0.9.2, MIT). Both trees
+were removed when `demo-servo-gpui` moved to the crates.io `gpui-pre` snapshot,
+so the 460-file, 79% and 86% figures above describe the repository as of
+2026-09-03, not today.
 
 `patches/freetype-sys-compat` is deliberately **not** in this table. It is
 Mark's own six-line shim — a `pub use freetype_sys_upstream::*;` that satisfies

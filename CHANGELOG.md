@@ -6,6 +6,15 @@ All notable changes to this project will be documented here.
 
 - Rename the unpublished Servo adapter package `servo-wgpu-interop-adapter` to
   `grafting-servo`.
+- Move `demo-servo-gpui` from the vendored glass-hq GPUI fork to crates.io
+  `gpui-pre` 0.3.10 (Zed's weekly snapshot) with `gpui-pre-platform`, keeping
+  the CPU-readback path. Remove `patches/glass-gpui`, `patches/taffy-0.9` and
+  the `gpui`/`taffy` `[patch.crates-io]` entries. Also remove
+  `patches/serde_fmt` and its patch entry, which nothing in the graph uses
+  any more.
+- Call `present()` after `paint()` in `demo-servo-gpui` and `demo-servo-xilem`;
+  Servo 0.7's `paint()` does not present, so the CPU-readback demos never
+  received a frame.
 
 ## [0.6.1] - 2026-10-24
 

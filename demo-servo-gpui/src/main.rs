@@ -36,7 +36,7 @@ use gpui::{
     App, Bounds, Context, FocusHandle, ImageSource, InteractiveElement, IntoElement,
     KeyDownEvent, KeyUpEvent, MouseButton as GpuiMouseButton, MouseDownEvent,
     MouseMoveEvent as GpuiMouseMoveEvent, MouseUpEvent, ObjectFit, ParentElement, Pixels, Point,
-    Render, RenderImage, ScrollDelta, ScrollWheelEvent, Styled, Window, WindowBounds,
+    Render, RenderImage, ScrollDelta, ScrollEvent, Styled, Window, WindowBounds,
     WindowOptions, div, img, prelude::*, px, rgb, size,
 };
 use image::{Frame, ImageBuffer, Rgba};
@@ -44,7 +44,8 @@ use rustls::crypto::aws_lc_rs;
 use servo::{
     DevicePoint, EventLoopWaker, InputEvent, MouseButton as ServoMouseButton, MouseButtonAction,
     MouseButtonEvent, MouseLeftViewportEvent, MouseMoveEvent as ServoMouseMoveEvent, Servo,
-    ServoBuilder, WebView, WebViewBuilder, WebViewDelegate, WheelDelta, WheelEvent, WheelMode,
+    RenderingContext, ServoBuilder, WebView, WebViewBuilder, WebViewDelegate, WheelDelta,
+    WheelEvent, WheelMode,
 };
 use servo_wgpu_interop_adapter::{CapturingRenderingContext, ServoWgpuRenderingContext};
 use smallvec::SmallVec;
@@ -172,6 +173,9 @@ impl Render for ServoView {
         // ── Poll Servo and read the latest frame ─────────────────────────
         self.servo.spin_event_loop();
         self.webview.paint();
+        // Servo 0.7 paint() draws without presenting; present() is where the
+        // capturing context reads the frame back.
+        self.render_ctx.present();
 
         if let Some(rgba) = self.render_ctx.take_frame() {
             let (w, h) = rgba.dimensions();
@@ -307,7 +311,7 @@ impl Render for ServoView {
                         }
                     }),
                 )
-                .on_scroll_wheel(cx.listener(|view, event: &ScrollWheelEvent, _window, _cx| {
+                .on_scroll(cx.listener(|view, event: &ScrollEvent, _window, _cx| {
                     let pos = event.position;
                     let (dx, dy, mode) = match event.delta {
                         ScrollDelta::Pixels(p) => (

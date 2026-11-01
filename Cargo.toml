@@ -13,13 +13,10 @@ members = [
     "grafting-frame",
     "servo-wgpu-interop-adapter",
 ]
-# patches/glass-gpui is itself a cargo workspace (the vendored glass-hq/gpui).
-# Exclude it so our workspace doesn't try to absorb its members; the gpui +
-# gpui_platform path deps resolve against its own [workspace].
 # iced 0.15-dev pins web-sys exactly to 0.3.85 while wgpu 30.0.1 requires
 # 0.3.104. Keep that wgpu-28 demo as a small adjacent workspace with its own
 # lockfile so the core triplet can take wgpu 30 patch releases independently.
-exclude = ["demo-servo-iced", "patches/glass-gpui"]
+exclude = ["demo-servo-iced"]
 resolver = "3"
 
 # Lockfile invariant for the wgpu-30 Windows row: gpu-allocator 0.28 accepts
@@ -29,23 +26,6 @@ resolver = "3"
 # mismatched ID3D12Device / ID3D12Heap types. The Windows wgpu-30 CI row is the
 # executable guard for this constraint.
 
-# gpui: switched from Zed's published `gpui = 0.2.2` (October 2025, blade
-# renderer pulling naga 25 → naga unification break) to the glass-hq fork
-# which uses wgpu 29 + naga 29 directly (no blade dep, no naga conflict).
-# Vendored under patches/glass-gpui because the fork's HEAD doesn't build for
-# Linux out of the box — two regressions from its "extract platform crates"
-# refactor that we fix in the vendored copy:
-#   1. workspace `ashpd` pin left at 0.12.1 while gpui_linux uses 0.13 API
-#      (ashpd::Uri, etc.) — bumped to 0.13.
-#   2. `LayerShellNotSupportedError` (imported by gpui_linux from
-#      gpui::layer_shell) was dropped during extraction — re-added.
-# Both are worth upstreaming to glass-hq. The fork also inherits Zed's
-# `taffy = "=0.9.0"` pin — see the taffy patch below.
-#
-# serde_fmt 1.1.0 adds `impl From<serde_fmt::Error> for std::fmt::Error`.
-# On Rust 1.92 this creates an ambiguous `From` resolution in stylo's
-# `ToCss` derive macro (E0282/E0283). The patch removes that impl.
-#
 # glslopt 0.1.12 (pulled by webrender) ships a bundled C11 threads polyfill
 # whose `typedef pthread_once_t once_flag;` collides with glibc 2.34+'s own
 # `once_flag` in <stdlib.h>. 0.1.14 adds `#ifndef __once_flag_defined`
@@ -58,24 +38,15 @@ resolver = "3"
 # patched copy emits both unconditionally so feature unification can't break
 # either consumer.
 #
-# taffy 0.9.2 source vendored under a 0.9.0 version declaration so gpui's
-# `taffy = "=0.9.0"` exact-version pin is satisfied with newer code. cargo
-# only substitutes this where versions are compatible, so servo-layout's
-# `^0.10` request still resolves to crates.io 0.10.x. Remove when gpui
-# upstream lifts the `=0.9.0` pin.
-#
 # zed-font-kit still asks for freetype-sys 0.20 directly on Unix. Servo 0.5
 # uses freetype-sys 0.23, and Cargo permits only one crate with
 # `links = "freetype"` in the workspace graph. The small shim keeps font-kit's
 # old package-version edge while re-exporting the 0.23 API backed by Servo's
 # single native FreeType link.
 [patch.crates-io]
-gpui = { path = "patches/glass-gpui/crates/gpui" }
 freetype-sys = { path = "patches/freetype-sys-compat" }
-serde_fmt = { path = "patches/serde_fmt" }
 glslopt = { git = "https://github.com/jamienicol/glslopt-rs", rev = "68019f02a1437d785408ebc8ce7fd20341fffb8a" }
 yeslogic-fontconfig-sys = { path = "patches/yeslogic-fontconfig-sys" }
-taffy = { path = "patches/taffy-0.9" }
 
 [workspace.package]
 rust-version = "1.97.1"
