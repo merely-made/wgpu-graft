@@ -33,7 +33,8 @@ use rustls::crypto::aws_lc_rs;
 use servo::EventLoopWaker;
 use servo::{
     DevicePoint, InputEvent, MouseButton as ServoMouseButton, MouseButtonAction, MouseButtonEvent,
-    MouseLeftViewportEvent, MouseMoveEvent, Servo, ServoBuilder, WebView, WebViewBuilder,
+    MouseLeftViewportEvent, MouseMoveEvent, RenderingContext, Servo, ServoBuilder, WebView,
+    WebViewBuilder,
     WebViewDelegate, WheelDelta, WheelEvent, WheelMode,
 };
 use servo_wgpu_interop_adapter::{CapturingRenderingContext, ServoWgpuRenderingContext};
@@ -420,6 +421,9 @@ impl ApplicationHandler<MasonryUserEvent> for ServoXilemApp {
 
             ss.servo.spin_event_loop();
             ss.webview.paint();
+            // Servo 0.7 paint() draws without presenting; present() is where the
+            // capturing context reads the frame back.
+            ss.render_ctx.present();
 
             if let Some(rgba) = ss.render_ctx.take_frame() {
                 let (width, height) = rgba.dimensions();
