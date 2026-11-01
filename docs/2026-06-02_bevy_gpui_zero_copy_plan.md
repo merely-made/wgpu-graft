@@ -34,9 +34,18 @@ handle into GPUI's D3D11 device. Glass-HQ/gpui has had no commit since
 
 - **D2, Linux first, then D3D11 (2026-11-01):** Mark: "Linux first, then D3D11".
   Swap the base, land Linux zero-copy on the wgpu path, then add Windows D3D11
-  shared-handle import as the next slice. gpui-ce's Linux `SurfaceSource::Texture`
-  (`crates/gpui_wgpu/src/wgpu_renderer/surfaces/texture.rs`) and xgpui's
-  `custom_draw/dxgi.rs` and `gpui_interop` 0.2.0 are reference material only.
+  shared-handle import as the next slice. How to do it is open to any fork's
+  approach (Mark: "We can look at gpui-fast for how, or others. More than just
+  those three choices"). References found 2026-11-01, not exhaustive:
+  longbridge's gpui-fast (native window composition on Windows, macOS and Linux
+  after Zed PR #62379; its `compat/gpui-pre*` crates can stand in for gpui-pre);
+  gpui-ce's Linux `SurfaceSource::Texture`
+  (`crates/gpui_wgpu/src/wgpu_renderer/surfaces/texture.rs`) with a shared
+  device/queue handle; xgpui's Windows `custom_draw/dxgi.rs` (keyed-mutex NT
+  handle import) and Linux `custom_draw/dma_buf.rs`; `gpui_interop` 0.2.0 on
+  bite-gpui (Linux dma-buf with sync_file, Windows D3D12 to D3D11 shared
+  texture); the closed Zed PR #60573 (external compositor for wgpu textures) and
+  the forks in Zed discussion #60572; gpui-fusion.
 
   Links: area demos · plans bevy_gpui_zero_copy · summary Linux wgpu zero-copy lands before the Windows D3D11 import.
 
