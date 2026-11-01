@@ -9,7 +9,7 @@ This workspace ships multiple demos embedding Servo in different GUI frameworks,
 cargo test -p grafting
 
 # Build checks
-cargo check -p servo-wgpu-interop-adapter --features servo
+cargo check -p grafting-servo --features servo
 cargo check -p demo-servo-winit
 cargo check -p demo-servo-xilem
 cargo check -p demo-servo-gpui

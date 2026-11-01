@@ -1,5 +1,11 @@
 # Wgpu Triplet Release Plan
 
+**Superseded (2026-11-01):** cut into `2026-11-01_triplet_release_plan.md`,
+which carries every open, deferred and follow-on item; this plan is archived
+whole. Commit hashes cited below predate the history rewrite and may not be
+ancestors of current `main` (the `grafting-v0.6.0` tag now peels to
+`10963f8`, cited here as `816f3e7`).
+
 **Status (2026-10-07):** the September registry release is complete;
 the bounded Windows Turnstone Scry/direct Weld slice has native receipts.
 Scry 0.7.2 is now published, with a passing fresh Windows registry consumer;
@@ -30,7 +36,8 @@ Servo-demo jobs. The package dry-run and upload each verified six files at
 on crates.io.
 
 **2026-10-22:** published heads are `grafting` 0.6.0, `grafting-frame` 0.1.0,
-`scrying` 0.7.2 and `welding` 0.15.0. Graft's main has unreleased breaking
+`scrying` 0.7.2 and `welding` 0.15.0 (since then `grafting-frame` 0.1.1 on
+2026-10-23 and `grafting` 0.6.1 on 2026-10-24). Graft's main has unreleased breaking
 changes, and Turnstone still pins Graft and its Servo adapter by Git revision.
 The [coordinated-release cues](#2026-10-22-coordinated-graft-07--scry-08--weld-0151-cues)
 record what a `grafting` 0.7 / `scrying` 0.8 / `welding` 0.15.1 / adapter train
@@ -149,7 +156,7 @@ adapter; Graft's macOS and Linux checks do not reach it.
   change forces the family repin (Knot, Redshank, Turnstone). Welding 0.15.1
   resolves under the existing requirement.
 
-**Registry proof.** `registry-only-triplet.yml` stages exact versions. Its
+**Registry proof.** `registry-only-triplet.yml` (removed with the CI workflows on 2026-10-28, `0743b3b`; recoverable from history before that commit) stages exact versions. Its
 last complete green run, `33916390001`, proved 0.6.0 / 0.7.1 / 0.14.1, not
 the current heads; this plan records no four-host registry run for Weld 0.15.0. The NVIDIA
 runner listener and Intel Metal cadence gates recorded below are still open,
@@ -203,7 +210,7 @@ Eleven pure staging and provenance checks pass, including all eight previous
 guards. No supplier package or native assertion changes. This fixes the
 observed dependency edge without freezing unrelated transitive versions;
 fresh compilation and native execution remain required. See the
-[fixture correction receipt](../docs/receipts/registry_rsa_reconciliation_20261007/README.md).
+[fixture correction receipt](../../../docs/receipts/registry_rsa_reconciliation_20261007/README.md).
 The corrected four-host run is
 [37633624184](https://github.com/merely-made/wgpu-graft/actions/runs/37633624184),
 dispatched with the same three release versions and immutable source fixtures.
@@ -303,7 +310,7 @@ default synchronization, swap preservation and Servo AAC selection intact.
 
 One cached Windows wgpu-30/Servo donor typed row passes at BelowNormal `-j1`,
 covering both changed supplier packages with forty frozen inputs unchanged.
-See the [dated supplier receipt](../docs/receipts/servo_current_20261007/README.md#opt-in-resize-and-import-observation-2026-10-07).
+See the [dated supplier receipt](../../../docs/receipts/servo_current_20261007/README.md#opt-in-resize-and-import-observation-2026-10-07).
 The source shows that the GL blit retains incoming scissor and changes
 framebuffer bindings, while normalization is a distinct wgpu render pass.
 Native tracing must identify the faulty boundary before changing those states
@@ -319,14 +326,14 @@ The canonical normalizer only reads the private shared alias and writes a fresh
 output. Its initial wgpu transition is explicit, so absent that flag a tracked
 COMMON handback requires a separate design. Existing Windows COM features
 already cover D3D11 immediate-context shared fences and the host D3D12 queue.
-See the [descriptor receipt](../docs/receipts/servo_current_20261007/README.md#shared-resource-descriptor-observation-2026-10-07).
+See the [descriptor receipt](../../../docs/receipts/servo_current_20261007/README.md#shared-resource-descriptor-observation-2026-10-07).
 The subsequent Turnstone probe on supplier `bb48281bd4a88a726a009e0518706881b74b7604`
 and executable SHA-256
 `61a81cb0864635a337e4db7ca7ded22f77d8076059fe72378b17f230f713c39a`
 measures flags `0x21` (simultaneous access plus render target) at both 252x570
 and 509x570, RGBA8, one mip/sample. This supports documented COMMON decay for
 that actual resource, without measuring transitions or qualifying other GPUs.
-The [dated receipt](../docs/receipts/servo_current_20261007/README.md#measured-resource-state-and-remaining-ordering-gate-2026-10-07)
+The [dated receipt](../../../docs/receipts/servo_current_20261007/README.md#measured-resource-state-and-remaining-ordering-gate-2026-10-07)
 names the host source/build/loaded-DLL evidence and exact stderr hash.
 
 Same `36b8cd6e` executable controls have five handoffs each: Normalization only
@@ -600,7 +607,7 @@ there is no second `wgpu`, `wgpu-core` or `wgpu-hal` family. The following build
 failure and status `0xc0000409`. Its transcript/result remain a failure
 receipt; resolver and source checks do not qualify compilation or native
 behavior. A serialized one-job retry has a separate gate. See the
-[decoder compatibility receipts](../../turnstone/docs/receipts/browser_supplier_integration_20261006/fontsan-compatibility/qualification-summary.json).
+[decoder compatibility receipts](../../../../turnstone/docs/receipts/browser_supplier_integration_20261006/fontsan-compatibility/qualification-summary.json).
 
 Upstream `WebView::paint` renders without presenting. Both the Turnstone host
 and the corrected winit donor explicitly present through the importing context
@@ -649,7 +656,7 @@ with exact completed-build ANGLE DLLs, PE imports, actual loaded-module hashes,
 and all 84 raw inputs archived. The donor exits through `process::exit`; full
 process-root teardown is outside that gate. GPU synchronization remains default
 `Existing`, PreserveBuffer::No is retained, and prior failures/raw receipts keep
-their original identity. The [current supplier receipt](../docs/receipts/servo_current_20261007/README.md)
+their original identity. The [current supplier receipt](../../../docs/receipts/servo_current_20261007/README.md)
 records commands, source/archive/artifact binding and the observed pixels.
 
 Read-only formatting still fails on 138 existing root paths and the Iced demo;
@@ -673,7 +680,7 @@ This is an owner diagnostic checkpoint; the default import behavior is unchanged
 The source trace found a cached shared GL/DX12 allocation whose producer blit
 normally omits completion before wgpu normalization, followed by asynchronous
 normalization without an explicit wait before the next shared-source write.
-The [supplier receipt](../docs/receipts/servo_present_hook_20261006/README.md)
+The [supplier receipt](../../../docs/receipts/servo_present_hook_20261006/README.md)
 separates this ordering gap from the still-unproved cause of the white reopened
 Servo view. Six fresh-profile controls used the same Turnstone executable:
 `Existing` passed one of two pixel reviews, with the other reopening view A white;
@@ -698,7 +705,7 @@ surfman omitted. Matching helper feature gates correct that warnings-as-errors
 failure. Seven Windows rows now pass with `RUSTFLAGS=-D warnings`: core
 28/29/30, GL-only 30, and surfman 28/29/30. Only two private-helper cfg attributes
 changed; Windows GL/surfman retains the same bodies. The
-[correction receipt](../docs/receipts/servo_present_hook_20261006/sync-diagnostic-cfg-fix-check-results.json)
+[correction receipt](../../../docs/receipts/servo_present_hook_20261006/sync-diagnostic-cfg-fix-check-results.json)
 records hashes and commands. Fresh cross-platform CI remains required; these
 checks add no native evidence to the archived preformat controls.
 
@@ -706,8 +713,8 @@ This checkpoint accepts no accessibility gate, U9 coordinated consumer landing,
 production default change, crate release, or broader platform qualification.
 Foreign AccessKit subtree/action integration and the coordinated current-stack
 Knot → Redshank → Turnstone gate remain open. The
-[postformat checks](../docs/receipts/servo_present_hook_20261006/sync-diagnostic-postformat-check-results.json)
-and [same-binary comparison](../docs/receipts/servo_present_hook_20261006/turnstone-sync-diagnostic-comparison.json)
+[postformat checks](../../../docs/receipts/servo_present_hook_20261006/sync-diagnostic-postformat-check-results.json)
+and [same-binary comparison](../../../docs/receipts/servo_present_hook_20261006/turnstone-sync-diagnostic-comparison.json)
 retain the exact evidence boundaries.
 
 ### 2026-10-05 source audit and next gates
@@ -1035,6 +1042,9 @@ diagnostics remain useful follow-up.
 
 ## Phase 1: Graft owned import API
 
+*Landed 2026-09-04 (Progress). The forced Windows demo import-error
+condition was not located in source; the new plan carries it.*
+
 Goal: make the safe public API impossible to misuse for consumed native
 handles.
 
@@ -1067,6 +1077,8 @@ Done conditions:
 
 ## Phase 2: Consumer ownership cleanup
 
+*Landed 2026-09-04 (Progress).*
+
 Goal: remove hand-managed descriptor lifetime from producers and demos where
 Graft can own it.
 
@@ -1088,6 +1100,8 @@ Done conditions:
 - no reachable path closes a descriptor after a successful import handoff
 
 ## Phase 3: Weld threading and sandbox honesty
+
+*Landed 2026-09-04 (Progress).*
 
 Goal: make the CEF producer API match the thread-affinity contract hosts
 actually need.
@@ -1115,6 +1129,8 @@ Done conditions:
 - Linux/macOS producers no longer claim cross-thread movability.
 
 ## Phase 4: Capability and timeout repairs
+
+*Landed 2026-09-04 (Progress).*
 
 Goal: make probes and adapters describe actual runtime behavior rather than
 hopeful defaults.
@@ -1146,6 +1162,9 @@ Done conditions:
 
 ## Phase 5: MSRV and packaging hygiene
 
+*Landed 2026-09-04 (Progress). The 1.92 floor was later replaced by the
+family MSRV 1.97.1 (2026-10-13).*
+
 Goal: ensure the release can be consumed from crates.io without local checkouts.
 
 Planned changes:
@@ -1172,6 +1191,9 @@ Done conditions:
 
 ## Phase 6: Publish and prove
 
+*Landed 2026-09-04: final registry-only runs `33861094065` and
+`33916390001` (Progress).*
+
 Goal: publish in the only order that can prove the stack.
 
 Order:
@@ -1183,7 +1205,7 @@ Order:
    the original sequence and superseded by 0.14.1 before the release gate
    closed.
 5. Build a fresh consumer using only the three crates.io releases.
-6. Dispatch `.github/workflows/registry-only-triplet.yml` with the immutable
+6. Dispatch `.github/workflows/registry-only-triplet.yml` (removed with the CI workflows on 2026-10-28, `0743b3b`; recoverable from history before that commit) with the immutable
    Scry/Weld source refs that produced the selected releases. It stages their
    demo/test source as fresh consumers; those checkouts are fixtures only and
    never Cargo dependencies. Each staged manifest pins `grafting` 0.6.0,

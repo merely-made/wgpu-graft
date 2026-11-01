@@ -7,6 +7,16 @@ date: 2026-06-02
 
 # Bevy + gpui zero-copy demos (remaining) + deferred cleanup
 
+**Status (2026-11-01):** Bevy shipped (`demo-servo-bevy`, now on stable Bevy
+0.19.0, RenderSet ordering `.after(PrepareAssets).before(Queue)` and
+`Rgba8Unorm` placeholder confirmed in `demo-servo-bevy/src/main.rs`). GPUI
+zero-copy is the remaining goal: Mark, 2026-11-01, "Zero copy should remain the
+goal." The current GPUI demo's CPU readback is the interim path, not the
+intended design, so `README.md` and `docs/testing.md` calling it intentional are
+stale against this ruling. Upstream Zed `main` still leaves the wgpu `Surfaces`
+draw empty (`crates/gpui_wgpu/src/wgpu_renderer.rs`, rechecked 2026-11-01), so
+the five-seam patch below still stands.
+
 ## Status — seven frameworks shipped (confirmed by Mark)
 
 All zero-copy Servo → host-framework, confirmed on the Windows multi-GPU laptop:
@@ -119,7 +129,7 @@ Multi-file change across gpui core (scene/window/surface) and gpui_wgpu (shader/
 ## Deferred cleanup (do alongside / after)
 
 1. **iced cpu-readback feature** — re-add the feature-gated CPU readback path to `demo-servo-iced` (dropped to ship zero-copy first).
-2. **Dead `ImportingRenderingContext`** in `servo-wgpu-interop-adapter` — the present-hook path is unused now (demos use the plain rendering context + post-paint import); remove it.
+2. ~~**Dead `ImportingRenderingContext`**~~ — obsolete (2026-11-01): the type is live in `grafting-servo` (formerly `servo-wgpu-interop-adapter`), restored for pre-present import in `02ddc11`. Do not remove it.
 3. **Minimal sync set review** — with LUID-match as the real flicker fix, re-check whether `present()`'s `PreserveBuffer::Yes` + `glFinish` and the normalizer copy are all still required, or if the set can shrink. Verify on winit + egui after any change.
 4. **Screenshots into READMEs** — Mark saving `screenshots/<name>.png` per demo; main README references them.
-5. **Main README** — updated this pass with the six demos + the wgpu-per-framework table + build-individually note.
+5. **Main README** — done: the demo list and build-individually note are in `README.md`; the per-demo render-path table is in `docs/testing.md`.

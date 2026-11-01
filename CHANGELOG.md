@@ -4,6 +4,33 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Rename the unpublished Servo adapter package `servo-wgpu-interop-adapter` to
+  `grafting-servo`.
+
+## [0.6.1] - 2026-10-24
+
+**Breaking, published as a patch release.** The default-on `surfman` feature
+moves Surfman 0.13 to 0.14 for Servo v0.7.0, and
+`surfman_gl::SurfmanFrameContext` exposes Surfman's `Device`, `Context`,
+`Surface` and `Error`, so code that names Surfman 0.13 types against this
+feature no longer compiles. 0.5.0 treated the same kind of move as breaking.
+This release should have been 0.7.0. It stays published; the next release is
+0.7.0.
+
+- Raise the minimum supported Rust version from 1.92 to 1.97.1.
+- Drop Surfman's `chains` feature request; 0.14 enables it unconditionally.
+- Depend on `grafting-frame` 0.1 and re-export its wgpu-free native frame
+  vocabulary. `Dx12SharedResource` is backed by `OwnedDx12SharedResource`
+  (`from_owned_resource`, `owned_resource`, `into_owned_resource`).
+- Add opt-in `DiagnosticGpuSync` on the non-exhaustive `ImportOptions` (default
+  `Existing`) and `InteropError::NormalizationCompletion`.
+- Add completed DMA-BUF snapshot export (`export_dmabuf_frame`,
+  `PendingDmaBufFrame`) and tracked Vulkan acquisition.
+- Add opt-in Servo resize/import and shared-resource descriptor tracing
+  (`GRAFT_SERVO_RESIZE_TRACE=1`).
+
+## [0.6.0] - 2026-09-04
+
 - Declare Rust 1.92 as Graft's minimum supported Rust version.
 - **Breaking:** make resource-bearing `NativeFrame` values move-only and make
   safe import consume them. Vulkan DMABUF and semaphore descriptors now have

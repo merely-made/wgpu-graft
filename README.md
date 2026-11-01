@@ -17,7 +17,7 @@ GUI frameworks. Derived from the
 - Servo demos use the immutable Servo 0.7.0 release
   `aac43a3f31a259f04a574f5ec4e959c943ad7cc7`, with Surfman 0.14 and ANGLE 0.7.
   Current migration checks and runtime acceptance are recorded in the
-  [triplet release plan](design_docs/2026-09-03_wgpu_triplet_release_plan.md).
+  [triplet release plan](design_docs/2026-11-01_triplet_release_plan.md).
 - Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,
   Bevy, Xilem, GPUI) plus a Servo-free GL demo. Six Servo GUI paths use GPU
   import; Xilem and GPUI intentionally demonstrate CPU readback. Bevy and

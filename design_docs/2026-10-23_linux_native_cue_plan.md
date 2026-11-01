@@ -41,6 +41,9 @@ without a queue-idle or CPU fence wait. Refusal closes image/sync custody.
   `webcue` remain at 0.1.1. `wgpu-cue` 0.1.2 adds `GraftVulkanImporter` over
   Graft's DMA-BUF importer. It accepts completed snapshots and explicitly refuses
   external-semaphore synchronization that this binding does not implement.
+  Since this record, `webcue` 0.1.2 and `wgpu-cue` 0.1.3 were published
+  (2026-10-24); `wgpu-cue` 0.1.3 requires `webcue =0.1.2` and `grafting =0.6.1`,
+  and Mere and Turnstone pin `wgpu-cue =0.1.3`.
 - **The foreign acquisition preserves contents.** It acquires from the foreign
   queue in `GENERAL` layout, following the
   [Khronos external-image layout rules](https://docs.vulkan.org/spec/latest/chapters/resources.html).
@@ -102,8 +105,9 @@ those commits. Shared-importer tests pass 12/0 against registry Graft; the Mac
 regression passes 11 portable and two explicit Metal GPU tests. Mere `114f4ea26`
 receives that cohort and Genet `2b5c0181`; Pelt passes nine Linux/Vulkan receiving
 tests. The root receiving lock and standalone Iced workspace's local package
-version rows have separate metadata follow-ups; they do not change published
-SDK source bytes.
+version rows were refreshed to `grafting` 0.6.1 and `grafting-frame` 0.1.1
+afterwards (`9fbe941`, `63ad7c4`); they do not change published SDK source
+bytes.
 
 Turnstone `a2655c6e` builds and passes the full native controls/lifecycle and
 mixed-card cases on executable

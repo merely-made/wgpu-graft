@@ -27,10 +27,13 @@ This is the canonical index for active documentation in this repository.
 
 - [Documentation policy](DOC_POLICY.md): shared documentation rules and the
   Wgpu-graft local addendum.
-- [Wgpu triplet release plan](2026-09-03_wgpu_triplet_release_plan.md):
-  release-gating plan for Graft, Scry, and Weld after the browser-surface
-  architecture review, including the October Servo GPU ordering diagnostic
-  checkpoint and the Windows-qualified current Servo migration.
+- [Triplet release plan](2026-11-01_triplet_release_plan.md): the next
+  Graft/Scry/Weld release train, `grafting` 0.6.1's disposition, the gate
+  mechanism after CI removal, the Servo GPU ordering fence and the remaining
+  Servo consumer gates. Cut 2026-11-01 from the September triplet release plan,
+  which is archived whole under `archive_docs/2026-11-01/` with its receipts.
+  The completed Slint upstream sync plan (2026-05-07, superseded 2026-08-30)
+  is archived in the same folder.
 - [Linux native frames through Cue](2026-10-23_linux_native_cue_plan.md): owned
   producer snapshots, non-blocking Vulkan import and shared Turnstone receiving.
 
@@ -42,11 +45,10 @@ archives them.
 
 - `docs/testing.md`: runtime validation and demo receipts.
 - `docs/project_wgpu_graft.md`: project context and platform-path summary.
-- `docs/2026-05-07_slint_upstream_sync_plan.md`: historical Slint upstream sync
-  plan.
 - `docs/2026-05-27_metal_objc2_wgpu29_arm.md`: Metal/objc2 compatibility note.
 - `docs/2026-05-27_xilem_zero_copy_seam.md`: Xilem zero-copy seam note.
-- `docs/2026-06-02_bevy_gpui_zero_copy_plan.md`: Bevy/GPUI zero-copy plan.
+- `docs/2026-06-02_bevy_gpui_zero_copy_plan.md`: Bevy shipped; GPUI zero-copy
+  remains the goal (ruled 2026-11-01), with deferred cleanup items 1 and 3 open.
 
 ## Maintainer-owned description
 

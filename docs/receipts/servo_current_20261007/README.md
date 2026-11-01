@@ -6,7 +6,7 @@ checkpoint. Turnstone's new consumer qualification, accessibility acceptance,
 reopened-view reliability, wider platform runtime checks, and registry release
 gates remain separate.
 
-The [canonical release plan](../../../design_docs/2026-09-03_wgpu_triplet_release_plan.md)
+The [canonical release plan](../../../design_docs/archive_docs/2026-11-01/2026-09-03_wgpu_triplet_release_plan.md) (archived 2026-11-01; open work continues in [the triplet release plan](../../../design_docs/2026-11-01_triplet_release_plan.md))
 owns the remaining gates. The [earlier presentation/ordering receipt](../servo_present_hook_20261006/README.md)
 retains the older source, failures, and six same-binary synchronization controls.
 
