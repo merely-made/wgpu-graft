@@ -162,6 +162,12 @@ Each lands with its own receipt; record it here.
 - Read-only formatting fails on 138 existing root paths and the Iced demo.
 - Scry and Weld each still define their own `NativeFrame` beside
   `grafting-frame`; Weld's adoption is a breaking 0.16.
+- Disjoint-fd multi-plane and YUV/ycbcr DMA-BUF import remain unsupported:
+  Graft refuses them with `VulkanDisjointDmabufNotSupported`. Carried from Scry's
+  archived 4a.x multi-plane plan (Mark, 2026-11-01: "Graft triplet plan"),
+  since Graft now owns shared-fd multi-plane handling
+  (`grafting/src/vulkan_dmabuf.rs`). Weld's producer gates plan lists the same
+  refusal as a Linux import gap.
 
 Done when each item lands or is recorded as dropped with its reason.
 
