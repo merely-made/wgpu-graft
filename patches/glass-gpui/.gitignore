@@ -1,6 +1,0 @@
-/target
-Cargo.lock
-*.trace/
-.DS_Store
-/hosts/*/build/
-/hosts/*/*.xcodeproj/

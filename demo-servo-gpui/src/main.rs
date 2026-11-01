@@ -36,7 +36,7 @@ use gpui::{
     App, Bounds, Context, FocusHandle, ImageSource, InteractiveElement, IntoElement,
     KeyDownEvent, KeyUpEvent, MouseButton as GpuiMouseButton, MouseDownEvent,
     MouseMoveEvent as GpuiMouseMoveEvent, MouseUpEvent, ObjectFit, ParentElement, Pixels, Point,
-    Render, RenderImage, ScrollDelta, ScrollWheelEvent, Styled, Window, WindowBounds,
+    Render, RenderImage, ScrollDelta, ScrollEvent, Styled, Window, WindowBounds,
     WindowOptions, div, img, prelude::*, px, rgb, size,
 };
 use image::{Frame, ImageBuffer, Rgba};
@@ -307,7 +307,7 @@ impl Render for ServoView {
                         }
                     }),
                 )
-                .on_scroll_wheel(cx.listener(|view, event: &ScrollWheelEvent, _window, _cx| {
+                .on_scroll(cx.listener(|view, event: &ScrollEvent, _window, _cx| {
                     let pos = event.position;
                     let (dx, dy, mode) = match event.delta {
                         ScrollDelta::Pixels(p) => (

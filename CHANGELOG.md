@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Move `demo-servo-gpui` from the vendored glass-hq GPUI fork to crates.io
+  `gpui-pre` 0.3.10 (Zed's weekly snapshot) with `gpui-pre-platform`, keeping
+  the CPU-readback path. Remove `patches/glass-gpui`, `patches/taffy-0.9` and
+  the `gpui`/`taffy` `[patch.crates-io]` entries.
 - Declare Rust 1.92 as Graft's minimum supported Rust version.
 - **Breaking:** make resource-bearing `NativeFrame` values move-only and make
   safe import consume them. Vulkan DMABUF and semaphore descriptors now have

@@ -9,17 +9,12 @@ description = "Demo embedding Servo in a GPUI application with URL bar and input
 [dependencies]
 demo-support = { path = "../demo-support" }
 euclid = "0.22.11"
-# Pinned at 0.2.2 to match upstream gpui's version. The workspace's
-# [patch.crates-io] entry redirects this to glass-hq/gpui — an actively-
-# maintained fork of Zed's gpui that uses gpui_wgpu (wgpu 29) instead of
-# blade, so wayland/x11 features no longer pull in a naga-25 build.
-gpui = { version = "0.2.2", features = ["font-kit", "windows-manifest", "wayland", "x11"] }
-# glass-hq factored platform construction out of gpui itself; gpui_platform
-# wraps the per-OS Platform impls with a single `application()` helper. Both
-# come from the vendored, Linux-fixed copy under patches/glass-gpui (see the
-# workspace [patch.crates-io] notes). wayland + x11 enabled so gpui_linux's
-# real window backends are compiled in.
-gpui_platform = { path = "../patches/glass-gpui/crates/gpui_platform", features = ["wayland", "x11"] }
+# Zed's weekly GPUI snapshot, published as `gpui-pre`. Every `gpui-pre-*`
+# crate pins its siblings `=0.3.10`, so the platform crate takes the same exact
+# version. Aliased so the source keeps importing `gpui::...` and
+# `gpui_platform::...`. wayland + x11 enable gpui's real Linux window backends.
+gpui = { package = "gpui-pre", version = "=0.3.10", features = ["font-kit", "windows-manifest", "wayland", "x11"] }
+gpui_platform = { package = "gpui-pre-platform", version = "=0.3.10", features = ["wayland", "x11"] }
 image = "0.25"
 servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5ec4e959c943ad7cc7" }
 rustls = "0.23.37"
