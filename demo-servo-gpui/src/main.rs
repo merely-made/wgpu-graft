@@ -44,7 +44,8 @@ use rustls::crypto::aws_lc_rs;
 use servo::{
     DevicePoint, EventLoopWaker, InputEvent, MouseButton as ServoMouseButton, MouseButtonAction,
     MouseButtonEvent, MouseLeftViewportEvent, MouseMoveEvent as ServoMouseMoveEvent, Servo,
-    ServoBuilder, WebView, WebViewBuilder, WebViewDelegate, WheelDelta, WheelEvent, WheelMode,
+    RenderingContext, ServoBuilder, WebView, WebViewBuilder, WebViewDelegate, WheelDelta,
+    WheelEvent, WheelMode,
 };
 use servo_wgpu_interop_adapter::{CapturingRenderingContext, ServoWgpuRenderingContext};
 use smallvec::SmallVec;
@@ -172,6 +173,9 @@ impl Render for ServoView {
         // ── Poll Servo and read the latest frame ─────────────────────────
         self.servo.spin_event_loop();
         self.webview.paint();
+        // Servo 0.7 paint() draws without presenting; present() is where the
+        // capturing context reads the frame back.
+        self.render_ctx.present();
 
         if let Some(rgba) = self.render_ctx.take_frame() {
             let (w, h) = rgba.dimensions();
