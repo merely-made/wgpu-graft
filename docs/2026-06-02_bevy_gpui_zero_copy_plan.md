@@ -15,7 +15,30 @@ goal." The current GPUI demo's CPU readback is the interim path, not the
 intended design, so `README.md` and `docs/testing.md` calling it intentional are
 stale against this ruling. Upstream Zed `main` still leaves the wgpu `Surfaces`
 draw empty (`crates/gpui_wgpu/src/wgpu_renderer.rs`, rechecked 2026-11-01), so
-the five-seam patch below still stands.
+the five-seam patch below still stands on Linux.
+
+**Correction and rulings (2026-11-01):** GPUI renders with DirectX 11 on
+Windows, not `gpui_wgpu`: the vendored `gpui_windows` uses
+`directx_renderer.rs` and references no wgpu, as do Zed, Glass-HQ, gpui-ce and
+gpui-pre. Seams 4 and 5 below (the wgpu surfaces draw and device accessor)
+therefore help only on Linux; Windows zero-copy means importing Servo's shared
+handle into GPUI's D3D11 device. Glass-HQ/gpui has had no commit since
+2026-05-16.
+
+- **D1, the GPUI base is gpui-pre (2026-11-01):** Mark chose "gpui-pre" over
+  gpui-ce and gpui-unofficial. gpui-pre is the weekly Zed snapshot on crates.io
+  (0.3.10, wgpu 30) that longbridge's gpui-component builds on. It carries no
+  external-texture support, so every zero-copy seam stays ours.
+
+  Links: area demos · plans bevy_gpui_zero_copy · summary Replace the vendored Glass-HQ GPUI with gpui-pre.
+
+- **D2, Linux first, then D3D11 (2026-11-01):** Mark: "Linux first, then D3D11".
+  Swap the base, land Linux zero-copy on the wgpu path, then add Windows D3D11
+  shared-handle import as the next slice. gpui-ce's Linux `SurfaceSource::Texture`
+  (`crates/gpui_wgpu/src/wgpu_renderer/surfaces/texture.rs`) and xgpui's
+  `custom_draw/dxgi.rs` and `gpui_interop` 0.2.0 are reference material only.
+
+  Links: area demos · plans bevy_gpui_zero_copy · summary Linux wgpu zero-copy lands before the Windows D3D11 import.
 
 ## Status — seven frameworks shipped (confirmed by Mark)
 
