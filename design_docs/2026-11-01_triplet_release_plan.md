@@ -24,7 +24,7 @@ Not here:
   `2026-10-23_linux_native_cue_plan.md`;
 - GPUI zero-copy and the demo cleanup: `docs/2026-06-02_bevy_gpui_zero_copy_plan.md`;
 - Weld's producer parity and CEF 151 to 154 refresh:
-  `wgpu-weld/design_docs/2026-08-10_producer_parity_plan.md`;
+  `wgpu-weld/design_docs/2026-11-01_producer_gates_plan.md`;
 - Turnstone's consumer repins and host gates (U9 and the Knot → Redshank →
   Turnstone landing): `turnstone/design_docs/2026-08-03_user_agent_taxonomy_plan.md`
   and `turnstone/design_docs/2026-08-25_browser_surface_implementation_plan.md`;
