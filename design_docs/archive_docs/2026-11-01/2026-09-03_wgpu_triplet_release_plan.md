@@ -408,7 +408,7 @@ denial/callback navigation and zero-producer teardown pass in the Windows
 consumer receipt. Scry's two-page input/current-pixel, cookie, resize,
 reconstruction and separate-process restart runs also pass at browser commit
 `a383cdd`; the receipt remains frozen under
-`turnstone/docs/receipts/browser_scry_windows_20261006/`.
+`Code/testing/turnstone/receipts/browser_scry_windows_20261006/`.
 
 The subsequent current-main merge preserves the stable Burn dependency graph
 and qualifies the browser again at Turnstone `7176581`. Its
@@ -607,7 +607,7 @@ there is no second `wgpu`, `wgpu-core` or `wgpu-hal` family. The following build
 failure and status `0xc0000409`. Its transcript/result remain a failure
 receipt; resolver and source checks do not qualify compilation or native
 behavior. A serialized one-job retry has a separate gate. See the
-[decoder compatibility receipts](../../../../turnstone/docs/receipts/browser_supplier_integration_20261006/fontsan-compatibility/qualification-summary.json).
+decoder compatibility receipts (`Code/testing/turnstone/receipts/browser_supplier_integration_20261006/fontsan-compatibility/qualification-summary.json`).
 
 Upstream `WebView::paint` renders without presenting. Both the Turnstone host
 and the corrected winit donor explicitly present through the importing context
@@ -790,7 +790,7 @@ requested zoom/permission/teardown scope has native receipts. Servo still needs
 a real process-owned browser producer, factory and registration. These
 application gates inform practice and the combined-demo milestone; they do
 not reopen the completed September package release. Track implementation in
-`turnstone/design_docs/2026-08-03_user_agent_taxonomy_plan.md`.
+`turnstone/design_docs/archive_docs/2026-11-02/2026-08-03_user_agent_taxonomy_plan.md`.
 
 ### 2026-10-05 B1 Windows Scry consumer source findings
 
@@ -798,7 +798,7 @@ Turnstone now has local Windows Scry factory, registry, input, and owned-frame
 import changes. These are source implementation findings; full native consumer
 qualification remains gated on cookie retention and current captured pixels.
 The receipt home is
-`turnstone/docs/receipts/browser_scry_windows_20261005/README.md`. Earlier
+`Code/testing/turnstone/receipts/browser_scry_windows_20261005/README.md`. Earlier
 compile and diagnostic receipts remain separate from full native qualification
 and do not expand the released triplet claim. Initial two-page captures and
 distinct-fence counters establish bounded construction/paint evidence; later
@@ -833,7 +833,7 @@ failures prevent full consumer acceptance.
   scenario text input calls it inside a winit event handler. The initial
   two-page capture/count guards passed in the subsequent native run, but the
   input-stage capture never arrived; the stopped run is retained in
-  `turnstone/docs/receipts/browser_scry_windows_20261005/native/aborted.json`.
+  `Code/testing/turnstone/receipts/browser_scry_windows_20261005/native/aborted.json`.
   Nested message dispatch is a concrete source seam consistent with that
   stall, rather than a captured native stack diagnosis. Turnstone's local
   `src/shell/scry.rs` now queues keyboard CDP commands per producer, with
@@ -854,7 +854,7 @@ failures prevent full consumer acceptance.
   `9221c083785fddf15c0a00347714532a0323e587682d3922496c1d64e95e30b0`,
   again reached the initial two-page capture but produced no input checkpoint
   after more than six minutes. The stopped run is retained in
-  `turnstone/docs/receipts/browser_scry_windows_20261005/native-nonblocking/aborted.json`.
+  `Code/testing/turnstone/receipts/browser_scry_windows_20261005/native-nonblocking/aborted.json`.
   That stopped run did not establish its native stack or root cause. The
   subsequent loop trace below measures a consumer wake boundary; blocked COM
   and capture/occlusion are not established. Ordered DOM text without external
@@ -862,7 +862,7 @@ failures prevent full consumer acceptance.
   qualification remain pending. This host adaptation changes neither the
   published Scry API nor any repository dependency pin.
 - **Producer availability needs a host wake hook.**
-  `turnstone/docs/receipts/browser_scry_windows_20261005/native-loop-trace/`
+  `Code/testing/turnstone/receipts/browser_scry_windows_20261005/native-loop-trace/`
   records native focus and mouse down/up returning, followed by completed
   render, accessibility update, and `trace-after-input-click` checkpoint.
   Further redraw callbacks then stop. `wait-chain.json` reports `cycle: false`;
@@ -917,7 +917,7 @@ failures prevent full consumer acceptance.
   counters qualify that path rather than replacing the reuse regression.
 
 **Latest bounded Turnstone result, 2026-10-05.**
-`turnstone/docs/receipts/browser_scry_windows_20261005/source-manifest.json`
+`Code/testing/turnstone/receipts/browser_scry_windows_20261005/source-manifest.json`
 binds 152 source/fixture inputs to executable SHA256
 `a245130a4becccd35c81c78a5108a2a74d0e980fa52744937711f4e678421948`.
 The `native-clipped/` full script completes without external repaint and fails

@@ -26,8 +26,8 @@ Not here:
 - Weld's producer parity and CEF 151 to 154 refresh:
   `wgpu-weld/design_docs/2026-11-01_producer_gates_plan.md`;
 - Turnstone's consumer repins and host gates (U9 and the Knot → Redshank →
-  Turnstone landing): `turnstone/design_docs/2026-08-03_user_agent_taxonomy_plan.md`
-  and `turnstone/design_docs/2026-08-25_browser_surface_implementation_plan.md`;
+  Turnstone landing): `turnstone/design_docs/2026-11-02_user_agent_taxonomy_plan.md`
+  and `turnstone/design_docs/2026-11-02_browser_surface_implementation_plan.md`;
 - the neutral browser-surface contract:
   `mere/design_docs/inker_docs/research/2026-09-03_web_surface_contract_assessment.md`.
 

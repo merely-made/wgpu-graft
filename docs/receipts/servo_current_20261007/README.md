@@ -197,7 +197,7 @@ default policy changes and GL state-custody changes are outside this checkpoint.
 ### Measured resource state and remaining ordering gate (2026-10-07)
 
 Turnstone's `native-current-resource-descriptor/run.stderr.log`, under
-`turnstone/docs/receipts/browser_supplier_integration_20261006/`, measures
+`Code/testing/turnstone/receipts/browser_supplier_integration_20261006/`, measures
 flags `0x21` for both 252x570 and 509x570 resources: ALLOW_RENDER_TARGET `0x1`
 and ALLOW_SIMULTANEOUS_ACCESS `0x20`. Both report layout 0, format 28
 (RGBA8Unorm), one mip and one sample. This is actual `GetDesc` evidence on
@@ -215,7 +215,7 @@ other devices.
 The earlier same-executable controls use SHA-256
 `36b8cd6e0a81b87a74a216eb5db632ddf2ff08e0bd5c0b80ada427ab3bab78a6`.
 Each row below has five import handoffs. Pixel percentages come from
-`turnstone/docs/receipts/browser_family_20261007/`:
+`Code/testing/turnstone/receipts/browser_family_20261007/`:
 
 | Fixture | Normalization only | Both completion controls |
 | --- | --- | --- |

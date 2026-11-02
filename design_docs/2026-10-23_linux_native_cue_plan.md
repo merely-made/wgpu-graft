@@ -127,7 +127,7 @@ retains both that failed receiving gate and the final positive cases. Diagnostic
 readback remains opt-in evidence collection rather than frame transport.
 
 The consumer record belongs to
-`turnstone/design_docs/2026-08-25_browser_surface_implementation_plan.md`; the
+`turnstone/design_docs/archive_docs/2026-11-02/2026-08-25_browser_surface_implementation_plan.md`; the
 contract assessment belongs to
 `mere/design_docs/inker_docs/research/2026-09-03_web_surface_contract_assessment.md`.
 Physical IME, human assistive-technology acceptance, physical device loss,
