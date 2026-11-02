@@ -52,6 +52,9 @@ pub mod vulkan_dmabuf;
 #[cfg(target_vendor = "apple")]
 mod metal_texture_ref;
 
+#[cfg(all(target_os = "macos", feature = "wgpu-30"))]
+pub mod metal_surface;
+
 #[cfg(target_vendor = "apple")]
 pub use metal_texture_ref::{import_metal_texture_borrowed, import_metal_texture_ref};
 
