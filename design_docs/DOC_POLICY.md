@@ -57,7 +57,7 @@ user data. Tests track current semantics only.
 ### 5. Cross-referencing
 
 - Within a repo: relative links.
-- Across repos: cite by path (`isometry/design_docs/...`), since relative links
+- Across repos: cite by path (`isocosm/design_docs/...`), since relative links
   do not cross repository boundaries reliably and rot silently when the
   neighbour moves or is archived.
 - Crates: link to crates.io when referring to a public API
