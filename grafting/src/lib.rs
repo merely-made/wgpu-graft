@@ -48,6 +48,8 @@ mod sync_vulkan;
 
 #[cfg(target_os = "linux")]
 pub mod vulkan_dmabuf;
+#[cfg(all(target_os = "linux", feature = "wgpu-30"))]
+pub mod vulkan_surface;
 
 #[cfg(target_vendor = "apple")]
 mod metal_texture_ref;
@@ -1141,14 +1143,14 @@ fn import_vulkan_external_image(
     {
         let metadata = frame.metadata();
         let texture = vulkan_dmabuf::import_vulkan_external_image(frame, host)?;
-        return Ok(ImportedTexture {
+        Ok(ImportedTexture {
             texture,
             format: metadata.format,
             size: metadata.size,
             origin: TextureOrigin::TopLeft,
             generation: metadata.generation,
             consumer_sync: metadata.producer_sync,
-        });
+        })
     }
 
     #[cfg(not(target_os = "linux"))]

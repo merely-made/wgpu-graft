@@ -255,6 +255,28 @@ pub fn import_dmabuf(
     frame: VulkanDmaBufImport,
     host: &HostWgpuContext,
 ) -> Result<wgpu::Texture, InteropError> {
+    import_inner(
+        frame,
+        host,
+        #[cfg(feature = "wgpu-30")]
+        None,
+    )
+}
+
+#[cfg(feature = "wgpu-30")]
+pub(crate) fn import_tracked(
+    frame: VulkanDmaBufImport,
+    host: &HostWgpuContext,
+    tracking: &mut super::vulkan_surface::ImportTracking,
+) -> Result<wgpu::Texture, InteropError> {
+    import_inner(frame, host, Some(tracking))
+}
+
+fn import_inner(
+    frame: VulkanDmaBufImport,
+    host: &HostWgpuContext,
+    #[cfg(feature = "wgpu-30")] tracking: Option<&mut super::vulkan_surface::ImportTracking>,
+) -> Result<wgpu::Texture, InteropError> {
     let mut plane_fds = PlaneFdGuard::new(frame.buffers);
 
     if host.backend != crate::InteropBackend::Vulkan {
@@ -333,7 +355,21 @@ pub fn import_dmabuf(
             .array_layers(1)
             .samples(vk::SampleCountFlags::TYPE_1)
             .tiling(vk::ImageTiling::DRM_FORMAT_MODIFIER_EXT)
-            .usage(vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::TRANSFER_SRC)
+            .usage({
+                let usage = vk::ImageUsageFlags::SAMPLED | vk::ImageUsageFlags::TRANSFER_SRC;
+                #[cfg(feature = "wgpu-30")]
+                {
+                    if tracking.is_some() {
+                        usage | vk::ImageUsageFlags::TRANSFER_DST
+                    } else {
+                        usage
+                    }
+                }
+                #[cfg(not(feature = "wgpu-30"))]
+                {
+                    usage
+                }
+            })
             .sharing_mode(vk::SharingMode::EXCLUSIVE)
             .initial_layout(vk::ImageLayout::UNDEFINED)
             .push_next(&mut external_memory_info)
@@ -383,13 +419,32 @@ pub fn import_dmabuf(
             view_formats: Vec::new(),
         };
         let vk_device_for_drop = vk_device.clone();
+        #[cfg(feature = "wgpu-30")]
+        let drop_callback: wgpu_hal::DropCallback = if let Some(tracking) = tracking {
+            let storage =
+                super::vulkan_surface::Storage::new(host, vk_device.clone(), vulkan_image, memory);
+            let callback_storage = storage.clone();
+            let dropped = tracking.dropped.clone();
+            tracking.storage = Some(storage);
+            Box::new(move || {
+                dropped.store(true, std::sync::atomic::Ordering::Release);
+                drop(callback_storage);
+            })
+        } else {
+            Box::new(move || {
+                vk_device_for_drop.destroy_image(vulkan_image, None);
+                vk_device_for_drop.free_memory(memory, None);
+            })
+        };
+        #[cfg(not(feature = "wgpu-30"))]
+        let drop_callback: wgpu_hal::DropCallback = Box::new(move || {
+            vk_device_for_drop.destroy_image(vulkan_image, None);
+            vk_device_for_drop.free_memory(memory, None);
+        });
         let hal_texture = hal_device.texture_from_raw(
             vulkan_image,
             &hal_descriptor,
-            Some(Box::new(move || {
-                vk_device_for_drop.destroy_image(vulkan_image, None);
-                vk_device_for_drop.free_memory(memory, None);
-            })),
+            Some(drop_callback),
             wgpu_hal::vulkan::TextureMemory::External,
         );
 
@@ -528,11 +583,13 @@ fn record_foreign_acquire(
                 expected: "Vulkan",
                 actual: "non-Vulkan encoder",
             })?;
+            // Ownership transfers use matching GENERAL->GENERAL layouts on
+            // both Vulkan peers. Register the shader layout in a local barrier.
             let barrier = vk::ImageMemoryBarrier::default()
                 .src_access_mask(vk::AccessFlags::empty())
                 .dst_access_mask(vk::AccessFlags::SHADER_READ | vk::AccessFlags::TRANSFER_READ)
                 .old_layout(vk::ImageLayout::GENERAL)
-                .new_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)
+                .new_layout(vk::ImageLayout::GENERAL)
                 .src_queue_family_index(vk::QUEUE_FAMILY_FOREIGN_EXT)
                 .dst_queue_family_index(queue_family)
                 .image(image)
@@ -551,6 +608,30 @@ fn record_foreign_acquire(
                 &[],
                 &[],
                 &[barrier],
+            );
+            let prepare = vk::ImageMemoryBarrier::default()
+                .src_access_mask(vk::AccessFlags::empty())
+                .dst_access_mask(vk::AccessFlags::SHADER_READ | vk::AccessFlags::TRANSFER_READ)
+                .old_layout(vk::ImageLayout::GENERAL)
+                .new_layout(vk::ImageLayout::SHADER_READ_ONLY_OPTIMAL)
+                .src_queue_family_index(vk::QUEUE_FAMILY_IGNORED)
+                .dst_queue_family_index(vk::QUEUE_FAMILY_IGNORED)
+                .image(image)
+                .subresource_range(vk::ImageSubresourceRange {
+                    aspect_mask: vk::ImageAspectFlags::COLOR,
+                    base_mip_level: 0,
+                    level_count: 1,
+                    base_array_layer: 0,
+                    layer_count: 1,
+                });
+            device.cmd_pipeline_barrier(
+                hal.raw_handle(),
+                vk::PipelineStageFlags::ALL_COMMANDS,
+                vk::PipelineStageFlags::ALL_COMMANDS,
+                vk::DependencyFlags::empty(),
+                &[],
+                &[],
+                &[prepare],
             );
             Ok(())
         })

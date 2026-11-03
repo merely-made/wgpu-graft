@@ -126,3 +126,24 @@ claim that arbitrary renderer output allocations are already exportable.
 ## License
 
 [MPL-2.0](../LICENSE)
+
+### Linux Vulkan export storage (wgpu 30)
+
+`vulkan_surface::SharedVulkanSurface` allocates exportable, single-plane linear
+RGBA8 DMA-BUF storage on a context from `create_dmabuf_host_context`. It queries
+export/import support for the exact DRM modifier and image usage. `copy_from`
+copies a texture on that device, releases ownership to FOREIGN/GENERAL, and
+provides nonblocking `poll_ready`; `export_fd` refuses an unfinished frame.
+
+`vulkan_surface::import_surface` consumes an owned descriptor after the host has
+observed producer completion. Its `VulkanRelease` waits for a sealed queue fence
+and destruction of every wgpu texture/view alias, then submits a real native
+ownership release. Only completion of that release permits an acknowledgement.
+The final consumer transition discards consumed pixels, so it does not assume a
+particular final wgpu layout. Reuse always overwrites the complete image.
+
+The host owns descriptor transport, trust, placement, leases, and stale-message
+rejection. Calling the producer's unsafe `acknowledge_release` requires that
+validated release witness from every importer. A dead peer is insufficient.
+Unsupported devices refuse this path; it does not implement external semaphore
+synchronization, modifier negotiation, cross-device qualification, or presentation.
