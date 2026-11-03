@@ -96,6 +96,54 @@ The repository's `grafting-servo` also exports a Linux
 shared `wgpu-cue` native-frame importer while the browser control protocol stays
 with its existing host.
 
+## macOS Metal storage handoff (wgpu 30)
+
+The `metal_surface` module allocates RGBA8/BGRA8 IOSurfaces on the host's
+Metal device. `SharedMetalSurface::export_right` returns one owned Mach send
+right. A host transport must transfer that right using an OS capability
+mechanism; serializing its integer name does not transfer the resource.
+`lookup_surface` retains the received storage and `import_surface` wraps it
+on the consumer's Metal device without a CPU pixel copy.
+
+Readiness must already be established by the host. One supported ordering is
+an authenticated control message sent after the producer observes its GPU
+completion callback. The frame's `FrameSync::None` then refers to that explicit
+prior ordering. This does not mean arbitrary concurrent writes are safe.
+
+After its final consumer submission, call `MetalRelease::seal`, then drop all
+texture/view clones. `poll_released` is nonblocking and reports completion only
+after both the queue callback and the HAL texture's final drop. Dropping the
+release tracker early abandons notification; it does not grant storage reuse.
+The producer must wait for this acknowledgement before overwriting a slot.
+
+This API is new on main after registry 0.6.1. Consumers must select the same
+exact Graft source for both `grafting` and `grafting-frame` until a release
+contains it. The wgpu-cue two-process proof qualifies native Metal on an AMD
+Radeon Pro Vega 56, including pixel equality, held clones, and producer exit.
+It makes one producer GPU copy into exportable storage; this API does not
+claim that arbitrary renderer output allocations are already exportable.
+
 ## License
 
 [MPL-2.0](../LICENSE)
+
+### Linux Vulkan export storage (wgpu 30)
+
+`vulkan_surface::SharedVulkanSurface` allocates exportable, single-plane linear
+RGBA8 DMA-BUF storage on a context from `create_dmabuf_host_context`. It queries
+export/import support for the exact DRM modifier and image usage. `copy_from`
+copies a texture on that device, releases ownership to FOREIGN/GENERAL, and
+provides nonblocking `poll_ready`; `export_fd` refuses an unfinished frame.
+
+`vulkan_surface::import_surface` consumes an owned descriptor after the host has
+observed producer completion. Its `VulkanRelease` waits for a sealed queue fence
+and destruction of every wgpu texture/view alias, then submits a real native
+ownership release. Only completion of that release permits an acknowledgement.
+The final consumer transition discards consumed pixels, so it does not assume a
+particular final wgpu layout. Reuse always overwrites the complete image.
+
+The host owns descriptor transport, trust, placement, leases, and stale-message
+rejection. Calling the producer's unsafe `acknowledge_release` requires that
+validated release witness from every importer. A dead peer is insufficient.
+Unsupported devices refuse this path; it does not implement external semaphore
+synchronization, modifier negotiation, cross-device qualification, or presentation.
