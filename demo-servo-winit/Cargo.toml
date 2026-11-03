@@ -29,3 +29,6 @@ winit = "0.30.13"
 [target.'cfg(windows)'.dependencies]
 # Build the matching ANGLE EGL/GLES DLLs for surfman's Windows EGL device.
 servo = { git = "https://github.com/servo/servo", rev = "aac43a3f31a259f04a574f5ec4e959c943ad7cc7", features = ["no-wgl"] }
+
+[lints]
+workspace = true

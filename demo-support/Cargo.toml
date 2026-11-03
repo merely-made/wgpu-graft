@@ -17,3 +17,6 @@ url = "2.5.7"
 # This dependency is otherwise unused; it exists purely to enable the feature.
 [target.'cfg(windows)'.dependencies]
 mozangle = { version = "0.7.0", features = ["build_dlls"] }
+
+[lints]
+workspace = true

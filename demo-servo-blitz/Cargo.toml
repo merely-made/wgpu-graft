@@ -20,3 +20,6 @@ grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] 
 url = "2.5.7"
 winit = "0.30.13"
 wgpu = { version = "29.0.1", features = ["metal"] }
+
+[lints]
+workspace = true

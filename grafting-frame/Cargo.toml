@@ -24,3 +24,6 @@ objc2-metal = { version = "0.3.2", features = ["MTLResource", "MTLTexture", "MTL
 
 [dev-dependencies]
 static_assertions = "1.1"
+
+[lints]
+workspace = true

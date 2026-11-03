@@ -8,3 +8,6 @@ publish = false
 
 [dependencies]
 freetype-sys-upstream = { package = "freetype-sys", version = "0.23.0" }
+
+[lints]
+workspace = true

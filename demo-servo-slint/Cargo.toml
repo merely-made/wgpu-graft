@@ -25,3 +25,6 @@ grafting = { path = "../grafting" }
 grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
 url = "2.5.7"
 winit = "0.30.13"
+
+[lints]
+workspace = true

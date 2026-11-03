@@ -1,0 +1,42 @@
+# mere/design_docs/mere_docs/implementation_strategy/2026-10-30_house_style_plan.md (H2); all physical source lines count.
+ceiling = 600
+
+[[exclude]]
+path = "patches/yeslogic-fontconfig-sys/"
+reason = "Imported fontconfig bindings with the documented link/runtime-loading compatibility patch."
+
+[[exception]]
+path = "demo-servo-iced/src/main.rs"
+reason = "Demo embedding Servo in an iced (0.15-dev) application, zero-copy. Existing source-size debt; a responsibility split must preserve AppState, SharedFrameDesc, Message and existing module visibility."
+
+[[exception]]
+path = "demo-servo-winit/src/main.rs"
+reason = "Minimal winit + wgpu demo embedding Servo as a web renderer. Existing source-size debt; a responsibility split must preserve App, AppStage, AppState and existing module visibility."
+
+[[exception]]
+path = "docs/receipts/servo_current_20261007/upstream-components-servo-servo.rs"
+reason = "Frozen qualification harness retained for reproducible recorded evidence; preserve its captured inputs and procedure when splitting the live successor."
+
+[[exception]]
+path = "docs/receipts/servo_current_20261007/upstream-components-servo-webview.rs"
+reason = "Frozen qualification harness retained for reproducible recorded evidence; preserve its captured inputs and procedure when splitting the live successor."
+
+[[exception]]
+path = "docs/receipts/servo_current_20261007/upstream-components-shared-paint-rendering_context.rs"
+reason = "Frozen qualification harness retained for reproducible recorded evidence; preserve its captured inputs and procedure when splitting the live successor."
+
+[[exception]]
+path = "docs/receipts/servo_present_hook_20261006/grafting-lib-before-sync-poll-format.rs"
+reason = "Frozen qualification harness retained for reproducible recorded evidence; preserve its captured inputs and procedure when splitting the live successor."
+
+[[exception]]
+path = "grafting/src/lib.rs"
+reason = "Src lib. Existing source-size debt; a responsibility split must preserve InteropBackend, TextureOrigin, NativeFrameKind and existing module visibility."
+
+[[exception]]
+path = "grafting/src/vulkan_dmabuf.rs"
+reason = "Linux DMABUF to Vulkan/wgpu import. Existing source-size debt; a responsibility split must preserve VulkanDmaBufPlane, VulkanDmaBufQueueOwnership, VulkanDmaBufImport and existing module visibility."
+
+[[exception]]
+path = "servo-wgpu-interop-adapter/src/lib.rs"
+reason = "Src lib. Existing source-size debt; a responsibility split must preserve ServoWgpuRenderingContext, CapturingRenderingContext, ImportingRenderingContext and existing module visibility."

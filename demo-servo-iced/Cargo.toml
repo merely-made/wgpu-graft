@@ -42,3 +42,13 @@ winit = "0.30.13"
 
 [workspace.package]
 rust-version = "1.97.1"
+
+[workspace.lints.clippy]
+missing_errors_doc = "warn"
+missing_panics_doc = "warn"
+missing_safety_doc = "warn"
+undocumented_unsafe_blocks = "warn"
+too_many_lines = "warn"
+
+[lints]
+workspace = true

@@ -1,0 +1,18 @@
+# mere/design_docs/mere_docs/implementation_strategy/2026-10-30_house_style_plan.md
+fail_fast: true
+repos:
+  - repo: local
+    hooks:
+      - id: line-ceiling
+        name: line ceiling
+        entry: line-ceiling
+        language: rust
+        types: [text]
+        always_run: true
+        additional_dependencies: ["cli:https://github.com/merely-made/eidetic:line-ceiling-v0.0.2:line-ceiling"]
+      - id: clippy
+        name: clippy
+        entry: cargo clippy --locked -p grafting -p grafting-frame --all-targets
+        language: system
+        files: '(^|/)(Cargo\.(toml|lock)|[^/]+\.rs)$'
+        pass_filenames: false

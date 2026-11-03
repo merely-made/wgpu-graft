@@ -95,3 +95,6 @@ pollster = "0.4"
 
 [dev-dependencies]
 static_assertions = "1.1"
+
+[lints]
+workspace = true
