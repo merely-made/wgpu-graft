@@ -147,3 +147,33 @@ rejection. Calling the producer's unsafe `acknowledge_release` requires that
 validated release witness from every importer. A dead peer is insufficient.
 Unsupported devices refuse this path; it does not implement external semaphore
 synchronization, modifier negotiation, cross-device qualification, or presentation.
+
+### Windows DX12 export storage (wgpu 30)
+
+`dx12_surface::SharedDx12Surface` allocates shared RGBA8 storage and a shared
+fence on the producer's actual device. `copy_from` copies a same-device texture,
+transitions the backing to COMMON and queues a positive odd fence value.
+`export` duplicates local owned handles for host transport without waiting for
+GPU completion. Transport must duplicate them into the receiving process and
+bind resource, fence and value to the same trusted publication and adapter LUID.
+
+`dx12_surface::import_surface` opens the received handles, checks the native
+resource shape and queues a producer-fence wait on the consumer queue. After
+its last use, call `Dx12Release::seal` with the paired texture: this records a
+COMMON transition, the following even shared-fence signal, and an independent
+consumer-fence signal. The consumer-only fence is necessary because producer
+device exit can poison the shared fence with UINT64_MAX. Drop all imported
+texture/view aliases and poll for release. A resource-private IUnknown witness
+tracks actual native-resource destruction; the tracker retains no resource
+reference that would keep its own witness alive.
+
+Only then may the host acknowledge the exact current lease to the producer.
+The producer's unsafe `acknowledge_release` independently checks consumer GPU
+completion before permitting another copy. A fence by itself, a dropped token,
+or a dead peer never authorizes reuse. Hosts serialize native queue operations
+with wgpu submission. The API does not implement process launch, handle transport,
+lease authentication, cross-adapter sharing, presentation or frame pacing.
+
+Both `grafting` and `grafting-frame` must select the same exact source revision
+until a registry release contains this API. The Windows qualification procedure
+and evidence belong to wgpu-cue's dated DX12 handoff document.

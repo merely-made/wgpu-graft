@@ -63,6 +63,9 @@ pub use metal_texture_ref::{import_metal_texture_borrowed, import_metal_texture_
 #[cfg(target_os = "windows")]
 mod dx12_shared_texture;
 
+#[cfg(all(target_os = "windows", feature = "wgpu-30"))]
+pub mod dx12_surface;
+
 /// Import a D3D12/D3D11 shared NT handle (described by [`Dx12SharedTexture`])
 /// into a `wgpu::Texture` on the given [`HostWgpuContext`]'s DX12 device.
 ///
