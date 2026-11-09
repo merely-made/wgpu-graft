@@ -30,12 +30,19 @@ use grafting::{
 };
 use winit::dpi::PhysicalSize;
 
+pub use grafting;
 pub use grafting::DiagnosticGpuSync;
 
 #[cfg(all(target_os = "linux", feature = "servo"))]
 mod native_dmabuf;
 #[cfg(all(target_os = "linux", feature = "servo"))]
 pub use native_dmabuf::ServoDmaBufAdapter;
+
+#[cfg(feature = "servo")]
+pub mod producer;
+/// The Servo this crate is built against, so hosts never name its revision.
+#[cfg(feature = "servo")]
+pub use servo;
 
 // Opt-in observation only: no readback, completion wait or synchronization change.
 fn resize_trace_enabled() -> bool {

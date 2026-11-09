@@ -4,6 +4,11 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Add the Servo producer to `grafting-servo` behind its `servo` feature: the
+  process root, per-view `ServoSurface`, delegate, input/cursor/navigation and
+  accessibility translation and both frame paths, moved out of Turnstone. Add a
+  `no-wgl` feature forwarding to `servo/no-wgl`, and re-export `servo` and
+  `grafting`.
 - Rename the unpublished Servo adapter package `servo-wgpu-interop-adapter` to
   `grafting-servo`.
 - Move `demo-servo-gpui` from the vendored glass-hq GPUI fork to crates.io

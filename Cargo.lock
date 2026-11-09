@@ -5436,6 +5436,7 @@ dependencies = [
 name = "grafting-servo"
 version = "0.1.0"
 dependencies = [
+ "accesskit 0.24.1",
  "dpi",
  "euclid",
  "gleam",
@@ -5443,8 +5444,11 @@ dependencies = [
  "grafting",
  "image",
  "rustls",
+ "serde_json",
  "servo",
  "surfman",
+ "tracing",
+ "url",
  "wgpu 28.0.0",
  "wgpu 29.0.3",
  "wgpu 30.0.1",

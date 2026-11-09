@@ -7,6 +7,19 @@ This crate bridges Servo's rendering context to the host application. It provide
 1. **`ServoWgpuRenderingContext`** — an offscreen `RenderingContext` that Servo renders into. Supports CPU readback via `read_full_frame()` (returns an `image::RgbaImage` of the current page).
 2. **`ServoWgpuInteropAdapter`** — native GPU import path that imports Servo's GL framebuffer into a host `wgpu::Texture` via the core interop crate.
 
+## Producer
+
+With `servo`, the crate also ships the engine-side producer (`producer`
+module): process root lifecycle (`ServoFactory::new`, `pump`, `shutdown`,
+`active_views`), one `ServoSurface` per view, and host-neutral input, cursor,
+navigation and accessibility vocabularies (`ServoMouseEvent`, `ServoKeyEvent`,
+`ServoCursor`, `ServoEvent`, `ServoFrame`). Hosts supply a `ServoProducerConfig`
+(profile name and directory, accessibility focus policy, GPU sync diagnostic)
+and adapt the types to their own surface contract; inker's `graft-engine` does
+this behind its `servo` feature. The crate re-exports `servo` and `grafting`, so
+a host never names the Servo revision. Accessibility updates cross the boundary
+as AccessKit serde JSON because Servo pins its own AccessKit version.
+
 ## Which path to use
 
 - **CPU readback** (`ServoWgpuRenderingContext::read_full_frame()`): Works on all platforms. Simpler to integrate — just display the returned image in your framework's image widget. Adds a GPU→CPU→GPU round-trip per frame.
@@ -17,6 +30,7 @@ The CPU readback demos ([xilem](../demo-servo-xilem/), [gpui](../demo-servo-gpui
 ## Feature flags
 
 - **`servo`** (optional) — enables the exact Git-pinned upstream Servo dependency and Servo trait implementations. All Servo-embedding demos enable this feature.
+- **`no-wgl`** — forwards to `servo/no-wgl` for Windows hosts that use ANGLE EGL.
 - **`wgpu-28`**, **`wgpu-29`**, **`wgpu-30`** — select the host wgpu type family. Enable exactly one; the default is `wgpu-29`.
 
 Without `servo`, only the surfman-level types are available (useful for testing the adapter layer without pulling in all of Servo).

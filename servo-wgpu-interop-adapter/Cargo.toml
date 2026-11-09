@@ -17,7 +17,9 @@ default = ["wgpu-29"]
 wgpu-30 = ["dep:wgpu_30", "grafting/wgpu-30"]
 wgpu-29 = ["dep:wgpu_29", "grafting/wgpu-29"]
 wgpu-28 = ["dep:wgpu_28", "grafting/wgpu-28"]
-servo = ["dep:servo"]
+servo = ["dep:servo", "dep:accesskit", "dep:serde_json", "dep:tracing", "dep:url"]
+# Forwarded to Servo for Windows builds that select ANGLE EGL instead of WGL.
+no-wgl = ["servo", "servo/no-wgl"]
 
 [dependencies]
 euclid = "0.22.11"
@@ -30,6 +32,12 @@ gleam = "0.15.1"
 glow = "0.17.0"
 image = "0.25.8"
 rustls = "0.23.37"
+url = { version = "2", optional = true }
+tracing = { version = "0.1", optional = true }
+serde_json = { version = "1", optional = true }
+# Servo 0.7 pins accesskit 0.24; the serde form carries updates to hosts on
+# other accesskit versions.
+accesskit = { version = "0.24.1", features = ["serde"], optional = true }
 surfman = "0.14.0"
 dpi = "0.1.2"
 winit = "0.30.13"
