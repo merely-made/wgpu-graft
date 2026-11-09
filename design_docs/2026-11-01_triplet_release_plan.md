@@ -223,3 +223,20 @@ asynchronous event model and capability truth.
   Its phases 1-6 are marked landed in the archived copy.
 - 2026-11-01: P1 landed (D1): `CHANGELOG.md` gains 0.6.0 and 0.6.1 headings with
   0.6.1's Surfman move recorded as breaking.
+- 2026-11-09: Servo producer parity landed ("Move into wgpu-graft"). The Servo
+  lane now matches Scry and Weld: `grafting-servo` owns the producer (`3eaa4f6`,
+  `6af6735` re-export), inker's `graft-engine` adapts it behind its `servo`
+  feature (inker `0a882b2`, `7740e8b`, `dda8dc5`, `db14215`), and Turnstone
+  keeps only host glue (`93beb8b`). The `servo` feature is not forwarded from
+  `graft-engine`: Cargo locks optional member features, which would pull the
+  Servo git tree into inker's lock, and Servo's exact mozjs ICU pins do not
+  resolve against inker's lock. Hosts enable `grafting-servo/servo` themselves.
+  Nine producer tests moved with the code (Turnstone keeps three servo tests, two
+  profile tests and one cross-AccessKit conversion test); the Turnstone offscreen
+  `cue_surfaces` receipt passes on Metal. Linux and Windows could not be
+  type-checked from this Mac (C build scripts of `libz-sys` and `aws-lc-sys`).
+- 2026-11-09: Servo 0.8.0 from crates.io (`319236f`; Turnstone `0ed0474`, which
+  also re-vendors mozjs ICU 153.6.0). Surfman 0.14, gleam 0.15 and glow 0.17 are
+  unchanged in 0.8's manifests; absorbed API change: `LoadStatus::Stopped`.
+  Cargo no longer scans Servo's git checkout, so the `invalid type: boolean
+  true` warning is gone. The Windows and Linux receipts above still describe 0.7.0.
