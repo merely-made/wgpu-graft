@@ -49,6 +49,58 @@ handle into GPUI's D3D11 device. Glass-HQ/gpui has had no commit since
 
   Links: area demos · plans bevy_gpui_zero_copy · summary Linux wgpu zero-copy lands before the Windows D3D11 import.
 
+- **D3, port bite-gpui's imported-texture path onto gpui-pre (2026-11-09):**
+  Mark kept gpui-pre as the base because it is closest to upstream Zed, and
+  chose to record a hand port of bite-gpui's imported-texture work as the
+  route. bite-gpui's per-backend draw code is the source for all three
+  platforms; its core plumbing is rewritten against gpui-pre's layout, and
+  its crate restructure is not taken. gpui-ce stays a reference for the Linux
+  API shape. Evidence is in the fork survey below.
+
+  Links: area demos · amends bevy_gpui_zero_copy D2 · plans bevy_gpui_zero_copy · summary Port bite-gpui's imported-texture path onto gpui-pre instead of designing the five seams from scratch.
+
+## Fork survey (2026-11-09)
+
+Sources: the gpui-archipelago fork map (`gpui-archipelago/map-data`, measured
+public API of the crates.io GPUI forks, data synced 2026-11-05), each fork's
+GitHub tree, and a blobless fetch of Zed, bite-gpui and gpui-ce to compare
+history. Nothing below was built.
+
+| Fork | External texture import |
+|---|---|
+| bite-gpui (crates.io 1.25.203) | All three native renderers: `ImportedTextureHandle` + `GpuCanvasContext::paint_texture`, with backends for Metal (`MTLTexture`), wgpu (`wgpu::TextureView`) and D3D11 (`ID3D11Texture2D`); dma-buf handles with release fences; device accessor. |
+| gpui-ce (crates.io 0.3.0) | `SurfaceSource::Texture` (`wgpu::Texture`) and `Window::gpu_context` on Linux/FreeBSD, and macOS behind `custom-gpu`. No Windows path. |
+| xgpui (gpui-luma-dev, git only) | `custom_draw` on Metal (with a CoreVideo path) and wgpu. The Windows `dxgi.rs` cited under D2 no longer appears in its tree. |
+| gpui-fusion (cradiy, git only) | Linux dma-buf, aimed at GStreamer media. |
+| gpui, gpui-pre, gpui-unofficial, gpui-box, gpui-fast | None beyond the macOS-only YUV `paint_surface`. |
+| gpui-kit, gpui-mobile, sonorahq/gpui, Pulsar-Native, kael | None. gpui-kit is the component library (formerly gpui-component) on gpui-pre; kael is not a GPUI fork. |
+
+**bite-gpui against gpui-pre.** bite-gpui is Zed `40180d9` (2026-09-30) plus
+62 commits, with no Zed merges since; gpui-pre 0.3.11 is Zed `f816e1f`
+(2026-11-01). About 36 of the 62 split GPUI into new crates (`gpui_types`,
+`gpui_engine`, `gpui_authoring`, `gpui_runtime`, `gpui_parley` and others);
+the whole fork diff is +37k/−14k over 398 files. The texture commits total
+about 2.5k lines, but 21 of the 46 files they touch do not exist in gpui-pre,
+so cherry-picking fails and the work is a port:
+
+| bite-gpui commits | Size | Port to gpui-pre |
+|---|---|---|
+| Draw arms: `eae392f18f` (wgpu), `23f88260b5` (Metal), `a6601b26ba` (D3D11), Metal producer `f3c4ba70e2`, per-backend `imported_texture.rs` | +100 / +145 / +502 / +255 | Near-direct: those backend crates exist in gpui-pre. Zed churn since bite-gpui's base is 6 commits on `gpui_wgpu`, 12 on `gpui_apple`, 2 on `directx_renderer.rs`. |
+| Custom-render primitive, texture token, window call `be8418bc88` | +593 | Rewrite against `gpui/src/scene.rs` (3 upstream commits since) and `gpui/src/window.rs` (23). |
+| Device accessor `99997237d1` | +120 over 13 files | Rewrite. |
+| Crate split and renderer seam (`200d24145c`…`ebc105b2c2`) | most of the fork | Skip. |
+
+Estimate: a 1.5–2k-line patch over gpui-pre covering Linux, macOS and
+Windows, which supersedes the five-seam Linux-only design below.
+
+**gpui-ce against gpui-pre.** Last shared Zed commit `60f4aa3`
+(2025-12-12); about 2,550 own commits against about 7,300 Zed commits since,
+with a different crate layout (`gpui_render`, `gpui_elements` and others).
+Its texture path came from #39 (Linux wgpu `Surface`, +304), #237 (custom GPU
+API, +856) and #215 (macOS onto wgpu, +17k/−15k). #39 and the useful part of
+#237 port to gpui-pre's Linux `gpui_wgpu` path; the macOS half needs #215 and
+does not port; Windows has nothing to port.
+
 ## Status — seven frameworks shipped (confirmed by Mark)
 
 All zero-copy Servo → host-framework, confirmed on the Windows multi-GPU laptop:
