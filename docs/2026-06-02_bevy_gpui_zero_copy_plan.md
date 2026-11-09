@@ -71,6 +71,44 @@ handle into GPUI's D3D11 device. Glass-HQ/gpui has had no commit since
 
   Links: area demos · replaces bevy_gpui_zero_copy D3 · amends bevy_gpui_zero_copy D1 · plans bevy_gpui_zero_copy · summary The GPUI demo runs on unpatched bite-gpui, GPU import on macOS first.
 
+## GPUI Linux and Windows import: handoff (2026-11-09)
+
+macOS import is on main (`b944556`) and was checked on screen on the M4
+iMac: the status bar reads GPU import and the fixture animates. Linux and
+Windows still read back. They need a machine on the mesh (o-pc or
+thinkpad-l14-f, Mark's choice), because the repository has no CI since
+`0743b3b` and the M4 iMac is on another network. Findings for whoever wires
+them in `demo-servo-gpui/src/main.rs`'s `Pipeline`:
+
+- **Device access.** bite-gpui lends its device only inside a `gpu_canvas`
+  paint: `canvas.try_device::<R>()`, with `R = gpui_wgpu::WgpuRenderer`
+  (crate `bite-gp-wgpu`) on Linux and `gpui_windows::DirectXRenderer` on
+  Windows. Servo's rendering context is fixed when the webview is built, so
+  the demo has to paint one frame first: a small root view renders a
+  `gpu_canvas` that stores the device in a shared slot, then builds
+  `ServoView` with it on the next render. macOS needs none of this.
+- **Linux.** The device is `(Arc<wgpu::Device>, Arc<wgpu::Queue>)`, wgpu 30.
+  Build `ServoWgpuInteropAdapter::new` on clones of them. The GL import
+  needs a Vulkan device with `VK_KHR_external_memory_fd`, as the winit demo's
+  plain device has; keep the readback fallback for anything else. bite's
+  `ImportedTextureExt` checks the *texture* format is `Rgba8UnormSrgb` or
+  `Bgra8UnormSrgb`, and grafting returns `Rgba8Unorm` with empty
+  `view_formats`, so copy each frame into a reused `Rgba8UnormSrgb`
+  texture (`copy_texture_to_texture` allows the sRGB pair). Same queue as
+  GPUI, so no wait. Alternatively add an sRGB output option to grafting's
+  normalizer and skip the copy.
+- **Windows.** The frame comes from `current_dx12_shared_texture()`, which
+  needs a wgpu DX12 device (the export is initialised with one), so build
+  the adapter on a LUID-matched DX12 device as Bevy and Iced do. The shared
+  texture is `R8G8B8A8_UNORM` with a bottom-left origin and no fence
+  (`SyncMechanism::None`). Open its NT handle on GPUI's `ID3D11Device` with
+  `ID3D11Device1::OpenSharedResource1`. bite's `DirectXTextureExt` accepts
+  only `B8G8R8A8_UNORM(_SRGB)` and samples straight through, so an RGBA
+  texture shows red and blue swapped without any error. Either a small
+  swizzle pass on GPUI's device into a reused BGRA texture, or a BGRA option
+  on grafting's D3D11 export. Pass `flip_v = true` for the bottom-left
+  origin, and check orientation and colour on screen.
+
 ## Fork survey (2026-11-09)
 
 Sources: the gpui-archipelago fork map (`gpui-archipelago/map-data`, measured
