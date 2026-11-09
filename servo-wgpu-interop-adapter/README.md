@@ -29,7 +29,7 @@ The CPU readback demos ([xilem](../demo-servo-xilem/), [gpui](../demo-servo-gpui
 
 ## Feature flags
 
-- **`servo`** (optional) — enables the exact Git-pinned upstream Servo dependency and Servo trait implementations. All Servo-embedding demos enable this feature.
+- **`servo`** (optional) — enables the upstream Servo dependency (crates.io `servo` 0.8) and Servo trait implementations. All Servo-embedding demos enable this feature.
 - **`no-wgl`** — forwards to `servo/no-wgl` for Windows hosts that use ANGLE EGL.
 - **`wgpu-28`**, **`wgpu-29`**, **`wgpu-30`** — select the host wgpu type family. Enable exactly one; the default is `wgpu-29`.
 

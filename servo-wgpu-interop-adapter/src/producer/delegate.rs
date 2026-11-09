@@ -143,6 +143,7 @@ impl WebViewDelegate for Delegate {
                 url,
                 title: view.page_title(),
             },
+            LoadStatus::Stopped => ServoEvent::NavigationStopped { url },
         });
     }
     fn notify_crashed(&self, _: WebView, reason: String, _: Option<String>) {

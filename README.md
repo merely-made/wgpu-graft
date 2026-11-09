@@ -14,8 +14,10 @@ GUI frameworks. Derived from the
   and diagnostic changes. It makes borrowed Metal frame descriptors move-only and carries
   feature-selected wgpu 28/29/30, including the corrected wgpu-28 Metal arm.
   wgpu 29 remains the default while the GUI ecosystem straddles majors.
-- Servo demos use the immutable Servo 0.7.0 release
-  `aac43a3f31a259f04a574f5ec4e959c943ad7cc7`, with Surfman 0.14 and ANGLE 0.7.
+- Servo demos and the adapter use the crates.io `servo` 0.8.0 release (2026-11-07),
+  with Surfman 0.14, gleam 0.15 and glow 0.17 read from its manifests. The
+  runtime receipts below predate the bump and describe Servo 0.7.0
+  (`aac43a3f31a259f04a574f5ec4e959c943ad7cc7`).
   Current migration checks and runtime acceptance are recorded in the
   [triplet release plan](design_docs/2026-11-01_triplet_release_plan.md).
 - Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,

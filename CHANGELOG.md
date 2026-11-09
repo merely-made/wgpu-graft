@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Take Servo from crates.io `servo = "0.8.0"` (2026-11-07) in the adapter and all
+  demos instead of the v0.7.0 git revision. Surfman 0.14, gleam 0.15 and glow
+  0.17 are unchanged in Servo 0.8's manifests. The producer reports Servo's new
+  `LoadStatus::Stopped` as `ServoEvent::NavigationStopped`.
 - Add the Servo producer to `grafting-servo` behind its `servo` feature: the
   process root, per-view `ServoSurface`, delegate, input/cursor/navigation and
   accessibility translation and both frame paths, moved out of Turnstone. Add a

@@ -254,4 +254,6 @@ pub enum ServoEvent {
     NavigationCommitted { url: String },
     NavigationFinished { url: String, title: Option<String> },
     NavigationFailed { url: String, reason: String },
+    /// The load was stopped by the embedder or by script (`window.stop()`).
+    NavigationStopped { url: String },
 }
