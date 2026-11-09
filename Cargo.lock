@@ -5388,7 +5388,7 @@ checksum = "e0f9dae92b9bc15baa6e530c90bdd4c689d3710bd4d18c3566deb1d6ae182daf"
 
 [[package]]
 name = "grafting"
-version = "0.6.1"
+version = "0.6.2"
 dependencies = [
  "ash",
  "dpi",
