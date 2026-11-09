@@ -9,19 +9,37 @@ description = "Demo embedding Servo in a GPUI application with URL bar and input
 [dependencies]
 demo-support = { path = "../demo-support" }
 euclid = "0.22.11"
-# Zed's weekly GPUI snapshot, published as `gpui-pre`. Every `gpui-pre-*`
-# crate pins its siblings `=0.3.10`, so the platform crate takes the same exact
-# version. Aliased so the source keeps importing `gpui::...` and
-# `gpui_platform::...`. wayland + x11 enable gpui's real Linux window backends.
-gpui = { package = "gpui-pre", version = "=0.3.10", features = ["font-kit", "windows-manifest", "wayland", "x11"] }
-gpui_platform = { package = "gpui-pre-platform", version = "=0.3.10", features = ["wayland", "x11"] }
+# bite-gpui: a Zed GPUI fork that adds an imported-texture path (a texture made
+# on GPUI's own device, drawn in its composite pass) on all three renderers.
+# Upstream GPUI and gpui-pre have no such path; see README.md for why we moved.
+# The library is already named `gpui`, so the source keeps importing `gpui::...`.
+# Default features are off because `platform` also pulls bite-gpui's wasm
+# backend, which pins `unicode-properties =0.1.3` against Servo's `^0.1.4`;
+# the native platform crates below are taken directly instead.
+gpui = { package = "bite-gpui", version = "1.25.203", default-features = false, features = ["font-kit", "windows-manifest"] }
 image = "0.25"
 servo = "0.8.0"
 rustls = "0.23.37"
-grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
+grafting-servo = { path = "../servo-wgpu-interop-adapter", default-features = false, features = ["servo", "wgpu-30"] }
 smallvec = "1"
 url = "2.5.7"
 winit = "0.30.13"
+
+[target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
+gpui_linux = { package = "bite-gp-linux", version = "1.25.203" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+gpui_windows = { package = "bite-gp-windows", version = "1.25.203" }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+# runtime_shaders compiles the Metal shaders at startup, so building does not
+# need Xcode's separately downloaded Metal Toolchain.
+gpui_macos = { package = "bite-gp-macos", version = "1.25.203", features = ["font-kit", "runtime_shaders"] }
+# bite-gpui's Metal renderer lends its device and takes textures as `metal` crate types.
+metal = "0.33"
+foreign-types = "0.5"
+pollster = "0.4"
+wgpu = "30.0.1"
 
 [lints]
 workspace = true

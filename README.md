@@ -22,7 +22,8 @@ GUI frameworks. Derived from the
   [triplet release plan](design_docs/2026-11-01_triplet_release_plan.md).
 - Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,
   Bevy, Xilem, GPUI) plus a Servo-free GL demo. Six Servo GUI paths use GPU
-  import; Xilem and GPUI intentionally demonstrate CPU readback. Bevy and
+  import; GPUI (on the bite-gpui fork) imports on macOS and reads back on
+  Linux and Windows for now, and Xilem demonstrates CPU readback. Bevy and
   Iced are DX12-specific; the other six Servo demos are checked on Linux,
   macOS, and Windows.
 - Consumed by siblings: wgpu-weld and wgpu-scry delegate their native

@@ -108,7 +108,9 @@ Find them in `target/debug/build/mozangle-*/out/` and copy to your target's `deb
 ### demo-servo-gpui
 
 - URL bar above the viewport with focus management.
-- RGBA→BGRA conversion for GPUI's `RenderImage` format.
+- Runs on bite-gpui (see the demo README for why not upstream GPUI).
+- macOS: GPU import drawn through `gpu_canvas`; Linux and Windows: RGBA→BGRA
+  CPU readback into a `RenderImage`.
 - Continuous rendering via `request_animation_frame()`.
 
 ### demo-servo-blitz
@@ -158,5 +160,5 @@ Each Servo demo includes fixtures in its `fixtures/` directory:
 | Bevy | GPU import | Windows | manual |
 | Iced | GPU import, optional CPU fallback | Windows | manual |
 | Xilem | CPU readback | Linux, macOS, Windows | manual |
-| GPUI | CPU readback | Linux, macOS, Windows | manual |
+| GPUI | GPU import (macOS), CPU readback (Linux, Windows) | Linux, macOS, Windows | manual |
 | raw GL | GPU import | Linux, Windows | low-level tests plus manual window |

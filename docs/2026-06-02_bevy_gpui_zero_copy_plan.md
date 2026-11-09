@@ -59,6 +59,18 @@ handle into GPUI's D3D11 device. Glass-HQ/gpui has had no commit since
 
   Links: area demos · amends bevy_gpui_zero_copy D2 · plans bevy_gpui_zero_copy · summary Port bite-gpui's imported-texture path onto gpui-pre instead of designing the five seams from scratch.
 
+- **D4, run the demo on bite-gpui as published (2026-11-09):** Mark ruled out
+  carrying a GPUI patch ("we didn't want to get into a 'maintain a gui toolkit
+  for a demo' stance") and chose bite-gpui itself: "let's just use
+  bite-gpui", with the demo README recording why upstream GPUI could not do GPU
+  import and every variant surveyed. The demo depends on bite-gpui 1.25.203
+  from crates.io with no patches. macOS imports through a wgpu device on
+  GPUI's `MTLDevice` and an sRGB Metal view; Linux (wgpu) and Windows
+  (Direct3D 11) stay on readback until they are wired and checked on those
+  machines. The Glass-HQ vendored-patch plan below is retired.
+
+  Links: area demos · replaces bevy_gpui_zero_copy D3 · amends bevy_gpui_zero_copy D1 · plans bevy_gpui_zero_copy · summary The GPUI demo runs on unpatched bite-gpui, GPU import on macOS first.
+
 ## Fork survey (2026-11-09)
 
 Sources: the gpui-archipelago fork map (`gpui-archipelago/map-data`, measured

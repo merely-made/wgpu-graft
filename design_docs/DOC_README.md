@@ -48,9 +48,9 @@ archives them.
 - `docs/2026-05-27_metal_objc2_wgpu29_arm.md`: Metal/objc2 compatibility note.
 - `docs/2026-05-27_xilem_zero_copy_seam.md`: Xilem zero-copy seam note.
 - `docs/2026-06-02_bevy_gpui_zero_copy_plan.md`: Bevy shipped; GPUI zero-copy
-  remains the goal (ruled 2026-11-01), now as a port of bite-gpui's
-  imported-texture path onto gpui-pre (D3, with the 2026-11-09 fork survey);
-  deferred cleanup items 1 and 3 open.
+  remains the goal (ruled 2026-11-01); the demo now runs on unpatched
+  bite-gpui with macOS import wired (D4, replacing D3; 2026-11-09 fork
+  survey); Linux/Windows import and deferred cleanup items 1 and 3 open.
 
 ## Maintainer-owned description
 

@@ -4,11 +4,15 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 // SPDX-License-Identifier: MPL-2.0
 
-//! Demo embedding Servo in a GPUI 0.2 application.
+//! Demo embedding Servo in a GPUI application (the bite-gpui fork).
 //!
-//! Servo renders offscreen via surfman/GL. Each frame, pixels are read back to
-//! CPU via `read_full_frame()`, converted from RGBA to BGRA (GPUI's internal
-//! format), wrapped in a `RenderImage`, and displayed via `img(ImageSource::Render(...))`.
+//! Servo renders offscreen via surfman/GL. On macOS each frame is imported
+//! onto GPUI's own Metal device by grafting and drawn by GPUI's renderer as an
+//! imported texture through `gpu_canvas`: no CPU readback. Elsewhere the frame
+//! is still read back to the CPU, converted from RGBA to BGRA (GPUI's internal
+//! format), wrapped in a `RenderImage`, and displayed via
+//! `img(ImageSource::Render(...))`. See README.md for why this demo uses
+//! bite-gpui rather than upstream GPUI.
 //!
 //! The GPUI window provides a URL bar above the Servo viewport. Mouse, scroll,
 //! and keyboard events are forwarded to Servo so pages are interactive.
@@ -26,6 +30,8 @@
 //!   cargo run -p demo-servo-gpui                     # opens built-in fixture page
 
 mod keyutils;
+#[cfg(target_os = "macos")]
+mod metal_import;
 
 use std::rc::Rc;
 use std::sync::Arc;
@@ -33,11 +39,11 @@ use std::sync::Arc;
 use demo_support::{DemoStatus, RenderPath};
 use euclid::Scale;
 use gpui::{
-    App, Bounds, Context, FocusHandle, ImageSource, InteractiveElement, IntoElement,
+    App, Bounds, Context, Corners, FocusHandle, ImageSource, InteractiveElement, IntoElement,
     KeyDownEvent, KeyUpEvent, MouseButton as GpuiMouseButton, MouseDownEvent,
     MouseMoveEvent as GpuiMouseMoveEvent, MouseUpEvent, ObjectFit, ParentElement, Pixels, Point,
-    Render, RenderImage, ScrollDelta, ScrollEvent, Styled, Window, WindowBounds,
-    WindowOptions, div, img, prelude::*, px, rgb, size,
+    Render, RenderImage, ScrollDelta, ScrollWheelEvent, Styled, Window, WindowBounds,
+    WindowOptions, div, gpu_canvas, img, prelude::*, px, rgb, size,
 };
 use image::{Frame, ImageBuffer, Rgba};
 use rustls::crypto::aws_lc_rs;
@@ -62,14 +68,149 @@ const DEFAULT_HEIGHT: f32 = 800.0;
 
 // ── App state ────────────────────────────────────────────────────────────────
 
+/// How Servo's frames reach GPUI.
+enum Pipeline {
+    /// Imported on GPUI's Metal device and drawn as a GPUI imported texture.
+    #[cfg(target_os = "macos")]
+    Gpu {
+        interop: servo_wgpu_interop_adapter::ServoWgpuInteropAdapter,
+        device: wgpu::Device,
+        frames: metal_import::MetalFrames,
+    },
+    /// Read back to the CPU and drawn as a BGRA `RenderImage`.
+    Cpu {
+        render_ctx: Rc<CapturingRenderingContext>,
+        frame: Option<Arc<RenderImage>>,
+    },
+}
+
+impl Pipeline {
+    /// The GPU path where this platform has one, else CPU readback.
+    fn new(size: PhysicalSize<u32>) -> Self {
+        #[cfg(target_os = "macos")]
+        match Self::gpu(size) {
+            Ok(pipeline) => return pipeline,
+            Err(err) => eprintln!("[demo] GPU import unavailable, using CPU readback: {err}"),
+        }
+        let render_ctx = Rc::new(
+            ServoWgpuRenderingContext::new(size)
+                .expect("failed to create ServoWgpuRenderingContext"),
+        );
+        Self::Cpu {
+            render_ctx: Rc::new(CapturingRenderingContext::new(render_ctx)),
+            frame: None,
+        }
+    }
+
+    #[cfg(target_os = "macos")]
+    fn gpu(size: PhysicalSize<u32>) -> Result<Self, String> {
+        let (device, queue) = metal_import::wgpu_device()?;
+        let interop = servo_wgpu_interop_adapter::ServoWgpuInteropAdapter::new(
+            device.clone(),
+            queue,
+            size,
+        )
+        .map_err(|err| format!("{err:?}"))?;
+        Ok(Self::Gpu {
+            interop,
+            device,
+            frames: metal_import::MetalFrames::default(),
+        })
+    }
+
+    fn rendering_context(&self) -> Rc<dyn RenderingContext> {
+        match self {
+            #[cfg(target_os = "macos")]
+            Self::Gpu { interop, .. } => interop.rendering_context(),
+            Self::Cpu { render_ctx, .. } => render_ctx.clone(),
+        }
+    }
+
+    fn render_path(&self) -> RenderPath {
+        match self {
+            #[cfg(target_os = "macos")]
+            Self::Gpu { .. } => RenderPath::GpuImport,
+            Self::Cpu { .. } => RenderPath::CpuReadback,
+        }
+    }
+
+    /// Present Servo's painted frame and take it into this pipeline.
+    /// Returns the frame size when a new frame arrived.
+    fn present(&mut self) -> Option<(u32, u32)> {
+        match self {
+            #[cfg(target_os = "macos")]
+            Self::Gpu {
+                interop,
+                device,
+                frames,
+            } => {
+                // The importing context imports inside present(), before the
+                // GL swap chain flips.
+                interop.rendering_context().present();
+                let imported = interop.take_imported_texture()?;
+                let size = (imported.size.width, imported.size.height);
+                match frames.push(device, imported.texture) {
+                    Ok(()) => Some(size),
+                    Err(err) => {
+                        eprintln!("[demo] imported frame rejected: {err}");
+                        None
+                    }
+                }
+            }
+            Self::Cpu { render_ctx, frame } => {
+                // Servo's paint() draws without presenting; present() is where
+                // the capturing context reads the frame back.
+                render_ctx.present();
+                let rgba = render_ctx.take_frame()?;
+                let (w, h) = rgba.dimensions();
+                let mut raw = rgba.into_raw();
+                // Servo outputs RGBA; GPUI expects BGRA — swap channels 0 and 2.
+                for px in raw.chunks_exact_mut(4) {
+                    px.swap(0, 2);
+                }
+                let bgra: ImageBuffer<Rgba<u8>, Vec<u8>> =
+                    ImageBuffer::from_raw(w, h, raw).expect("invalid dimensions");
+                let render_image = RenderImage::new(SmallVec::from_elem(Frame::new(bgra), 1));
+                *frame = Some(Arc::new(render_image));
+                Some((w, h))
+            }
+        }
+    }
+
+    /// The element that draws the latest frame, if one has arrived.
+    fn frame_element(&self) -> Option<gpui::AnyElement> {
+        match self {
+            #[cfg(target_os = "macos")]
+            Self::Gpu { frames, .. } => {
+                let handle = frames.latest()?;
+                Some(
+                    gpu_canvas(move |canvas| {
+                        // grafting normalizes to a top-left origin, which is
+                        // the convention GPUI samples in: no flip.
+                        canvas.paint_texture(handle, Corners::default(), 1.0, false);
+                    })
+                    .size_full()
+                    .into_any_element(),
+                )
+            }
+            Self::Cpu { frame, .. } => {
+                let source = ImageSource::Render(frame.clone()?);
+                Some(
+                    img(source)
+                        .size_full()
+                        .object_fit(ObjectFit::Fill)
+                        .into_any_element(),
+                )
+            }
+        }
+    }
+}
+
 struct ServoView {
     // Servo (main-thread only, !Send)
     servo: Servo,
     webview: WebView,
-    render_ctx: Rc<CapturingRenderingContext>,
-
-    // Latest rendered frame as BGRA RenderImage
-    frame: Option<Arc<RenderImage>>,
+    pipeline: Pipeline,
     status: DemoStatus,
 
     // URL bar state
@@ -85,21 +226,18 @@ struct ServoView {
 
 impl ServoView {
     fn new(initial_url: Url, cx: &mut Context<Self>) -> Self {
-        let render_ctx = Rc::new(
-            ServoWgpuRenderingContext::new(PhysicalSize::new(
-                DEFAULT_WIDTH as u32,
-                (DEFAULT_HEIGHT - NAV_BAR_HEIGHT) as u32,
-            ))
-            .expect("failed to create ServoWgpuRenderingContext"),
-        );
-        let capture_ctx = Rc::new(CapturingRenderingContext::new(render_ctx));
+        let pipeline = Pipeline::new(PhysicalSize::new(
+            DEFAULT_WIDTH as u32,
+            (DEFAULT_HEIGHT - NAV_BAR_HEIGHT) as u32,
+        ));
+        let status = DemoStatus::new(pipeline.render_path());
 
         let servo = ServoBuilder::default()
             .event_loop_waker(Box::new(NoopWaker))
             .build();
         servo.setup_logging();
 
-        let webview = WebViewBuilder::new(&servo, capture_ctx.clone())
+        let webview = WebViewBuilder::new(&servo, pipeline.rendering_context())
             .url(initial_url.clone())
             .hidpi_scale_factor(Scale::new(1.0))
             .delegate(Rc::new(DemoDelegate))
@@ -108,9 +246,8 @@ impl ServoView {
         Self {
             servo,
             webview,
-            render_ctx: capture_ctx,
-            frame: None,
-            status: DemoStatus::new(RenderPath::CpuReadback),
+            pipeline,
+            status,
             url_text: initial_url.to_string(),
             url_focused: false,
             url_focus: cx.focus_handle(),
@@ -173,22 +310,8 @@ impl Render for ServoView {
         // ── Poll Servo and read the latest frame ─────────────────────────
         self.servo.spin_event_loop();
         self.webview.paint();
-        // Servo 0.7 paint() draws without presenting; present() is where the
-        // capturing context reads the frame back.
-        self.render_ctx.present();
-
-        if let Some(rgba) = self.render_ctx.take_frame() {
-            let (w, h) = rgba.dimensions();
-            self.status.set_frame(RenderPath::CpuReadback, w, h);
-            let mut raw = rgba.into_raw();
-            // Servo outputs RGBA; GPUI expects BGRA — swap channels 0 and 2.
-            for px in raw.chunks_exact_mut(4) {
-                px.swap(0, 2);
-            }
-            let bgra: ImageBuffer<Rgba<u8>, Vec<u8>> =
-                ImageBuffer::from_raw(w, h, raw).expect("invalid dimensions");
-            let render_image = RenderImage::new(SmallVec::from_elem(Frame::new(bgra), 1));
-            self.frame = Some(Arc::new(render_image));
+        if let Some((w, h)) = self.pipeline.present() {
+            self.status.set_frame(self.pipeline.render_path(), w, h);
         }
 
         // Keep re-rendering every frame for continuous Servo polling.
@@ -246,8 +369,7 @@ impl Render for ServoView {
             );
 
         // Servo viewport
-        let viewport: gpui::AnyElement = if let Some(frame) = &self.frame {
-            let source = ImageSource::Render(frame.clone());
+        let viewport: gpui::AnyElement = if let Some(frame) = self.pipeline.frame_element() {
             div()
                 .flex_1()
                 .w_full()
@@ -311,7 +433,7 @@ impl Render for ServoView {
                         }
                     }),
                 )
-                .on_scroll(cx.listener(|view, event: &ScrollEvent, _window, _cx| {
+                .on_scroll_wheel(cx.listener(|view, event: &ScrollWheelEvent, _window, _cx| {
                     let pos = event.position;
                     let (dx, dy, mode) = match event.delta {
                         ScrollDelta::Pixels(p) => (
@@ -343,7 +465,7 @@ impl Render for ServoView {
                     let kbd = keyutils::keyboard_event_from_gpui_up(event);
                     view.webview.notify_input_event(InputEvent::Keyboard(kbd));
                 }))
-                .child(img(source).size_full().object_fit(ObjectFit::Fill))
+                .child(frame)
                 .into_any()
         } else {
             div()
@@ -457,6 +579,20 @@ impl WebViewDelegate for DemoDelegate {
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
+/// The native GPUI platform, built here rather than through bite-gpui's
+/// `platform` feature (see Cargo.toml).
+fn application() -> gpui::Application {
+    #[cfg(target_os = "macos")]
+    let platform: Rc<dyn gpui::Platform> = Rc::new(gpui_macos::MacPlatform::new(false));
+    #[cfg(target_os = "windows")]
+    let platform: Rc<dyn gpui::Platform> = Rc::new(
+        gpui_windows::WindowsPlatform::new(false).expect("failed to initialize Windows platform"),
+    );
+    #[cfg(any(target_os = "linux", target_os = "freebsd"))]
+    let platform: Rc<dyn gpui::Platform> = gpui_linux::current_platform(false);
+    gpui::Application::with_platform(platform)
+}
+
 fn main() {
     aws_lc_rs::default_provider()
         .install_default()
@@ -465,7 +601,7 @@ fn main() {
     let initial_url = demo_support::resolve_initial_url(env!("CARGO_MANIFEST_DIR"))
         .expect("failed to resolve initial URL");
 
-    gpui_platform::application().run(move |cx: &mut App| {
+    application().run(move |cx: &mut App| {
         let initial_url = initial_url.clone();
         let bounds = Bounds::centered(None, size(px(DEFAULT_WIDTH), px(DEFAULT_HEIGHT)), cx);
         cx.open_window(
