@@ -40,6 +40,8 @@ pub use native_dmabuf::ServoDmaBufAdapter;
 
 #[cfg(feature = "servo")]
 pub mod producer;
+#[cfg(feature = "servo")]
+pub use producer::*;
 /// The Servo this crate is built against, so hosts never name its revision.
 #[cfg(feature = "servo")]
 pub use servo;
