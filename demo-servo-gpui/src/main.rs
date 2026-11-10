@@ -30,8 +30,10 @@
 //!   cargo run -p demo-servo-gpui                     # opens built-in fixture page
 
 mod keyutils;
-#[cfg(target_os = "macos")]
-mod metal_import;
+#[cfg(gpu_import)]
+#[cfg_attr(target_os = "macos", path = "metal_import.rs")]
+#[cfg_attr(not(target_os = "macos"), path = "wgpu_import.rs")]
+mod gpu_import;
 
 use std::rc::Rc;
 use std::sync::Arc;
@@ -68,15 +70,29 @@ const DEFAULT_HEIGHT: f32 = 800.0;
 
 // ── App state ────────────────────────────────────────────────────────────────
 
+/// What the boot frame borrows from GPUI's renderer for the GPU path.
+#[cfg(gpu_import)]
+use gpu_import::Host;
+#[cfg(not(gpu_import))]
+type Host = ();
+
+/// Borrow GPUI's device inside a `gpu_canvas` paint, the only place
+/// bite-gpui lends it. `None` means the GPU path is unavailable.
+fn borrow_host(canvas: &mut gpui::GpuCanvasContext) -> Option<Host> {
+    #[cfg(gpu_import)]
+    return gpu_import::host(canvas);
+    #[cfg(not(gpu_import))]
+    {
+        let _ = canvas;
+        None
+    }
+}
+
 /// How Servo's frames reach GPUI.
 enum Pipeline {
-    /// Imported on GPUI's Metal device and drawn as a GPUI imported texture.
-    #[cfg(target_os = "macos")]
-    Gpu {
-        interop: servo_wgpu_interop_adapter::ServoWgpuInteropAdapter,
-        device: wgpu::Device,
-        frames: metal_import::MetalFrames,
-    },
+    /// Imported by grafting and drawn as a GPUI imported texture.
+    #[cfg(gpu_import)]
+    Gpu(gpu_import::GpuImport),
     /// Read back to the CPU and drawn as a BGRA `RenderImage`.
     Cpu {
         render_ctx: Rc<CapturingRenderingContext>,
@@ -85,13 +101,17 @@ enum Pipeline {
 }
 
 impl Pipeline {
-    /// The GPU path where this platform has one, else CPU readback.
-    fn new(size: PhysicalSize<u32>) -> Self {
-        #[cfg(target_os = "macos")]
-        match Self::gpu(size) {
-            Ok(pipeline) => return pipeline,
-            Err(err) => eprintln!("[demo] GPU import unavailable, using CPU readback: {err}"),
+    /// The GPU path where this platform has one and GPUI lent its device,
+    /// else CPU readback.
+    fn new(size: PhysicalSize<u32>, host: Option<Host>) -> Self {
+        #[cfg(gpu_import)]
+        match host.map(|host| gpu_import::GpuImport::new(size, host)) {
+            Some(Ok(gpu)) => return Self::Gpu(gpu),
+            Some(Err(err)) => eprintln!("[demo] GPU import unavailable, using CPU readback: {err}"),
+            None => eprintln!("[demo] GPUI lent no GPU device, using CPU readback"),
         }
+        #[cfg(not(gpu_import))]
+        let _ = host;
         let render_ctx = Rc::new(
             ServoWgpuRenderingContext::new(size)
                 .expect("failed to create ServoWgpuRenderingContext"),
@@ -102,34 +122,18 @@ impl Pipeline {
         }
     }
 
-    #[cfg(target_os = "macos")]
-    fn gpu(size: PhysicalSize<u32>) -> Result<Self, String> {
-        let (device, queue) = metal_import::wgpu_device()?;
-        let interop = servo_wgpu_interop_adapter::ServoWgpuInteropAdapter::new(
-            device.clone(),
-            queue,
-            size,
-        )
-        .map_err(|err| format!("{err:?}"))?;
-        Ok(Self::Gpu {
-            interop,
-            device,
-            frames: metal_import::MetalFrames::default(),
-        })
-    }
-
     fn rendering_context(&self) -> Rc<dyn RenderingContext> {
         match self {
-            #[cfg(target_os = "macos")]
-            Self::Gpu { interop, .. } => interop.rendering_context(),
+            #[cfg(gpu_import)]
+            Self::Gpu(gpu) => gpu.rendering_context(),
             Self::Cpu { render_ctx, .. } => render_ctx.clone(),
         }
     }
 
     fn render_path(&self) -> RenderPath {
         match self {
-            #[cfg(target_os = "macos")]
-            Self::Gpu { .. } => RenderPath::GpuImport,
+            #[cfg(gpu_import)]
+            Self::Gpu(_) => RenderPath::GpuImport,
             Self::Cpu { .. } => RenderPath::CpuReadback,
         }
     }
@@ -138,25 +142,11 @@ impl Pipeline {
     /// Returns the frame size when a new frame arrived.
     fn present(&mut self) -> Option<(u32, u32)> {
         match self {
-            #[cfg(target_os = "macos")]
-            Self::Gpu {
-                interop,
-                device,
-                frames,
-            } => {
-                // The importing context imports inside present(), before the
-                // GL swap chain flips.
-                interop.rendering_context().present();
-                let imported = interop.take_imported_texture()?;
-                let size = (imported.size.width, imported.size.height);
-                match frames.push(device, imported.texture) {
-                    Ok(()) => Some(size),
-                    Err(err) => {
-                        eprintln!("[demo] imported frame rejected: {err}");
-                        None
-                    }
-                }
-            }
+            #[cfg(gpu_import)]
+            Self::Gpu(gpu) => gpu.present().unwrap_or_else(|err| {
+                eprintln!("[demo] frame import failed: {err}");
+                None
+            }),
             Self::Cpu { render_ctx, frame } => {
                 // Servo's paint() draws without presenting; present() is where
                 // the capturing context reads the frame back.
@@ -180,9 +170,9 @@ impl Pipeline {
     /// The element that draws the latest frame, if one has arrived.
     fn frame_element(&self) -> Option<gpui::AnyElement> {
         match self {
-            #[cfg(target_os = "macos")]
-            Self::Gpu { frames, .. } => {
-                let handle = frames.latest()?;
+            #[cfg(gpu_import)]
+            Self::Gpu(gpu) => {
+                let handle = gpu.latest()?;
                 Some(
                     gpu_canvas(move |canvas| {
                         // grafting normalizes to a top-left origin, which is
@@ -206,6 +196,36 @@ impl Pipeline {
     }
 }
 
+/// The window's root. GPUI lends its GPU device only during a `gpu_canvas`
+/// paint, and Servo's rendering context is fixed when its webview is built,
+/// so the first frame borrows the device and the second starts Servo with it.
+struct Boot {
+    initial_url: Url,
+    borrowed: Rc<std::cell::RefCell<Option<Option<Host>>>>,
+    view: Option<gpui::Entity<ServoView>>,
+}
+
+impl Render for Boot {
+    fn render(&mut self, window: &mut Window, cx: &mut Context<Self>) -> impl IntoElement {
+        if self.view.is_none()
+            && let Some(host) = self.borrowed.borrow_mut().take()
+        {
+            let url = self.initial_url.clone();
+            self.view = Some(cx.new(|cx| ServoView::new(url, host, cx)));
+        }
+        if let Some(view) = &self.view {
+            return div().size_full().child(view.clone()).into_any_element();
+        }
+        window.request_animation_frame();
+        let borrowed = self.borrowed.clone();
+        gpu_canvas(move |canvas| {
+            *borrowed.borrow_mut() = Some(borrow_host(canvas));
+        })
+        .size_full()
+        .into_any_element()
+    }
+}
+
 struct ServoView {
     // Servo (main-thread only, !Send)
     servo: Servo,
@@ -225,11 +245,14 @@ struct ServoView {
 }
 
 impl ServoView {
-    fn new(initial_url: Url, cx: &mut Context<Self>) -> Self {
-        let pipeline = Pipeline::new(PhysicalSize::new(
-            DEFAULT_WIDTH as u32,
-            (DEFAULT_HEIGHT - NAV_BAR_HEIGHT) as u32,
-        ));
+    fn new(initial_url: Url, host: Option<Host>, cx: &mut Context<Self>) -> Self {
+        let pipeline = Pipeline::new(
+            PhysicalSize::new(
+                DEFAULT_WIDTH as u32,
+                (DEFAULT_HEIGHT - NAV_BAR_HEIGHT) as u32,
+            ),
+            host,
+        );
         let status = DemoStatus::new(pipeline.render_path());
 
         let servo = ServoBuilder::default()
@@ -614,7 +637,13 @@ fn main() {
                 focus: true,
                 ..Default::default()
             },
-            move |_window, cx| cx.new(|cx| ServoView::new(initial_url.clone(), cx)),
+            move |_window, cx| {
+                cx.new(|_| Boot {
+                    initial_url: initial_url.clone(),
+                    borrowed: Rc::default(),
+                    view: None,
+                })
+            },
         )
         .expect("failed to open window");
         cx.activate(true);

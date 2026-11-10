@@ -16,11 +16,15 @@
 //! decodes the sample and re-encodes it into its target.
 
 use std::collections::VecDeque;
+use std::rc::Rc;
 
 use foreign_types::ForeignTypeRef as _;
 use gpui::ImportedTextureHandle;
 use gpui_macos::MetalTextureExt as _;
 use metal::MTLPixelFormat;
+use servo::RenderingContext;
+use servo_wgpu_interop_adapter::ServoWgpuInteropAdapter;
+use winit::dpi::PhysicalSize;
 
 /// How many imported frames stay alive. bite-gpui's handle carries the
 /// `id<MTLTexture>` by pointer, so the texture must outlive the frame that
@@ -28,7 +32,7 @@ use metal::MTLPixelFormat;
 const FRAMES_KEPT: usize = 2;
 
 /// A wgpu device on the Metal device GPUI's renderer uses.
-pub fn wgpu_device() -> Result<(wgpu::Device, wgpu::Queue), String> {
+fn wgpu_device() -> Result<(wgpu::Device, wgpu::Queue), String> {
     let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
         backends: wgpu::Backends::METAL,
         flags: wgpu::InstanceFlags::default(),
@@ -59,7 +63,7 @@ struct Frame {
 
 /// The recent imported frames, newest last.
 #[derive(Default)]
-pub struct MetalFrames {
+struct MetalFrames {
     frames: VecDeque<Frame>,
 }
 
@@ -101,5 +105,55 @@ impl MetalFrames {
     /// The newest frame's handle, if any frame has arrived.
     pub fn latest(&self) -> Option<ImportedTextureHandle> {
         self.frames.back().map(|frame| frame.handle.clone())
+    }
+}
+
+/// What the boot frame borrows from GPUI: nothing on macOS, where the wgpu
+/// device is made here and lands on GPUI's `MTLDevice` anyway.
+pub type Host = ();
+
+pub fn host(_canvas: &mut gpui::GpuCanvasContext) -> Option<Host> {
+    Some(())
+}
+
+/// Servo's frames, imported by grafting and handed to GPUI each frame.
+pub struct GpuImport {
+    interop: ServoWgpuInteropAdapter,
+    device: wgpu::Device,
+    frames: MetalFrames,
+}
+
+impl GpuImport {
+    pub fn new(size: PhysicalSize<u32>, (): Host) -> Result<Self, String> {
+        let (device, queue) = wgpu_device()?;
+        let interop = ServoWgpuInteropAdapter::new(device.clone(), queue, size)
+            .map_err(|err| format!("{err:?}"))?;
+        Ok(Self {
+            interop,
+            device,
+            frames: MetalFrames::default(),
+        })
+    }
+
+    pub fn rendering_context(&self) -> Rc<dyn RenderingContext> {
+        self.interop.rendering_context()
+    }
+
+    /// Present Servo's painted frame and import it. Returns the frame size
+    /// when a new frame arrived.
+    pub fn present(&mut self) -> Result<Option<(u32, u32)>, String> {
+        // The importing context imports inside present(), before the GL
+        // swap chain flips.
+        self.interop.rendering_context().present();
+        let Some(imported) = self.interop.take_imported_texture() else {
+            return Ok(None);
+        };
+        let size = (imported.size.width, imported.size.height);
+        self.frames.push(&self.device, imported.texture)?;
+        Ok(Some(size))
+    }
+
+    pub fn latest(&self) -> Option<ImportedTextureHandle> {
+        self.frames.latest()
     }
 }

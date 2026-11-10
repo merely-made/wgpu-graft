@@ -4,8 +4,8 @@ Servo embedded in a [GPUI](https://github.com/zed-industries/zed/tree/main/crate
 
 ## What it demonstrates
 
-- macOS: zero-copy GPU import. grafting imports each Servo frame onto the Metal device GPUI's renderer uses, and GPUI draws it as an imported texture through `gpu_canvas`.
-- Linux and Windows: CPU readback for now (`read_full_frame()`, RGBA→BGRA into a `RenderImage`). bite-gpui has the import path on both (wgpu on Linux, Direct3D 11 on Windows); wiring it here waits on a machine to check it on.
+- macOS and Linux: zero-copy GPU import. grafting imports each Servo frame onto the device GPUI's renderer uses (its `MTLDevice` on macOS, its own wgpu device on Linux), and GPUI draws it as an imported texture through `gpu_canvas`.
+- Windows: CPU readback for now (`read_full_frame()`, RGBA→BGRA into a `RenderImage`). bite-gpui's Direct3D 11 path takes BGRA textures on its own device, which grafting's Windows export does not produce yet.
 - Continuous rendering via `request_animation_frame()` in the `Render` implementation
 - URL bar with focus management via `FocusHandle`
 - Mouse, scroll, and keyboard events forwarded to Servo via GPUI's element event handlers
@@ -50,12 +50,15 @@ bite-gpui is the only one covering every GPU backend, and it is published on cra
 - bite-gpui is pre-1.0 and does not use winit, so this demo has its own key mapping in `keyutils.rs` rather than sharing the winit-based one used by the other demos.
 - bite-gpui's `platform` feature also pulls its wasm backend, which pins `unicode-properties =0.1.3` against Servo's `^0.1.4`. The demo turns default features off and builds the native platform from `bite-gp-macos` / `bite-gp-linux` / `bite-gp-windows` directly.
 - GPUI's `Pixels` type has a crate-private field, so all pixel math uses `f32::from(px)` rather than direct field access.
+- bite-gpui lends its GPU device only inside a `gpu_canvas` paint, and Servo's rendering context is fixed when the webview is built, so the window's first frame borrows the device and the second starts Servo with it.
+- On Linux the imported `Rgba8Unorm` frame is copied on the GPU into a reused `Rgba8UnormSrgb` texture, because bite-gpui checks that an imported texture samples as sRGB. The copy runs on GPUI's own queue, so no wait is needed.
 - bite-gpui's macOS renderer is Metal. The demo makes its own wgpu device, which lands on the same `MTLDevice` (macOS hands every creator the one device), and passes GPUI an sRGB view of the imported texture. It waits for the import's GPU work before GPUI samples it, since the two use different command queues.
 
 ## Platform notes
 
 - **macOS**: GPU import; falls back to CPU readback (logged) if the wgpu device or adapter cannot be created.
-- **Linux, Windows**: CPU readback.
+- **Linux**: GPU import on GPUI's wgpu device (checked on RADV under GNOME Wayland); falls back to CPU readback (logged) if GPUI's renderer is not wgpu or the import cannot be set up.
+- **Windows**: CPU readback.
 - **Windows**: requires ANGLE DLLs next to the executable (see [workspace README](../README.md#prerequisites)).
 
 ## License

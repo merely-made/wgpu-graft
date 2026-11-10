@@ -73,6 +73,10 @@ handle into GPUI's D3D11 device. Glass-HQ/gpui has had no commit since
 
 ## GPUI Linux and Windows import: handoff (2026-11-09)
 
+**Update:** Linux landed the same day. It was built and checked on screen on
+thinkpad-l14-f (RADV, GNOME Wayland), along the lines below. Windows
+remains.
+
 macOS import is on main (`b944556`) and was checked on screen on the M4
 iMac: the status bar reads GPU import and the fixture animates. Linux and
 Windows still read back. They need a machine on the mesh (o-pc or

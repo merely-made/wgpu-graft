@@ -3884,6 +3884,7 @@ version = "0.1.0"
 dependencies = [
  "bite-gp-linux",
  "bite-gp-macos",
+ "bite-gp-wgpu",
  "bite-gp-windows",
  "bite-gpui",
  "demo-support",

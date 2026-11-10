@@ -5,6 +5,14 @@
 // SPDX-License-Identifier: MPL-2.0
 
 fn main() {
+    // `gpu_import`: platforms whose GPUI renderer takes Servo's frame as an
+    // imported texture in this demo (Metal on macOS, wgpu on Linux).
+    println!("cargo::rustc-check-cfg=cfg(gpu_import)");
+    let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
+    if matches!(target_os.as_str(), "macos" | "linux" | "freebsd") {
+        println!("cargo::rustc-cfg=gpu_import");
+    }
+
     // Only needed on Windows — Servo forces ANGLE (libEGL/libGLESv2) which must
     // be present next to the executable at runtime.
     #[cfg(target_os = "windows")]
