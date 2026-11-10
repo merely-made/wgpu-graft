@@ -4,6 +4,17 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Move `demo-servo-gpui` from `gpui-pre` to crates.io `bite-gpui` 1.25.203,
+  whose imported-texture path gives the demo zero-copy GPU import on macOS
+  (Metal), Linux (wgpu) and Windows (Direct3D 11). The demo README records why
+  upstream GPUI could not, and the GPUI variants surveyed.
+- Add `grafting::surfman_gl::select_adapter_matching_luid` and
+  `ServoWgpuRenderingContext::new_for_adapter_luid` (Windows) for hosts whose
+  device is not wgpu's, so ANGLE renders on the host's GPU.
+- Fix the Windows demos' `build.rs` copying the ANGLE DLLs into
+  `target/build/{profile}` instead of next to the executable since the
+  `build-dir` setting; the demos panicked with "egl function was not loaded".
+
 - Take Servo from crates.io `servo = "0.8.0"` (2026-11-07) in the adapter and all
   demos instead of the v0.7.0 git revision. Surfman 0.14, gleam 0.15 and glow
   0.17 are unchanged in Servo 0.8's manifests. The producer reports Servo's new

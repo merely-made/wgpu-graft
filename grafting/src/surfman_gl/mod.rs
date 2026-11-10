@@ -20,6 +20,8 @@ mod windows;
 mod windows_dx12_shared;
 
 pub use adapter::select_adapter_matching_surfman_luid;
+#[cfg(target_os = "windows")]
+pub use adapter::select_adapter_matching_luid;
 
 use std::cell::Cell;
 use std::rc::Rc;

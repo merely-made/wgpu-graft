@@ -89,7 +89,9 @@ impl MetalFrames {
             // pixel-format-view usage on Metal.
             raw.new_texture_view(MTLPixelFormat::RGBA8Unorm_sRGB)
         };
-        let handle = view.to_imported_handle().map_err(|err| format!("{err:#}"))?;
+        let handle = view
+            .to_imported_handle()
+            .map_err(|err| format!("{err:#}"))?;
 
         self.frames.push_back(Frame {
             _view: view,

@@ -109,6 +109,25 @@ impl ServoWgpuRenderingContext {
             .map_err(|err| InteropError::Surfman(format!("{err:?}")))
     }
 
+    /// Create a rendering context whose surfman/ANGLE GPU is the one with this
+    /// DXGI adapter LUID. For hosts that render with their own Direct3D 11
+    /// device rather than wgpu and open
+    /// [`current_dx12_shared_texture`](Self::current_dx12_shared_texture) on
+    /// it: the shared handle only works when both sides are on one GPU.
+    #[cfg(target_os = "windows")]
+    pub fn new_for_adapter_luid(
+        size: PhysicalSize<u32>,
+        luid_low: u32,
+        luid_high: i32,
+    ) -> Result<Self, InteropError> {
+        let connection = Connection::new()
+            .map_err(|err| InteropError::Surfman(format!("Connection::new failed: {err:?}")))?;
+        let adapter =
+            grafting::surfman_gl::select_adapter_matching_luid(&connection, luid_low, luid_high)?;
+        Self::from_connection_adapter(connection, adapter, size)
+            .map_err(|err| InteropError::Surfman(format!("{err:?}")))
+    }
+
     fn from_connection_adapter(
         connection: Connection,
         adapter: surfman::Adapter,

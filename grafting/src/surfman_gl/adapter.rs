@@ -69,7 +69,21 @@ pub fn select_adapter_matching_surfman_luid(
                 .raw_device()
                 .GetAdapterLuid()
         };
+        select_adapter_matching_luid(connection, wgpu_luid.LowPart, wgpu_luid.HighPart)
+    }
+}
 
+/// Pick the surfman (ANGLE D3D11) adapter on the GPU with this DXGI adapter
+/// LUID, for hosts whose device is not wgpu's (a Direct3D 11 renderer, for
+/// one). Sharing a texture handle across GPUs garbles, so the producer has to
+/// render on the host's GPU.
+#[cfg(target_os = "windows")]
+pub fn select_adapter_matching_luid(
+    connection: &surfman::Connection,
+    luid_low: u32,
+    luid_high: i32,
+) -> Result<surfman::Adapter, InteropError> {
+    {
         for create_adapter_fn in [
             surfman::Connection::create_hardware_adapter
                 as fn(&surfman::Connection) -> Result<surfman::Adapter, surfman::Error>,
@@ -108,15 +122,13 @@ pub fn select_adapter_matching_surfman_luid(
                 desc.AdapterLuid
             };
 
-            if surfman_luid.HighPart == wgpu_luid.HighPart
-                && surfman_luid.LowPart == wgpu_luid.LowPart
-            {
+            if surfman_luid.HighPart == luid_high && surfman_luid.LowPart == luid_low {
                 return Ok(surfman_adapter);
             }
         }
 
         Err(InteropError::Dx12(
-            "no surfman adapter LUID matches the wgpu DX12 device LUID — \
+            "no surfman adapter LUID matches the host device LUID — \
              multi-GPU host with surfman pinned to a different driver?"
                 .into(),
         ))

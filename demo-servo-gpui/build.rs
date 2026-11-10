@@ -6,10 +6,14 @@
 
 fn main() {
     // `gpu_import`: platforms whose GPUI renderer takes Servo's frame as an
-    // imported texture in this demo (Metal on macOS, wgpu on Linux).
+    // imported texture in this demo (Metal on macOS, wgpu on Linux, Direct3D
+    // 11 on Windows).
     println!("cargo::rustc-check-cfg=cfg(gpu_import)");
     let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
-    if matches!(target_os.as_str(), "macos" | "linux" | "freebsd") {
+    if matches!(
+        target_os.as_str(),
+        "macos" | "linux" | "freebsd" | "windows"
+    ) {
         println!("cargo::rustc-cfg=gpu_import");
     }
 
@@ -52,12 +56,35 @@ fn copy_angle_dlls_to_binary_dir() {
                 .unwrap_or(std::time::UNIX_EPOCH)
         });
 
+    // With `.cargo/config.toml`'s `build-dir` (`{target}/build`), OUT_DIR sits
+    // under `{target}/build/{profile}` while the executable lands in
+    // `{target}/{profile}`; dropping that `build` segment finds it.
+    let mut dest_dirs = vec![binary_dir.to_path_buf()];
+    let components: Vec<_> = binary_dir.components().collect();
+    if let Some(index) = components.iter().rposition(|c| c.as_os_str() == "build") {
+        let artifact_dir: std::path::PathBuf = components
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| *i != index)
+            .map(|(_, c)| c.as_os_str())
+            .collect();
+        dest_dirs.push(artifact_dir);
+    }
+
     if let Some(out_dir) = newest_out_dir {
-        for dll in dlls {
-            let src = out_dir.join(dll);
-            let dest = binary_dir.join(dll);
-            if let Err(e) = std::fs::copy(&src, &dest) {
-                println!("cargo:warning=Failed to copy {dll} to binary dir: {e}");
+        for dest_dir in &dest_dirs {
+            if std::fs::create_dir_all(dest_dir).is_err() {
+                continue;
+            }
+            for dll in dlls {
+                let src = out_dir.join(dll);
+                let dest = dest_dir.join(dll);
+                if let Err(e) = std::fs::copy(&src, &dest) {
+                    println!(
+                        "cargo:warning=Failed to copy {dll} to {}: {e}",
+                        dest_dir.display()
+                    );
+                }
             }
         }
     }

@@ -73,9 +73,16 @@ handle into GPUI's D3D11 device. Glass-HQ/gpui has had no commit since
 
 ## GPUI Linux and Windows import: handoff (2026-11-09)
 
-**Update:** Linux landed the same day. It was built and checked on screen on
-thinkpad-l14-f (RADV, GNOME Wayland), along the lines below. Windows
-remains.
+**Update:** both landed the same day. Linux was checked on screen on
+thinkpad-l14-f (RADV, GNOME Wayland) and Windows on o-pc (RTX 4060). Windows
+needed no wgpu device: `current_dx12_shared_texture` exports from ANGLE's own
+D3D11 device. The demo opens the handle on GPUI's device and does the BGRA
+swizzle and flip in one D3D11 draw, and the new
+`ServoWgpuRenderingContext::new_for_adapter_luid` pins ANGLE to GPUI's GPU.
+Running it also showed that every Windows demo's `build.rs` had copied the
+ANGLE DLLs to `target/build/{profile}`, not next to the exe, since the
+build-dir change; that is fixed in all eight. With this, the GPUI zero-copy
+goal is met.
 
 macOS import is on main (`b944556`) and was checked on screen on the M4
 iMac: the status bar reads GPU import and the fixture animates. Linux and

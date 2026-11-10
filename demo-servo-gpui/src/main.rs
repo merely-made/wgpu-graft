@@ -29,11 +29,15 @@
 //!   cargo run -p demo-servo-gpui -- servo.org        # auto-prefixes https://
 //!   cargo run -p demo-servo-gpui                     # opens built-in fixture page
 
-mod keyutils;
 #[cfg(gpu_import)]
 #[cfg_attr(target_os = "macos", path = "metal_import.rs")]
-#[cfg_attr(not(target_os = "macos"), path = "wgpu_import.rs")]
+#[cfg_attr(target_os = "windows", path = "d3d11_import.rs")]
+#[cfg_attr(
+    not(any(target_os = "macos", target_os = "windows")),
+    path = "wgpu_import.rs"
+)]
 mod gpu_import;
+mod keyutils;
 
 use std::rc::Rc;
 use std::sync::Arc;
@@ -51,8 +55,8 @@ use image::{Frame, ImageBuffer, Rgba};
 use rustls::crypto::aws_lc_rs;
 use servo::{
     DevicePoint, EventLoopWaker, InputEvent, MouseButton as ServoMouseButton, MouseButtonAction,
-    MouseButtonEvent, MouseLeftViewportEvent, MouseMoveEvent as ServoMouseMoveEvent, Servo,
-    RenderingContext, ServoBuilder, WebView, WebViewBuilder, WebViewDelegate, WheelDelta,
+    MouseButtonEvent, MouseLeftViewportEvent, MouseMoveEvent as ServoMouseMoveEvent,
+    RenderingContext, Servo, ServoBuilder, WebView, WebViewBuilder, WebViewDelegate, WheelDelta,
     WheelEvent, WheelMode,
 };
 use servo_wgpu_interop_adapter::{CapturingRenderingContext, ServoWgpuRenderingContext};
@@ -163,7 +167,7 @@ impl Pipeline {
                 let render_image = RenderImage::new(SmallVec::from_elem(Frame::new(bgra), 1));
                 *frame = Some(Arc::new(render_image));
                 Some((w, h))
-            }
+            },
         }
     }
 
@@ -182,7 +186,7 @@ impl Pipeline {
                     .size_full()
                     .into_any_element(),
                 )
-            }
+            },
             Self::Cpu { frame, .. } => {
                 let source = ImageSource::Render(frame.clone()?);
                 Some(
@@ -191,7 +195,7 @@ impl Pipeline {
                         .object_fit(ObjectFit::Fill)
                         .into_any_element(),
                 )
-            }
+            },
         }
     }
 }
@@ -288,7 +292,7 @@ impl ServoView {
             Ok(url) => {
                 eprintln!("[demo] navigating to: {url}");
                 self.webview.load(url);
-            }
+            },
             Err(_) => eprintln!("[demo] invalid URL: {raw}"),
         }
         self.url_focused = false;
@@ -466,7 +470,7 @@ impl Render for ServoView {
                         ),
                         ScrollDelta::Lines(p) => {
                             (p.x as f64 * 38.0, p.y as f64 * 38.0, WheelMode::DeltaLine)
-                        }
+                        },
                     };
                     let pt = view.servo_point(pos);
                     view.webview
@@ -548,13 +552,13 @@ fn handle_url_key(
     match key.as_str() {
         "enter" | "return" | "Enter" => {
             view.navigate();
-        }
+        },
         "escape" | "Escape" => {
             view.url_focused = false;
-        }
+        },
         "backspace" | "Backspace" => {
             view.url_text.pop();
-        }
+        },
         _ => {
             // Append printable characters (no ctrl/alt modifiers).
             if !event.keystroke.modifiers.control && !event.keystroke.modifiers.alt {
@@ -564,7 +568,7 @@ fn handle_url_key(
                     }
                 }
             }
-        }
+        },
     }
 }
 
