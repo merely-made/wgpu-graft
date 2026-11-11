@@ -20,8 +20,8 @@ GUI frameworks. Derived from the
   (`aac43a3f31a259f04a574f5ec4e959c943ad7cc7`).
   Current migration checks and runtime acceptance are recorded in the
   [triplet release plan](design_docs/2026-11-01_triplet_release_plan.md).
-- Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,
-  Bevy, Xilem, GPUI) plus a Servo-free GL demo. All eight Servo GUI paths
+- Ten demos: nine Servo embeddings (winit, egui, iced, Blitz, Slint,
+  Bevy, Xilem, GPUI, Kas) plus a Servo-free GL demo. All nine Servo GUI paths
   use GPU import: GPUI on the bite-gpui fork, and Xilem on its git main with
   a vendored `masonry_winit` that realizes Masonry's external layers. Bevy and
   Iced are DX12-specific; the other six Servo demos are checked on Linux,
@@ -60,7 +60,7 @@ different wgpu majors, so build them individually, not with `--workspace`:
 ```sh
 cargo test -p grafting
 cargo run -p demo-servo-winit -- https://servo.org
-# also: -egui, -iced, -blitz, -slint, -bevy, -xilem, -gpui, demo-raw-gl
+# also: -egui, -iced, -blitz, -slint, -bevy, -xilem, -gpui, -kas, demo-raw-gl
 ```
 
 Windows notes: `scripts/check-servo-demos.ps1` selects desktop LLVM for

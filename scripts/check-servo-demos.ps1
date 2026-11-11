@@ -11,6 +11,7 @@ param(
         "demo-servo-winit",
         "demo-servo-xilem",
         "demo-servo-gpui",
+        "demo-servo-kas",
         "demo-servo-bevy",
         "demo-servo-blitz",
         "demo-servo-egui",

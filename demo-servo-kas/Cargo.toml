@@ -1,0 +1,24 @@
+[package]
+rust-version = "1.97.1"
+name = "demo-servo-kas"
+version = "0.1.0"
+edition = "2024"
+license = "MPL-2.0"
+description = "Demo embedding Servo in a Kas UI, zero-copy through a Kas custom pipe"
+
+[dependencies]
+demo-support = { path = "../demo-support" }
+euclid = "0.22.11"
+# Kas 0.17 composites with wgpu 28, so the adapter takes grafting's wgpu-28 row.
+kas = "0.17.0"
+kas-wgpu = "0.17.0"
+servo = "0.8.0"
+rustls = "0.23.37"
+grafting-servo = { path = "../servo-wgpu-interop-adapter", default-features = false, features = ["servo", "wgpu-28"] }
+bytemuck = { version = "1", features = ["derive"] }
+url = "2.5.7"
+# The winit Kas 0.17 is built on, for the key mapping's KeyCode and KeyLocation.
+winit = { version = "=0.31.0-beta.2", default-features = false }
+
+[lints]
+workspace = true

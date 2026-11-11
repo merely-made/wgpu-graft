@@ -4,6 +4,12 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Add `demo-servo-kas`: Servo in Kas 0.17 through Kas's public custom-pipe API
+  (`kas_wgpu::draw::CustomPipe`), which hands app code Kas's wgpu device and
+  draws in its render pass; no Kas patch. On Windows it sets `KAS_BACKENDS=DX12`
+  and `KAS_POWER_PREFERENCE=HighPerformance` (Kas ignores `WGPU_BACKEND`, and
+  ANGLE could not be matched to the integrated GPU).
+
 - Move `demo-servo-xilem` to Xilem git main (rev `dc496876`, wgpu 28) with GPU
   import: Servo's frame is drawn into a Masonry external layer by a vendored
   `masonry_winit` (Apache-2.0, `[patch]`-substituted, changes marked

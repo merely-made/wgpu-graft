@@ -6,6 +6,7 @@ members = [
     "demo-servo-blitz",
     "demo-servo-egui",
     "demo-servo-gpui",
+    "demo-servo-kas",
     "demo-servo-slint",
     "demo-servo-winit",
     "demo-servo-xilem",
