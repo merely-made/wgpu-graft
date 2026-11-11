@@ -4,11 +4,11 @@ Rust workspace for grafting an external GPU producer's texture onto
 host-owned `wgpu` textures. The framework-agnostic
 [`grafting`](grafting/) crate provides the low-level interop (GL FBO /
 Vulkan image / Metal IOSurface / DX12 shared texture into wgpu), a Servo
-adapter sits on top, and nine demos show the embedding pattern across Rust
+adapter sits on top, and ten demos show the embedding pattern across Rust
 GUI frameworks. Derived from the
 [Slint Servo embedding example](https://github.com/slint-ui/slint/tree/master/examples/servo).
 
-## Status (2026-10-07)
+## Status (2026-11-11)
 
 - `grafting` 0.6.0 is the published baseline; `main` carries subsequent compatibility
   and diagnostic changes. It makes borrowed Metal frame descriptors move-only and carries
@@ -22,22 +22,27 @@ GUI frameworks. Derived from the
   [triplet release plan](design_docs/2026-11-01_triplet_release_plan.md).
 - Ten demos: nine Servo embeddings (winit, egui, iced, Blitz, Slint,
   Bevy, Xilem, GPUI, Kas) plus a Servo-free GL demo. All nine Servo GUI paths
-  use GPU import: GPUI on the bite-gpui fork, and Xilem on its git main with
-  a vendored `masonry_winit` that realizes Masonry's external layers. Bevy and
-  Iced are DX12-specific; the other six Servo demos are checked on Linux,
-  macOS, and Windows.
+  use GPU import: GPUI on the bite-gpui fork, Kas through its public custom
+  pipe, and Xilem on its git main with a vendored `masonry_winit` that
+  realizes Masonry's external layers. Bevy and Iced are DX12-specific; the
+  other seven Servo demos run on Linux, macOS, and Windows. All nine were
+  checked on screen on Windows on 2026-11-10/11; see `docs/testing.md` for
+  the Linux and macOS coverage.
 - Consumed by siblings: wgpu-weld and wgpu-scry delegate their native
   Metal/Vulkan import boundaries to `grafting`; producer policy stays local.
 - Linux foreign-image consumers construct the unified host device through
   `vulkan_dmabuf::create_dmabuf_host_context`, which enables the complete
   external-memory, DRM-modifier, and foreign-queue extension set.
-- Trusted RADV, NVIDIA, Apple Silicon, and Intel Mac runners execute the
-  reference Servo demo's deterministic imported-pixel, input, and resize gate.
-  RADV also executes RGBA and BGRA DMA-BUF pixel round trips.
+- The CI workflows were removed on 2026-10-28 (`0743b3b`), so there is no
+  hosted CI at present; checks are run by hand. Until then, trusted RADV,
+  NVIDIA, Apple Silicon, and Intel Mac runners executed the reference Servo
+  demo's deterministic imported-pixel, input, and resize gate.
+  RADV also executed RGBA and BGRA DMA-BUF pixel round trips.
   Shared-allocation multi-plane layouts are supported; disjoint plane
   allocations return a specific typed error and close every transferred fd.
-- `main` is the one supported repository line. A weekly workflow keeps its
-  Servo pin on the newest tagged release line. The unused `latest-release`
+- `main` is the one supported repository line. The weekly workflow that
+  kept its Servo pin on the newest tagged release line went with the CI
+  workflows; Servo now comes from crates.io. The unused `latest-release`
   and `experimental` lines were retired on 2026-08-30; their last reachable
   tips contained no history absent from `main`.
 
@@ -69,8 +74,8 @@ the Windows SDK, CMake, NASM, and Git long-path support before compilation. It
 checks each root demo in its own Cargo graph; pass `-IncludeIced` for the
 adjacent Iced workspace, or `-CargoCommand build` to compile and link the
 binaries. The minimum parallelism is `-Jobs 2` because WebRender's shader
-optimizer needs a jobserver worker. CI also sets `AWS_LC_SYS_NO_ASM=1`, but
-keeps NASM installed for the remaining aws-lc paths. ANGLE DLLs are built and
+optimizer needs a jobserver worker. The former CI also set
+`AWS_LC_SYS_NO_ASM=1`, but kept NASM installed for the remaining aws-lc paths. ANGLE DLLs are built and
 copied next to the binary automatically. Rust is pinned at 1.97.1.
 Bounded smoke run: `pwsh -File scripts/smoke-demo.ps1`. It requires a GPU
 imported pixel receipt, a page-observed click, and a resized imported frame.
