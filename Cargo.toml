@@ -9,13 +9,15 @@ members = [
     "demo-servo-slint",
     "demo-servo-winit",
     "demo-servo-xilem",
+    "demo-servo-xilem/masonry_winit",
     "grafting",
     "grafting-frame",
     "servo-wgpu-interop-adapter",
 ]
-# iced 0.15-dev pins web-sys exactly to 0.3.85 while wgpu 30.0.1 requires
-# 0.3.104. Keep that wgpu-28 demo as a small adjacent workspace with its own
-# lockfile so the core triplet can take wgpu 30 patch releases independently.
+# The iced demo tracks iced's git main, whose exact pins (web-sys among them)
+# need not agree with this lockfile. Keep it a small adjacent workspace with
+# its own lockfile so the core triplet can take wgpu patch releases
+# independently.
 exclude = ["demo-servo-iced"]
 resolver = "3"
 
@@ -43,6 +45,11 @@ resolver = "3"
 # `links = "freetype"` in the workspace graph. The small shim keeps font-kit's
 # old package-version edge while re-exporting the 0.23 API backed by Servo's
 # single native FreeType link.
+# demo-servo-xilem's vendored masonry_winit (see its Cargo.toml), which draws
+# an imported texture into Masonry's external layers.
+[patch."https://github.com/linebender/xilem"]
+masonry_winit = { path = "demo-servo-xilem/masonry_winit" }
+
 [patch.crates-io]
 freetype-sys = { path = "patches/freetype-sys-compat" }
 glslopt = { git = "https://github.com/jamienicol/glslopt-rs", rev = "68019f02a1437d785408ebc8ce7fd20341fffb8a" }

@@ -4,21 +4,27 @@ name = "demo-servo-xilem"
 version = "0.1.0"
 edition = "2024"
 license = "MPL-2.0"
-description = "Demo embedding Servo in a Xilem UI via CPU texture readback"
+description = "Demo embedding Servo in a Xilem UI, zero-copy through a Masonry external layer"
 
 [dependencies]
 demo-support = { path = "../demo-support" }
 euclid = "0.22.11"
 image = "0.25"
+tracing = "0.1"
+# Masonry's wgpu major, so the imported texture is the type it copies from.
+wgpu = "28.0.0"
 servo = "0.8.0"
-masonry = "0.4.0"
-masonry_winit = "0.4.0"
+# Xilem from git main: the 0.4.0 release (2025-10) is on vello 0.6 / wgpu 26,
+# below grafting's range; main is on wgpu 28 and renders through the public,
+# host-neutral masonry_imaging texture renderer.
+masonry = { git = "https://github.com/linebender/xilem", rev = "dc496876" }
+masonry_winit = { git = "https://github.com/linebender/xilem", rev = "dc496876" }
 rustls = "0.23.37"
-grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
+grafting-servo = { path = "../servo-wgpu-interop-adapter", default-features = false, features = ["servo", "wgpu-28"] }
 tokio = { version = "1", features = ["sync"] }
 url = "2.5.7"
 winit = "0.30.13"
-xilem = "0.4.0"
+xilem = { git = "https://github.com/linebender/xilem", rev = "dc496876" }
 
 [lints]
 workspace = true

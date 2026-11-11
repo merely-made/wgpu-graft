@@ -39,7 +39,10 @@ use grafting::{Dx12SharedTexture, HostWgpuContext, SyncMechanism, import_dx12_sh
 use iced::wgpu;
 use iced::widget::shader::{Pipeline, Primitive};
 use iced::widget::{column, shader, text, text_input};
-use iced::{Element, Event, Length, Rectangle, Size, Subscription, Task, event, keyboard, mouse, window};
+use iced::{
+    Element, Event, Length, Rectangle, Size, Subscription, Task, Widget as _, event, keyboard,
+    mouse, window,
+};
 use rustls::crypto::aws_lc_rs;
 use servo::{
     DevicePoint, EventLoopWaker, InputEvent, KeyState, MouseButton as ServoMouseButton,
@@ -56,8 +59,8 @@ use winit::dpi::PhysicalSize;
 /// coordinates into Servo viewport coordinates and to size the Servo surface.
 const NAV_BAR_HEIGHT: f32 = 50.0;
 
-const DEFAULT_WIDTH: f32 = 1280.0;
-const DEFAULT_HEIGHT: f32 = 800.0;
+const DEFAULT_WIDTH: f32 = demo_support::WINDOW_WIDTH as f32;
+const DEFAULT_HEIGHT: f32 = demo_support::WINDOW_HEIGHT as f32;
 
 // ── App state ────────────────────────────────────────────────────────────────
 
@@ -107,9 +110,8 @@ fn boot() -> (AppState, Task<Message>) {
     let viewport_h = DEFAULT_HEIGHT - NAV_BAR_HEIGHT;
     let size = PhysicalSize::new(viewport_w as u32, viewport_h as u32);
 
-    let render_ctx = Rc::new(
-        create_luid_anchored_context(size).expect("failed to create rendering context"),
-    );
+    let render_ctx =
+        Rc::new(create_luid_anchored_context(size).expect("failed to create rendering context"));
 
     let servo = ServoBuilder::default()
         .event_loop_waker(Box::new(NoopWaker))
@@ -146,14 +148,16 @@ fn boot() -> (AppState, Task<Message>) {
 fn create_luid_anchored_context(
     size: PhysicalSize<u32>,
 ) -> Result<ServoWgpuRenderingContext, grafting::InteropError> {
-    let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
+    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
         backends: wgpu::Backends::DX12,
-        ..Default::default()
+        flags: wgpu::InstanceFlags::default(),
+        memory_budget_thresholds: wgpu::MemoryBudgetThresholds::default(),
+        backend_options: wgpu::BackendOptions::default(),
+        display: None,
     });
     let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
         power_preference: wgpu::PowerPreference::HighPerformance,
-        force_fallback_adapter: false,
-        compatible_surface: None,
+        ..Default::default()
     }))
     .expect("no DX12 adapter for LUID anchoring");
     let (device, _queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
@@ -192,10 +196,10 @@ fn update(state: &mut AppState, message: Message) -> Task<Message> {
                         height: metadata.size.height,
                         generation: metadata.generation,
                     });
-                }
+                },
                 Err(e) => eprintln!("[iced] shared-texture export failed: {e:?}"),
             }
-        }
+        },
 
         Message::UrlInputChanged(url) => state.url_input = url,
 
@@ -205,7 +209,7 @@ fn update(state: &mut AppState, message: Message) -> Task<Message> {
                 Ok(url) => state.webview.load(url),
                 Err(_) => eprintln!("invalid URL: {raw}"),
             }
-        }
+        },
 
         Message::IcedEvent(event) => handle_event(state, event),
     }
@@ -219,8 +223,10 @@ fn handle_event(state: &mut AppState, event: Event) {
             let vp_w = new_size.width;
             let vp_h = (new_size.height - NAV_BAR_HEIGHT).max(1.0);
             state.viewport_size = Size::new(vp_w, vp_h);
-            state.webview.resize(PhysicalSize::new(vp_w as u32, vp_h as u32));
-        }
+            state
+                .webview
+                .resize(PhysicalSize::new(vp_w as u32, vp_h as u32));
+        },
 
         Event::Mouse(mouse::Event::CursorMoved { position }) => {
             state.cursor_position = position;
@@ -241,7 +247,7 @@ fn handle_event(state: &mut AppState, event: Event) {
                         MouseLeftViewportEvent::default(),
                     ));
             }
-        }
+        },
 
         Event::Mouse(mouse::Event::CursorLeft) => {
             if state.cursor_in_viewport {
@@ -252,7 +258,7 @@ fn handle_event(state: &mut AppState, event: Event) {
                     ));
                 state.cursor_in_viewport = false;
             }
-        }
+        },
 
         Event::Mouse(mouse::Event::ButtonPressed(btn)) if state.cursor_in_viewport => {
             if let Some(servo_btn) = map_mouse_button(btn) {
@@ -265,7 +271,7 @@ fn handle_event(state: &mut AppState, event: Event) {
                         servo::WebViewPoint::Device(pt),
                     )));
             }
-        }
+        },
 
         Event::Mouse(mouse::Event::ButtonReleased(btn)) if state.cursor_in_viewport => {
             if let Some(servo_btn) = map_mouse_button(btn) {
@@ -278,13 +284,13 @@ fn handle_event(state: &mut AppState, event: Event) {
                         servo::WebViewPoint::Device(pt),
                     )));
             }
-        }
+        },
 
         Event::Mouse(mouse::Event::WheelScrolled { delta }) if state.cursor_in_viewport => {
             let (dx, dy, mode) = match delta {
                 mouse::ScrollDelta::Lines { x, y } => {
                     ((x as f64) * 38.0, (y as f64) * 38.0, WheelMode::DeltaLine)
-                }
+                },
                 mouse::ScrollDelta::Pixels { x, y } => (x as f64, y as f64, WheelMode::DeltaPixel),
             };
             let pt = servo_point(state.cursor_position);
@@ -299,7 +305,7 @@ fn handle_event(state: &mut AppState, event: Event) {
                     },
                     servo::WebViewPoint::Device(pt),
                 )));
-        }
+        },
 
         Event::Keyboard(keyboard::Event::KeyPressed {
             key,
@@ -318,7 +324,7 @@ fn handle_event(state: &mut AppState, event: Event) {
                 repeat,
             );
             state.webview.notify_input_event(InputEvent::Keyboard(kbd));
-        }
+        },
 
         Event::Keyboard(keyboard::Event::KeyReleased {
             key,
@@ -336,9 +342,9 @@ fn handle_event(state: &mut AppState, event: Event) {
                 false,
             );
             state.webview.notify_input_event(InputEvent::Keyboard(kbd));
-        }
+        },
 
-        _ => {}
+        _ => {},
     }
 }
 
@@ -353,15 +359,15 @@ fn view(state: &AppState) -> Element<'_, Message> {
         shader(ServoProgram { desc: desc.clone() })
             .width(Length::Fill)
             .height(Length::Fill)
-            .into()
+            .boxed()
     } else {
         text("Servo loading…")
             .width(Length::Fill)
             .height(Length::Fill)
-            .into()
+            .boxed()
     };
 
-    column![url_bar, text(state.status.summary()), content].into()
+    column![url_bar, text(state.status.summary()), content].boxed()
 }
 
 // ── Subscription ─────────────────────────────────────────────────────────────
@@ -455,32 +461,31 @@ impl Pipeline for ServoPipeline {
             source: wgpu::ShaderSource::Wgsl(SHADER_WGSL.into()),
         });
 
-        let bind_group_layout =
-            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-                label: Some("servo-iced-bgl"),
-                entries: &[
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 0,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        ty: wgpu::BindingType::Texture {
-                            sample_type: wgpu::TextureSampleType::Float { filterable: true },
-                            view_dimension: wgpu::TextureViewDimension::D2,
-                            multisampled: false,
-                        },
-                        count: None,
+        let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            label: Some("servo-iced-bgl"),
+            entries: &[
+                wgpu::BindGroupLayoutEntry {
+                    binding: 0,
+                    visibility: wgpu::ShaderStages::FRAGMENT,
+                    ty: wgpu::BindingType::Texture {
+                        sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                        view_dimension: wgpu::TextureViewDimension::D2,
+                        multisampled: false,
                     },
-                    wgpu::BindGroupLayoutEntry {
-                        binding: 1,
-                        visibility: wgpu::ShaderStages::FRAGMENT,
-                        ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
-                        count: None,
-                    },
-                ],
-            });
+                    count: None,
+                },
+                wgpu::BindGroupLayoutEntry {
+                    binding: 1,
+                    visibility: wgpu::ShaderStages::FRAGMENT,
+                    ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+                    count: None,
+                },
+            ],
+        });
 
         let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("servo-iced-pl"),
-            bind_group_layouts: &[&bind_group_layout],
+            bind_group_layouts: &[Some(&bind_group_layout)],
             immediate_size: 0,
         });
 
@@ -581,7 +586,7 @@ impl ServoPipeline {
                     _texture: texture,
                     bind_group,
                 });
-            }
+            },
             Err(e) => eprintln!("[iced] import_dx12_shared_texture failed: {e:?}"),
         }
     }

@@ -21,9 +21,9 @@ GUI frameworks. Derived from the
   Current migration checks and runtime acceptance are recorded in the
   [triplet release plan](design_docs/2026-11-01_triplet_release_plan.md).
 - Nine demos: eight Servo embeddings (winit, egui, iced, Blitz, Slint,
-  Bevy, Xilem, GPUI) plus a Servo-free GL demo. Six Servo GUI paths use GPU
-  import, as does GPUI (on the bite-gpui fork); Xilem demonstrates CPU
-  readback. Bevy and
+  Bevy, Xilem, GPUI) plus a Servo-free GL demo. All eight Servo GUI paths
+  use GPU import: GPUI on the bite-gpui fork, and Xilem on its git main with
+  a vendored `masonry_winit` that realizes Masonry's external layers. Bevy and
   Iced are DX12-specific; the other six Servo demos are checked on Linux,
   macOS, and Windows.
 - Consumed by siblings: wgpu-weld and wgpu-scry delegate their native

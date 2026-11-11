@@ -20,11 +20,11 @@ demo-support = { path = "../demo-support" }
 # wgpu crate egui composites with, which must also unify with the adapter's
 # wgpu for the imported texture to be the same type.
 #
-# 0.35 keeps this demo on grafting's default wgpu-29 row. The adjacent iced
-# demo has its own lockfile because its exact web-sys pin cannot coexist with
-# wgpu 30.0.1; it no longer constrains this workspace. A future eframe 0.36
-# move is therefore a deliberate host-major change rather than a resolver fix.
-eframe = { version = "0.35", default-features = false, features = [
+# eframe 0.36 composites with wgpu 30, so the adapter takes grafting's
+# wgpu-30 row below. Not 0.37 yet: its text rasteriser panics when vello_cpu's
+# `multithreading` feature is on, which Servo's canvas enables
+# (emilk/egui#8800).
+eframe = { version = "0.36", default-features = false, features = [
     "wgpu",
     "default_fonts",
     "wayland",
@@ -34,7 +34,7 @@ euclid = "0.22.11"
 image = "0.25"
 servo = "0.8.0"
 rustls = "0.23.37"
-grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
+grafting-servo = { path = "../servo-wgpu-interop-adapter", default-features = false, features = ["servo", "wgpu-30"] }
 url = "2.5.7"
 winit = "0.30.13"
 

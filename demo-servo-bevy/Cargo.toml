@@ -9,9 +9,9 @@ description = "Demo embedding Servo in a Bevy app, zero-copy via D3D12 shared-ha
 [dependencies]
 demo-support = { path = "../demo-support" }
 euclid = "0.22.11"
-# Bevy 0.19 is on wgpu 29 (the 0.18 line was wgpu 27), so the imported texture
-# stays Bevy's own wgpu::Texture type with no new grafting wgpu version.
-bevy = { version = "0.19.0", default-features = false, features = [
+# Bevy 0.20 is on wgpu 30, so the adapter takes grafting's wgpu-30 row and the
+# imported texture stays Bevy's own wgpu::Texture type.
+bevy = { version = "0.20.1", default-features = false, features = [
     "bevy_winit",
     "bevy_core_pipeline",
     "bevy_sprite",
@@ -25,11 +25,11 @@ bevy = { version = "0.19.0", default-features = false, features = [
 servo = "0.8.0"
 rustls = "0.23.37"
 pollster = "0.4.0"
-grafting = { path = "../grafting" }
-grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
+grafting = { path = "../grafting", default-features = false, features = ["surfman", "wgpu-30"] }
+grafting-servo = { path = "../servo-wgpu-interop-adapter", default-features = false, features = ["servo", "wgpu-30"] }
 url = "2.5.7"
 winit = "0.30.13"
-wgpu = { version = "29.0.1", features = ["metal"] }
+wgpu = { version = "30.0.1", features = ["metal"] }
 
 [lints]
 workspace = true

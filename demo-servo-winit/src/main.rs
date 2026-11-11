@@ -50,8 +50,8 @@ use grafting::{HostWgpuContext, InteropBackend};
 use rustls::crypto::aws_lc_rs;
 use servo::{
     DevicePoint, EventLoopWaker, InputEvent, MouseButton as ServoMouseButton, MouseButtonAction,
-    MouseButtonEvent, MouseLeftViewportEvent, MouseMoveEvent, RenderingContext, Servo, ServoBuilder,
-    WebView, WebViewBuilder, WebViewDelegate, WheelDelta, WheelEvent, WheelMode,
+    MouseButtonEvent, MouseLeftViewportEvent, MouseMoveEvent, RenderingContext, Servo,
+    ServoBuilder, WebView, WebViewBuilder, WebViewDelegate, WheelDelta, WheelEvent, WheelMode,
 };
 use servo_wgpu_interop_adapter::ServoWgpuInteropAdapter;
 use url::Url;
@@ -175,10 +175,11 @@ impl ApplicationHandler<WakerEvent> for App {
             return;
         };
 
-        let initial_size = if *smoke {
-            SMOKE_INITIAL_SIZE
+        let initial_size: winit::dpi::Size = if *smoke {
+            SMOKE_INITIAL_SIZE.into()
         } else {
-            PhysicalSize::new(1280, 800)
+            winit::dpi::LogicalSize::new(demo_support::WINDOW_WIDTH, demo_support::WINDOW_HEIGHT)
+                .into()
         };
         let window = Arc::new(
             event_loop
@@ -265,7 +266,7 @@ impl ApplicationHandler<WakerEvent> for App {
                     }
                     event_loop.exit();
                 }
-            }
+            },
 
             WindowEvent::Resized(new_size) => {
                 state.renderer.resize(new_size);
@@ -288,7 +289,7 @@ impl ApplicationHandler<WakerEvent> for App {
                     }
                 }
                 state.window.request_redraw();
-            }
+            },
 
             WindowEvent::ScaleFactorChanged { scale_factor, .. } => {
                 state.scale_factor = scale_factor;
@@ -296,11 +297,11 @@ impl ApplicationHandler<WakerEvent> for App {
                     .webview
                     .set_hidpi_scale_factor(Scale::new(scale_factor as f32));
                 state.window.request_redraw();
-            }
+            },
 
             WindowEvent::ModifiersChanged(mods) => {
                 state.modifiers = mods.state();
-            }
+            },
 
             WindowEvent::CursorMoved { position, .. } => {
                 state.cursor_position = position;
@@ -310,7 +311,7 @@ impl ApplicationHandler<WakerEvent> for App {
                     .notify_input_event(InputEvent::MouseMove(MouseMoveEvent::new(
                         servo::WebViewPoint::Device(point),
                     )));
-            }
+            },
 
             WindowEvent::CursorLeft { .. } => {
                 state
@@ -318,7 +319,7 @@ impl ApplicationHandler<WakerEvent> for App {
                     .notify_input_event(InputEvent::MouseLeftViewport(
                         MouseLeftViewportEvent::default(),
                     ));
-            }
+            },
 
             WindowEvent::MouseInput {
                 state: btn_state,
@@ -344,13 +345,13 @@ impl ApplicationHandler<WakerEvent> for App {
                         servo_button,
                         servo::WebViewPoint::Device(point),
                     )));
-            }
+            },
 
             WindowEvent::MouseWheel { delta, .. } => {
                 let (dx, dy, mode) = match delta {
                     MouseScrollDelta::LineDelta(x, y) => {
                         ((x as f64) * 38.0, (y as f64) * 38.0, WheelMode::DeltaLine)
-                    }
+                    },
                     MouseScrollDelta::PixelDelta(pos) => (pos.x, pos.y, WheelMode::DeltaPixel),
                 };
                 let pos = state.cursor_position;
@@ -366,14 +367,14 @@ impl ApplicationHandler<WakerEvent> for App {
                         },
                         servo::WebViewPoint::Device(point),
                     )));
-            }
+            },
 
             WindowEvent::KeyboardInput { event, .. } => {
                 let kbd = keyutils::keyboard_event_from_winit(&event, state.modifiers);
                 state.webview.notify_input_event(InputEvent::Keyboard(kbd));
-            }
+            },
 
-            _ => {}
+            _ => {},
         }
     }
 
@@ -411,7 +412,9 @@ impl AppState {
             // Diagnostic only: exercise the same Surfman swap without the
             // import hook. Completion does not qualify an imported frame.
             self.interop.rendering_context_handle().present();
-            println!("GRAFT RAW PRESENT CONTROL: swap completed without importer; no pixel/import qualification");
+            println!(
+                "GRAFT RAW PRESENT CONTROL: swap completed without importer; no pixel/import qualification"
+            );
             exit_smoke_success();
         }
 
@@ -451,7 +454,7 @@ impl AppState {
                         }
                     }
                     return Ok(());
-                }
+                },
                 Err(e) => {
                     if self.smoke.is_some() {
                         return Err(format!("GPU import failed during smoke gate: {e}"));
@@ -462,7 +465,7 @@ impl AppState {
                     // The failed import still presented and swapped buffers.
                     // Repaint the current buffer before reading the CPU frame.
                     self.webview.paint();
-                }
+                },
             }
         }
 
@@ -850,7 +853,9 @@ impl Renderer {
         #[cfg(feature = "wgpu-29")]
         let data = slice.get_mapped_range();
         #[cfg(feature = "wgpu-30")]
-        let data = slice.get_mapped_range().map_err(|error| error.to_string())?;
+        let data = slice
+            .get_mapped_range()
+            .map_err(|error| error.to_string())?;
         let pixel = [data[0], data[1], data[2], data[3]];
         drop(data);
         buffer.unmap();

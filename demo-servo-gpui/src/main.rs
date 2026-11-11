@@ -69,8 +69,8 @@ use winit::dpi::PhysicalSize;
 /// Height of the URL navigation bar in logical pixels.
 const NAV_BAR_HEIGHT: f32 = 48.0;
 
-const DEFAULT_WIDTH: f32 = 1280.0;
-const DEFAULT_HEIGHT: f32 = 800.0;
+const DEFAULT_WIDTH: f32 = demo_support::WINDOW_WIDTH as f32;
+const DEFAULT_HEIGHT: f32 = demo_support::WINDOW_HEIGHT as f32;
 
 // ── App state ────────────────────────────────────────────────────────────────
 

@@ -8,6 +8,13 @@ use std::path::{Path, PathBuf};
 
 use url::Url;
 
+/// Every demo's initial window width, in logical pixels. One size keeps the
+/// demos comparable; 1120x700 (16:10) fits a 1280x800-logical screen, such as
+/// 1920x1200 at 150%, with room for a taskbar.
+pub const WINDOW_WIDTH: f64 = 1120.0;
+/// Every demo's initial window height, in logical pixels. See [`WINDOW_WIDTH`].
+pub const WINDOW_HEIGHT: f64 = 700.0;
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum RenderPath {
     GpuImport,
@@ -101,12 +108,9 @@ pub fn resolve_url_argument(argument: &str) -> Result<Url, String> {
             .join(candidate)
     };
 
-    Url::from_file_path(&absolute)
-        .map_err(|_| format!("not a valid URL or file path: {argument}"))
+    Url::from_file_path(&absolute).map_err(|_| format!("not a valid URL or file path: {argument}"))
 }
 
 pub fn fixture_path(manifest_dir: &str, file_name: &str) -> PathBuf {
-    PathBuf::from(manifest_dir)
-        .join("fixtures")
-        .join(file_name)
+    PathBuf::from(manifest_dir).join("fixtures").join(file_name)
 }

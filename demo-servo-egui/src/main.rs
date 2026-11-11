@@ -44,8 +44,8 @@ use servo_wgpu_interop_adapter::ServoWgpuInteropAdapter;
 use url::Url;
 use winit::dpi::PhysicalSize;
 
-const DEFAULT_WIDTH: u32 = 1280;
-const DEFAULT_HEIGHT: u32 = 800;
+const DEFAULT_WIDTH: f64 = demo_support::WINDOW_WIDTH;
+const DEFAULT_HEIGHT: f64 = demo_support::WINDOW_HEIGHT;
 
 // ── App ────────────────────────────────────────────────────────────────────
 
@@ -191,46 +191,46 @@ impl ServoEguiApp {
                     self.last_pointer = pos;
                     if let Some(pt) = self.servo_point(pos, ppp) {
                         self.cursor_in_viewport = true;
-                        self.webview
-                            .notify_input_event(InputEvent::MouseMove(MouseMoveEvent::new(
-                                WebViewPoint::Device(pt),
-                            )));
+                        self.webview.notify_input_event(InputEvent::MouseMove(
+                            MouseMoveEvent::new(WebViewPoint::Device(pt)),
+                        ));
                     } else if self.cursor_in_viewport {
                         self.cursor_in_viewport = false;
-                        self.webview.notify_input_event(InputEvent::MouseLeftViewport(
-                            MouseLeftViewportEvent::default(),
-                        ));
+                        self.webview
+                            .notify_input_event(InputEvent::MouseLeftViewport(
+                                MouseLeftViewportEvent::default(),
+                            ));
                     }
-                }
+                },
                 egui::Event::PointerButton {
                     pos,
                     button,
                     pressed,
                     ..
                 } => {
-                    if let (Some(btn), Some(pt)) = (map_button(button), self.servo_point(pos, ppp)) {
+                    if let (Some(btn), Some(pt)) = (map_button(button), self.servo_point(pos, ppp))
+                    {
                         let action = if pressed {
                             MouseButtonAction::Down
                         } else {
                             MouseButtonAction::Up
                         };
-                        self.webview
-                            .notify_input_event(InputEvent::MouseButton(MouseButtonEvent::new(
-                                action,
-                                btn,
-                                WebViewPoint::Device(pt),
-                            )));
+                        self.webview.notify_input_event(InputEvent::MouseButton(
+                            MouseButtonEvent::new(action, btn, WebViewPoint::Device(pt)),
+                        ));
                     }
-                }
+                },
                 egui::Event::MouseWheel { unit, delta, .. } => {
                     if let Some(pt) = self.servo_point(self.last_pointer, ppp) {
                         let (dx, dy, mode) = match unit {
-                            egui::MouseWheelUnit::Line => {
-                                (delta.x as f64 * 38.0, delta.y as f64 * 38.0, WheelMode::DeltaLine)
-                            }
+                            egui::MouseWheelUnit::Line => (
+                                delta.x as f64 * 38.0,
+                                delta.y as f64 * 38.0,
+                                WheelMode::DeltaLine,
+                            ),
                             egui::MouseWheelUnit::Point => {
                                 (delta.x as f64, delta.y as f64, WheelMode::DeltaPixel)
-                            }
+                            },
                             egui::MouseWheelUnit::Page => (
                                 delta.x as f64 * 380.0,
                                 delta.y as f64 * 380.0,
@@ -248,7 +248,7 @@ impl ServoEguiApp {
                                 WebViewPoint::Device(pt),
                             )));
                     }
-                }
+                },
                 egui::Event::Key {
                     key,
                     pressed,
@@ -257,19 +257,20 @@ impl ServoEguiApp {
                     ..
                 } => {
                     if !self.url_focused {
-                        if let Some(kbd) = keyutils::named_key_event(key, pressed, key_mods, repeat) {
+                        if let Some(kbd) = keyutils::named_key_event(key, pressed, key_mods, repeat)
+                        {
                             self.webview.notify_input_event(InputEvent::Keyboard(kbd));
                         }
                     }
-                }
+                },
                 egui::Event::Text(text) => {
                     if !self.url_focused {
                         for kbd in keyutils::text_key_events(&text, modifiers) {
                             self.webview.notify_input_event(InputEvent::Keyboard(kbd));
                         }
                     }
-                }
-                _ => {}
+                },
+                _ => {},
             }
         }
     }
@@ -309,7 +310,7 @@ impl ServoEguiApp {
             Err(e) => {
                 self.status.set_fallback_error(&e);
                 return;
-            }
+            },
         };
 
         let device = &self.render_state.device;
@@ -327,20 +328,21 @@ impl ServoEguiApp {
                         id,
                     );
                     None
-                }
-                None => Some(renderer.register_native_texture(
-                    device,
-                    &view,
-                    wgpu::FilterMode::Linear,
-                )),
+                },
+                None => {
+                    Some(renderer.register_native_texture(device, &view, wgpu::FilterMode::Linear))
+                },
             }
         };
         if let Some(id) = new_id {
             self.texture_id = Some(id);
         }
 
-        self.status
-            .set_frame(RenderPath::GpuImport, imported.size.width, imported.size.height);
+        self.status.set_frame(
+            RenderPath::GpuImport,
+            imported.size.width,
+            imported.size.height,
+        );
         self.current_texture = Some(imported.texture);
     }
 

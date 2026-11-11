@@ -6,20 +6,20 @@ edition = "2024"
 license = "MPL-2.0"
 description = "Demo embedding Servo in an iced UI, zero-copy via D3D12 shared-handle import (CPU readback feature-gated)"
 
-# This demo is intentionally its own workspace. iced 0.15-dev pins web-sys
-# exactly to 0.3.85, which cannot share the root lockfile with wgpu 30.0.1's
-# web-sys 0.3.104. The demo itself stays on the wgpu-28 interop row.
+# This demo is intentionally its own workspace with its own lockfile: iced's
+# git main carries exact pins (web-sys among them) that need not agree with the
+# root lockfile.
 [workspace]
 resolver = "3"
 
 [dependencies]
 demo-support = { path = "../demo-support" }
 euclid = "0.22.11"
-# iced master (0.15.0-dev) is on wgpu 28; the crates.io 0.14 release is on wgpu
-# 27. We need wgpu 28 so the imported texture is iced's own `wgpu::Texture` type
-# (grafting is built with `wgpu-28` and Cargo unifies them). Pinned to a rev
-# (not a moving branch); switch to the crates.io 0.15 release once it ships.
-iced = { git = "https://github.com/iced-rs/iced", rev = "4255f613", default-features = false, features = [
+# iced main (0.15.0-dev) is on wgpu 30; the crates.io 0.14 release is on wgpu
+# 27. The imported texture has to be iced's own `wgpu::Texture` type, so
+# grafting builds with `wgpu-30` and Cargo unifies them. Pinned to a rev (not a
+# moving branch); switch to the crates.io 0.15 release once it ships.
+iced = { git = "https://github.com/iced-rs/iced", rev = "8ff48c42", default-features = false, features = [
     "wgpu",
     "tiny-skia",
     "tokio",
@@ -28,13 +28,13 @@ iced = { git = "https://github.com/iced-rs/iced", rev = "4255f613", default-feat
 servo = "0.8.0"
 rustls = "0.23.37"
 pollster = "0.4.0"
-# wgpu-28 to match iced master; grafting + adapter must build with the same.
+# wgpu-30 to match iced main; grafting + adapter must build with the same.
 grafting = { path = "../grafting", default-features = false, features = [
-    "wgpu-28",
+    "wgpu-30",
     "surfman",
 ] }
 grafting-servo = { path = "../servo-wgpu-interop-adapter", default-features = false, features = [
-    "wgpu-28",
+    "wgpu-30",
     "servo",
 ] }
 url = "2.5.7"

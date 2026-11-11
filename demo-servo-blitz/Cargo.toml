@@ -9,17 +9,17 @@ description = "Demo embedding Servo via the Blitz renderer (anyrender_vello), ze
 [dependencies]
 demo-support = { path = "../demo-support" }
 euclid = "0.22.11"
-anyrender = "0.10"
-anyrender_vello = "0.10"
-vello = "0.9"
+anyrender = "0.14"
+anyrender_vello = "0.15"
+vello = "0.11"
 servo = "0.8.0"
 rustls = "0.23.37"
 pollster = "0.4.0"
-grafting = { path = "../grafting" }
-grafting-servo = { path = "../servo-wgpu-interop-adapter", features = ["servo"] }
+grafting = { path = "../grafting", default-features = false, features = ["surfman", "wgpu-30"] }
+grafting-servo = { path = "../servo-wgpu-interop-adapter", default-features = false, features = ["servo", "wgpu-30"] }
 url = "2.5.7"
 winit = "0.30.13"
-wgpu = { version = "29.0.1", features = ["metal"] }
+wgpu = { version = "30.0.1", features = ["metal"] }
 
 [lints]
 workspace = true

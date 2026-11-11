@@ -4,6 +4,27 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+- Move `demo-servo-xilem` to Xilem git main (rev `dc496876`, wgpu 28) with GPU
+  import: Servo's frame is drawn into a Masonry external layer by a vendored
+  `masonry_winit` (Apache-2.0, `[patch]`-substituted, changes marked
+  `wgpu-graft:`). The 0.4.0 release is on wgpu 26, below grafting's range.
+- Bump demo hosts: Bevy 0.20.1, egui 0.36, Blitz's anyrender 0.14 /
+  anyrender_vello 0.15 / vello 0.11, iced main `8ff48c42`, all on wgpu 30.
+  egui stays below 0.37 (emilk/egui#8800: its text rasteriser panics with
+  `vello_cpu`'s `multithreading`, which Servo's canvas enables) and Slint stays
+  on 1.17 (1.18 needs ICU 2.2; Servo 0.8's SpiderMonkey pins `icu_capi
+  =2.1.2`).
+- Open every demo at one logical size, `demo_support::WINDOW_WIDTH` x
+  `WINDOW_HEIGHT` (1120x700). Blitz and winit asked for physical pixels before
+  and opened half-size on HiDPI screens; Xilem set no size.
+- `demo-servo-blitz` forces DX12 only on Windows; elsewhere wgpu 30 found no
+  backend to create a surface with.
+- `demo-servo-bevy` gives each frame size a new image asset instead of
+  resizing one: Bevy 0.20 recreates the resized GpuImage, but the sprite keeps
+  its cached bind group to the old texture, so the page never showed.
+- `demo-servo-xilem` forces DX12 on Windows, where the shared-texture import
+  needs it.
+
 - Move `demo-servo-gpui` from `gpui-pre` to crates.io `bite-gpui` 1.25.203,
   whose imported-texture path gives the demo zero-copy GPU import on macOS
   (Metal), Linux (wgpu) and Windows (Direct3D 11). The demo README records why

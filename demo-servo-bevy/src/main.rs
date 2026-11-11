@@ -27,9 +27,7 @@ use bevy::asset::RenderAssetUsages;
 use bevy::image::Image;
 use bevy::prelude::*;
 use bevy::render::render_asset::RenderAssets;
-use bevy::render::render_resource::{
-    Extent3d, TextureDimension, TextureFormat, TextureUsages,
-};
+use bevy::render::render_resource::{Extent3d, TextureDimension, TextureFormat, TextureUsages};
 use bevy::render::renderer::{RenderDevice, RenderQueue};
 use bevy::render::settings::{Backends, PowerPreference, RenderCreation, WgpuSettings};
 use bevy::render::texture::GpuImage;
@@ -37,15 +35,13 @@ use bevy::render::{Extract, ExtractSchedule, Render, RenderApp, RenderPlugin, Re
 use bevy::window::{PrimaryWindow, WindowResolution};
 use grafting::{Dx12SharedTexture, HostWgpuContext, SyncMechanism, import_dx12_shared_texture};
 use rustls::crypto::aws_lc_rs;
-use servo::{
-    EventLoopWaker, Servo, ServoBuilder, WebView, WebViewBuilder, WebViewDelegate,
-};
+use servo::{EventLoopWaker, Servo, ServoBuilder, WebView, WebViewBuilder, WebViewDelegate};
 use servo_wgpu_interop_adapter::ServoWgpuInteropAdapter;
 use url::Url;
 use winit::dpi::PhysicalSize;
 
-const DEFAULT_WIDTH: u32 = 1280;
-const DEFAULT_HEIGHT: u32 = 800;
+const DEFAULT_WIDTH: u32 = demo_support::WINDOW_WIDTH as u32;
+const DEFAULT_HEIGHT: u32 = demo_support::WINDOW_HEIGHT as u32;
 
 // ── Servo side (main world, !Send) ───────────────────────────────────────────
 
@@ -121,7 +117,10 @@ fn main() {
     app.insert_non_send(servo_state)
         .init_resource::<ServoFrame>()
         .add_systems(Startup, setup)
-        .add_systems(Update, (drive_servo, resize_servo_image, fit_sprite_to_window));
+        .add_systems(
+            Update,
+            (drive_servo, resize_servo_image, fit_sprite_to_window),
+        );
 
     // Render world: extract the handle, then inject the imported texture.
     let render_app = app.sub_app_mut(RenderApp);
@@ -151,8 +150,7 @@ fn build_servo(initial_url: &Url) -> ServoState {
     });
     let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
         power_preference: wgpu::PowerPreference::HighPerformance,
-        force_fallback_adapter: false,
-        compatible_surface: None,
+        ..Default::default()
     }))
     .expect("no DX12 adapter for LUID anchoring");
     let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
@@ -200,19 +198,7 @@ fn setup(
     // into it each frame (so the sprite's bind group aliases a stable Bevy
     // texture, not the short-lived shared-handle import). RENDER_WORLD only (no
     // CPU data); needs COPY_DST for the copy and TEXTURE_BINDING to be sampled.
-    let mut placeholder = Image::new_uninit(
-        Extent3d {
-            width: DEFAULT_WIDTH,
-            height: DEFAULT_HEIGHT,
-            depth_or_array_layers: 1,
-        },
-        TextureDimension::D2,
-        TextureFormat::Rgba8Unorm,
-        RenderAssetUsages::RENDER_WORLD,
-    );
-    placeholder.texture_descriptor.usage =
-        TextureUsages::TEXTURE_BINDING | TextureUsages::COPY_DST;
-    let handle = images.add(placeholder);
+    let handle = images.add(servo_target_image(DEFAULT_WIDTH, DEFAULT_HEIGHT));
     commands.insert_resource(ServoImage(handle.clone()));
 
     let size = windows
@@ -263,33 +249,54 @@ fn drive_servo(
                 height: metadata.size.height,
                 generation: metadata.generation,
             });
-        }
+        },
         Err(e) => eprintln!("[bevy] shared-texture export failed: {e:?}"),
     }
 }
 
-/// Keep the Bevy-owned placeholder image sized to the Servo frame. Resizing the
-/// asset fires an `AssetEvent::Modified`, which makes Bevy re-create the GpuImage
-/// texture at the new size and refresh the sprite's image bind group (otherwise
-/// the cached bind group would keep pointing at the old-size texture).
+/// The Bevy-owned texture the render world copies each Servo frame into.
+/// RENDER_WORLD only (no CPU data); COPY_DST for the copy and TEXTURE_BINDING
+/// to be sampled.
+fn servo_target_image(width: u32, height: u32) -> Image {
+    let mut image = Image::new_uninit(
+        Extent3d {
+            width,
+            height,
+            depth_or_array_layers: 1,
+        },
+        TextureDimension::D2,
+        TextureFormat::Rgba8Unorm,
+        RenderAssetUsages::RENDER_WORLD,
+    );
+    image.texture_descriptor.usage = TextureUsages::TEXTURE_BINDING | TextureUsages::COPY_DST;
+    image
+}
+
+/// Keep the sprite's image sized to the Servo frame. A new size gets a new
+/// image asset rather than a resized one: Bevy 0.20 recreates the GpuImage
+/// texture for a resized asset but the sprite keeps its cached bind group to
+/// the old texture, so the page never shows.
 fn resize_servo_image(
     frame: Res<ServoFrame>,
-    servo_image: Res<ServoImage>,
+    mut servo_image: ResMut<ServoImage>,
     mut images: ResMut<Assets<Image>>,
+    mut sprites: Query<&mut Sprite>,
+    mut current: Local<Option<(u32, u32)>>,
 ) {
     let Some(desc) = frame.0.as_ref() else {
         return;
     };
-    if let Some(mut image) = images.get_mut(&servo_image.0) {
-        let size = image.texture_descriptor.size;
-        if size.width != desc.width || size.height != desc.height {
-            image.texture_descriptor.size = Extent3d {
-                width: desc.width,
-                height: desc.height,
-                depth_or_array_layers: 1,
-            };
-        }
+    let size = (desc.width, desc.height);
+    if *current == Some(size) {
+        return;
     }
+    *current = Some(size);
+    let handle = images.add(servo_target_image(desc.width, desc.height));
+    for mut sprite in &mut sprites {
+        sprite.image = handle.clone();
+    }
+    images.remove(&servo_image.0);
+    servo_image.0 = handle;
 }
 
 fn fit_sprite_to_window(
@@ -346,17 +353,19 @@ fn inject_servo_image(
         return;
     }
 
-    let host = HostWgpuContext::new(device.wgpu_device().clone(), (**render_queue.0).clone());
-    let imported = match import_dx12_shared_texture(
-        Dx12SharedTexture::new(metadata, desc.resource, 0),
-        &host,
-    ) {
-        Ok(t) => t,
-        Err(e) => {
-            eprintln!("[bevy] import_dx12_shared_texture failed: {e:?}");
-            return;
-        }
-    };
+    let host = HostWgpuContext::new(
+        device.wgpu_device().clone(),
+        wgpu::Queue::clone(&render_queue),
+    );
+    let imported =
+        match import_dx12_shared_texture(Dx12SharedTexture::new(metadata, desc.resource, 0), &host)
+        {
+            Ok(t) => t,
+            Err(e) => {
+                eprintln!("[bevy] import_dx12_shared_texture failed: {e:?}");
+                return;
+            },
+        };
 
     // Copy the imported (short-lived) alias into Bevy's stable owned texture, so
     // the sprite's cached bind group keeps sampling a texture that stays valid

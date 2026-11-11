@@ -1,0 +1,44 @@
+# Vendored copy of linebender/xilem's masonry_winit at rev dc496876
+# (Apache-2.0, see LICENSE), substituted for the git crate through the root
+# workspace's [patch]. The only change from upstream is in
+# src/event_loop_runner.rs, marked "wgpu-graft:": external visual layers are
+# collected instead of dropped, and a texture the application registers is
+# drawn into them before the frame is presented. To update, copy masonry_winit
+# from the new Xilem rev and reapply those marked hunks.
+
+[package]
+name = "masonry_winit"
+version = "0.4.0"
+description = "Data-oriented Rust UI design toolkit (wgpu-graft vendored copy)."
+edition = "2024"
+rust-version = "1.96"
+license = "Apache-2.0"
+publish = false
+
+[features]
+default = ["imaging_vello"]
+imaging_vello = ["masonry_imaging/imaging_vello"]
+# Upstream's imaging_vello_hybrid, imaging_skia and tracy features are left
+# out: as a workspace member their optional dependencies would join the root
+# lockfile, and Skia's native link clashes with Slint's. `tracy` stays as an
+# empty feature so upstream's cfg gates still name a known feature.
+tracy = []
+
+[dependencies]
+masonry_core = { git = "https://github.com/linebender/xilem", rev = "dc496876", default-features = false }
+masonry_imaging = { git = "https://github.com/linebender/xilem", rev = "dc496876", default-features = false }
+winit = "0.30.13"
+tracing = { version = "0.1.44", default-features = false, features = ["default"] }
+ui-events-winit = { version = "0.3.0", default-features = false }
+pollster = "0.4.0"
+accesskit_winit = { version = "0.32.2", default-features = false, features = [
+    "accesskit_unix",
+    "tokio",
+    "rwh_06",
+] }
+wgpu = "28.0.0"
+copypasta = "0.10.2"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+# We need Metal to interact with CoreAnimation during window resizing.
+wgpu = { version = "28.0.0", features = ["metal"] }

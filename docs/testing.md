@@ -98,7 +98,9 @@ Find them in `target/debug/build/mozangle-*/out/` and copy to your target's `deb
 ### demo-servo-xilem
 
 - URL bar + Go button above the viewport.
-- Frame delivery via `tokio::sync::watch` channel.
+- Servo's frame drawn into a Masonry external layer by the vendored
+  `masonry_winit` (see the demo README); CPU readback uploads into the same
+  slot as the fallback.
 
 ### demo-servo-iced
 
@@ -159,6 +161,6 @@ Each Servo demo includes fixtures in its `fixtures/` directory:
 | Slint | GPU import | Linux, macOS, Windows | manual |
 | Bevy | GPU import | Windows | manual |
 | Iced | GPU import, optional CPU fallback | Windows | manual |
-| Xilem | CPU readback | Linux, macOS, Windows | manual |
+| Xilem | GPU import, CPU fallback | Linux, macOS, Windows | manual |
 | GPUI | GPU import (macOS, Linux, Windows) | Linux, macOS, Windows | manual |
 | raw GL | GPU import | Linux, Windows | low-level tests plus manual window |

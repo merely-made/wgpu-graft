@@ -27,7 +27,11 @@ pub fn named_key_event(
 ) -> Option<KeyboardEvent> {
     let named = map_named(key)?;
     Some(KeyboardEvent::new_without_event(
-        if pressed { KeyState::Down } else { KeyState::Up },
+        if pressed {
+            KeyState::Down
+        } else {
+            KeyState::Up
+        },
         Key::Named(named),
         map_code(key),
         Location::Standard,

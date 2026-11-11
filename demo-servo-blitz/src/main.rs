@@ -53,7 +53,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Force anyrender (via wgpu_context's `Backends::from_env`) onto DX12 so the
     // ANGLE-D3D11 → DX12 shared-texture import path works and the surfman/ANGLE
     // GPU can be LUID-matched to anyrender's wgpu device.
+    // Windows only: elsewhere a DX12-only backend set leaves wgpu nothing to
+    // create a surface with.
     // SAFETY: set before any wgpu/thread init.
+    #[cfg(target_os = "windows")]
     unsafe {
         std::env::set_var("WGPU_BACKEND", "dx12");
     }
@@ -112,7 +115,10 @@ impl ApplicationHandler<WakerEvent> for App {
                 .create_window(
                     Window::default_attributes()
                         .with_title("demo-servo-blitz")
-                        .with_inner_size(PhysicalSize::new(1280, 800)),
+                        .with_inner_size(winit::dpi::LogicalSize::new(
+                            demo_support::WINDOW_WIDTH,
+                            demo_support::WINDOW_HEIGHT,
+                        )),
                 )
                 .expect("failed to create window"),
         );
@@ -151,8 +157,10 @@ impl ApplicationHandler<WakerEvent> for App {
             }))
             .build();
 
-        let status =
-            DemoStatus::new(RenderPath::GpuImport).with_backend("DX12 (vello)".to_string());
+        let status = DemoStatus::new(RenderPath::GpuImport).with_backend(format!(
+            "{:?} (vello)",
+            device_handle.adapter.get_info().backend
+        ));
 
         println!("[blitz] vello renderer active; Servo embedded zero-copy");
         window.request_redraw();
@@ -192,7 +200,7 @@ impl ApplicationHandler<WakerEvent> for App {
 
             WindowEvent::RedrawRequested => {
                 state.render_frame();
-            }
+            },
 
             WindowEvent::Resized(new_size) => {
                 state
@@ -203,7 +211,7 @@ impl ApplicationHandler<WakerEvent> for App {
                 // context, or Servo early-returns before updating the rect).
                 state.webview.resize(new_size);
                 state.window.request_redraw();
-            }
+            },
 
             WindowEvent::CursorMoved { position, .. } => {
                 state.cursor_position = position;
@@ -213,7 +221,7 @@ impl ApplicationHandler<WakerEvent> for App {
                     .notify_input_event(InputEvent::MouseMove(MouseMoveEvent::new(
                         servo::WebViewPoint::Device(point),
                     )));
-            }
+            },
 
             WindowEvent::CursorLeft { .. } => {
                 state
@@ -221,7 +229,7 @@ impl ApplicationHandler<WakerEvent> for App {
                     .notify_input_event(InputEvent::MouseLeftViewport(
                         MouseLeftViewportEvent::default(),
                     ));
-            }
+            },
 
             WindowEvent::MouseInput {
                 state: btn_state,
@@ -247,13 +255,13 @@ impl ApplicationHandler<WakerEvent> for App {
                         servo_button,
                         servo::WebViewPoint::Device(point),
                     )));
-            }
+            },
 
             WindowEvent::MouseWheel { delta, .. } => {
                 let (dx, dy, mode) = match delta {
                     MouseScrollDelta::LineDelta(x, y) => {
                         ((x as f64) * 38.0, (y as f64) * 38.0, WheelMode::DeltaLine)
-                    }
+                    },
                     MouseScrollDelta::PixelDelta(pos) => (pos.x, pos.y, WheelMode::DeltaPixel),
                 };
                 let pos = state.cursor_position;
@@ -269,18 +277,18 @@ impl ApplicationHandler<WakerEvent> for App {
                         },
                         servo::WebViewPoint::Device(point),
                     )));
-            }
+            },
 
             WindowEvent::ModifiersChanged(mods) => {
                 state.modifiers = mods.state();
-            }
+            },
 
             WindowEvent::KeyboardInput { event, .. } => {
                 let kbd = keyutils::keyboard_event_from_winit(&event, state.modifiers);
                 state.webview.notify_input_event(InputEvent::Keyboard(kbd));
-            }
+            },
 
-            _ => {}
+            _ => {},
         }
     }
 }
@@ -297,7 +305,7 @@ impl AppState {
             Err(e) => {
                 eprintln!("[blitz] GPU import failed: {e:?}");
                 return;
-            }
+            },
         };
         let frame_size = imported.size;
         self.status
@@ -316,7 +324,7 @@ impl AppState {
             Err(e) => {
                 eprintln!("[blitz] register_custom_resource failed: {e:?}");
                 return;
-            }
+            },
         };
 
         let win = self.window.inner_size();

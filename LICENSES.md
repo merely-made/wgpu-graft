@@ -42,6 +42,7 @@ relicensed, and nothing here receives a Merely copyright line.
 | Path | License | Upstream | Notice files |
 |---|---|---|---|
 | `patches/yeslogic-fontconfig-sys` | MIT | [yeslogic/fontconfig-rs](https://github.com/yeslogic/fontconfig-rs) 6.0.0 | its manifest |
+| `demo-servo-xilem/masonry_winit` | Apache-2.0 | [linebender/xilem](https://github.com/linebender/xilem) `masonry_winit` at rev `dc496876` (2026-11-03), consumed through the root `[patch]`; local changes are marked `wgpu-graft:` in `src/event_loop_runner.rs` (added 2026-11-10) | its `LICENSE` and manifest |
 
 Until 2026-11-01 this table also listed `patches/glass-gpui` (the vendored
 glass-hq GPUI fork, Apache-2.0, which carried three files marked `Copyright (c)

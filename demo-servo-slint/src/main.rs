@@ -36,8 +36,8 @@ slint::slint! {
     export component MainWindow inherits Window {
         in property <image> frame;
         title: "demo-servo-slint";
-        preferred-width: 1280px;
-        preferred-height: 800px;
+        preferred-width: 1120px;
+        preferred-height: 700px;
         Image {
             source: frame;
             width: 100%;

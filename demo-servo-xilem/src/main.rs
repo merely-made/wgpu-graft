@@ -6,19 +6,22 @@
 
 //! Demo embedding Servo in a Xilem app with input forwarding.
 //!
-//! Servo renders offscreen via surfman/GL into a `ServoWgpuRenderingContext`.
-//! Each frame, the GPU pixels are read back to CPU as an `image::RgbaImage`,
-//! converted to a `peniko::ImageData`, and injected into the Xilem view tree via
-//! a `tokio::sync::watch` channel + Xilem `task_raw` view.
+//! The Servo viewport is an [`external_surface`] widget, which Masonry paints
+//! as an external layer: it records only the widget's bounds. The demo's
+//! vendored `masonry_winit` copies a registered texture into that rectangle
+//! each redraw, before presenting. On the GPU path that texture is Servo's
+//! frame, imported by grafting onto Masonry's own wgpu device; no pixels reach
+//! the CPU. If the import cannot be set up, the demo reads frames back and
+//! uploads them into the same texture slot instead.
 //!
-//! The Xilem UI provides a URL bar and a Go button above the Servo viewport.
-//! Mouse, scroll, and keyboard events in the viewport region are forwarded
-//! to Servo so pages are interactive (links, scrolling, text input).
+//! The Xilem UI provides a URL bar and a Go button above the viewport. Mouse,
+//! scroll, and keyboard events in the viewport are forwarded to Servo.
 //!
 //! Usage:
 //!   cargo run -p demo-servo-xilem -- https://example.com
 //!   cargo run -p demo-servo-xilem          # opens built-in fixture page
 
+mod external_surface;
 mod keyutils;
 
 use std::rc::Rc;
@@ -26,18 +29,18 @@ use std::sync::{Arc, Mutex};
 
 use demo_support::{DemoStatus, RenderPath};
 use euclid::Scale;
-use masonry::peniko::{Blob, ImageAlphaType, ImageData, ImageFormat};
+use external_surface::external_surface;
 use masonry::theme::default_property_set;
 use masonry_winit::app::{AppDriver, MasonryState, MasonryUserEvent};
 use rustls::crypto::aws_lc_rs;
-use servo::EventLoopWaker;
 use servo::{
-    DevicePoint, InputEvent, MouseButton as ServoMouseButton, MouseButtonAction, MouseButtonEvent,
-    MouseLeftViewportEvent, MouseMoveEvent, RenderingContext, Servo, ServoBuilder, WebView,
-    WebViewBuilder,
-    WebViewDelegate, WheelDelta, WheelEvent, WheelMode,
+    DevicePoint, EventLoopWaker, InputEvent, MouseButton as ServoMouseButton, MouseButtonAction,
+    MouseButtonEvent, MouseLeftViewportEvent, MouseMoveEvent, RenderingContext, Servo,
+    ServoBuilder, WebView, WebViewBuilder, WebViewDelegate, WheelDelta, WheelEvent, WheelMode,
 };
-use servo_wgpu_interop_adapter::{CapturingRenderingContext, ServoWgpuRenderingContext};
+use servo_wgpu_interop_adapter::{
+    CapturingRenderingContext, ServoWgpuInteropAdapter, ServoWgpuRenderingContext,
+};
 use tokio::sync::watch;
 use url::Url;
 use winit::application::ApplicationHandler;
@@ -47,10 +50,7 @@ use winit::event::{ElementState, MouseScrollDelta, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow};
 use winit::keyboard::ModifiersState;
 use xilem::core::fork;
-use xilem::view::{
-    FlexExt, flex_col, flex_row, image as image_view, label, sized_box, task_raw, text_button,
-    text_input,
-};
+use xilem::view::{FlexExt, flex_col, flex_row, label, task_raw, text_button, text_input};
 use xilem::{EventLoop, WidgetView, WindowOptions, Xilem};
 
 // ── App state ────────────────────────────────────────────────────────────────
@@ -58,16 +58,15 @@ use xilem::{EventLoop, WidgetView, WindowOptions, Xilem};
 struct AppState {
     /// The URL currently shown in the navigation bar input.
     nav_input: String,
-    /// The last successfully read frame from Servo, or None before first paint.
-    current_image: Option<ImageData>,
-    status: DemoStatus,
+    /// The status line, updated from the frame loop.
+    status: String,
 }
 
 // ── View logic ────────────────────────────────────────────────────────────────
 
 fn app_logic(
     state: &mut AppState,
-    image_rx: watch::Receiver<Option<ImageData>>,
+    status_rx: watch::Receiver<String>,
     nav_request: Arc<Mutex<Option<String>>>,
 ) -> impl WidgetView<AppState> + use<> {
     let nav_for_enter = nav_request.clone();
@@ -88,82 +87,167 @@ fn app_logic(
         }),
     ));
 
-    let content = if let Some(img) = state.current_image.clone() {
-        xilem::core::one_of::OneOf2::A(
-            sized_box(image_view(img).fit(xilem::view::ObjectFit::Fill))
-                .expand_width()
-                .expand_height(),
-        )
-    } else {
-        xilem::core::one_of::OneOf2::B(
-            sized_box(label("Servo loading…"))
-                .expand_width()
-                .expand_height(),
-        )
-    };
-
     // `task_raw` must take `Fn`, not `FnOnce`. Since watch::Receiver: Clone,
-    // we clone it inside the closure body — the move-captured `rx` stays alive
-    // for subsequent (no-op) calls while the async task owns the clone.
+    // we clone it inside the closure body.
     fork(
-        flex_col((nav_bar, label(state.status.summary()), content.flex(1.0))),
+        flex_col((
+            nav_bar,
+            label(state.status.clone()),
+            external_surface().flex(1.0),
+        )),
         task_raw(
-            move |proxy| {
-                let mut rx = image_rx.clone(); // borrow, then clone — Fn-safe
+            move |proxy, _shutdown| {
+                let mut rx = status_rx.clone();
                 async move {
-                    loop {
-                        if rx.changed().await.is_err() {
+                    while rx.changed().await.is_ok() {
+                        let status = rx.borrow_and_update().clone();
+                        if proxy.message(status).is_err() {
                             break;
-                        }
-                        if let Some(img) = rx.borrow_and_update().clone() {
-                            if proxy.message(img).is_err() {
-                                break;
-                            }
                         }
                     }
                 }
             },
-            |state: &mut AppState, img: ImageData| {
-                state
-                    .status
-                    .set_frame(RenderPath::CpuReadback, img.width, img.height);
-                state.current_image = Some(img);
+            |state: &mut AppState, status: String| {
+                state.status = status;
             },
         ),
     )
 }
 
-// ── Servo helpers ─────────────────────────────────────────────────────────────
+// ── Servo ─────────────────────────────────────────────────────────────────────
+
+/// How Servo's frames reach the external layer.
+enum Pipeline {
+    /// Imported by grafting onto Masonry's device, texture handed over as is.
+    Gpu(ServoWgpuInteropAdapter),
+    /// Read back to the CPU and uploaded into a texture on Masonry's device.
+    Cpu(Rc<CapturingRenderingContext>),
+}
 
 struct ServoState {
     servo: Servo,
     webview: WebView,
-    render_ctx: Rc<CapturingRenderingContext>,
+    pipeline: Pipeline,
+    device: wgpu::Device,
+    queue: wgpu::Queue,
+    viewport: PhysicalSize<u32>,
+    status: DemoStatus,
 }
 
 impl ServoState {
-    fn init(size: PhysicalSize<u32>, initial_url: Url) -> Result<Self, String> {
-        let render_ctx = Rc::new(
-            ServoWgpuRenderingContext::new(size).map_err(|e| format!("surfman error: {e:?}"))?,
-        );
-        let capture_ctx = Rc::new(CapturingRenderingContext::new(render_ctx));
+    fn init(
+        device: wgpu::Device,
+        queue: wgpu::Queue,
+        viewport: PhysicalSize<u32>,
+        scale_factor: f64,
+        initial_url: Url,
+    ) -> Result<Self, String> {
+        let (pipeline, context, status) =
+            match ServoWgpuInteropAdapter::new(device.clone(), queue.clone(), viewport) {
+                Ok(interop) => {
+                    let context = interop.rendering_context();
+                    let status = DemoStatus::new(RenderPath::GpuImport);
+                    (Pipeline::Gpu(interop), context, status)
+                },
+                Err(err) => {
+                    eprintln!("[demo] GPU import unavailable, using CPU readback: {err:?}");
+                    let render_ctx = Rc::new(
+                        ServoWgpuRenderingContext::new(viewport)
+                            .map_err(|e| format!("surfman error: {e:?}"))?,
+                    );
+                    let capture = Rc::new(CapturingRenderingContext::new(render_ctx));
+                    let context: Rc<dyn RenderingContext> = capture.clone();
+                    (
+                        Pipeline::Cpu(capture),
+                        context,
+                        DemoStatus::new(RenderPath::CpuReadback),
+                    )
+                },
+            };
 
         let servo = ServoBuilder::default()
             .event_loop_waker(Box::new(NoopWaker))
             .build();
         servo.setup_logging();
 
-        let webview = WebViewBuilder::new(&servo, capture_ctx.clone())
+        let webview = WebViewBuilder::new(&servo, context)
             .url(initial_url)
-            .hidpi_scale_factor(Scale::new(1.0))
+            .hidpi_scale_factor(Scale::new(scale_factor as f32))
             .delegate(Rc::new(DemoDelegate))
             .build();
 
         Ok(Self {
             servo,
             webview,
-            render_ctx: capture_ctx,
+            pipeline,
+            device,
+            queue,
+            viewport,
+            status,
         })
+    }
+
+    /// Present Servo's painted frame and return it as a texture on Masonry's
+    /// device, if a new one arrived.
+    fn take_frame(&mut self) -> Option<wgpu::Texture> {
+        match &self.pipeline {
+            Pipeline::Gpu(interop) => {
+                // The importing context imports inside present(), before the
+                // GL swap chain flips.
+                interop.rendering_context().present();
+                let imported = interop.take_imported_texture()?;
+                self.status.set_frame(
+                    RenderPath::GpuImport,
+                    imported.size.width,
+                    imported.size.height,
+                );
+                Some(imported.texture)
+            },
+            Pipeline::Cpu(capture) => {
+                capture.present();
+                let rgba = capture.take_frame()?;
+                let (width, height) = rgba.dimensions();
+                self.status
+                    .set_frame(RenderPath::CpuReadback, width, height);
+                let texture = self.device.create_texture(&wgpu::TextureDescriptor {
+                    label: Some("servo readback"),
+                    size: wgpu::Extent3d {
+                        width,
+                        height,
+                        depth_or_array_layers: 1,
+                    },
+                    mip_level_count: 1,
+                    sample_count: 1,
+                    dimension: wgpu::TextureDimension::D2,
+                    format: wgpu::TextureFormat::Rgba8Unorm,
+                    usage: wgpu::TextureUsages::COPY_SRC | wgpu::TextureUsages::COPY_DST,
+                    view_formats: &[],
+                });
+                self.queue.write_texture(
+                    texture.as_image_copy(),
+                    rgba.as_raw(),
+                    wgpu::TexelCopyBufferLayout {
+                        offset: 0,
+                        bytes_per_row: Some(width * 4),
+                        rows_per_image: Some(height),
+                    },
+                    texture.size(),
+                );
+                Some(texture)
+            },
+        }
+    }
+
+    /// Follow the external layer's size. `webview.resize` drives the Servo
+    /// side (see the winit demo).
+    fn resize(&mut self, size: PhysicalSize<u32>) {
+        if size != self.viewport {
+            self.viewport = size;
+            if let Pipeline::Cpu(capture) = &self.pipeline {
+                capture.resize(size);
+            }
+            self.webview.resize(size);
+        }
     }
 }
 
@@ -199,60 +283,71 @@ impl WebViewDelegate for DemoDelegate {
 
 // ── ApplicationHandler ────────────────────────────────────────────────────────
 
-/// Height of the nav bar in logical pixels, measured empirically from the
-/// Masonry flex_row layout (text_input + button with default theme padding).
-/// Used to translate window coordinates into Servo viewport coordinates and
-/// to size the Servo rendering surface. In a production app, query the
-/// actual Masonry layout instead of using a constant.
-const NAV_BAR_HEIGHT_LP: f64 = 72.0;
-
 struct ServoXilemApp {
-    masonry_state: MasonryState<'static>,
+    masonry_state: MasonryState,
     app_driver: Box<dyn AppDriver>,
     servo_state: Option<ServoState>,
-    /// Sends new CPU frames to the Xilem task_raw view.
-    image_tx: watch::Sender<Option<ImageData>>,
+    /// Sends the status line to the Xilem task_raw view.
+    status_tx: watch::Sender<String>,
     /// Navigation requests from the Xilem UI.
     nav_request: Arc<Mutex<Option<String>>>,
     /// URL to load on start.
     initial_url: Url,
+    /// Servo failed to start; don't retry every frame.
+    servo_failed: bool,
 
     // ── Input tracking ───────────────────────────────────────────────────
     /// Last known cursor position in physical window coordinates.
     cursor_position: PhysicalPosition<f64>,
     /// Current keyboard modifier state (Ctrl, Shift, Alt, Super).
     modifiers: ModifiersState,
-    /// Whether the cursor is currently inside the Servo viewport region.
+    /// Whether the cursor is currently inside the Servo viewport.
     cursor_in_viewport: bool,
-    /// Window scale factor (physical pixels per logical pixel).
-    scale_factor: f64,
+}
+
+impl ServoXilemApp {
+    /// The cursor as a Servo [`DevicePoint`] if it is inside the viewport
+    /// (the external layer's rectangle).
+    fn viewport_point(&self) -> Option<DevicePoint> {
+        let [x, y, width, height] = self.masonry_state.external_rect()?;
+        let px = self.cursor_position.x - f64::from(x);
+        let py = self.cursor_position.y - f64::from(y);
+        (px >= 0.0 && py >= 0.0 && px < f64::from(width) && py < f64::from(height))
+            .then(|| DevicePoint::new(px as f32, py as f32))
+    }
+
+    /// Start Servo once Masonry has a device and has laid out the viewport.
+    fn ensure_servo(&mut self) {
+        if self.servo_state.is_some() || self.servo_failed {
+            return;
+        }
+        let (Some((device, queue)), Some([_, _, width, height])) = (
+            self.masonry_state.wgpu_device(),
+            self.masonry_state.external_rect(),
+        ) else {
+            return;
+        };
+        let scale_factor = self.masonry_state.scale_factor().unwrap_or(1.0);
+        match ServoState::init(
+            device,
+            queue,
+            PhysicalSize::new(width, height),
+            scale_factor,
+            self.initial_url.clone(),
+        ) {
+            Ok(state) => self.servo_state = Some(state),
+            Err(err) => {
+                eprintln!("Servo init failed: {err}");
+                self.servo_failed = true;
+            },
+        }
+    }
 }
 
 impl ApplicationHandler<MasonryUserEvent> for ServoXilemApp {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         self.masonry_state
             .handle_resumed(event_loop, &mut *self.app_driver);
-
-        // Initialise Servo once the masonry window is up so we know the size.
-        if self.servo_state.is_none() {
-            let window_size = self
-                .masonry_state
-                .roots()
-                .next()
-                .map(|r| r.size())
-                .unwrap_or(PhysicalSize::new(1280, 800));
-
-            // Servo's viewport is the window minus the nav bar.
-            let nav_h = self.nav_bar_height_px();
-            let viewport = PhysicalSize::new(
-                window_size.width,
-                (window_size.height as f64 - nav_h).max(1.0) as u32,
-            );
-            match ServoState::init(viewport, self.initial_url.clone()) {
-                Ok(state) => self.servo_state = Some(state),
-                Err(err) => eprintln!("Servo init failed: {err}"),
-            }
-        }
     }
 
     fn suspended(&mut self, event_loop: &ActiveEventLoop) {
@@ -267,50 +362,33 @@ impl ApplicationHandler<MasonryUserEvent> for ServoXilemApp {
     ) {
         // ── Forward relevant events to Servo ─────────────────────────────
         //
-        // We intercept winit events *before* Masonry processes them and
-        // forward mouse, scroll, and keyboard events to Servo's WebView.
         // Masonry still receives every event for its own UI (nav bar, etc.);
-        // there's no conflict because the Servo viewport is a passive image
-        // widget that doesn't consume pointer events.
+        // the viewport widget doesn't consume pointer events.
 
         if let WindowEvent::ModifiersChanged(mods) = &event {
             self.modifiers = mods.state();
         }
 
-        if let WindowEvent::ScaleFactorChanged { scale_factor, .. } = &event {
-            self.scale_factor = *scale_factor;
-        }
-
         if let Some(ss) = &self.servo_state {
-            let nav_h = self.nav_bar_height_px();
             match &event {
-                // ── Resize ───────────────────────────────────────────────
-                WindowEvent::Resized(new_size) => {
-                    let viewport_h = (new_size.height as f64 - nav_h).max(1.0) as u32;
-                    let viewport = PhysicalSize::new(new_size.width, viewport_h);
-                    ss.render_ctx.resize(viewport);
-                    ss.webview.resize(viewport);
-                }
-
                 // ── Cursor tracking ──────────────────────────────────────
                 WindowEvent::CursorMoved { position, .. } => {
                     self.cursor_position = *position;
                     let was_in = self.cursor_in_viewport;
-                    self.cursor_in_viewport = position.y >= nav_h;
+                    let point = self.viewport_point();
+                    self.cursor_in_viewport = point.is_some();
 
-                    if self.cursor_in_viewport {
-                        let pt = self.servo_device_point(nav_h);
+                    if let Some(pt) = point {
                         ss.webview
                             .notify_input_event(InputEvent::MouseMove(MouseMoveEvent::new(
                                 pt.into(),
                             )));
                     } else if was_in {
-                        // Cursor left the viewport → tell Servo.
                         ss.webview.notify_input_event(InputEvent::MouseLeftViewport(
                             MouseLeftViewportEvent::default(),
                         ));
                     }
-                }
+                },
                 WindowEvent::CursorLeft { .. } => {
                     if self.cursor_in_viewport {
                         ss.webview.notify_input_event(InputEvent::MouseLeftViewport(
@@ -318,57 +396,56 @@ impl ApplicationHandler<MasonryUserEvent> for ServoXilemApp {
                         ));
                         self.cursor_in_viewport = false;
                     }
-                }
+                },
 
                 // ── Mouse buttons ────────────────────────────────────────
-                WindowEvent::MouseInput { state, button, .. } if self.cursor_in_viewport => {
-                    let action = match state {
-                        ElementState::Pressed => MouseButtonAction::Down,
-                        ElementState::Released => MouseButtonAction::Up,
-                    };
-                    let btn = match button {
-                        winit::event::MouseButton::Left => ServoMouseButton::Primary,
-                        winit::event::MouseButton::Right => ServoMouseButton::Secondary,
-                        winit::event::MouseButton::Middle => ServoMouseButton::Auxiliary,
-                        winit::event::MouseButton::Back => ServoMouseButton::Back,
-                        winit::event::MouseButton::Forward => ServoMouseButton::Forward,
-                        winit::event::MouseButton::Other(v) => ServoMouseButton::Other(*v),
-                    };
-                    let pt = self.servo_device_point(nav_h);
-                    ss.webview
-                        .notify_input_event(InputEvent::MouseButton(MouseButtonEvent::new(
-                            action,
-                            btn,
-                            pt.into(),
-                        )));
-                }
+                WindowEvent::MouseInput { state, button, .. } => {
+                    if let Some(pt) = self.viewport_point() {
+                        let action = match state {
+                            ElementState::Pressed => MouseButtonAction::Down,
+                            ElementState::Released => MouseButtonAction::Up,
+                        };
+                        let btn = match button {
+                            winit::event::MouseButton::Left => ServoMouseButton::Primary,
+                            winit::event::MouseButton::Right => ServoMouseButton::Secondary,
+                            winit::event::MouseButton::Middle => ServoMouseButton::Auxiliary,
+                            winit::event::MouseButton::Back => ServoMouseButton::Back,
+                            winit::event::MouseButton::Forward => ServoMouseButton::Forward,
+                            winit::event::MouseButton::Other(v) => ServoMouseButton::Other(*v),
+                        };
+                        ss.webview.notify_input_event(InputEvent::MouseButton(
+                            MouseButtonEvent::new(action, btn, pt.into()),
+                        ));
+                    }
+                },
 
                 // ── Scroll wheel ─────────────────────────────────────────
-                WindowEvent::MouseWheel { delta, .. } if self.cursor_in_viewport => {
-                    let (dx, dy, mode) = match delta {
-                        MouseScrollDelta::LineDelta(x, y) => {
-                            ((*x as f64) * 38.0, (*y as f64) * 38.0, WheelMode::DeltaLine)
-                        }
-                        MouseScrollDelta::PixelDelta(d) => (d.x, d.y, WheelMode::DeltaPixel),
-                    };
-                    let pt = self.servo_device_point(nav_h);
-                    ss.webview
-                        .notify_input_event(InputEvent::Wheel(WheelEvent::new(
-                            WheelDelta {
-                                x: dx,
-                                y: dy,
-                                z: 0.0,
-                                mode,
+                WindowEvent::MouseWheel { delta, .. } => {
+                    if let Some(pt) = self.viewport_point() {
+                        let (dx, dy, mode) = match delta {
+                            MouseScrollDelta::LineDelta(x, y) => {
+                                ((*x as f64) * 38.0, (*y as f64) * 38.0, WheelMode::DeltaLine)
                             },
-                            pt.into(),
-                        )));
-                }
+                            MouseScrollDelta::PixelDelta(d) => (d.x, d.y, WheelMode::DeltaPixel),
+                        };
+                        ss.webview
+                            .notify_input_event(InputEvent::Wheel(WheelEvent::new(
+                                WheelDelta {
+                                    x: dx,
+                                    y: dy,
+                                    z: 0.0,
+                                    mode,
+                                },
+                                pt.into(),
+                            )));
+                    }
+                },
 
                 // ── Keyboard ─────────────────────────────────────────────
                 //
                 // Keyboard events are forwarded regardless of cursor position.
                 // In a production app you would track focus (e.g. only forward
-                // when the viewport image is focused, not the URL bar).
+                // when the viewport is focused, not the URL bar).
                 WindowEvent::KeyboardInput {
                     event: key_event, ..
                 } => {
@@ -376,9 +453,9 @@ impl ApplicationHandler<MasonryUserEvent> for ServoXilemApp {
                         keyutils::keyboard_event_from_winit(key_event, self.modifiers);
                     ss.webview
                         .notify_input_event(InputEvent::Keyboard(servo_event));
-                }
+                },
 
-                _ => {}
+                _ => {},
             }
         }
 
@@ -403,9 +480,8 @@ impl ApplicationHandler<MasonryUserEvent> for ServoXilemApp {
     }
 
     fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
-        // Note: `Resized` is handled in `window_event` above, including the
-        // Servo viewport resize with the nav bar offset subtracted.
         event_loop.set_control_flow(ControlFlow::Poll);
+        self.ensure_servo();
 
         if let Some(ss) = &mut self.servo_state {
             // Handle any pending navigation from the URL bar.
@@ -419,22 +495,23 @@ impl ApplicationHandler<MasonryUserEvent> for ServoXilemApp {
                 }
             }
 
+            if let Some([_, _, width, height]) = self.masonry_state.external_rect() {
+                ss.resize(PhysicalSize::new(width, height));
+            }
+
             ss.servo.spin_event_loop();
             ss.webview.paint();
-            // Servo 0.7 paint() draws without presenting; present() is where the
-            // capturing context reads the frame back.
-            ss.render_ctx.present();
-
-            if let Some(rgba) = ss.render_ctx.take_frame() {
-                let (width, height) = rgba.dimensions();
-                let image_data = ImageData {
-                    data: Blob::new(Arc::new(rgba.into_raw())),
-                    format: ImageFormat::Rgba8,
-                    alpha_type: ImageAlphaType::Alpha,
-                    width,
-                    height,
-                };
-                let _ = self.image_tx.send(Some(image_data));
+            if let Some(texture) = ss.take_frame() {
+                self.masonry_state.set_external_texture(Some(texture));
+                self.masonry_state.request_redraw();
+                let summary = ss.status.summary();
+                self.status_tx.send_if_modified(|status| {
+                    let changed = *status != summary;
+                    if changed {
+                        status.clone_from(&summary);
+                    }
+                    changed
+                });
             }
         }
 
@@ -454,24 +531,6 @@ impl ApplicationHandler<MasonryUserEvent> for ServoXilemApp {
     }
 }
 
-impl ServoXilemApp {
-    /// Convert the current cursor position to a Servo [`DevicePoint`],
-    /// translating from window space to viewport space by subtracting the
-    /// nav bar offset.
-    fn servo_device_point(&self, nav_bar_px: f64) -> DevicePoint {
-        DevicePoint::new(
-            self.cursor_position.x as f32,
-            (self.cursor_position.y - nav_bar_px) as f32,
-        )
-    }
-
-    /// Nav bar height in physical pixels, derived from the logical-pixel
-    /// constant and the current window scale factor.
-    fn nav_bar_height_px(&self) -> f64 {
-        NAV_BAR_HEIGHT_LP * self.scale_factor
-    }
-}
-
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 fn main() -> Result<(), EventLoopError> {
@@ -482,29 +541,36 @@ fn main() -> Result<(), EventLoopError> {
     let initial_url = demo_support::resolve_initial_url(env!("CARGO_MANIFEST_DIR"))
         .expect("failed to resolve initial URL");
 
-    // Watch channel: about_to_wait sends frames; task_raw forwards them to AppState.
-    let (image_tx, image_rx) = watch::channel(None::<ImageData>);
+    // Masonry picks its wgpu backends from WGPU_BACKEND. On Windows the import
+    // opens ANGLE's shared texture on a DX12 device, so force DX12 there.
+    // SAFETY: set before any wgpu or thread initialisation.
+    #[cfg(target_os = "windows")]
+    unsafe {
+        std::env::set_var("WGPU_BACKEND", "dx12");
+    }
+
+    // Watch channel: about_to_wait sends the status line; task_raw forwards it.
+    let (status_tx, status_rx) = watch::channel(String::from("Servo loading…"));
     // Shared slot: UI writes a URL here on "Go" click; about_to_wait reads it.
     let nav_request: Arc<Mutex<Option<String>>> = Default::default();
 
     let app_state = AppState {
         nav_input: initial_url.to_string(),
-        current_image: None,
-        status: DemoStatus::new(RenderPath::CpuReadback),
+        status: String::from("Servo loading…"),
     };
 
-    let window_options =
-        WindowOptions::new("servo-xilem demo").with_min_inner_size(LogicalSize::new(800.0, 600.0));
+    let window_options = WindowOptions::new("servo-xilem demo")
+        .with_initial_inner_size(LogicalSize::new(
+            demo_support::WINDOW_WIDTH,
+            demo_support::WINDOW_HEIGHT,
+        ))
+        .with_min_inner_size(LogicalSize::new(800.0, 600.0));
 
-    // Each rebuild gets a fresh receiver clone; all clones share the same channel.
-    // task_raw uses only the first clone (it runs once), which is fine.
     let nav_request_for_view = nav_request.clone();
     let xilem = Xilem::new_simple(
         app_state,
         move |state: &mut AppState| {
-            let rx = image_rx.clone();
-            let nr = nav_request_for_view.clone();
-            app_logic(state, rx, nr)
+            app_logic(state, status_rx.clone(), nav_request_for_view.clone())
         },
         window_options,
     );
@@ -521,15 +587,14 @@ fn main() -> Result<(), EventLoopError> {
         masonry_state,
         app_driver: Box::new(driver),
         servo_state: None,
-        image_tx,
+        status_tx,
         nav_request,
         initial_url,
+        servo_failed: false,
         cursor_position: PhysicalPosition::new(0.0, 0.0),
         modifiers: ModifiersState::default(),
         cursor_in_viewport: false,
-        scale_factor: 1.0,
     };
 
     event_loop.run_app(&mut app)
 }
-
