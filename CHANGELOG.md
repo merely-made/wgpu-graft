@@ -4,6 +4,28 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
+## [grafting 0.6.3, grafting-servo 0.1.0] - 2026-11-13
+
+### grafting 0.6.3
+
+- Add `surfman_gl::select_adapter_matching_luid` (Windows): pick the surfman
+  (ANGLE D3D11) adapter on the GPU with a given DXGI adapter LUID, for hosts
+  whose device is not wgpu's. `select_adapter_matching_surfman_luid` now
+  delegates to it. Additive.
+
+### grafting-servo 0.1.0
+
+First release of the Servo adapter, publishable now that Servo is on
+crates.io (`servo` 0.8.0). It owns the Servo producer moved out of Turnstone
+(behind the `servo` feature), the `ServoWgpuRenderingContext` /
+`ServoWgpuInteropAdapter` rendering contexts and import paths, and a `no-wgl`
+feature forwarding to `servo/no-wgl`. Pick the wgpu major with `wgpu-28`,
+`wgpu-29` (default) or `wgpu-30`. New in this release:
+`ServoWgpuRenderingContext::new_for_adapter_luid` (Windows), for a host
+Direct3D 11 device such as GPUI's.
+
+### Demos (not published)
+
 - Add `demo-servo-kas`: Servo in Kas 0.17 through Kas's public custom-pipe API
   (`kas_wgpu::draw::CustomPipe`), which hands app code Kas's wgpu device and
   draws in its render pass; no Kas patch. On Windows it sets `KAS_BACKENDS=DX12`
@@ -35,9 +57,6 @@ All notable changes to this project will be documented here.
   whose imported-texture path gives the demo zero-copy GPU import on macOS
   (Metal), Linux (wgpu) and Windows (Direct3D 11). The demo README records why
   upstream GPUI could not, and the GPUI variants surveyed.
-- Add `grafting::surfman_gl::select_adapter_matching_luid` and
-  `ServoWgpuRenderingContext::new_for_adapter_luid` (Windows) for hosts whose
-  device is not wgpu's, so ANGLE renders on the host's GPU.
 - Fix the Windows demos' `build.rs` copying the ANGLE DLLs into
   `target/build/{profile}` instead of next to the executable since the
   `build-dir` setting; the demos panicked with "egl function was not loaded".
@@ -62,6 +81,14 @@ All notable changes to this project will be documented here.
 - Call `present()` after `paint()` in `demo-servo-gpui` and `demo-servo-xilem`;
   Servo 0.7's `paint()` does not present, so the CPU-readback demos never
   received a frame.
+
+
+## [0.6.2] - 2026-11-09
+
+- Add tracked frame storage with consumer release for each platform's
+  producer-to-host handoff: `metal_surface` (IOSurface storage for Metal),
+  `vulkan_surface` (Vulkan DMA-BUF storage) and `dx12_surface` (shared DX12
+  frame storage with final-consumer release). Additive.
 
 ## [0.6.1] - 2026-10-24
 
