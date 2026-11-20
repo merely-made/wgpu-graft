@@ -39,7 +39,7 @@ thiserror = "2.0.17"
 # patching the host onto ours. Renamed via `package` so both can coexist as
 # optional deps; lib.rs aliases the selected pair back to `wgpu` / `wgpu_hal`
 # crate-wide via `extern crate`.
-wgpu_30 = { package = "wgpu", version = "30.0.1", features = ["metal"], optional = true }
+wgpu_30 = { package = "wgpu", version = "30.0.2", features = ["metal"], optional = true }
 wgpu_hal_30 = { package = "wgpu-hal", version = "30.0.1", optional = true }
 wgpu_29 = { package = "wgpu", version = "29.0.1", features = ["metal"], optional = true }
 wgpu_hal_29 = { package = "wgpu-hal", version = "29.0.1", optional = true }

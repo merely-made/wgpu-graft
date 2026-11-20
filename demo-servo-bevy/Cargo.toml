@@ -29,7 +29,7 @@ grafting = { path = "../grafting", default-features = false, features = ["surfma
 grafting-servo = { path = "../servo-wgpu-interop-adapter", default-features = false, features = ["servo", "wgpu-30"] }
 url = "2.5.7"
 winit = "0.30.13"
-wgpu = { version = "30.0.1", features = ["metal"] }
+wgpu = { version = "30.0.2", features = ["metal"] }
 
 [lints]
 workspace = true
