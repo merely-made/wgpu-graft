@@ -10,7 +10,7 @@ use servo::{
     WheelEvent, WheelMode,
 };
 use url::Url;
-use winit::dpi::PhysicalSize;
+use dpi::PhysicalSize;
 
 use super::{
     delegate::Delegate,

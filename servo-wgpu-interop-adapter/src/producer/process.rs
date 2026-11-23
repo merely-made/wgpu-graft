@@ -11,7 +11,7 @@ use std::{
 
 use servo::{EventLoopWaker, Opts, Preferences, Servo, ServoBuilder, WebViewBuilder};
 use url::Url;
-use winit::dpi::PhysicalSize;
+use dpi::PhysicalSize;
 
 use super::{
     delegate::Delegate,

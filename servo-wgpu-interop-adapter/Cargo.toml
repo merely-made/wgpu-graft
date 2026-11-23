@@ -42,7 +42,6 @@ serde_json = { version = "1", optional = true }
 accesskit = { version = "0.24.1", features = ["serde"], optional = true }
 surfman = "0.14.0"
 dpi = "0.1.2"
-winit = "0.30.13"
 wgpu_30 = { package = "wgpu", version = "30.0.2", features = ["metal"], optional = true }
 wgpu_29 = { package = "wgpu", version = "29.0.1", features = ["metal"], optional = true }
 wgpu_28 = { package = "wgpu", version = "28.0.0", features = ["metal"], optional = true }

@@ -28,7 +28,7 @@ use grafting::{
     WgpuTextureImporter,
     surfman_gl::{SurfmanFrameContext, SurfmanFrameProducer, select_adapter_matching_surfman_luid},
 };
-use winit::dpi::PhysicalSize;
+use dpi::PhysicalSize;
 
 pub use grafting;
 pub use grafting::DiagnosticGpuSync;
